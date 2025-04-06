@@ -1,0 +1,426 @@
+{
+  "labels": {
+    "login": {
+      "header": "Welcome back to b10cks",
+      "fields": {
+        "emailLabel": "Email",
+        "emailPlaceholder": "Enter your email address",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password"
+      },
+      "forgotPassword": "Forgot your password?"
+    },
+    "command": {
+      "input": {
+        "placeholder": "Type to search for spaces, blocks, content ..."
+      },
+      "empty": "No results found"
+    },
+    "search": {
+      "search": "Search...",
+      "searchOrSelectField": "Search or select a field to filter...",
+      "selectOperatorFor": "Select operator for {field}...",
+      "selectValueFor": "Select value for {field}...",
+      "enterDateFor": "Enter date for {field}...",
+      "enterValueFor": "Enter value for {field}...",
+      "removeFilter": "Remove filter: {field} {operator} {value}",
+      "dateInput": "Date input",
+      "typeValueAndEnter": "Type to enter a value and press Enter",
+      "noResultsFound": "No results found",
+      "keyboardNavHint": "Use up and down arrow keys to navigate, Enter to select, Escape to cancel",
+      "fieldDropdownLabel": "Available filter fields",
+      "operatorDropdownLabel": "Available operators",
+      "valueDropdownLabel": "Available values",
+      "clearAllFilters": "Clear all filters",
+      "editFilter": "Edit filter",
+      "fieldSelected": "Selected field: {field}",
+      "operatorSelected": "Selected operator: {operator}",
+      "filterAdded": "Added filter: {field} {operator} {value}",
+      "filterRemoved": "Removed filter: {field}",
+      "filterUpdated": "Updated filter: {field} {operator} {value}",
+      "editingFilter": "Editing filter: {field}",
+      "goingBack": "Going back to previous step",
+      "filteringCancelled": "Filtering cancelled",
+      "allFiltersCleared": "All filters cleared"
+    },
+    "datasources": {
+      "title": "Datasources",
+      "slug": "Technical name (Slug)",
+      "name": "Name",
+      "description": "Description",
+      "status": {
+        "label": "Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "entries": "Entries"
+    },
+    "assetFolders": {
+      "title": "Asset Folders"
+    },
+    "assets": {
+      "uploadAssets": "Upload Assets",
+      "uploadDetails": "Upload Details",
+      "uploadDescription": "Upload files to your asset library. You can upload multiple files at once.",
+      "dragAndDrop": "Drag and drop files here or click to browse",
+      "browseFiles": "Browse Files",
+      "addMoreFiles": "Add More Files",
+      "fileInformation": "File Information",
+      "metadata": {
+        "type": "Type",
+        "aspectRatio": "Aspect Ratio",
+        "width": "Width",
+        "height": "Height",
+        "duration": "Duration",
+        "original_filename": "Original File Name"
+      },
+      "filename": "Filename",
+      "altText": "Alt Text",
+      "describeContent": "Describe the content of the file",
+      "addDetailedDescription": "Add a detailed description",
+      "copyright": "Copyright",
+      "size": "Size",
+      "createdAt": "Uploaded at",
+      "updatedAt": "Last Modified",
+      "unknown": "Unknown",
+      "replaceMedia": "Replace Media",
+      "finish": "Finish"
+    },
+    "content": {
+      "name": "Name",
+      "type": "Type",
+      "firstPublishedAt": "First published at",
+      "publishedAt": "Published at",
+      "updatedAt": "Last updated at",
+      "createdAt": "Created at",
+      "slug": "Slug",
+      "fullSlug": "Full slug",
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "settings": {
+        "disablePreview": "Disable Preview",
+        "disablePreviewDescription": "Disable the preview panel for this content"
+      }
+    },
+    "blocks": {
+      "title": "Blocks",
+      "types": {
+        "blocks": "Blocks",
+        "boolean": "Boolean",
+        "link": "Link",
+        "markdown": "Markdown",
+        "number": "Number",
+        "option": "Option",
+        "text": "Text",
+        "textarea": "Textarea"
+      },
+      "fields": {
+        "name": "Name",
+        "slug": "Technical name",
+        "slugOf": "Technical name of {name}",
+        "description": "Description",
+        "type": "Type",
+        "default": "Default value",
+        "icon": "Icon",
+        "previewTemplate": "Preview template",
+        "previewTemplateDescription": "Use handlebars syntax to create a preview template.",
+        "required": "Required field",
+        "requiredTooltip": "You won't be able to create an entry if this field is empty.",
+        "translatable": "Translatable",
+        "translatableTooltip": "This field can be translated using field level translations.",
+        "color": "Color",
+        "order": "Order",
+        "restrict_blocks": "Restrict possible blocks",
+        "asset_link_type": "Allow asset links",
+        "email_link_type": "Allow email links",
+        "allow_target_blank": "Allow target blank"
+      },
+      "fieldTypes": {
+        "boolean": {
+          "label": "Boolean",
+          "description": "A boolean value (true/false)"
+        },
+        "link": {
+          "label": "Link",
+          "description": "A link to another content or an external URL"
+        },
+        "markdown": {
+          "label": "Markdown",
+          "description": "A text field with markdown support"
+        },
+        "blocks": {
+          "label": "Blocks",
+          "description": "A field that can contain other blocks"
+        },
+        "number": {
+          "label": "Number",
+          "description": "A number field"
+        },
+        "option": {
+          "label": "Single Option",
+          "description": "A field with a single option"
+        },
+        "options": {
+          "label": "Multi Options",
+          "description": "A field with multiple options"
+        },
+        "text": {
+          "label": "Text",
+          "description": "A simple text field"
+        },
+        "reference": {
+          "label": "Reference",
+          "description": "A reference to another content"
+        },
+        "asset": {
+          "label": "Asset",
+          "description": "A reference to an asset"
+        },
+        "multiAsset": {
+          "label": "Multi Asset",
+          "description": "A reference to multiple assets"
+        },
+        "textarea": {
+          "label": "Textarea",
+          "description": "A larger text field"
+        }
+      },
+      "options": {
+        "label": "User friendly label",
+        "value": "Technical value"
+      },
+      "createBlock": "Create Block"
+    },
+    "spaces": {
+      "title": "Spaces"
+    },
+    "settings": {
+      "general": {
+        "title": "General Settings",
+        "description": "Manage your space settings and preferences."
+      },
+      "configuration": {
+        "title": "Configuration",
+        "description": "Manage technical settings and integrations for your space."
+      },
+      "people": {
+        "title": "People",
+        "description": "Manage team members and their access to your space."
+      },
+      "space": {
+        "title": "Space",
+        "description": "Manage your space identity and basic information.",
+        "name": "Name",
+        "namePlaceholder": "Enter space name",
+        "nameDescription": "This is the name that will be displayed throughout the application.",
+        "icon": "Icon",
+        "uploadIcon": "Upload Icon",
+        "uploading": "Uploading...",
+        "iconDescription": "Recommended size: 512x512px. Max file size: 2MB.",
+        "spaceId": "Space ID",
+        "spaceIdDescription": "This is your unique space identifier (read-only)."
+      },
+      "content": {
+        "title": "Content",
+        "description": "Configure default content settings for your space.",
+        "defaultBlock": "Default Content Block",
+        "selectDefaultBlock": "Select default block",
+        "defaultBlockDescription": "This block type will be used when creating new content."
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "description": "Irreversible and destructive actions.",
+        "warning": "Deleting your space will permanently remove all content, settings, and user data. This action cannot be undone.",
+        "deleteSpace": "Delete Entire Space",
+        "areYouSure": "Are you absolutely sure?",
+        "deleteWarning": "This action cannot be undone. This will permanently delete your space and remove all associated data from our servers.",
+        "typeToConfirm": "Type {text} to confirm",
+        "confirmDelete": "Delete Space",
+        "deleting": "Deleting..."
+      },
+      "editor": {
+        "title": "Editor",
+        "description": "Configure editor environments and features.",
+        "environments": "Environments",
+        "environmentsDescription": "Configure preview environments for your content.",
+        "name": "Name",
+        "url": "URL",
+        "namePlaceholder": "Name",
+        "urlPlaceholder": "URL",
+        "visualEditor": "Visual Editor",
+        "visualEditorDescription": "Enable or disable the visual editor for content creation.",
+        "enableVisualEditor": "Enable Visual Editor",
+        "visualEditorInfo": "The visual editor provides a WYSIWYG experience for content creators."
+      },
+      "i18n": {
+        "title": "Internationalization",
+        "description": "Configure language settings for your content.",
+        "languages": "Languages",
+        "languagesDescription": "Add and manage supported languages for your content.",
+        "code": "Code",
+        "label": "Label",
+        "codePlaceholder": "Code (e.g., de)",
+        "labelPlaceholder": "Label (e.g., German)"
+      },
+      "accessTokens": {
+        "title": "Access Tokens",
+        "description": "Manage API access tokens for your space.",
+        "createdAt": "Created at",
+        "expiresAt": "Expires at",
+        "lastUsedAt": "Last used at",
+        "executionCount": "Usage count",
+        "tokenName": "Token Name",
+        "tokenNamePlaceholder": "e.g., Website Integration",
+        "generateToken": "Generate Token",
+        "generating": "Generating...",
+        "existingTokens": "Existing Tokens",
+        "name": "Name",
+        "token": "Token",
+        "actions": "Actions",
+        "tokenGenerated": "Token Generated",
+        "tokenWarning": "Make sure to copy your new access token now. You won't be able to see it again!",
+        "newToken": "Your New Token",
+        "tokenCopied": "Token copied to clipboard",
+        "noTokens": "No tokens created yet"
+      },
+      "assetLibrary": {
+        "title": "Asset Library",
+        "description": "Configure metadata fields for your asset library.",
+        "addMetadataField": "Add Metadata Field",
+        "fieldKey": "Field Key",
+        "fieldLabel": "Field Label",
+        "fieldKeyPlaceholder": "e.g., alt",
+        "fieldLabelPlaceholder": "e.g., Alt Text",
+        "required": "Required",
+        "addField": "Add Field",
+        "metadataFields": "Metadata Fields",
+        "key": "Key",
+        "label": "Label",
+        "defaultField": "Default Fields can't be removed",
+        "noMetadataFields": "No metadata fields defined"
+      },
+      "ai": {
+        "title": "AI Settings",
+        "description": "Configure AI features and monitor usage.",
+        "enableAIFeatures": "Enable AI Features",
+        "featuresDescription": "AI features include content suggestions, auto-tagging, and smart search.",
+        "usage": "AI Usage",
+        "usageDescription": "Your current token usage for this billing period.",
+        "of": "of",
+        "tokensUsed": "tokens used",
+        "resetInfo": "Your plan resets on {date}. Need more tokens?",
+        "upgradePlan": "Upgrade your plan"
+      },
+      "members": {
+        "title": "Members",
+        "description": "Manage team members and their permissions.",
+        "addMember": "Add Member",
+        "addNewMember": "Add New Member",
+        "inviteDescription": "Invite a new team member to collaborate on your space.",
+        "name": "Name",
+        "namePlaceholder": "John Doe",
+        "email": "Email",
+        "emailPlaceholder": "john@example.com",
+        "role": "Role",
+        "selectRole": "Select a role",
+        "inviting": "Inviting...",
+        "inviteMember": "Invite Member",
+        "member": "Member",
+        "status": "Status",
+        "actions": "Actions",
+        "editMember": "Edit Member",
+        "editDescription": "Update member details and permissions.",
+        "emailNotEditable": "Email cannot be changed.",
+        "selectStatus": "Select a status",
+        "memberInvited": "Member invited successfully",
+        "memberUpdated": "Member updated successfully",
+        "memberRemoved": "Member removed successfully",
+        "roles": {
+          "admin": "Admin",
+          "editor": "Editor",
+          "viewer": "Viewer"
+        },
+        "statuses": {
+          "active": "Active",
+          "pending": "Pending",
+          "inactive": "Inactive"
+        }
+      }
+    },
+    "yes": "Yes",
+    "no": "No"
+  },
+  "notifications": {
+    "preview": {
+      "copied": "Link copied to clipboard"
+    }
+  },
+  "actions": {
+    "toDashboard": "Go to dashboard",
+    "quickActions": "Quick actions...",
+    "saveClose": "Save & close",
+    "rename": "Rename",
+    "archive": "Archive",
+    "settings": "Settings",
+    "newTab": "Open in new tab",
+    "copyLink": "Copy link",
+    "user": {
+      "account": "Account"
+    },
+    "assets": {
+      "upload": "Upload asset"
+    },
+    "assetFolders": {
+      "create": "Create new folder"
+    },
+    "datasources": {
+      "add": "Add new Datasource",
+      "viewEntries": "View entries",
+      "edit": "Edit Datasource",
+      "delete": "Delete Datasource"
+    },
+    "blocks": {
+      "add": "Add new block",
+      "delete": "Delete block",
+      "edit": "Edit block",
+      "save": "Save block",
+      "duplicate": "Duplicate block",
+      "options": {
+        "add": "Add new option",
+        "delete": "Delete option"
+      }
+    },
+    "spaces": {
+      "add": "Add new space",
+      "select": "Select space",
+      "delete": "Delete space",
+      "edit": "Edit space",
+      "save": "Save space",
+      "switch": "Switch space"
+    },
+    "createNewSpace": "Create new space",
+    "saveChanges": "Save Changes",
+    "close": "Close",
+    "add": "Add",
+    "remove": "Remove",
+    "edit": "Edit",
+    "copy": "Copy",
+    "delete": "Delete",
+    "create": "Create",
+    "cancel": "Cancel",
+    "login": "Login"
+  },
+  "alertDialog": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "messages": {
+    "preview": {
+      "noContent": "No content selected. Select a content item to preview."
+    }
+  }
+}

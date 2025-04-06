@@ -1,0 +1,662 @@
+{
+  "labels": {
+    "login": {
+      "header": "Welcome back to b10cks",
+      "fields": {
+        "firstnameLabel": "First Name",
+        "firstnamePlaceholder": "Enter your first name",
+        "lastnameLabel": "Last Name",
+        "lastnamePlaceholder": "Enter your last name",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Enter your email address",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password"
+      },
+      "signupHeader": "Create your account",
+      "signupDescription": "Join us to start building your content with b10cks.",
+      "signup": "Don't have an account? [Sign up](/login/signup)",
+      "login": "Already have an account? [Login](/login)",
+      "terms": "I agree to the [Terms of Service](https://www.b10cks.com/legal/terms-of-service) and [Privacy Policy](https://www.b10cks.com/legal/privacy-policy)",
+      "forgotPassword": "Forgot your password?",
+      "marketing": {
+        "demo": "Want to learn more? [Schedule a demo](https://www.b10cks.com/demo) with us.",
+        "header": "Your content, **Enterprise Ready**.",
+        "description": "* Modular by design with atomic block architecture for seamless content composition\n* User-focused visual editor with Git-like versioning and powerful API-first approach\n* Enterprise features standard for everyone — global CDN delivery without premium pricing\n* **No credit card required to get started**",
+        "asFeatured": "As featured on",
+        "footer": "By using this service, you agree to the [Terms of Service](https://www.b10cks.com/legal/terms-of-service) and [Privacy Policy](https://www.b10cks.com/legal/privacy-policy)."
+      }
+    },
+    "command": {
+      "input": {
+        "placeholder": "Type to search for spaces, blocks, content ..."
+      },
+      "empty": "No results found"
+    },
+    "search": {
+      "search": "Search...",
+      "searchOrSelectField": "Search or select a field to filter...",
+      "selectOperatorFor": "Select operator for {field}...",
+      "selectValueFor": "Select value for {field}...",
+      "enterDateFor": "Enter date for {field}...",
+      "enterValueFor": "Enter value for {field}...",
+      "removeFilter": "Remove filter: {field} {operator} {value}",
+      "dateInput": "Date input",
+      "typeValueAndEnter": "Type to enter a value and press Enter",
+      "noResultsFound": "No results found",
+      "keyboardNavHint": "Use up and down arrow keys to navigate, Enter to select, Escape to cancel",
+      "fieldDropdownLabel": "Available filter fields",
+      "operatorDropdownLabel": "Available operators",
+      "valueDropdownLabel": "Available values",
+      "clearAllFilters": "Clear all filters",
+      "editFilter": "Edit filter",
+      "fieldSelected": "Selected field: {field}",
+      "operatorSelected": "Selected operator: {operator}",
+      "filterAdded": "Added filter: {field} {operator} {value}",
+      "filterRemoved": "Removed filter: {field}",
+      "filterUpdated": "Updated filter: {field} {operator} {value}",
+      "editingFilter": "Editing filter: {field}",
+      "goingBack": "Going back to previous step",
+      "filteringCancelled": "Filtering cancelled",
+      "allFiltersCleared": "All filters cleared"
+    },
+    "datasets": {
+      "title": "Datasets",
+      "description": "Manage your datasets and their entries.",
+      "backToDataSources": "Back to Data Sources",
+      "copySlugTooltip": "Copy API URL to clipboard",
+      "dataEntries": "Data Entries",
+      "loading": "Loading...",
+      "loadingEntries": "Loading entries...",
+      "noEntries": "No entries found. Create your first entry to get started.",
+      "searchEntriesPlaceholder": "Search entries by key or value...",
+      "perPage": "Per page",
+      "singleEdit": "Single Edit",
+      "gridEdit": "Grid Edit",
+      "autoSave": "Auto-save",
+      "dimensions": {
+        "default": "Default"
+      },
+      "fields": {
+        "name": "Name",
+        "slug": "Technical name (Slug)",
+        "description": "Description",
+        "dimensions": "Dimensions",
+        "cacheTtl": "Cache TTL",
+        "cacheTtlDescription": "Time in seconds for which the dataset will be cached. Set to 0 for no caching.",
+        "dimensionTranslatable": "Are dimensions translatable",
+        "dimensionTranslatableDescription": "Enable this if dimensions represent translatable content. This allows you to use AI features like translation.",
+        "status": "Status",
+        "entries": "Entries",
+        "active": "Active",
+        "activeDescription": "Enable this dataset to make it available for usage in the API.",
+        "createdAt": "Created at",
+        "updatedAt": "Last updated at",
+        "actions": "Actions"
+      },
+      "status": {
+        "label": "Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "entries": "Entries",
+      "addEntry": "Add Entry",
+      "editEntry": "Edit Entry",
+      "createEntry": "Create Entry",
+      "saveChanges": "Save Changes",
+      "createDataSource": "Create Data Source",
+      "editDataSources": "Edit Data Source",
+      "editDataSourceDescription": "Update the data source configuration and settings.",
+      "createDataSourceDescription": "Create a new data source to organize your content data.",
+      "slugDescription": "URL-friendly identifier (lowercase, numbers, and hyphens only)",
+
+      "searchPlaceholder": "Search data sources...",
+      "noDataSources": "No data sources found. Create your first data source to get started.",
+
+      "deleteConfirm": {
+        "title": "Delete Data Source",
+        "description": "Are you sure you want to delete this data source? This action cannot be undone and all associated entries will be permanently removed.",
+        "confirmText": "Delete Data Source"
+      }
+    },
+    "dataEntries": {
+      "fields": {
+        "key": "Key",
+        "value": "Value",
+        "type": "Type",
+        "createdAt": "Created at",
+        "updatedAt": "Last updated at",
+        "actions": "Actions",
+        "active": "Active",
+        "editEntry": "Edit Entry",
+        "deleteEntry": "Delete Entry",
+        "addEntry": "Add Entry"
+      },
+
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "view": "View Entries"
+      },
+
+      "deleteConfirm": {
+        "title": "Delete Entry",
+        "description": "Are you sure you want to delete this entry? This action cannot be undone.",
+        "confirmText": "Delete Entry"
+      }
+    },
+    "assetFolders": {
+      "title": "Asset Folders",
+      "create": "Create New Folder",
+      "createDescription": "Create a new folder to organize your assets.",
+      "fields": {
+        "icon": "Icon",
+        "color": "Color",
+        "name": "Name",
+        "namePlaceholder": "Enter folder name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter folder description"
+      }
+    },
+    "assets": {
+      "allAssets": "All Assets",
+      "noAssetsFound": "No Assets found",
+      "noAssetsFoundDescription": "Your asset library is empty. Upload your first asset to get started.",
+      "asset": "Asset",
+      "assets": "Assets",
+      "showing": "Showing {from} to {to} of {total} assets",
+      "uploadAssets": "Upload Assets",
+      "uploadDetails": "Upload Details",
+      "uploadDescription": "Upload files to your asset library. You can upload multiple files at once.",
+      "dragAndDrop": "Drag and drop files here or click to browse",
+      "browseFiles": "Browse Files",
+      "addMoreFiles": "Add More Files",
+      "fileInformation": "File Information",
+      "setFocusPoint": "Set Focus Point",
+      "removeFocusPoint": "Remove Focus Point",
+      "fields": {
+        "name": "Name",
+        "type": "Type",
+        "metadata": "Metadata",
+        "filename": "Filename",
+        "altText": "Alt Text",
+        "copyright": "Copyright"
+      },
+      "metadata": {
+        "codec": "Codec",
+        "fps": "FPS",
+        "exif": "Exif",
+        "bitrate": "Bitrate",
+        "subtype": "Subtype",
+        "thumbnails": "Thumbnails",
+        "type": "Type",
+        "aspectRatio": "Aspect Ratio",
+        "width": "Width",
+        "height": "Height",
+        "duration": "Duration",
+        "original_filename": "Original File Name"
+      },
+      "describeContent": "Describe the content of the file",
+      "addDetailedDescription": "Add a detailed description",
+      "size": "Size",
+      "createdAt": "Uploaded at",
+      "updatedAt": "Last Modified",
+      "unknown": "Unknown",
+      "replaceMedia": "Replace Media",
+      "finish": "Finish"
+    },
+    "contents": {
+      "title": "Content",
+      "fields": {
+        "name": "Name",
+        "type": "Type",
+        "firstPublishedAt": "First published at",
+        "publishedAt": "Published at",
+        "updatedAt": "Last updated at",
+        "createdAt": "Created at",
+        "slug": "Slug",
+        "block": "Block",
+        "fullSlug": "Full slug"
+      },
+      "localization": {
+        "label": "Localization",
+        "language": "Language",
+        "notAvailable": "This space has no localization configured.",
+        "available": "Switch to localization mode"
+      },
+      "createContent": "Create New Content",
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "settings": {
+        "disablePreview": "Disable Preview",
+        "disablePreviewDescription": "Disable the preview panel for this content"
+      }
+    },
+    "blocks": {
+      "title": "Blocks",
+      "description": "Manage your content blocks and their configurations.",
+      "fields": {
+        "name": "Name",
+        "slug": "Technical name",
+        "slugOf": "Technical name of {name}",
+        "description": "Description",
+        "folder": "Folder",
+        "tags": "Tags",
+        "type": "Type",
+        "default": "Default value",
+        "icon": "Icon",
+        "isRoot": "Root Content Type",
+        "isRootDescription": "Enable this block to serve as a standalone content type that can be created directly. Root blocks function like pages, posts, or products in traditional CMS systems.",
+        "previewTemplate": "Preview template",
+        "previewTemplateDescription": "Use handlebars syntax to create a preview template.",
+        "required": "Required field",
+        "requiredTooltip": "You won't be able to create an entry if this field is empty.",
+        "translatable": "Translatable",
+        "translatableTooltip": "This field can be translated using field level translations.",
+        "color": "Color",
+        "order": "Order",
+        "restrict_blocks": "Restrict possible blocks",
+        "asset_link_type": "Allow asset links",
+        "email_link_type": "Allow email links",
+        "allow_target_blank": "Allow target blank"
+      },
+      "types": {
+        "root": {
+          "label": "Root Block",
+          "description": "Define the main content structures for your experience - like blog posts, product pages, or landing pages. These serve as the foundation that users will navigate to."
+        },
+        "nestable": {
+          "label": "Nestable Block",
+          "description": "Reusable building blocks that make up your pages - like hero sections, image galleries, or newsletter signups. Mix and match these to create rich content experiences."
+        },
+        "single": {
+          "label": "Unique Block",
+          "description": "Site-wide unique blocks that appear once across your experience - like navigation menus, site settings, or footer information. These blocks can't have children."
+        },
+        "universal": {
+          "label": "Universal Block",
+          "description": "Versatile blocks that work both as standalone content and as nested blocks within other content."
+        }
+      },
+      "fieldTypes": {
+        "boolean": {
+          "label": "Boolean",
+          "description": "A boolean value (true/false)"
+        },
+        "link": {
+          "label": "Link",
+          "description": "A link to another content or an external URL"
+        },
+        "markdown": {
+          "label": "Markdown",
+          "description": "A text field with markdown support"
+        },
+        "blocks": {
+          "label": "Blocks",
+          "description": "A field that can contain other blocks"
+        },
+        "number": {
+          "label": "Number",
+          "description": "A number field"
+        },
+        "option": {
+          "label": "Single Option",
+          "description": "A field with a single option"
+        },
+        "options": {
+          "label": "Multi Options",
+          "description": "A field with multiple options"
+        },
+        "text": {
+          "label": "Text",
+          "description": "A simple text field"
+        },
+        "reference": {
+          "label": "Reference",
+          "description": "A reference to another content"
+        },
+        "asset": {
+          "label": "Asset",
+          "description": "A reference to an asset"
+        },
+        "multiAsset": {
+          "label": "Multi Asset",
+          "description": "A reference to multiple assets"
+        },
+        "textarea": {
+          "label": "Textarea",
+          "description": "A larger text field"
+        }
+      },
+      "options": {
+        "label": "User friendly label",
+        "value": "Technical value"
+      },
+      "createBlock": "Create Block"
+    },
+    "blockTags": {
+      "title": "Block Tags",
+      "description": "Manage tags for your blocks to categorize and filter them.",
+      "createTag": "Create Tag",
+      "editTag": "Edit Tag",
+      "deleteConfirmTitle": "Delete Tag",
+      "deleteConfirmMessage": "Are you sure you want to delete the tag \"{name}\"?",
+      "noTags": "No tags found",
+      "fields": {
+        "name": "Name",
+        "color": "Color",
+        "icon": "Icon",
+        "blockCount": "Block Count",
+        "createdAt": "Created At"
+      }
+    },
+    "blockFolders": {
+      "title": "Block Folders",
+      "description": "Organize your blocks into folders for better management.",
+      "createFolder": "Create Folder",
+      "editFolder": "Edit Folder",
+      "deleteConfirmTitle": "Delete Folder",
+      "deleteConfirmMessage": "Are you sure you want to delete the folder \"{name}\"? All blocks inside this folder will be moved to the root.",
+      "noFolders": "No folders found",
+      "allBlocks": "All Blocks",
+      "fields": {
+        "name": "Name",
+        "color": "Color",
+        "icon": "Icon",
+        "description": "Description",
+        "createdAt": "Created At"
+      }
+    },
+    "spaces": {
+      "title": "Spaces"
+    },
+    "releases": {
+      "title": "Releases",
+      "description": "Manage your content releases and deployments.",
+      "createRelease": "Create Release",
+      "editRelease": "Edit Release",
+      "deleteConfirmTitle": "Delete Release",
+      "deleteConfirmMessage": "Are you sure you want to delete the release \"{name}\"?",
+      "noReleases": "No releases found"
+    },
+    "redirects": {
+      "title": "Redirects",
+      "description": "Manage URL redirects for your site",
+      "createRedirect": "Create Redirect",
+      "editRedirect": "Edit Redirect",
+      "deleteConfirmTitle": "Delete Redirect",
+      "deleteConfirmMessage": "Are you sure you want to delete the redirect from \"{from}\"?",
+      "noRedirects": "No redirects found",
+      "loading": "Loading redirects...",
+      "openMenu": "Open menu",
+      "selectStatusCode": "Select a status code",
+      "statusCodes": {
+        "301": "Moved Permanently",
+        "302": "Found",
+        "303": "See Other",
+        "307": "Temporary Redirect",
+        "308": "Permanent Redirect",
+        "unknown": "Unknown Status Code"
+      },
+      "fields": {
+        "Target": "Target Path",
+        "fromDescription": "The source path that will be redirected",
+        "source": "Source Path",
+        "toDescription": "The destination path where users will be redirected",
+        "statusCode": "Status Code",
+        "statusCodeDescription": "HTTP status code for the redirect"
+      },
+      "columns": {
+        "source": "Source Path",
+        "target": "Target Path",
+        "statusCode": "Status Code",
+        "hits": "Hits",
+        "lastUsedAt": "Last Used",
+        "createdAt": "Created At"
+      }
+    },
+    "settings": {
+      "general": {
+        "title": "General Settings",
+        "description": "Manage your space settings and preferences."
+      },
+      "configuration": {
+        "title": "Configuration",
+        "description": "Manage technical settings and integrations for your space."
+      },
+      "people": {
+        "title": "People",
+        "description": "Manage team members and their access to your space."
+      },
+      "space": {
+        "title": "Space",
+        "description": "Manage your space identity and basic information.",
+        "name": "Name",
+        "namePlaceholder": "Enter space name",
+        "nameDescription": "This is the name that will be displayed throughout the application.",
+        "icon": "Icon",
+        "uploadIcon": "Upload Icon",
+        "uploading": "Uploading...",
+        "iconDescription": "Recommended size: 512x512px. Max file size: 2MB.",
+        "spaceId": "Space ID",
+        "spaceIdDescription": "This is your unique space identifier (read-only)."
+      },
+      "content": {
+        "title": "Content",
+        "description": "Configure default content settings for your space.",
+        "defaultBlock": "Default Content Block",
+        "selectDefaultBlock": "Select default block",
+        "defaultBlockDescription": "This block type will be used when creating new content."
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "description": "Irreversible and destructive actions.",
+        "warning": "Deleting your space will permanently remove all content, settings, and user data. This action cannot be undone.",
+        "deleteSpace": "Delete Entire Space",
+        "areYouSure": "Are you absolutely sure?",
+        "deleteWarning": "This action cannot be undone. This will permanently delete your space and remove all associated data from our servers.",
+        "typeToConfirm": "Type {text} to confirm",
+        "confirmDelete": "Delete Space",
+        "deleting": "Deleting..."
+      },
+      "editor": {
+        "title": "Editor",
+        "description": "Configure editor environments and features.",
+        "environments": "Environments",
+        "environmentsDescription": "Configure preview environments for your content.",
+        "name": "Name",
+        "url": "URL",
+        "namePlaceholder": "Name",
+        "urlPlaceholder": "URL",
+        "visualEditor": "Visual Editor",
+        "visualEditorDescription": "Enable or disable the visual editor for content creation.",
+        "enableVisualEditor": "Enable Visual Editor",
+        "visualEditorInfo": "The visual editor provides a WYSIWYG experience for content creators."
+      },
+      "i18n": {
+        "title": "Internationalization",
+        "description": "Configure language settings for your content.",
+        "languages": "Languages",
+        "languagesDescription": "Add and manage supported languages for your content.",
+        "code": "Code",
+        "label": "Label",
+        "codePlaceholder": "Code (e.g., de)",
+        "labelPlaceholder": "Label (e.g., German)"
+      },
+      "accessTokens": {
+        "title": "Access Tokens",
+        "description": "Manage API access tokens for your space.",
+        "createdAt": "Created at",
+        "expiresAt": "Expires at",
+        "lastUsedAt": "Last used at",
+        "executionCount": "Usage count",
+        "tokenName": "Token Name",
+        "tokenNamePlaceholder": "e.g., Website Integration",
+        "generateToken": "Generate Token",
+        "generating": "Generating...",
+        "existingTokens": "Existing Tokens",
+        "name": "Name",
+        "token": "Token",
+        "actions": "Actions",
+        "tokenGenerated": "Token Generated",
+        "tokenWarning": "Make sure to copy your new access token now. You won't be able to see it again!",
+        "newToken": "Your New Token",
+        "tokenCopied": "Token copied to clipboard",
+        "noTokens": "No tokens created yet"
+      },
+      "assetLibrary": {
+        "title": "Asset Library",
+        "description": "Configure metadata fields for your asset library.",
+        "addMetadataField": "Add Metadata Field",
+        "fieldKey": "Field Key",
+        "fieldLabel": "Field Label",
+        "fieldKeyPlaceholder": "e.g., alt",
+        "fieldLabelPlaceholder": "e.g., Alt Text",
+        "required": "Required",
+        "addField": "Add Field",
+        "metadataFields": "Metadata Fields",
+        "key": "Key",
+        "label": "Label",
+        "defaultField": "Default Fields can't be removed",
+        "noMetadataFields": "No metadata fields defined"
+      },
+      "ai": {
+        "title": "AI Settings",
+        "description": "Configure AI features and monitor usage.",
+        "enableAIFeatures": "Enable AI Features",
+        "featuresDescription": "AI features include content suggestions, auto-tagging, and smart search.",
+        "usage": "AI Usage",
+        "usageDescription": "Your current token usage for this billing period.",
+        "of": "of",
+        "tokensUsed": "tokens used",
+        "resetInfo": "Your plan resets on {date}. Need more tokens?",
+        "upgradePlan": "Upgrade your plan"
+      },
+      "members": {
+        "title": "Members",
+        "description": "Manage team members and their permissions.",
+        "addMember": "Add Member",
+        "addNewMember": "Add New Member",
+        "inviteDescription": "Invite a new team member to collaborate on your space.",
+        "name": "Name",
+        "namePlaceholder": "John Doe",
+        "email": "Email",
+        "emailPlaceholder": "john@example.com",
+        "role": "Role",
+        "selectRole": "Select a role",
+        "inviting": "Inviting...",
+        "inviteMember": "Invite Member",
+        "member": "Member",
+        "status": "Status",
+        "actions": "Actions",
+        "editMember": "Edit Member",
+        "editDescription": "Update member details and permissions.",
+        "emailNotEditable": "Email cannot be changed.",
+        "selectStatus": "Select a status",
+        "memberInvited": "Member invited successfully",
+        "memberUpdated": "Member updated successfully",
+        "memberRemoved": "Member removed successfully",
+        "roles": {
+          "admin": "Admin",
+          "editor": "Editor",
+          "viewer": "Viewer"
+        },
+        "statuses": {
+          "active": "Active",
+          "pending": "Pending",
+          "inactive": "Inactive"
+        }
+      }
+    },
+    "sortBy": "Sort by",
+    "selectionCount": "Selected {count} items",
+    "showingEntries": "Showing {from} to {to} of {total} items",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "notifications": {
+    "preview": {
+      "copied": "Link copied to clipboard"
+    }
+  },
+  "actions": {
+    "toDashboard": "Go to dashboard",
+    "quickActions": "Quick actions...",
+    "saveClose": "Save & close",
+    "deleteSelected": "Delete selected",
+    "move": "Move",
+    "clear": "Clear",
+    "clearSelection": "Clear Selection",
+    "rename": "Rename",
+    "archive": "Archive",
+    "settings": "Settings",
+    "inviteMember": "Invite Member",
+    "signup": "Sign up with email",
+    "newTab": "Open in new tab",
+    "copyLink": "Copy link",
+    "user": {
+      "account": "Account"
+    },
+    "assets": {
+      "upload": "Upload asset"
+    },
+    "assetFolders": {
+      "create": "Create new folder"
+    },
+    "datasources": {
+      "add": "Add new Datasource",
+      "viewEntries": "View entries",
+      "edit": "Edit Datasource",
+      "delete": "Delete Datasource"
+    },
+    "blocks": {
+      "add": "Add new block",
+      "delete": "Delete block",
+      "edit": "Edit block",
+      "save": "Save block",
+      "duplicate": "Duplicate block",
+      "options": {
+        "add": "Add new option",
+        "delete": "Delete option"
+      }
+    },
+    "redirects": {
+      "add": "Add Redirect",
+      "edit": "Edit Redirect",
+      "delete": "Delete Redirect",
+      "reset": "Reset  Usage Stats",
+      "save": "Save Redirect"
+    },
+    "spaces": {
+      "add": "Add new space",
+      "select": "Select space",
+      "delete": "Delete space",
+      "edit": "Edit space",
+      "save": "Save space",
+      "switch": "Switch space"
+    },
+    "createNewSpace": "Create new space",
+    "saveChanges": "Save Changes",
+    "close": "Close",
+    "add": "Add",
+    "remove": "Remove",
+    "edit": "Edit",
+    "copy": "Copy",
+    "delete": "Delete",
+    "create": "Create",
+    "cancel": "Cancel",
+    "login": "Login"
+  },
+  "alertDialog": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "messages": {
+    "preview": {
+      "noContent": "No content selected. Select a content item to preview."
+    }
+  }
+}

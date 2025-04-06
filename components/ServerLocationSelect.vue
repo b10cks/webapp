@@ -1,0 +1,55 @@
+<script setup lang="ts">
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import { FormField } from '~/components/ui/form'
+
+const serverLocations = [
+  { id: 'eu', name: 'Europe (EU)', icon: 'flag:eu-4x3' },
+  { id: 'us', name: 'United States (US)', icon: 'flag:us-4x3', disabled: false }
+]
+
+const selectedLocationId = defineModel<string>()
+
+const selectedLocation = computed(() => serverLocations.find(location => location.id === selectedLocationId.value))
+
+</script>
+
+<template>
+  <FormField
+    name="location"
+    label="Server Location"
+    description="Where your content will be hosted. Can't be changed later."
+  >
+    <Select
+      v-model="selectedLocationId"
+      v-bind="$attrs"
+    >
+      <SelectTrigger
+        id="server-location"
+        class="w-full"
+      >
+        <SelectValue placeholder="Select a location">
+          <div class="flex items-center gap-2">
+            <Icon :name="selectedLocation?.icon"/>
+            <span>{{ selectedLocation?.name }}</span>
+          </div>
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem
+          v-for="location in serverLocations"
+          :key="location.id"
+          :value="location.id"
+          :disabled="location.disabled"
+        >
+          <div class="flex items-center">
+            <Icon
+              :name="location.icon"
+              class="mr-2 h-4 w-4"
+            />
+            <span>{{ location.name }}</span>
+          </div>
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  </FormField>
+</template>

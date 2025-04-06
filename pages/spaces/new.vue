@@ -1,0 +1,380 @@
+<script setup lang="ts">
+
+import { Badge } from '~/components/ui/badge'
+import { Label } from 'reka-ui'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
+import {
+  Stepper,
+  StepperDescription,
+  StepperIndicator,
+  StepperItem,
+  StepperSeparator,
+  StepperTitle,
+  StepperTrigger
+} from '~/components/ui/stepper'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
+import { Button } from '~/components/ui/button'
+import { InputField } from '~/components/ui/form'
+import AppHeader from '~/components/AppHeader.vue'
+import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
+
+const { useCreateSpaceMutation } = useSpaces()
+const { mutate: createSpace, isPending } = useCreateSpaceMutation()
+
+// Plan data
+const plans = [
+  {
+    id: 'free',
+    name: 'Free',
+    description: 'For personal projects and landing pages',
+    price: '€0',
+    period: 'per month',
+    features: [
+      '5,000 API requests',
+      '5 GB traffic (fair use)',
+      '500 MB assets storage',
+      'Unlimited blocks, content, users, languages'
+    ],
+    aiFeatures: [
+      '5,000 AI tokens',
+    ],
+    badge: null,
+    disabled: false
+  },
+  {
+    id: 'essential',
+    name: 'Essential',
+    description: 'For small teams',
+    price: '€19',
+    period: 'per month',
+    features: [
+      '100,000 API requests',
+      '50 GB traffic (fair use)',
+      '5 GB assets storage',
+      'Unlimited blocks, content, users, languages'
+    ],
+    aiFeatures: [
+      '100,000 AI tokens',
+    ],
+  },
+  {
+    id: 'growth',
+    name: 'Growth',
+    description: 'For growing businesses',
+    price: '€49',
+    period: 'per month',
+    features: [
+      '500,000 API requests',
+      '250 GB traffic (fair use)',
+      '25 GB assets storage',
+      'Unlimited blocks, content, users, languages',
+      'Email support'
+    ],
+    aiFeatures: [
+      '500,000 AI tokens',
+    ],
+    badge: { text: 'Coming soon', variant: 'default' },
+    disabled: true,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    description: 'For professional teams',
+    price: '€99',
+    period: 'per month',
+    features: [
+      '1,500,000 API requests',
+      '500 GB traffic (fair use)',
+      '50 GB assets storage',
+      'Unlimited blocks, content, users, languages',
+      '24-hour technical support'
+    ],
+    aiFeatures: [
+      '1,500,000 AI tokens',
+    ],
+    badge: { text: 'Coming soon', variant: 'default' },
+    disabled: true,
+  },
+  {
+    id: 'scale',
+    name: 'Scale',
+    description: 'For large organizations',
+    price: '€249',
+    period: 'per month',
+    features: [
+      '10,000,000 API requests',
+      '1,000 GB traffic (fair use)',
+      '100 GB assets storage',
+      'Unlimited blocks, content, users, languages',
+      'Dedicated account manager'
+    ],
+    aiFeatures: [
+      '10,000,000 AI tokens',
+    ],
+    badge: { text: 'Coming soon', variant: 'default' },
+    disabled: true,
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    description: 'Custom solution',
+    price: 'Custom',
+    period: 'pricing',
+    features: [
+      'Custom API requests',
+      'Custom traffic limits',
+      'Custom storage allocation',
+      'SLA guarantees'
+    ],
+    badge: { text: 'Coming soon', variant: 'default' },
+    disabled: true,
+    buttonText: 'Contact Sales'
+  }
+]
+
+// Step wizard state
+const step = ref(1)
+const selectedPlan = ref<string | undefined>()
+const spaceName = ref('')
+const spaceSlug = ref('')
+const serverLocation = ref('eu')
+
+const steps = computed(() => [
+  { step: 1, title: 'Plan', icon: 'lucide:land-plot', description: 'Select a plan for the space' },
+  {
+    step: 2,
+    title: 'Details',
+    icon: 'lucide:settings-2',
+    description: 'Enter details of your space',
+    disabled: !selectedPlan.value
+  }
+])
+
+// Watch name changes to auto-generate slug
+const handleNameChange = (event) => {
+  const name = event.target.value
+  spaceName.value = name
+  spaceSlug.value = name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+}
+
+const { selectedTeam } = useGlobalTeam()
+
+const handleNext = async () => {
+  if (step.value === 1 && !selectedPlan.value) {
+    return
+  }
+
+  if (step.value < 2) {
+    step.value++
+  } else {
+    const payload = {
+      name: spaceName.value,
+      slug: spaceSlug.value,
+      team_id: selectedTeam.value?.id,
+      settings: {
+        region: serverLocation.value || 'eu',
+      }
+    } as CreateSpacePayload
+
+    await createSpace(payload, {
+      onSuccess(data) {
+        navigateTo(`/${data.id}`)
+      },
+    })
+  }
+}
+
+const handleBack = () => {
+  if (step.value > 1) {
+    step.value--
+  }
+}
+</script>
+
+<template>
+  <div class="min-h-svh flex w-full flex-col">
+    <AppHeader/>
+    <div class="grow w-full bg-background pt-10">
+      <main class="content-grid py-6">
+        <div class="content-narrow grid gap-6">
+          <ContentHeader
+            header="Create a new space"
+            description="Set up your content management space in just a few steps"
+          />
+          <Stepper
+            v-model="step"
+            class="flex justify-center items-start w-full"
+          >
+            <StepperItem
+              v-for="item in steps"
+              :key="item.step"
+              :step="item.step"
+              :disabled="item?.disabled"
+            >
+              <StepperTrigger>
+                <StepperIndicator>
+                  <Icon :name="item.icon"/>
+                </StepperIndicator>
+                <div class="flex flex-col">
+                  <StepperTitle>{{ item.title }}</StepperTitle>
+                  <StepperDescription>{{ item.description }}</StepperDescription>
+                </div>
+              </StepperTrigger>
+              <StepperSeparator
+                v-if="item.step !== steps[steps.length - 1].step"
+                class="w-[10rem] h-px"
+              />
+            </StepperItem>
+          </Stepper>
+          <div
+            v-if="step === 1"
+            class="space-y-6"
+          >
+            <h2 class="text-xl font-semibold text-primary">Select a plan</h2>
+            <RadioGroup v-model="selectedPlan">
+              <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <Card
+                  v-for="plan in plans"
+                  :key="plan.id"
+                  :class="[
+                    'bg-surface flex flex-col',
+                    plan.disabled ? 'opacity-30' : '',
+                    selectedPlan === plan.id ? 'ring ring-ring' : ''
+                  ]"
+                  @click="plan.id === selectedPlan ? handleNext() : () => {}"
+                >
+                  <CardHeader class="pb-2 relative">
+                    <Badge
+                      v-if="plan.badge"
+                      :variant="plan.badge.variant"
+                      class="absolute -right-2 -top-2 rounded-full"
+                    >
+                      {{ plan.badge.text }}
+                    </Badge>
+                    <CardTitle class="text-xl text-primary">{{ plan.name }}</CardTitle>
+                    <CardDescription>{{ plan.description }}</CardDescription>
+                  </CardHeader>
+                  <CardContent class="grow">
+                    <div class="flex items-baseline gap-2">
+                      <div class="text-3xl text-primary font-bold">{{ plan.price }}</div>
+                      <div class="text-sm text-text-muted">{{ plan.period }}</div>
+                    </div>
+                    <ul class="mt-6 grid gap-3">
+                      <li
+                        v-for="(feature, featureIndex) in plan.features"
+                        :key="featureIndex"
+                        class="flex item-start gap-2"
+                      >
+                        <Icon
+                          name="lucide:check"
+                          class="mt-1 text-success"
+                        />
+                        <span>{{ feature }}</span>
+                      </li>
+                      <li
+                        v-for="(feature, featureIndex) in plan?.aiFeatures"
+                        :key="featureIndex"
+                        class="flex item-start gap-2"
+                      >
+                        <Icon
+                          name="lucide:sparkles"
+                          size="0.825rem"
+                          class="mt-1 text-ai"
+                        />
+                        <span>{{ feature }}</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <RadioGroupItem
+                      :id="plan.id"
+                      :value="plan.id"
+                      class="sr-only"
+                      :disabled="plan.disabled"
+                    />
+                    <Label
+                      :for="plan.id"
+                      :class="[
+                        'flex w-full cursor-pointer items-center justify-center rounded-md border py-2 text-sm font-semibold',
+                        selectedPlan === plan.id ? 'border-accent bg-accent text-accent-foreground' : 'border-elevated',
+                        plan.disabled ? 'cursor-not-allowed opacity-50' : ''
+                      ]"
+                    >
+                      {{
+                        selectedPlan === plan.id ? `Continue with ${plan.name}` : (plan.buttonText || `Select ${plan.name}`)
+                      }}
+                    </Label>
+                  </CardFooter>
+                </Card>
+              </div>
+            </RadioGroup>
+          </div>
+          <div
+            v-if="step === 2"
+            class="space-y-6"
+          >
+            <h2 class="text-xl font-semibold">Space details</h2>
+            <div class="space-y-4">
+              <InputField
+                v-model="spaceName"
+                name="name"
+                label="Space Name"
+                placeholder="My Awesome Space"
+                required
+                description="A friendly name for your content space"
+                :autofocus="true"
+                @input="handleNameChange"
+              />
+              <InputField
+                v-model="spaceSlug"
+                name="slug"
+                label="Space Slug"
+                placeholder="my-awesome-space"
+                required
+                :description="`Used in URLs and API calls (e.g., api.cms.com/${spaceSlug || 'my-awesome-space' })`"
+              />
+              <ServerLocationSelect
+                v-model="serverLocation"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="mt-8 flex justify-between">
+            <Button
+              variant="outline"
+              :disabled="step === 1"
+              @click="handleBack"
+            >
+              Back
+            </Button>
+            <Button
+              variant="primary"
+              :disabled="(step === 1 && !selectedPlan) || (step === 2 && (!spaceName || !spaceSlug || !serverLocation))"
+              @click="handleNext"
+            >
+              <template v-if="step < 2">
+                Next
+                <Icon
+                  name="lucide:chevron-right"
+                  class="ml-2 h-4 w-4"
+                />
+              </template>
+              <template v-else>
+                <Icon
+                  v-if="isPending"
+                  name="lucide:loader"
+                  class="mr-2 h-4 w-4 animate-spin"
+                />
+                Create Space
+              </template>
+            </Button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</template>

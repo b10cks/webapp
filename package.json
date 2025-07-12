@@ -21,7 +21,7 @@
   "dependencies": {
     "@iconify-json/flag": "^1.2.6",
     "@iconify-json/lucide": "^1.2.57",
-    "@tanstack/vue-query": "^5.82.0",
+    "@tanstack/vue-query": "^5.83.0",
     "@tanstack/vue-table": "^8.21.3",
     "@vueuse/integrations": "^13.5.0",
     "class-variance-authority": "^0.7.1",
@@ -44,7 +44,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@types/postmate": "^1.5.4",
     "@vueuse/core": "^13.5.0",
-    "eslint": "^9.30.1",
+    "eslint": "^9.31.0",
     "eslint-plugin-better-tailwindcss": "^3.5.2",
     "eslint-plugin-tailwindcss": "^3.18.0",
     "eslint-plugin-vue": "^10.3.0",

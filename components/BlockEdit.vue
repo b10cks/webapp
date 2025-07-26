@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
   isCreate: false,
 })
 
-const editableBlock = ref<BlockResource>({ ...props.block, type: props.block.type || 'root' })
+const editableBlock = ref<BlockResource>({ ...props.block, type: props.block.type || 'nestable' })
 
 const { useBlockTagsQuery } = useBlockTags(props.spaceId)
 const { data: blockTags } = useBlockTagsQuery({ per_page: 500 })
@@ -82,7 +82,7 @@ const enforceSlugFormat = () => {
           name="type"
         >
           <div
-            v-for="type in ['root', 'nestable', 'universal', 'single']"
+            v-for="type in ['nestable', 'universal', 'root', 'single']"
             :key="type"
             :class="['text-left cursor-pointer flex gap-3 px-3 py-2 border rounded-lg', editableBlock.type === type ? 'border-border bg-input' : 'border-border']"
             tabindex="-1"
@@ -97,7 +97,7 @@ const enforceSlugFormat = () => {
               <h4 class="text-primary font-semibold">
                 {{ $t(`labels.blocks.types.${type}.label`) }}
               </h4>
-              <p class="text-xs">{{ $t(`labels.blocks.types.${type}.description`) }}</p>
+              <p class="text-sm">{{ $t(`labels.blocks.types.${type}.description`) }}</p>
             </div>
           </div>
         </RadioGroup>

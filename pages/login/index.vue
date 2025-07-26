@@ -3,7 +3,7 @@
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
-import Logo from '~/assets/Logo.svg'
+import Logo from '~/assets/logo.svg'
 import Markdown from '~/components/Markdown.vue'
 
 const { login, error } = useAuth()

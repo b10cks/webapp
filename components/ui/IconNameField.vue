@@ -26,7 +26,7 @@ const localValue = ref({ ...props.modelValue })
 
 watch(() => props.modelValue, (val) => {
   localValue.value = { ...val }
-})
+}, { deep: true })
 
 const update = (key: keyof typeof localValue.value, value: unknown) => {
   localValue.value[key] = value

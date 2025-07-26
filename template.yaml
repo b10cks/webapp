@@ -98,7 +98,7 @@ Resources:
           NUXT_PUBLIC_REVERB_SCHEME: !Ref NuxtPublicReverbScheme
           NUXT_PUBLIC_POSTHOG_KEY: !Ref NuxtPublicPosthogKey
           NUXT_PUBLIC_POSTHOG_HOST: !Ref NuxtPublicPosthogHost
-          NUXT_ILUM_BASE_URL: !Ref NuxtIlumBaseUrl
+          NUXT_PUBLIC_ILUM_BASE_URL: !Ref NuxtIlumBaseUrl
       FunctionUrlConfig:
         AuthType: NONE
       Tags:

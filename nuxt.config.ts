@@ -31,7 +31,7 @@ export default defineNuxtConfig({
         name: 'ilum',
         provider: '~/lib/providers/ilum',
         options: {
-          baseURL: process.env.NUXT_ILUM_BASE_URL
+          baseURL: process.env.NUXT_PUBLIC_ILUM_BASE_URL
         }
       }
     }

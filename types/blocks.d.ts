@@ -22,12 +22,16 @@ interface LinkSchema extends Schema {
   allow_target_blank: boolean
 }
 
+type FileTypes = 'image' | 'video' | 'audio' | 'document' | 'archive' | 'other' | 'all'
+
 interface AssetSchema extends Schema {
   type: 'asset'
-
+  file_types: FileTypes[]
 }
+
 interface MultiAssetSchema extends Schema {
   type: 'multi_assets'
+  file_types: FileTypes[]
   min: number
   max: number
 }

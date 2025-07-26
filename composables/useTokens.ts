@@ -29,13 +29,12 @@ export function useTokens(spaceIdRef: MaybeRefOrComputed<string>) {
   const useCreateTokenMutation = () => {
     return useMutation({
       mutationFn: async (payload: CreateTokenRequest) => {
-        const response = await spaceAPI.value.tokens.create(payload)
-        return response.data
+        return await spaceAPI.value.tokens.create(payload)
       },
       onSuccess: (data) => {
         // Invalidate the tokens list query to trigger a refetch
         queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId.value).lists() })
-        toast.success(`Token "${data.name}" created successfully`)
+        toast.success(`Token "${data.token.name}" created successfully`)
       },
       onError: (error: Error) => {
         toast.error(`Failed to create token: ${error.message || 'Unknown error'}`)

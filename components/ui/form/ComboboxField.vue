@@ -23,12 +23,11 @@ import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
 export interface ComboboxOption<T = unknown> {
   value: T
-  label: string
+  label: string | CleanTranslation
   disabled?: boolean
 }
 
 const props = defineProps<{
-  // FormField props
   id?: string
   label?: string | CleanTranslation
   required?: boolean
@@ -38,7 +37,6 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
   comboboxClass?: HTMLAttributes['class']
 
-  // Combobox specific props
   modelValue?: T[] | T
   defaultValue?: T[] | T
   placeholder?: string | CleanTranslation
@@ -46,17 +44,14 @@ const props = defineProps<{
   readonly?: boolean
   name: string
 
-  // Data props
   options: ComboboxOption<T>[]
   multiple?: boolean
   searchable?: boolean
 
-  // Filter/display props
   filterFn?: (option: ComboboxOption<T>, search: string, selectedValues: T[]) => boolean
   displayFn?: (option: ComboboxOption<T>) => string
   valueFn?: (option: ComboboxOption<T>) => T
 
-  // UI props
   emptyText?: string | CleanTranslation
   loadingText?: string | CleanTranslation
   loading?: boolean
@@ -67,16 +62,13 @@ const emits = defineEmits<{
   (e: 'select' | 'remove', payload: { option: ComboboxOption<T>, value: T }): void
 }>()
 
-// Create two-way binding for modelValue
 const modelValue = useVModel(props, 'modelValue', emits, {
   passive: true,
   defaultValue: props.defaultValue ?? (props.multiple ? [] : undefined),
 })
 
-// Search functionality
 const searchValue = ref('')
 
-// Computed values
 const selectedValues = computed(() => {
   if (props.multiple) {
     return Array.isArray(modelValue.value) ? modelValue.value : []
@@ -84,7 +76,6 @@ const selectedValues = computed(() => {
   return modelValue.value ? [modelValue.value] : []
 })
 
-// Default filter function
 const defaultFilterFn = (option: ComboboxOption<T>, search: string, selectedValues: T[]): boolean => {
   const searchLower = search.toLowerCase()
   const isSelected = selectedValues.some(selected => {
@@ -92,12 +83,10 @@ const defaultFilterFn = (option: ComboboxOption<T>, search: string, selectedValu
     return selected === optionValue
   })
 
-  // Don't show already selected options in multiple mode
   if (props.multiple && isSelected) {
     return false
   }
 
-  // Filter by search term
   if (search && !option.label.toLowerCase().includes(searchLower)) {
     return false
   }
@@ -105,7 +94,6 @@ const defaultFilterFn = (option: ComboboxOption<T>, search: string, selectedValu
   return !option.disabled
 }
 
-// Filtered options
 const filteredOptions = computed(() => {
   const filterFn = props.filterFn || defaultFilterFn
   return props.options.filter(option =>
@@ -113,7 +101,6 @@ const filteredOptions = computed(() => {
   )
 })
 
-// Display functions
 const getDisplayValue = (option: ComboboxOption<T>): string => {
   return props.displayFn ? props.displayFn(option) : option.label
 }
@@ -122,7 +109,6 @@ const getOptionValue = (option: ComboboxOption<T>): T => {
   return props.valueFn ? props.valueFn(option) : option.value
 }
 
-// Get option by value for display purposes
 const getOptionByValue = (value: T): ComboboxOption<T> | undefined => {
   return props.options.find(option => {
     const optionValue = getOptionValue(option)
@@ -130,7 +116,6 @@ const getOptionByValue = (value: T): ComboboxOption<T> | undefined => {
   })
 }
 
-// Handle selection
 const handleSelect = (option: ComboboxOption<T>) => {
   const value = getOptionValue(option)
 
@@ -144,14 +129,11 @@ const handleSelect = (option: ComboboxOption<T>) => {
     modelValue.value = value as T[] | T
   }
 
-  // Clear search after selection
   searchValue.value = ''
 
-  // Emit select event
   emits('select', { option, value })
 }
 
-// Handle removal (for multiple mode)
 const handleRemove = (value: T) => {
   if (props.multiple && Array.isArray(modelValue.value)) {
     const currentValues = [...modelValue.value]
@@ -160,7 +142,6 @@ const handleRemove = (value: T) => {
       currentValues.splice(index, 1)
       modelValue.value = currentValues as T[] | T
 
-      // Emit remove event
       const option = getOptionByValue(value)
       if (option) {
         emits('remove', { option, value })
@@ -169,7 +150,6 @@ const handleRemove = (value: T) => {
   }
 }
 
-// Computed texts
 const emptyTextComputed = computed(() => {
   if (props.loading) {
     return props.loadingText || 'common.loading'
@@ -201,8 +181,7 @@ const emptyTextComputed = computed(() => {
             v-if="multiple"
             :model-value="selectedValues"
             :disabled="disabled || readonly"
-            :class="{ 'border-red-500': hasError }"
-            class="pl-2"
+            :class="{ 'border-red-500': hasError, 'pl-2': selectedValues.length > 0 }"
           >
             <TagsInputItem
               v-for="value in selectedValues"

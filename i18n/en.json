@@ -281,10 +281,12 @@
         "tagWhitelistEmpty": "No matching tags found.",
         "fileTypes": "File Types",
         "fileTypesPlaceholder": "Select allowed file types for this block",
-        "min": "Minimum number of items",
+        "min": "Allowed minimum",
         "minPlaceholder": "Enter minimum number of items",
-        "max": "Maximum number of items",
-        "maxPlaceholder": "Enter maximum number of items"
+        "minDescription": "Leave empty to allow zero items.",
+        "max": "Allowed maximum",
+        "maxPlaceholder": "Enter maximum number of items",
+        "maxDescription": "Leave empty to allow unlimited items."
       },
       "types": {
         "root": {

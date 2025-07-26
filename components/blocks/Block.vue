@@ -18,6 +18,8 @@ import {
 import BlockType from '~/components/ui/BlockType.vue'
 import { CheckboxField, InputField, TextField } from '~/components/ui/form'
 import ReferencesBlock from '~/components/blocks/ReferencesBlock.vue'
+import AssetBlock from '~/components/blocks/AssetBlock.vue'
+import MultiAssetBlock from '~/components/blocks/MultiAssetBlock.vue'
 
 const emit = defineEmits(['delete', 'to-page', 'update:name', 'update:item'])
 
@@ -33,6 +35,8 @@ const localItem = ref({ ...props.item })
 const translatable = ['text', 'textarea', 'markdown', 'number', 'link']
 
 const schemas = {
+  asset: AssetBlock,
+  multiAsset: MultiAssetBlock,
   blocks: BlocksBlock,
   boolean: BooleanBlock,
   link: LinkBlock,

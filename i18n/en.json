@@ -173,6 +173,14 @@
       "fileInformation": "File Information",
       "setFocusPoint": "Set Focus Point",
       "removeFocusPoint": "Remove Focus Point",
+      "fileTypes": {
+        "image": "Image",
+        "document": "Document",
+        "video": "Video",
+        "audio": "Audio",
+        "other": "Other",
+        "all": "All Files"
+      },
       "fields": {
         "name": "Name",
         "type": "Type",
@@ -270,7 +278,13 @@
         "tagWhitelist": "Tag Whitelist",
         "tagWhitelistPlaceholder": "Select tags to restrict block usage",
         "tagWhitelistDescription": "Restrict blocks to only those with the selected tags. This allows you to create a curated set of blocks that can be used together.",
-        "tagWhitelistEmpty": "No matching tags found."
+        "tagWhitelistEmpty": "No matching tags found.",
+        "fileTypes": "File Types",
+        "fileTypesPlaceholder": "Select allowed file types for this block",
+        "min": "Minimum number of items",
+        "minPlaceholder": "Enter minimum number of items",
+        "max": "Maximum number of items",
+        "maxPlaceholder": "Enter maximum number of items"
       },
       "types": {
         "root": {

@@ -62,11 +62,12 @@ const filterBlocks = (option: ComboboxOption<string>, search: string, selectedVa
       :model-value="value.block_whitelist"
       :label="$t('labels.blocks.fields.blockWhitelist')"
       :placeholder="$t('labels.blocks.fields.blockWhitelistPlaceholder')"
+      :description="$t('labels.blocks.fields.blockWhitelistDescription')"
       :options="blockOptions"
       :filter-fn="filterBlocks"
       multiple
       searchable
-      :empty-text="$t('labels.blocks.fields.no_blocks_found')"
+      :empty-text="$t('labels.blocks.fields.blockWhitelistEmpty')"
       @update:model-value="emit('update:item-value', 'block_whitelist', $event)"
     />
 
@@ -76,11 +77,12 @@ const filterBlocks = (option: ComboboxOption<string>, search: string, selectedVa
       :model-value="value.tag_whitelist"
       :label="$t('labels.blocks.fields.tagWhitelist')"
       :placeholder="$t('labels.blocks.fields.tagWhitelistPlaceholder')"
+      :description="$t('labels.blocks.fields.tagWhitelistDescription')"
       :options="blockTagOptions"
       :filter-fn="filterBlocks"
       multiple
       searchable
-      :empty-text="$t('labels.blocks.fields.no_blocks_found')"
+      :empty-text="$t('labels.blocks.fields.tagWhitelistEmpty')"
       @update:model-value="emit('update:item-value', 'tag_whitelist', $event)"
     />
   </div>

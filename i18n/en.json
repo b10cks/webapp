@@ -262,7 +262,15 @@
         "restrict_blocks": "Restrict possible blocks",
         "asset_link_type": "Allow asset links",
         "email_link_type": "Allow email links",
-        "allow_target_blank": "Allow target blank"
+        "allow_target_blank": "Allow target blank",
+        "blockWhitelist": "Block Whitelist",
+        "blockWhitelistPlaceholder": "Select specific blocks to restrict",
+        "blockWhitelistDescription": "Restrict the blocks that can be used inside this block. Only the selected blocks will be allowed.",
+        "blockWhitelistEmpty": "No matching blocks found.",
+        "tagWhitelist": "Tag Whitelist",
+        "tagWhitelistPlaceholder": "Select tags to restrict block usage",
+        "tagWhitelistDescription": "Restrict blocks to only those with the selected tags. This allows you to create a curated set of blocks that can be used together.",
+        "tagWhitelistEmpty": "No matching tags found."
       },
       "types": {
         "root": {

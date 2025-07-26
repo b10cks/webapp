@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ContentVersionHistory from '~/components/Content/VersionHistory.vue'
+import ContentVersionHistory from '~/components/content/VersionHistory.vue'
 import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/content/ContentHeader.vue'
 

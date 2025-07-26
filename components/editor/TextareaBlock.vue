@@ -19,7 +19,6 @@ defineProps<{
   >
     <Textarea
       v-model="value"
-      class="resize-none"
     />
   </FormField>
 </template>

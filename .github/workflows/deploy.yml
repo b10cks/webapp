@@ -1,0 +1,177 @@
+name: Deploy to AWS with SAM
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
+
+env:
+  AWS_REGION: eu-west-1
+  SAM_CLI_TELEMETRY: 0
+
+  SAM_STACK_NAME: ${{ vars.SAM_STACK_NAME || 'b10cks-app' }}
+  SAM_S3_BUCKET: ${{ vars.SAM_S3_BUCKET || 'b10cks-app' }}
+
+  SAM_APP_DOMAIN_NAME: ${{ vars.SAM_APP_DOMAIN_NAME || 'app.b10cks.com' }}
+  SAM_API_DOMAIN_NAME: ${{ vars.SAM_API_DOMAIN_NAME || 'api.b10cks.com' }}
+  SAM_ECS_ORIGIN_HEADER: ${{ secrets.SAM_ECS_ORIGIN_HEADER || '' }}
+  SAM_ACM_CERTIFICATE_ARN: ${{ secrets.SAM_ACM_CERTIFICATE_ARN || '' }}
+  SAM_ELB_DOMAIN_NAME: ${{ vars.SAM_ELB_DOMAIN_NAME || 'nb-clients-406653055.eu-west-1.elb.amazonaws.com' }}
+  SAM_CLIENT: ${{ vars.SAM_CLIENT || 'b10cks' }}
+
+  SAM_NUXT_PUBLIC_FRONTEND_URL: ${{ vars.SAM_NUXT_PUBLIC_FRONTEND_URL || 'https://app.b10cks.com/' }}
+  SAM_NUXT_PUBLIC_BACKEND_URL: ${{ vars.SAM_NUXT_PUBLIC_BACKEND_URL || 'https://api.b10cks.com/' }}
+  SAM_NUXT_API_PROXY_URL: ${{ vars.SAM_NUXT_API_PROXY_URL || 'https://api.b10cks.com/' }}
+  SAM_NUXT_ILUM_BASE_URL: ${{ vars.SAM_NUXT_ILUM_BASE_URL || 'https://api.b10cks.com/ilum' }}
+  SAM_NUXT_PUBLIC_POSTHOG_HOST: ${{ vars.SAM_NUXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com' }}
+
+  SAM_NUXT_PUBLIC_REVERB_APP_ID: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_ID || '' }}
+  SAM_NUXT_PUBLIC_REVERB_APP_KEY: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_KEY || '' }}
+  SAM_NUXT_PUBLIC_REVERB_APP_SECRET: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_SECRET || '' }}
+  SAM_NUXT_PUBLIC_REVERB_HOST: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_HOST || '' }}
+  SAM_NUXT_PUBLIC_REVERB_PORT: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_PORT || '' }}
+  SAM_NUXT_PUBLIC_REVERB_SCHEME: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_SCHEME || '' }}
+  SAM_NUXT_PUBLIC_POSTHOG_KEY: ${{ secrets.SAM_NUXT_PUBLIC_POSTHOG_KEY || '' }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read    # Required to checkout code
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better caching
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node.js (for SAM CLI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Python (for SAM CLI)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          # Extract version from tag (remove 'v' prefix)
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Deploying version: ${VERSION}"
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build Nuxt application
+        run: |
+          # Set version for build
+          export NUXT_PUBLIC_VERSION="${{ steps.version.outputs.version }}"
+          bun run build --preset=aws_lambda
+        env:
+          NODE_ENV: production
+
+      - name: Build SAM application
+        run: sam build --cached --parallel
+
+      - name: Deploy SAM application
+        run: |
+          sam deploy \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --region "${AWS_REGION}" \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --parameter-overrides \
+              AppDomainName="${SAM_APP_DOMAIN_NAME}" \
+              ApiDomainName="${SAM_API_DOMAIN_NAME}" \
+              EcsOriginHeader="${SAM_ECS_ORIGIN_HEADER}" \
+              AcmCertificateArn="${SAM_ACM_CERTIFICATE_ARN}" \
+              ElbDomainName="${SAM_ELB_DOMAIN_NAME}" \
+              Client="${SAM_CLIENT}" \
+              NuxtPublicFrontendUrl="${SAM_NUXT_PUBLIC_FRONTEND_URL}" \
+              NuxtPublicBackendUrl="${SAM_NUXT_PUBLIC_BACKEND_URL}" \
+              NuxtApiProxyUrl="${SAM_NUXT_API_PROXY_URL}" \
+              NuxtPublicVersion="${{ steps.version.outputs.version }}" \
+              NuxtPublicReverbAppId="${SAM_NUXT_PUBLIC_REVERB_APP_ID}" \
+              NuxtPublicReverbAppKey="${SAM_NUXT_PUBLIC_REVERB_APP_KEY}" \
+              NuxtPublicReverbAppSecret="${SAM_NUXT_PUBLIC_REVERB_APP_SECRET}" \
+              NuxtPublicReverbHost="${SAM_NUXT_PUBLIC_REVERB_HOST}" \
+              NuxtPublicReverbPort="${SAM_NUXT_PUBLIC_REVERB_PORT}" \
+              NuxtPublicReverbScheme="${SAM_NUXT_PUBLIC_REVERB_SCHEME}" \
+              NuxtPublicPosthogKey="${SAM_NUXT_PUBLIC_POSTHOG_KEY}" \
+              NuxtPublicPosthogHost="${SAM_NUXT_PUBLIC_POSTHOG_HOST}" \
+              NuxtIlumBaseUrl="${SAM_NUXT_ILUM_BASE_URL}" \
+            --tags \
+              Version="${{ steps.version.outputs.version }}" \
+              Environment="production" \
+              DeployedBy="github-actions" \
+              Repository="${{ github.repository }}" \
+              Commit="${{ github.sha }}"
+
+      - name: Get S3 bucket name from stack outputs
+        id: stack-outputs
+        run: |
+          BUCKET_NAME=$(aws cloudformation describe-stacks \
+            --stack-name "${SAM_STACK_NAME}" \
+            --region "${AWS_REGION}" \
+            --query 'Stacks[0].Outputs[?OutputKey==`S3Bucket`].OutputValue' \
+            --output text)
+          echo "bucket-name=${BUCKET_NAME}" >> $GITHUB_OUTPUT
+          echo "S3 Bucket: ${BUCKET_NAME}"
+
+      - name: Sync static assets to S3
+        run: |
+          # Sync with optimized cache headers and cleanup
+          aws s3 sync .output/public/ "s3://${{ steps.stack-outputs.outputs.bucket-name }}" \
+            --delete \
+            --cache-control "max-age=7776000,s-maxage=604800,public" \
+            --exclude "*.html" \
+            --exclude "*.xml" \
+            --exclude "*.json" \
+            --exclude "*.txt"
+          
+          # Sync HTML files with shorter cache (for better SEO/updates)
+          aws s3 sync .output/public/ "s3://${{ steps.stack-outputs.outputs.bucket-name }}" \
+            --cache-control "max-age=0,s-maxage=604800,public,must-revalidate" \
+            --include "*.html" \
+            --include "*.xml" \
+            --include "*.json" \
+            --include "*.txt"
+
+      - name: Display deployment information
+        run: |
+          echo "## 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Stack Name:** ${SAM_STACK_NAME}" >> $GITHUB_STEP_SUMMARY
+          echo "**S3 Bucket:** ${{ steps.stack-outputs.outputs.bucket-name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Website URL:** ${SAM_NUXT_PUBLIC_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Deployment completed at $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

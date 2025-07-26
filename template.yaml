@@ -1,0 +1,384 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Description: NB SAM Template v2
+
+Parameters:
+  AppDomainName:
+    Type: String
+    Description: "The domain name of website"
+    Default: "app.b10cks.com"
+  ApiDomainName:
+    Type: String
+    Description: "The domain name of website"
+    Default: "api.b10cks.com"
+  EcsOriginHeader:
+    Type: String
+    Description: "The X-ECS-Origin header to to allow ELB to route traffic"
+    Default: ""
+  AcmCertificateArn:
+    Type: String
+    Description: "The certificate ARN for the domain name provided, must be in us-east-1 region"
+    Default: ""
+  ElbDomainName:
+    Type: String
+    Description: "The domain name of the ELB for the Cloudfront ELB origin"
+    Default: "nb-clients-406653055.eu-west-1.elb.amazonaws.com"
+  Client:
+    Type: String
+    Default: "b10cks"
+  NuxtPublicFrontendUrl:
+    Type: String
+    Default: "https://app.b10cks.com/"
+  NuxtPublicBackendUrl:
+    Type: String
+    Default: "https://api.b10cks.com/"
+
+  NuxtApiProxyUrl:
+    Type: String
+    Default: "https://api.b10cks.com/"
+  NuxtPublicVersion:
+    Type: String
+    Default: ""
+  NuxtPublicReverbAppId:
+    Type: String
+    Default: ""
+  NuxtPublicReverbAppKey:
+    Type: String
+    Default: ""
+  NuxtPublicReverbAppSecret:
+    Type: String
+    Default: ""
+  NuxtPublicReverbHost:
+    Type: String
+    Default: ""
+  NuxtPublicReverbPort:
+    Type: String
+    Default: ""
+  NuxtPublicReverbScheme:
+    Type: String
+    Default: ""
+  NuxtPublicPosthogKey:
+    Type: String
+    Default: ""
+  NuxtPublicPosthogHost:
+    Type: String
+    Default: "https://eu.i.posthog.com"
+  NuxtIlumBaseUrl:
+    Type: String
+    Default: "https://api.b10cks.com/ilum"
+
+Conditions:
+  IsDomainProvided: !Not [!Equals [!Ref AppDomainName, ""]]
+  HasEcsOriginHeader: !Not [!Equals [!Ref AppDomainName, ""]]
+  HasClient: !Not [!Equals [!Ref Client, ""]]
+
+Resources:
+  NuxtFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Ref AWS::StackName
+      Runtime: nodejs22.x
+      Architectures:
+        - x86_64
+      CodeUri: .output/server/
+      Handler: index.handler
+      MemorySize: 1024
+      Timeout: 10
+      Environment:
+        Variables:
+          NUXT_API_PROXY_URL: !Ref NuxtApiProxyUrl
+          NUXT_PUBLIC_VERSION: !Ref NuxtPublicVersion
+          NUXT_PUBLIC_REVERB_APP_ID: !Ref NuxtPublicReverbAppId
+          NUXT_PUBLIC_REVERB_APP_KEY: !Ref NuxtPublicReverbAppKey
+          NUXT_PUBLIC_REVERB_APP_SECRET: !Ref NuxtPublicReverbAppSecret
+          NUXT_PUBLIC_REVERB_HOST: !Ref NuxtPublicReverbHost
+          NUXT_PUBLIC_REVERB_PORT: !Ref NuxtPublicReverbPort
+          NUXT_PUBLIC_REVERB_SCHEME: !Ref NuxtPublicReverbScheme
+          NUXT_PUBLIC_POSTHOG_KEY: !Ref NuxtPublicPosthogKey
+          NUXT_PUBLIC_POSTHOG_HOST: !Ref NuxtPublicPosthogHost
+          NUXT_ILUM_BASE_URL: !Ref NuxtIlumBaseUrl
+      FunctionUrlConfig:
+        AuthType: NONE
+      Tags:
+        client: !If [HasClient, !Ref Client, !Ref AWS::StackName]
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AWS::StackName}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: [ ]
+            AllowedMethods:
+              - "GET"
+            AllowedOrigins:
+              - "*"
+            ExposedHeaders: [ ]
+      Tags:
+        - Key: client
+          Value: !If [HasClient, !Ref Client, !Ref AWS::StackName]
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+          - Sid: AllowCloudFrontServicePrincipal
+            Effect: Allow
+            Principal:
+              Service: 'cloudfront.amazonaws.com'
+            Action: 's3:GetObject'
+            Resource:
+              - !Sub 'arn:aws:s3:::${S3Bucket}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
+
+  CloudFrontOriginAccessControl:
+    Type: 'AWS::CloudFront::OriginAccessControl'
+    Properties:
+      OriginAccessControlConfig:
+        Name: !GetAtt S3Bucket.DomainName
+        Description: !Ref AWS::StackName
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: 'sigv4'
+
+  NuxtCachePolicy:
+    Type: 'AWS::CloudFront::CachePolicy'
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub '${AWS::StackName}-Nuxt'
+        Comment: !Sub 'Cache Policy for AWS SAM Project ${AWS::StackName}'
+        DefaultTTL: 0
+        MaxTTL: 31536000
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: all
+
+  NuxtApiCachePolicy:
+    Type: 'AWS::CloudFront::CachePolicy'
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub '${AWS::StackName}-Nuxt-API'
+        Comment: !Sub 'Cache Policy for AWS SAM Project ${AWS::StackName} API'
+        DefaultTTL: 86400
+        MaxTTL: 31536000
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: whitelist
+            Headers:
+              - 'Accept-Language'
+              - 'Authorization'
+          QueryStringsConfig:
+            QueryStringBehavior: all
+
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      Tags:
+        - Key: client
+          Value: !If [HasClient, !Ref Client, !Ref AWS::StackName]
+      DistributionConfig:
+        Comment: !Ref AWS::StackName
+        Enabled: true
+        PriceClass: PriceClass_100
+        HttpVersion: http2and3
+        Aliases:
+          - !If [IsDomainProvided, !Ref AppDomainName, !Ref AWS::NoValue]
+          - !If [IsDomainProvided, !Ref ApiDomainName, !Ref AWS::NoValue]
+        ViewerCertificate:
+          Fn::If:
+            - IsDomainProvided
+            -
+              AcmCertificateArn: !If [IsDomainProvided, !Ref AcmCertificateArn, !Ref AWS::NoValue]
+              MinimumProtocolVersion: TLSv1.2_2021
+              SslSupportMethod: sni-only
+            -
+              CloudFrontDefaultCertificate: true
+        OriginGroups:
+          Quantity: 1
+          Items:
+            - Id: s3ThenNuxt
+              FailoverCriteria:
+                StatusCodes:
+                  Quantity: 2
+                  Items:
+                    - 403
+                    - 404
+              Members:
+                Quantity: 2
+                Items:
+                  - OriginId: s3
+                  - OriginId: nuxt
+        Origins:
+          - Id: nuxt
+            DomainName: !Select [ 2, !Split [ "/", !GetAtt NuxtFunctionUrl.FunctionUrl ] ]
+            CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+          - Id: s3
+            DomainName: !GetAtt S3Bucket.RegionalDomainName
+            OriginAccessControlId: !Ref CloudFrontOriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+          - Id: elb
+            DomainName: !Ref ElbDomainName
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+            OriginCustomHeaders:
+              - HeaderName: X-ECS-Origin
+                HeaderValue:
+                  Fn::If:
+                    - HasEcsOriginHeader
+                    - Ref: EcsOriginHeader
+                    - Fn::Select:
+                        - 0
+                        - Fn::Split:
+                          - '='
+                          - Fn::Join:
+                              - '-'
+                              -
+                                - Ref: AWS::StackName
+                                - !Select [ 0, !Split [ "-", !Select [ 2, !Split [ "/", !Ref AWS::StackId ] ] ] ]
+        DefaultCacheBehavior:
+          Compress: true
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          TargetOriginId: s3ThenNuxt
+          ViewerProtocolPolicy: redirect-to-https
+          # CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled
+          CachePolicyId: !Ref NuxtCachePolicy
+          OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+          # Create custom policy to allow storyblok editor
+          # ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03  # Managed-SecurityHeadersPolicy
+        CacheBehaviors:
+          - PathPattern: /_nuxt/*
+            TargetOriginId: s3
+            Compress: true
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # Managed-CachingOptimized
+            OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf # Managed-CORS-S3Origin
+            ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03 # Managed-SecurityHeadersPolicy
+
+          - PathPattern: /api/v1/*
+            TargetOriginId: elb
+            Compress: true
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: de90d3a3-a76e-4c8a-9448-aff0ec3f1d25
+            OriginRequestPolicyId: c582687b-19bf-4796-aff9-a4866462ac32
+
+          - PathPattern: /ilum/*
+            TargetOriginId: elb
+            Compress: true
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: 09765723-8078-477b-a2c4-873e926bb034
+            OriginRequestPolicyId: fff6e727-a5cd-4c46-8c26-f7877668275c # Managed-AllViewerExceptHostHeader
+
+          - PathPattern: /auth/*
+            TargetOriginId: elb
+            Compress: true
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: de90d3a3-a76e-4c8a-9448-aff0ec3f1d25
+            OriginRequestPolicyId: c582687b-19bf-4796-aff9-a4866462ac32
+
+          - PathPattern: /mgmt/*
+            TargetOriginId: elb
+            Compress: true
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: de90d3a3-a76e-4c8a-9448-aff0ec3f1d25
+            OriginRequestPolicyId: c582687b-19bf-4796-aff9-a4866462ac32
+            #ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03 # Managed-SecurityHeadersPolicy
+
+Outputs:
+  S3Bucket:
+    Description: "The S3 bucket that contains static files"
+    Value: !Ref S3Bucket
+  CloudFrontDistribution:
+    Description: "The CloudFront distribution in front of the S3 bucket"
+    Value: !Ref CloudFrontDistribution
+  WebsiteUrl:
+    Description: "The website URL"
+    Value: !If [IsDomainProvided, !Sub "https://${AppDomainName}/", !Sub "https://${CloudFrontDistribution.DomainName}/"]
+  ApplicationLog:
+    Description: "The CloudWatch log group where application log are saved"
+    Value: !Sub "/aws/lambda/${NuxtFunction}"

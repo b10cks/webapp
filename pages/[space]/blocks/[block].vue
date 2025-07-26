@@ -37,7 +37,7 @@ const submit = async (b: BlockResource) => {
         </div>
         <div
           v-if="block"
-          class="max-w-xl mx-auto w-full gap-6 flex-col flex"
+          class="max-w-xl mx-auto w-full gap-6 flex-col flex pb-6"
         >
           <ContentHeader :header="block.name"/>
           <BlockEdit

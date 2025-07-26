@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
 import { ApiClient } from '~/api/client'
+import StatsCard from '~/components/StatsCard.vue'
 
 const { formatDuration, formatNumber } = useFormat()
 
@@ -128,7 +128,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <div class="flex justify-between items-center">
       <h2 class="text-3xl font-bold"/>
 
@@ -186,74 +186,65 @@ onMounted(() => {
     </div>
 
     <template v-else>
+      <h2 class="text-primary font-semibold">Space Content Stats</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader class="flex flex-row items-center justify-between pb-2">
-            <CardTitle class="text-sm font-medium">Total Content</CardTitle>
-            <Icon
-              name="lucide:book-open"
-              class="h-4 w-4 text-muted"
-            />
-          </CardHeader>
-          <CardContent>
-            <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.content.count.total) }}</div>
-            <p class="text-sm text-muted">
-              {{ formatNumber(stats.content.count.published) }} published, {{ formatNumber(stats.content.count.draft) }}
-              draft
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          icon="lucide:book-open"
+          title="Total Content"
+        >
+          <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.content.count.total) }}</div>
+          <p class="text-sm text-muted">
+            {{ formatNumber(stats.content.count.published) }} published, {{ formatNumber(stats.content.count.draft) }}
+            draft
+          </p>
+        </StatsCard>
 
-        <Card>
-          <CardHeader class="flex flex-row items-center justify-between pb-2">
-            <CardTitle class="text-sm font-medium">Total Users</CardTitle>
-            <Icon
-              name="lucide:users"
-              class="h-4 w-4 text-muted"
-            />
-          </CardHeader>
-          <CardContent>
-            <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.user_activity.total_users) }}</div>
-            <p class="text-sm text-muted">
-              {{ formatRoleDistribution(stats.user_activity.role_distribution) }}
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          icon="lucide:users"
+          title="Total Users"
+          :description="formatRoleDistribution(stats.user_activity.role_distribution)"
+        >
+          <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.user_activity.total_users) }}</div>
+        </StatsCard>
 
-        <Card>
-          <CardHeader class="flex flex-row items-center justify-between pb-2">
-            <CardTitle class="text-sm font-medium">API Requests</CardTitle>
-            <Icon
-              name="lucide:server"
-              class="h-4 w-4 text-muted"
-            />
-          </CardHeader>
-          <CardContent>
-            <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.system.api.total_requests) }}</div>
-            <p class="text-sm text-muted">
-              {{ formatNumber(stats.system.api.success_rate, 2) }}% success rate
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          icon="lucide:blocks"
+          title="Blocks"
+        />
 
-        <Card>
-          <CardHeader class="flex flex-row items-center justify-between pb-2">
-            <CardTitle class="text-sm font-medium">Avg Response Time</CardTitle>
-            <Icon
-              name="lucide:zap"
-              class="h-4 w-4 text-muted"
-            />
-          </CardHeader>
-          <CardContent>
-            <div class="text-2xl font-bold text-primary">{{
-                formatDuration(stats.system.api.avg_response_time_ms, 2)
-              }}
-            </div>
-            <p class="text-sm text-muted">
-              API response time
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          icon="lucide:globe"
+          title="Languages"
+        >
+          <div class="text-2xl font-bold text-primary">
+            {{ formatNumber(Object.keys(stats.content.languages).length) }}
+          </div>
+        </StatsCard>
+      </div>
+
+      <h2 class="text-primary font-semibold">API Stats</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatsCard
+          icon="lucide:server"
+          title="API Requests"
+        >
+          <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.system.api.total_requests) }}</div>
+          <p class="text-sm text-muted">
+            {{ formatNumber(stats.system.api.success_rate, 2) }}% success rate
+          </p>
+        </StatsCard>
+
+        <StatsCard
+          icon="lucide:zap"
+          title="Avg Response Time"
+          description="API response time"
+        >
+          <div class="text-2xl font-bold text-primary">
+            {{
+              formatDuration(stats.system.api.avg_response_time_ms, 2)
+            }}
+          </div>
+        </StatsCard>
       </div>
     </template>
   </div>

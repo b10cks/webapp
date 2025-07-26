@@ -2,11 +2,13 @@ import { BaseResource } from './base-resource'
 import type { ApiClient } from '../client'
 import type { BaseQueryParams } from '~/types'
 
+export type BlockType = 'root' | 'nestable' | 'single' | 'universal'
+
 export interface BlocksQueryParams extends BaseQueryParams {
   name?: string
   slug?: string
   folder_id?: string
-  type?: 'root' | 'nestable' | 'single' | 'universal'
+  type?: BlockType
   tags?: string | string[]
   created_at?: string
   updated_at?: string

@@ -13,9 +13,9 @@ export const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-card text-card-foreground shadow-sm',
+        default: 'bg-card text-card-foreground shadow-soft',
         outline: 'border border-border',
-        accent: 'bg-accent text-white shadow-sm',
+        accent: 'bg-accent text-white shadow-soft',
         warning: 'bg-warning-background/20 text-warning shadow-sm',
         destructive: 'bg-destructive-background/20 text-destructive shadow-sm',
         destructiveOutline: 'border border-destructive text-destructive',

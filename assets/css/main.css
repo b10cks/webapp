@@ -210,6 +210,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-soft-sm: 0px 2px 4px rgba(3, 7, 18, 0.02),  0px 7px 15px rgba(3, 7, 18, 0.04), 0px 16px 33px rgba(3, 7, 18, 0.06);
+  --shadow-soft: 0px 1px 1px rgba(3, 7, 18, 0.01), 0px 3px 5px rgba(3, 7, 18, 0.02), 0px 6px 12px rgba(3, 7, 18, 0.04), 0px 10px 21px rgba(3, 7, 18, 0.05), 0px 16px 33px rgba(3, 7, 18, 0.06);
+  --shadow-soft-lg: 0px 1px 1px rgba(3, 7, 18, 0.01),  0px 3px 4px rgba(3, 7, 18, 0.02), 0px 6px 8px rgba(3, 7, 18, 0.03), 0px 11px 15px rgba(3, 7, 18, 0.04), 0px 17px 23px rgba(3, 7, 18, 0.05), 0px 24px 33px rgba(3, 7, 18, 0.06);
 }
 
 @layer base {

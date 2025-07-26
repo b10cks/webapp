@@ -148,6 +148,7 @@ const updateValue = (key: string, value: unknown) => {
       />
       <component
         :is="schemas[localItem.type]"
+        :name="name"
         :value="item as SchemaType"
         @update:item-value="(key, value) => updateValue(key, value)"
       />

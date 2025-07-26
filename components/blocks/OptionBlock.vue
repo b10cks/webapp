@@ -13,7 +13,7 @@ import {
 import { Input } from '~/components/ui/input'
 import { Button } from '~/components/ui/button'
 
-const props = defineProps<{ value: OptionSchema }>()
+const props = defineProps<{ value: OptionSchema, name: string }>()
 const list = ref<HTMLDivElement | null>(null)
 
 const emit = defineEmits<{
@@ -42,7 +42,7 @@ function addOption(focusNew = false) {
 
   if (focusNew) {
     nextTick(() => {
-      const newInput = document.querySelector(`[data-row="${newIndex}"][data-col="0"]`) as HTMLElement
+      const newInput = document.querySelector(`#options-list-${props.name} [data-row="${newIndex}"][data-col="0"]`) as HTMLElement
       newInput?.focus()
     })
   }
@@ -54,7 +54,7 @@ function removeOption(index: number) {
   nextTick(() => {
     if (props.value.options.length > 0) {
       const newFocusIndex = Math.min(index, props.value.options.length - 1)
-      const inputToFocus = document.querySelector(`[data-row="${newFocusIndex}"][data-col="0"]`) as HTMLElement
+      const inputToFocus = document.querySelector(`#options-list-${props.name} [data-row="${newFocusIndex}"][data-col="0"]`) as HTMLElement
       inputToFocus?.focus()
     }
   })
@@ -67,7 +67,7 @@ function handleKeyDown(event: KeyboardEvent, rowIndex: number, colIndex: number)
     case 'ArrowUp':
       if (rowIndex > 0) {
         event.preventDefault()
-        const upElement = document.querySelector(`[data-row="${rowIndex - 1}"][data-col="${colIndex}"]`) as HTMLElement
+        const upElement = document.querySelector(`#options-list-${props.name} [data-row="${rowIndex - 1}"][data-col="${colIndex}"]`) as HTMLElement
         upElement?.focus()
       }
       break
@@ -75,7 +75,7 @@ function handleKeyDown(event: KeyboardEvent, rowIndex: number, colIndex: number)
     case 'ArrowDown':
       if (rowIndex < lastRowIndex) {
         event.preventDefault()
-        const downElement = document.querySelector(`[data-row="${rowIndex + 1}"][data-col="${colIndex}"]`) as HTMLElement
+        const downElement = document.querySelector(`#options-list-${props.name} [data-row="${rowIndex + 1}"][data-col="${colIndex}"]`) as HTMLElement
         downElement?.focus()
       } else {
         event.preventDefault()
@@ -95,7 +95,7 @@ function handleKeyDown(event: KeyboardEvent, rowIndex: number, colIndex: number)
       if (rowIndex === lastRowIndex) {
         addOption(true)
       } else {
-        const nextRowElement = document.querySelector(`[data-row="${rowIndex + 1}"][data-col="${colIndex}"]`) as HTMLElement
+        const nextRowElement = document.querySelector(`#options-list-${props.name} [data-row="${rowIndex + 1}"][data-col="${colIndex}"]`) as HTMLElement
         nextRowElement?.focus()
       }
       break
@@ -107,6 +107,7 @@ function handleKeyDown(event: KeyboardEvent, rowIndex: number, colIndex: number)
   <div class="flex flex-col gap-4">
     <div class="bg-background py-3 rounded-xl">
       <div
+        :id="`options-list-${name}`"
         ref="list"
         class="flex flex-col mb-3"
       >

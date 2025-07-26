@@ -244,6 +244,8 @@
         "description": "Description",
         "folder": "Folder",
         "tags": "Tags",
+        "tagsPlaceholder": "Assign tags to categorize this block",
+        "tagsEmpty": "No tags found. Create tags to organize your blocks.",
         "type": "Type",
         "default": "Default value",
         "icon": "Icon",
@@ -277,7 +279,7 @@
         },
         "universal": {
           "label": "Universal Block",
-          "description": "Versatile blocks that work both as standalone content and as nested blocks within other content."
+          "description": "Universal blocks that can be used anywhere in your content. They can be nested and reused across different content types, providing flexibility in your content structure."
         }
       },
       "fieldTypes": {

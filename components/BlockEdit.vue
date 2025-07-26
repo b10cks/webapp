@@ -108,12 +108,12 @@ const enforceSlugFormat = () => {
       v-if="possibleTags"
       v-model="editableBlock.tags"
       name="block_whitelist"
-      :label="$t('labels.blocks.fields.block_whitelist')"
-      :placeholder="$t('labels.blocks.fields.block_whitelist_placeholder')"
+      :label="$t('labels.blocks.fields.tags')"
+      :placeholder="$t('labels.blocks.fields.tagsPlaceholder')"
       :options="possibleTags"
       multiple
       searchable
-      :empty-text="$t('labels.blocks.fields.no_blocks_found')"
+      :empty-text="$t('labels.blocks.fields.tagsEmpty')"
     />
 
     <TextField

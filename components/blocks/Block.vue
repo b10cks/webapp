@@ -43,6 +43,10 @@ const schemas = {
   textarea: TextareaBlock
 }
 
+watch(props.item as SchemaType, (newItem) => {
+  localItem.value = { ...newItem }
+}, { deep: true })
+
 const updateValue = (key: string, value: unknown) => {
   emit('update:item', {
     ...localItem.value,

@@ -4,42 +4,43 @@
     "": {
       "name": "nuxt-app",
       "dependencies": {
-        "@iconify-json/flag": "latest",
-        "@iconify-json/lucide": "latest",
-        "@tanstack/vue-query": "latest",
-        "@tanstack/vue-table": "latest",
-        "@vueuse/integrations": "latest",
-        "class-variance-authority": "latest",
-        "dayjs": "latest",
-        "laravel-echo": "latest",
-        "marked": "latest",
-        "mini-handlebars": "latest",
-        "nuxt-i18n-micro": "latest",
-        "posthog-js": "latest",
-        "pusher-js": "latest",
-        "reka-ui": "latest",
-        "sortablejs": "latest",
-        "vue-sonner": "latest",
+        "@iconify-json/flag": "^1.2.6",
+        "@iconify-json/lucide": "^1.2.57",
+        "@tanstack/vue-query": "^5.83.0",
+        "@tanstack/vue-table": "^8.21.3",
+        "@vueuse/integrations": "^13.5.0",
+        "class-variance-authority": "^0.7.1",
+        "dayjs": "^1.11.13",
+        "laravel-echo": "^2.1.6",
+        "marked": "^16.1.1",
+        "mini-handlebars": "^0.1.1",
+        "nuxt-i18n-micro": "^1.88.1",
+        "posthog-js": "^1.257.1",
+        "pusher-js": "^8.4.0",
+        "reka-ui": "^2.3.2",
+        "sortablejs": "^1.15.6",
+        "vue-sonner": "^2.0.2",
       },
       "devDependencies": {
-        "@nuxt/eslint": "latest",
-        "@nuxt/icon": "latest",
-        "@nuxt/image": "latest",
-        "@tailwindcss/postcss": "latest",
-        "@tailwindcss/vite": "latest",
-        "@types/postmate": "latest",
-        "@vueuse/core": "latest",
-        "eslint": "latest",
-        "eslint-plugin-better-tailwindcss": "latest",
-        "eslint-plugin-tailwindcss": "latest",
-        "eslint-plugin-vue": "latest",
-        "eslint-plugin-vuejs-accessibility": "latest",
-        "nuxt": "latest",
-        "tailwindcss": "latest",
-        "vite-svg-loader": "latest",
-        "vue": "latest",
-        "vue-router": "latest",
-        "vue-tsc": "latest",
+        "@nuxt/eslint": "1.7.0",
+        "@nuxt/icon": "1.15.0",
+        "@nuxt/image": "1.10.0",
+        "@tailwindcss/postcss": "^4.1.11",
+        "@tailwindcss/vite": "^4.1.11",
+        "@types/postmate": "^1.5.4",
+        "@vueuse/core": "^13.5.0",
+        "@vueuse/router": "^13.5.0",
+        "eslint": "^9.31.0",
+        "eslint-plugin-better-tailwindcss": "^3.7.1",
+        "eslint-plugin-tailwindcss": "^3.18.2",
+        "eslint-plugin-vue": "^10.3.0",
+        "eslint-plugin-vuejs-accessibility": "^2.4.1",
+        "nuxt": "^4.0.1",
+        "tailwindcss": "^4.1.11",
+        "vite-svg-loader": "^5.1.0",
+        "vue": "^3.5.17",
+        "vue-router": "^4.5.1",
+        "vue-tsc": "^3.0.3",
       },
     },
   },
@@ -705,6 +706,8 @@
     "@vueuse/integrations": ["@vueuse/integrations@13.5.0", "", { "dependencies": { "@vueuse/core": "13.5.0", "@vueuse/shared": "13.5.0" }, "peerDependencies": { "async-validator": "^4", "axios": "^1", "change-case": "^5", "drauu": "^0.4", "focus-trap": "^7", "fuse.js": "^7", "idb-keyval": "^6", "jwt-decode": "^4", "nprogress": "^0.2", "qrcode": "^1.5", "sortablejs": "^1", "universal-cookie": "^7 || ^8", "vue": "^3.5.0" }, "optionalPeers": ["async-validator", "axios", "change-case", "drauu", "focus-trap", "fuse.js", "idb-keyval", "jwt-decode", "nprogress", "qrcode", "sortablejs", "universal-cookie"] }, "sha512-7RACJySnlpl0MkSzxbtadioNGSX4TL5/Wl2cUy4nDq/XkeHwPYvVM880HJUSiap/FXhVEup9VKTM9y/n5UspAw=="],
 
     "@vueuse/metadata": ["@vueuse/metadata@13.5.0", "", {}, "sha512-euhItU3b0SqXxSy8u1XHxUCdQ8M++bsRs+TYhOLDU/OykS7KvJnyIFfep0XM5WjIFry9uAPlVSjmVHiqeshmkw=="],
+
+    "@vueuse/router": ["@vueuse/router@13.5.0", "", { "dependencies": { "@vueuse/shared": "13.5.0" }, "peerDependencies": { "vue": "^3.5.0", "vue-router": "^4.0.0" } }, "sha512-QI735rn3FPMnEAqiwJKdYN2byMn1orRBcBq9YuZS/QSYUNV7tR8jhU99s7Vix+BL0YEIk/nU7lUZA0IOCarGzg=="],
 
     "@vueuse/shared": ["@vueuse/shared@13.5.0", "", { "peerDependencies": { "vue": "^3.5.0" } }, "sha512-K7GrQIxJ/ANtucxIXbQlUHdB0TPA8c+q5i+zbrjxuhJCnJ9GtBg75sBSnvmLSxHKPg2Yo8w62PWksl9kwH0Q8g=="],
 
@@ -1496,7 +1499,7 @@
 
     "node-abi": ["node-abi@3.74.0", "", { "dependencies": { "semver": "^7.3.5" } }, "sha512-c5XK0MjkGBrQPGYG24GBADZud0NCbznxNx0ZkS+ebUTrmV1qTDxPxSL8zEAPURXSbLRWVexxmP4986BziahL5w=="],
 
-    "node-addon-api": ["node-addon-api@6.1.0", "", {}, "sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA=="],
+    "node-addon-api": ["node-addon-api@7.1.1", "", {}, "sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ=="],
 
     "node-domexception": ["node-domexception@1.0.0", "", {}, "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="],
 
@@ -2282,8 +2285,6 @@
 
     "@parcel/watcher/detect-libc": ["detect-libc@1.0.3", "", { "bin": { "detect-libc": "./bin/detect-libc.js" } }, "sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg=="],
 
-    "@parcel/watcher/node-addon-api": ["node-addon-api@7.1.1", "", {}, "sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ=="],
-
     "@parcel/watcher-wasm/napi-wasm": ["napi-wasm@1.1.3", "", { "bundled": true }, "sha512-h/4nMGsHjZDCYmQVNODIrYACVJ+I9KItbG+0si6W/jSjdA9JbWDoU4LLeMXVcEQGHjttI2tuXqDrbGF7qkUHHg=="],
 
     "@poppinss/dumper/supports-color": ["supports-color@10.0.0", "", {}, "sha512-HRVVSbCCMbj7/kdWF9Q+bbckjBHLtHMEoJWlkmYzzdwhYMkjkOwubLM6t7NbWKjgKamGDrWL1++KrjUO1t9oAQ=="],
@@ -2599,6 +2600,8 @@
     "send/debug": ["debug@4.4.0", "", { "dependencies": { "ms": "^2.1.3" } }, "sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA=="],
 
     "sharp/detect-libc": ["detect-libc@2.0.3", "", {}, "sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw=="],
+
+    "sharp/node-addon-api": ["node-addon-api@6.1.0", "", {}, "sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA=="],
 
     "sharp/semver": ["semver@7.7.1", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA=="],
 

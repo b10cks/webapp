@@ -10,6 +10,7 @@ import {
   PaginationPrev
 } from '~/components/ui/pagination'
 import { Button } from '~/components/ui/button'
+import type { LaravelMeta } from '~/types'
 
 const props = withDefaults(defineProps<{
   meta: LaravelMeta | null
@@ -24,16 +25,11 @@ const modelValue = defineModel<number>()
 
 const totalItems = computed(() => props.meta?.total || 0)
 const itemsPerPage = computed(() => props.meta?.per_page || 10)
-
-const handlePageChange = (page: number) => {
-  modelValue.value = page
-  // emit('update:modelValue', page)
-}
 </script>
 
 <template>
   <Pagination
-    v-model="modelValue"
+    v-model:page="modelValue"
     :items-per-page="itemsPerPage"
     :total="totalItems"
     :sibling-count="siblingCount"
@@ -51,7 +47,6 @@ const handlePageChange = (page: number) => {
           :key="index"
           :value="item.value"
           as-child
-          @click="handlePageChange(item.value)"
         >
           <Button
             class="w-9 h-9"

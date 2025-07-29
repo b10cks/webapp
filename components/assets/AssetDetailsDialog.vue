@@ -159,6 +159,7 @@ const onOpenChange = (open: boolean) => {
                 :src="asset.full_path"
                 :alt="assetCopy?.data?.altText || asset.filename"
                 height="600"
+                width="600"
                 class="object-contain max-h-[calc(60svh)] max-w-full"
               />
               <div

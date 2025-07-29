@@ -27,6 +27,7 @@ type FileTypes = 'image' | 'video' | 'audio' | 'document' | 'archive' | 'other' 
 interface AssetSchema extends Schema {
   type: 'asset'
   file_types: FileTypes[]
+  folder_id: string | null
 }
 
 interface MultiAssetSchema extends Schema {

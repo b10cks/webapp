@@ -159,6 +159,7 @@
     },
     "assets": {
       "allAssets": "All Assets",
+      "selectAsset": "Select an Asset",
       "noAssetsFound": "No Assets found",
       "noAssetsFoundDescription": "Your asset library is empty. Upload your first asset to get started.",
       "asset": "Asset",

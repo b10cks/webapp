@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/u
 import { useAlertDialog } from '~/composables/useAlertDialog'
 import AssetGrid from '~/components/assets/AssetGrid.vue'
 import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
+import { ScrollArea } from '~/components/ui/scroll-area'
 
 interface AssetValue {
   id: string
@@ -16,6 +17,7 @@ interface AssetValue {
 }
 
 const props = defineProps<{
+  item: AssetSchema & { key: string }
   modelValue?: AssetValue | null
   spaceId: string
 }>()
@@ -186,13 +188,15 @@ const handleAssetDelete = async () => {
           <DialogTitle>{{ $t('labels.assets.selectAsset') }}</DialogTitle>
         </DialogHeader>
 
-        <div class="flex-1">
+        <ScrollArea class="flex-1">
           <AssetGrid
             :space-id="spaceId"
+            :folder-id="item.folder_id || null"
             mode="select"
+            class="mt-2"
             @asset-select="handleAssetSelect"
           />
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
 

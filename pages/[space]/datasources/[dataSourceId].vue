@@ -13,6 +13,7 @@ import SearchFilter from '~/components/SearchFilter.vue'
 import { Textarea } from '~/components/ui/textarea'
 import SortSelect from '~/components/ui/SortSelect.vue'
 import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import { useRouteQuery } from '@vueuse/router'
 
 const route = useRoute()
 const { alert } = useAlertDialog()
@@ -87,12 +88,8 @@ const { mutate: createEntry, isPending: isCreatingEntry } = useCreateDataEntryMu
 const { mutate: updateEntry, isPending: isUpdatingEntry } = useUpdateDataEntryMutation()
 const { mutate: deleteEntry } = useDeleteDataEntryMutation()
 
-const selectedDimension = computed<string>({
-  get: () => (route.query.dimension) || 'default',
-  set: v => {
-    const query = { ...route.query, dimension: v }
-    useRouter().replace({ query })
-  }
+const selectedDimension = useRouteQuery('dimension', 'default', {
+  transform: (value: string) => value || 'default'
 })
 
 const editingEntries = ref<Map<string, DataEntryResource>>(new Map())

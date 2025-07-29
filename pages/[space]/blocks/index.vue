@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import { useRouteQuery } from '@vueuse/router'
 import BlockMenu from '~/components/BlockMenu.vue'
 import BlockTagsTable from '~/components/BlockTagsTable.vue'
 import BlockTable from '~/components/BlockTable.vue'
@@ -7,21 +8,8 @@ import BlockTable from '~/components/BlockTable.vue'
 const route = useRoute()
 const spaceId = computed(() => route.params.space as string)
 
-const mode = computed<'list' | 'tags'>({
-  get: () => (route.query.mode as 'list' | 'tags') || 'list',
-  set: v => {
-    const query = { ...route.query, mode: v, folder: undefined, tag: undefined }
-    useRouter().replace({ query })
-  }
-})
-
-const folder = computed<string | undefined>({
-  get: () => route.query.folder as string | undefined,
-  set: v => {
-    const query = { ...route.query, folder: v }
-    useRouter().replace({ query })
-  }
-})
+const mode = useRouteQuery('mode', 'list') as Ref<'list' | 'tags'>
+const folder = useRouteQuery('folder', undefined) as Ref<string | undefined>
 
 const component = computed(() => {
   if (mode.value === 'list') {

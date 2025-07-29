@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import { useRouteHash, useRouteQuery } from '@vueuse/router'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Button } from '~/components/ui/button'
 import CreateBlockDialog from '~/components/blocks/CreateBlockDialog.vue'
@@ -22,9 +23,9 @@ const { alert } = useAlertDialog()
 
 const showCreateBlockDialog = ref(false)
 
-const searchQuery = ref('')
-const currentPage = ref(1)
-const perPage = ref(25)
+const searchQuery = useRouteQuery('q')
+const currentPage = useRouteQuery('page', 1, { transform: Number })
+const perPage = useRouteQuery('per_page', 25, { transform: Number })
 const sortBy = ref<{ column: string; direction: 'asc' | 'desc' }>({
   column: 'name',
   direction: 'asc'

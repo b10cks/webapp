@@ -13,6 +13,7 @@ import type { ContentResource, ContentVersionListResource } from '~/types/conten
 import { RadioGroupItem, RadioGroupRoot } from 'reka-ui'
 import RenamableTitle from '~/components/ui/RenamableTitle.vue'
 import DiffViewer from '~/components/content/DiffViewer.vue'
+import { useRouteQuery } from '@vueuse/router'
 
 const { formatDateTime, formatRelativeTime, formatCalendarTime } = useFormat()
 const { user } = useAuth()
@@ -28,16 +29,7 @@ const { settings } = useSpaceSettings(props.spaceId)
 const searchQuery = ref('')
 const filterOptions = ref({})
 
-const selectedVersionId = computed({
-  get: () => route.query?.version,
-  set: (newId) => {
-    if (newId) {
-      router.replace({ ...route, query: { ...route.query, version: newId } })
-    } else {
-      router.replace({ ...route, query: { ...route.query, version: undefined } })
-    }
-  }
-})
+const selectedVersionId = useRouteQuery('version', undefined) as Ref<string | undefined>
 
 const selectedTab = computed({
   get: () => route.query?.mode || settings.value.content.history.mode,

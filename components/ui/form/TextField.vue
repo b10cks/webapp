@@ -31,13 +31,11 @@ const emits = defineEmits<{
   (e: 'update:modelValue', payload: string | number): void
 }>()
 
-// Create two-way binding for modelValue
 const modelValue = useVModel(props, 'modelValue', emits, {
   passive: true,
   defaultValue: props.defaultValue,
 })
 
-// Additional input props that should be passed to the Input component
 const inputProps = computed(() => {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -160,34 +160,40 @@ jobs:
           NODE_ENV: production
 
       - name: Build SAM application
-        run: sam build --cached --parallel \
-          --parameter-overrides \
-          AppDomainName="${SAM_APP_DOMAIN_NAME}" \
-          ApiDomainName="${SAM_API_DOMAIN_NAME}" \
-          EcsOriginHeader="${SAM_ECS_ORIGIN_HEADER}" \
-          AcmCertificateArn="${SAM_ACM_CERTIFICATE_ARN}" \
-          ElbDomainName="${SAM_ELB_DOMAIN_NAME}" \
-          Client="${SAM_CLIENT}" \
-          NuxtPublicFrontendUrl="${SAM_NUXT_PUBLIC_FRONTEND_URL}" \
-          NuxtPublicBackendUrl="${SAM_NUXT_PUBLIC_BACKEND_URL}" \
-          NuxtApiProxyUrl="${SAM_NUXT_API_PROXY_URL}" \
-          NuxtPublicVersion="${{ steps.version.outputs.version }}" \
-          NuxtPublicReverbAppId="${SAM_NUXT_PUBLIC_REVERB_APP_ID}" \
-          NuxtPublicReverbAppKey="${SAM_NUXT_PUBLIC_REVERB_APP_KEY}" \
-          NuxtPublicReverbAppSecret="${SAM_NUXT_PUBLIC_REVERB_APP_SECRET}" \
-          NuxtPublicReverbHost="${SAM_NUXT_PUBLIC_REVERB_HOST}" \
-          NuxtPublicReverbPort="${SAM_NUXT_PUBLIC_REVERB_PORT}" \
-          NuxtPublicReverbScheme="${SAM_NUXT_PUBLIC_REVERB_SCHEME}" \
-          NuxtPublicPosthogKey="${SAM_NUXT_PUBLIC_POSTHOG_KEY}" \
-          NuxtPublicPosthogHost="${SAM_NUXT_PUBLIC_POSTHOG_HOST}" \
-          NuxtIlumBaseUrl="${SAM_NUXT_ILUM_BASE_URL}" \
+        run: sam build --cached --parallel
 
       - name: Deploy SAM application
         run: |
           sam deploy \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
-            --region "${AWS_REGION}"
+            --stack-name "${SAM_STACK_NAME}" \
+            --region "${AWS_REGION}" \
+            --tags "Version=${{ steps.version.outputs.version }}" \
+              "Environment=production" \
+              "DeployedBy=github-actions" \
+              "Repository=${{ github.repository }}" \
+              "Commit=${{ github.sha }}" \
+            --parameter-overrides \
+              AppDomainName="${SAM_APP_DOMAIN_NAME}" \
+              ApiDomainName="${SAM_API_DOMAIN_NAME}" \
+              EcsOriginHeader="${SAM_ECS_ORIGIN_HEADER}" \
+              AcmCertificateArn="${SAM_ACM_CERTIFICATE_ARN}" \
+              ElbDomainName="${SAM_ELB_DOMAIN_NAME}" \
+              Client="${SAM_CLIENT}" \
+              NuxtPublicFrontendUrl="${SAM_NUXT_PUBLIC_FRONTEND_URL}" \
+              NuxtPublicBackendUrl="${SAM_NUXT_PUBLIC_BACKEND_URL}" \
+              NuxtApiProxyUrl="${SAM_NUXT_API_PROXY_URL}" \
+              NuxtPublicVersion="${{ steps.version.outputs.version }}" \
+              NuxtPublicReverbAppId="${SAM_NUXT_PUBLIC_REVERB_APP_ID}" \
+              NuxtPublicReverbAppKey="${SAM_NUXT_PUBLIC_REVERB_APP_KEY}" \
+              NuxtPublicReverbAppSecret="${SAM_NUXT_PUBLIC_REVERB_APP_SECRET}" \
+              NuxtPublicReverbHost="${SAM_NUXT_PUBLIC_REVERB_HOST}" \
+              NuxtPublicReverbPort="${SAM_NUXT_PUBLIC_REVERB_PORT}" \
+              NuxtPublicReverbScheme="${SAM_NUXT_PUBLIC_REVERB_SCHEME}" \
+              NuxtPublicPosthogKey="${SAM_NUXT_PUBLIC_POSTHOG_KEY}" \
+              NuxtPublicPosthogHost="${SAM_NUXT_PUBLIC_POSTHOG_HOST}" \
+              NuxtIlumBaseUrl="${SAM_NUXT_ILUM_BASE_URL}"
 
       - name: Get S3 bucket name from stack outputs
         id: stack-outputs

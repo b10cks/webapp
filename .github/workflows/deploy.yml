@@ -98,53 +98,6 @@ jobs:
             ${{ runner.os }}-sam-${{ env.SAM_STACK_NAME }}-
             ${{ runner.os }}-sam-
 
-      # Create or update samconfig.toml for consistent deployments
-      - name: Create SAM configuration
-        run: |
-          cat > samconfig.toml << EOF
-          version = 0.1
-          
-          [default.deploy.parameters]
-          stack_name = "${SAM_STACK_NAME}"
-          s3_bucket = "${SAM_S3_BUCKET}"
-          region = "${AWS_REGION}"
-          capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM"
-          confirm_changeset = false
-          fail_on_empty_changeset = false
-          image_repositories = []
-          parameter_overrides = [
-            "AppDomainName=${SAM_APP_DOMAIN_NAME}",
-            "ApiDomainName=${SAM_API_DOMAIN_NAME}",
-            "EcsOriginHeader=${SAM_ECS_ORIGIN_HEADER}",
-            "AcmCertificateArn=${SAM_ACM_CERTIFICATE_ARN}",
-            "ElbDomainName=${SAM_ELB_DOMAIN_NAME}",
-            "Client=${SAM_CLIENT}",
-            "NuxtPublicFrontendUrl=${NUXT_PUBLIC_FRONTEND_URL}",
-            "NuxtPublicBackendUrl=${NUXT_PUBLIC_BACKEND_URL}",
-            "NuxtPublicVersion=${{ steps.version.outputs.version }}",
-            "NuxtPublicReverbAppId=${NUXT_PUBLIC_REVERB_APP_ID}",
-            "NuxtPublicReverbAppKey=${NUXT_PUBLIC_REVERB_APP_KEY}",
-            "NuxtPublicReverbAppSecret=${NUXT_PUBLIC_REVERB_APP_SECRET}",
-            "NuxtPublicReverbHost=${NUXT_PUBLIC_REVERB_HOST}",
-            "NuxtPublicReverbPort=${NUXT_PUBLIC_REVERB_PORT}",
-            "NuxtPublicReverbScheme=${NUXT_PUBLIC_REVERB_SCHEME}",
-            "NuxtPublicPosthogKey=${NUXT_PUBLIC_POSTHOG_KEY}",
-            "NuxtPublicPosthogHost=${NUXT_PUBLIC_POSTHOG_HOST}",
-            "NuxtIlumBaseUrl=${NUXT_ILUM_BASE_URL}"
-          ]
-          tags = [
-            "Version=${{ steps.version.outputs.version }}",
-            "Environment=production",
-            "DeployedBy=github-actions",
-            "Repository=${{ github.repository }}",
-            "Commit=${{ github.sha }}"
-          ]
-          
-          [default.build.parameters]
-          cached = true
-          parallel = true
-          EOF
-
       - name: Install dependencies
         run: bun install --frozen-lockfile
 

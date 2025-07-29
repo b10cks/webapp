@@ -21,7 +21,7 @@ env:
 
   NUXT_PUBLIC_FRONTEND_URL: ${{ vars.SAM_NUXT_PUBLIC_FRONTEND_URL || 'https://app.b10cks.com/' }}
   NUXT_PUBLIC_BACKEND_URL: ${{ vars.SAM_NUXT_PUBLIC_BACKEND_URL || 'https://api.b10cks.com/' }}
-  NUXT_ILUM_BASE_URL: 'https://api.b10cks.com/ilum'
+  NUXT_ILUM_BASE_URL: ${{ vars.SAM_NUXT_ILUM_BASE_URL || 'https://api.b10cks.com/ilum' }}
   NUXT_PUBLIC_POSTHOG_HOST: ${{ vars.SAM_NUXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com' }}
   NUXT_PUBLIC_POSTHOG_KEY: ${{ secrets.SAM_NUXT_PUBLIC_POSTHOG_KEY || '' }}
   NUXT_PUBLIC_REVERB_APP_ID: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_ID || '' }}

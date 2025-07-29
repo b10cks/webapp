@@ -15,7 +15,7 @@ const props = defineProps<{
 }>()
 
 const { useBlocksQuery, getBlockBySlug } = useBlocks(props.spaceId)
-const { data: blocks } = useBlocksQuery()
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const ulid = useUlid()
 const route = useRoute()
@@ -119,7 +119,7 @@ function blockTitle(block: BlockResource | null): string {
 
 function guessTitle(content: Record<string, never>, block: BlockResource | null): string {
   if (!content) return 'Untitled'
-  if (block.preview_template) {
+  if (block?.preview_template) {
     try {
       return handlebars.render(block.preview_template, content)
     } catch (_) { /* empty */ }

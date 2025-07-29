@@ -234,7 +234,7 @@ const previewSource = computed(() => {
     env.url = env.url.slice(0, -1)
   }
 
-  return `${env.url}${props.content.full_slug}?b10cks_mode=draft&b10cks_ts=${Date.now()}&b10cks_vid=${selectedVersion.value.id}`
+  return `${env.url}${props.content.full_slug}?b10cks_mode=draft&b10cks_ts=${new Date(selectedVersion.value.created_at).getTime()}&b10cks_vid=${selectedVersion.value.id}`
 })
 
 const openInTab = () => {
@@ -502,6 +502,7 @@ const openInTab = () => {
                 </div>
                 <div class="bg-surface grow rounded-lg overflow-hidden flex">
                   <iframe
+                    v-if="previewSource"
                     class="grow flex-1 bg-white"
                     title="Content Preview"
                     :src="previewSource"

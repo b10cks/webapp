@@ -16,10 +16,12 @@ const props = withDefaults(defineProps<{
   blockSlug?: string
   spaceId: string
   isChild?: boolean
+  rootId?: string
   itemId?: string | null
 }>(), {
   blockId: null,
   blockSlug: null,
+  rootId: undefined,
   isChild: false,
   itemId: null
 })
@@ -102,7 +104,7 @@ const updateSubItem = (updatedValue: unknown) => {
   contentTree.updateItem(props.itemId, updatedValue)
 }
 const updateItem = (updatedValue: unknown) => {
-  updatePreviewItem(updatedValue)
+  updatePreviewItem({ id: props.rootId, ...updatedValue })
 }
 </script>
 
@@ -162,7 +164,7 @@ const updateItem = (updatedValue: unknown) => {
               v-model="content"
               :item="currentBlock?.schema?.[item]"
               :space-id="spaceId"
-              @update:m-odel-value="updateItem"
+              @update:model-value="updateItem"
             />
           </template>
         </div>

@@ -116,6 +116,7 @@ provide('updateHoverItem', (id) => previewRef.value && previewRef.value.updateHo
     <Preview
       ref="previewRef"
       :full-slug="content?.full_slug"
+      :updated-at="content?.updated_at"
       :item-id="selectedItemId"
       :space-id="spaceId"
       @select-item="(itemId) => selectedItemId = itemId"

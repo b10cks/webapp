@@ -16,6 +16,7 @@ const { t } = useI18n()
 const props = defineProps<{
   spaceId: string
   fullSlug?: string
+  updatedAt?: string
   content?: never // Content for live updates
   itemId?: string | null // Currently selected item in the editor
 }>()
@@ -48,7 +49,9 @@ const baseSrc = computed(() => {
 })
 
 const src = computed(() => {
-  return baseSrc?.value ? `${baseSrc.value}?b10cks_mode=draft&b10cks_id=123&b10cks_ts=${Date.now()}` : null
+  const timestamp = props.updatedAt ? new Date(props.updatedAt).getTime() : Date.now()
+
+  return baseSrc?.value ? `${baseSrc.value}?b10cks_mode=draft&b10cks_id=123&b10cks_ts=${timestamp}` : null
 })
 
 

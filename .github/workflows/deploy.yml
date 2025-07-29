@@ -181,6 +181,6 @@ jobs:
           echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Stack Name:** ${SAM_STACK_NAME}" >> $GITHUB_STEP_SUMMARY
           echo "**S3 Bucket:** ${{ steps.stack-outputs.outputs.bucket-name }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Website URL:** ${SAM_NUXT_PUBLIC_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "**Website URL:** ${NUXT_PUBLIC_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Deployment completed at $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

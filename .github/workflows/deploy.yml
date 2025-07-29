@@ -119,11 +119,6 @@ jobs:
             --no-fail-on-empty-changeset \
             --stack-name "${SAM_STACK_NAME}" \
             --region "${AWS_REGION}" \
-            --tags "Version=${{ steps.version.outputs.version }}" \
-              "Environment=production" \
-              "DeployedBy=github-actions" \
-              "Repository=${{ github.repository }}" \
-              "Commit=${{ github.sha }}" \
             --parameter-overrides \
               AppDomainName="${SAM_APP_DOMAIN_NAME}" \
               ApiDomainName="${SAM_API_DOMAIN_NAME}" \

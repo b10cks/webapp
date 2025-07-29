@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
-import { FormField } from '~/components/ui/form'
-import { Textarea } from '~/components/ui/textarea'
+import { TextField } from '~/components/ui/form'
 
 const value = defineModel<string>()
 
@@ -12,13 +11,11 @@ defineProps<{
 </script>
 
 <template>
-  <FormField
-    name="item.key"
+  <TextField
+    v-model="value"
+    :name="item.key"
     :label="item.name || item.key"
     :description="item.description"
-  >
-    <Textarea
-      v-model="value"
-    />
-  </FormField>
+    auto-size
+  />
 </template>

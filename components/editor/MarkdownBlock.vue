@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
-import { FormField, TextField } from '~/components/ui/form'
-import { Textarea } from '~/components/ui/textarea'
+import { TextField } from '~/components/ui/form'
 
 const value = defineModel<string>()
 
@@ -17,5 +16,6 @@ defineProps<{
     :name="item.key"
     :label="item.name || item.key"
     :description="item.description"
+    auto-size
   />
 </template>

@@ -77,7 +77,7 @@ const setCurrentItemFromRoute = () => {
 }
 
 // Watch for route changes to update selection
-watch(() => route.params.slug, () => {
+watch(() => route.params.contentId, () => {
   setCurrentItemFromRoute()
 }, { immediate: true })
 

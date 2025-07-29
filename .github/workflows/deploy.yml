@@ -19,19 +19,17 @@ env:
   SAM_ELB_DOMAIN_NAME: ${{ vars.SAM_ELB_DOMAIN_NAME || 'nb-clients-406653055.eu-west-1.elb.amazonaws.com' }}
   SAM_CLIENT: ${{ vars.SAM_CLIENT || 'b10cks' }}
 
-  SAM_NUXT_PUBLIC_FRONTEND_URL: ${{ vars.SAM_NUXT_PUBLIC_FRONTEND_URL || 'https://app.b10cks.com/' }}
-  SAM_NUXT_PUBLIC_BACKEND_URL: ${{ vars.SAM_NUXT_PUBLIC_BACKEND_URL || 'https://api.b10cks.com/' }}
-  SAM_NUXT_API_PROXY_URL: ${{ vars.SAM_NUXT_API_PROXY_URL || 'https://api.b10cks.com/' }}
-  SAM_NUXT_ILUM_BASE_URL: ${{ vars.SAM_NUXT_ILUM_BASE_URL || 'https://api.b10cks.com/ilum' }}
-  SAM_NUXT_PUBLIC_POSTHOG_HOST: ${{ vars.SAM_NUXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com' }}
-
-  SAM_NUXT_PUBLIC_REVERB_APP_ID: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_ID || '' }}
-  SAM_NUXT_PUBLIC_REVERB_APP_KEY: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_KEY || '' }}
-  SAM_NUXT_PUBLIC_REVERB_APP_SECRET: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_SECRET || '' }}
-  SAM_NUXT_PUBLIC_REVERB_HOST: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_HOST || '' }}
-  SAM_NUXT_PUBLIC_REVERB_PORT: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_PORT || '' }}
-  SAM_NUXT_PUBLIC_REVERB_SCHEME: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_SCHEME || '' }}
-  SAM_NUXT_PUBLIC_POSTHOG_KEY: ${{ secrets.SAM_NUXT_PUBLIC_POSTHOG_KEY || '' }}
+  NUXT_PUBLIC_FRONTEND_URL: ${{ vars.SAM_NUXT_PUBLIC_FRONTEND_URL || 'https://app.b10cks.com/' }}
+  NUXT_PUBLIC_BACKEND_URL: ${{ vars.SAM_NUXT_PUBLIC_BACKEND_URL || 'https://api.b10cks.com/' }}
+  NUXT_ILUM_BASE_URL: ${{ vars.SAM_NUXT_ILUM_BASE_URL || 'https://api.b10cks.com/ilum' }}
+  NUXT_PUBLIC_POSTHOG_HOST: ${{ vars.SAM_NUXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com' }}
+  NUXT_PUBLIC_POSTHOG_KEY: ${{ secrets.SAM_NUXT_PUBLIC_POSTHOG_KEY || '' }}
+  NUXT_PUBLIC_REVERB_APP_ID: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_ID || '' }}
+  NUXT_PUBLIC_REVERB_APP_KEY: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_KEY || '' }}
+  NUXT_PUBLIC_REVERB_APP_SECRET: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_APP_SECRET || '' }}
+  NUXT_PUBLIC_REVERB_HOST: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_HOST || '' }}
+  NUXT_PUBLIC_REVERB_PORT: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_PORT || '' }}
+  NUXT_PUBLIC_REVERB_SCHEME: ${{ secrets.SAM_NUXT_PUBLIC_REVERB_SCHEME || '' }}
 
 jobs:
   deploy:
@@ -121,19 +119,18 @@ jobs:
             "AcmCertificateArn=${SAM_ACM_CERTIFICATE_ARN}",
             "ElbDomainName=${SAM_ELB_DOMAIN_NAME}",
             "Client=${SAM_CLIENT}",
-            "NuxtPublicFrontendUrl=${SAM_NUXT_PUBLIC_FRONTEND_URL}",
-            "NuxtPublicBackendUrl=${SAM_NUXT_PUBLIC_BACKEND_URL}",
-            "NuxtApiProxyUrl=${SAM_NUXT_API_PROXY_URL}",
+            "NuxtPublicFrontendUrl=${NUXT_PUBLIC_FRONTEND_URL}",
+            "NuxtPublicBackendUrl=${NUXT_PUBLIC_BACKEND_URL}",
             "NuxtPublicVersion=${{ steps.version.outputs.version }}",
-            "NuxtPublicReverbAppId=${SAM_NUXT_PUBLIC_REVERB_APP_ID}",
-            "NuxtPublicReverbAppKey=${SAM_NUXT_PUBLIC_REVERB_APP_KEY}",
-            "NuxtPublicReverbAppSecret=${SAM_NUXT_PUBLIC_REVERB_APP_SECRET}",
-            "NuxtPublicReverbHost=${SAM_NUXT_PUBLIC_REVERB_HOST}",
-            "NuxtPublicReverbPort=${SAM_NUXT_PUBLIC_REVERB_PORT}",
-            "NuxtPublicReverbScheme=${SAM_NUXT_PUBLIC_REVERB_SCHEME}",
-            "NuxtPublicPosthogKey=${SAM_NUXT_PUBLIC_POSTHOG_KEY}",
-            "NuxtPublicPosthogHost=${SAM_NUXT_PUBLIC_POSTHOG_HOST}",
-            "NuxtIlumBaseUrl=${SAM_NUXT_ILUM_BASE_URL}"
+            "NuxtPublicReverbAppId=${NUXT_PUBLIC_REVERB_APP_ID}",
+            "NuxtPublicReverbAppKey=${NUXT_PUBLIC_REVERB_APP_KEY}",
+            "NuxtPublicReverbAppSecret=${NUXT_PUBLIC_REVERB_APP_SECRET}",
+            "NuxtPublicReverbHost=${NUXT_PUBLIC_REVERB_HOST}",
+            "NuxtPublicReverbPort=${NUXT_PUBLIC_REVERB_PORT}",
+            "NuxtPublicReverbScheme=${NUXT_PUBLIC_REVERB_SCHEME}",
+            "NuxtPublicPosthogKey=${NUXT_PUBLIC_POSTHOG_KEY}",
+            "NuxtPublicPosthogHost=${NUXT_PUBLIC_POSTHOG_HOST}",
+            "NuxtIlumBaseUrl=${NUXT_ILUM_BASE_URL}"
           ]
           tags = [
             "Version=${{ steps.version.outputs.version }}",
@@ -181,19 +178,18 @@ jobs:
               AcmCertificateArn="${SAM_ACM_CERTIFICATE_ARN}" \
               ElbDomainName="${SAM_ELB_DOMAIN_NAME}" \
               Client="${SAM_CLIENT}" \
-              NuxtPublicFrontendUrl="${SAM_NUXT_PUBLIC_FRONTEND_URL}" \
-              NuxtPublicBackendUrl="${SAM_NUXT_PUBLIC_BACKEND_URL}" \
-              NuxtApiProxyUrl="${SAM_NUXT_API_PROXY_URL}" \
+              NuxtPublicFrontendUrl="${NUXT_PUBLIC_FRONTEND_URL}" \
+              NuxtPublicBackendUrl="${NUXT_PUBLIC_BACKEND_URL}" \
               NuxtPublicVersion="${{ steps.version.outputs.version }}" \
-              NuxtPublicReverbAppId="${SAM_NUXT_PUBLIC_REVERB_APP_ID}" \
-              NuxtPublicReverbAppKey="${SAM_NUXT_PUBLIC_REVERB_APP_KEY}" \
-              NuxtPublicReverbAppSecret="${SAM_NUXT_PUBLIC_REVERB_APP_SECRET}" \
-              NuxtPublicReverbHost="${SAM_NUXT_PUBLIC_REVERB_HOST}" \
-              NuxtPublicReverbPort="${SAM_NUXT_PUBLIC_REVERB_PORT}" \
-              NuxtPublicReverbScheme="${SAM_NUXT_PUBLIC_REVERB_SCHEME}" \
-              NuxtPublicPosthogKey="${SAM_NUXT_PUBLIC_POSTHOG_KEY}" \
-              NuxtPublicPosthogHost="${SAM_NUXT_PUBLIC_POSTHOG_HOST}" \
-              NuxtIlumBaseUrl="${SAM_NUXT_ILUM_BASE_URL}"
+              NuxtPublicReverbAppId="${NUXT_PUBLIC_REVERB_APP_ID}" \
+              NuxtPublicReverbAppKey="${NUXT_PUBLIC_REVERB_APP_KEY}" \
+              NuxtPublicReverbAppSecret="${NUXT_PUBLIC_REVERB_APP_SECRET}" \
+              NuxtPublicReverbHost="${NUXT_PUBLIC_REVERB_HOST}" \
+              NuxtPublicReverbPort="${NUXT_PUBLIC_REVERB_PORT}" \
+              NuxtPublicReverbScheme="${NUXT_PUBLIC_REVERB_SCHEME}" \
+              NuxtPublicPosthogKey="${NUXT_PUBLIC_POSTHOG_KEY}" \
+              NuxtPublicPosthogHost="${NUXT_PUBLIC_POSTHOG_HOST}" \
+              NuxtIlumBaseUrl="${NUXT_ILUM_BASE_URL}"
 
       - name: Get S3 bucket name from stack outputs
         id: stack-outputs

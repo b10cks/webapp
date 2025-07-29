@@ -432,8 +432,8 @@ const assetItemProps = computed(() => {
         </BreadcrumbItem>
 
         <template
-          v-for="crumb in breadcrumbs"
-          :key="crumb.id"
+          v-for="{ id, color, icon, name } in breadcrumbs"
+          :key="id"
         >
           <li
             role="presentation"
@@ -445,13 +445,13 @@ const assetItemProps = computed(() => {
           <BreadcrumbItem>
             <button
               class="flex items-center gap-2 hover:text-primary cursor-pointer"
-              @click="folderId = crumb.id"
+              @click="folderId = id"
             >
               <Icon
-                :name="`lucide:${crumb.icon}`"
-                :style="{ color: crumb.color || 'inherit' }"
+                :name="`lucide:${icon}`"
+                :style="{ color: color || 'inherit' }"
               />
-              <span>{{ crumb.name }}</span>
+              <span>{{ name }}</span>
             </button>
           </BreadcrumbItem>
         </template>

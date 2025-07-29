@@ -2,14 +2,9 @@
 
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator
-} from '~/components/ui/breadcrumb'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '~/components/ui/breadcrumb'
 import type { ContentResource } from '~/types/contents'
+import { NuxtLink } from '#components'
 
 const props = defineProps<{
   content: ContentResource
@@ -57,15 +52,25 @@ const status = computed<{ color: string, label: string }>(() => {
       <div class="flex items-center gap-3">
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem
-              v-for="(item, index) in breadcrumbs"
-              :key="index"
+            <template
+              v-for="{id, name} in breadcrumbs"
+              :key="id"
             >
-              <BreadcrumbLink :to="{ name: 'space-content-contentId', params: { space: spaceId, contentId: item.id }}">
-                {{ item.name }}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator v-if="index < breadcrumbs.length - 1"/>
+              <li
+                role="presentation"
+                aria-hidden="true"
+              >
+                /
+              </li>
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  :as="NuxtLink"
+                  :to="{ name: 'space-content-contentId', params: { space: spaceId, contentId: id }}"
+                >
+                  {{ name }}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </template>
           </BreadcrumbList>
         </Breadcrumb>
       </div>

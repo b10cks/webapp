@@ -15,6 +15,7 @@ import { SimpleTooltip } from '~/components/ui/tooltip'
 const { t } = useI18n()
 const props = defineProps<{
   spaceId: string
+  contentId: string
   fullSlug?: string
   updatedAt?: string
   content?: never // Content for live updates
@@ -51,7 +52,7 @@ const baseSrc = computed(() => {
 const src = computed(() => {
   const timestamp = props.updatedAt ? new Date(props.updatedAt).getTime() : Date.now()
 
-  return baseSrc?.value ? `${baseSrc.value}?b10cks_mode=draft&b10cks_id=123&b10cks_ts=${timestamp}` : null
+  return baseSrc?.value ? `${baseSrc.value}?b10cks_mode=draft&b10cks_id=${props.contentId}&b10cks_ts=${timestamp}` : null
 })
 
 

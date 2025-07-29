@@ -116,6 +116,7 @@ provide('updateHoverItem', (id) => previewRef.value && previewRef.value.updateHo
     <Preview
       ref="previewRef"
       :full-slug="content?.full_slug"
+      :content-id="content?.id"
       :updated-at="content?.updated_at"
       :item-id="selectedItemId"
       :space-id="spaceId"
@@ -137,6 +138,7 @@ provide('updateHoverItem', (id) => previewRef.value && previewRef.value.updateHo
         >
           <EditorComponent
             v-model="content.content"
+            :root-id="content.id"
             :block-id="content.block.id"
             :space-id="spaceId"
             :item-id="selectedItemId"

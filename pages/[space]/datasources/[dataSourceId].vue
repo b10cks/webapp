@@ -14,6 +14,8 @@ import { Textarea } from '~/components/ui/textarea'
 import SortSelect from '~/components/ui/SortSelect.vue'
 import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import { useRouteQuery } from '@vueuse/router'
+import DataEntriesIcon from '~/assets/images/data-entries.svg?component'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
 
 const route = useRoute()
 const { alert } = useAlertDialog()
@@ -646,14 +648,12 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                         </TableCell>
                       </TableRow>
                     </template>
-                    <TableRow v-else>
-                      <TableCell
-                        :colspan="4"
-                        class="py-6 text-center"
-                      >
-                        {{ $t('labels.datasets.noEntries') }}
-                      </TableCell>
-                    </TableRow>
+                    <TableEmptyRow
+                      v-else
+                      :colspan="4"
+                      :icon="DataEntriesIcon"
+                      :label="$t('labels.datasets.noEntries')"
+                    />
                   </TableBody>
                 </Table>
               </div>

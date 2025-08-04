@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import ContentsIcon from '~/assets/images/contents.svg?component'
 import { Button } from '~/components/ui/button'
 
 const route = useRoute()
@@ -17,10 +18,8 @@ const rootItems = computed(() => getRootItems(data.value) || [])
       v-if="rootItems.length === 0"
       class="text-center py-12"
     >
-      <Icon
-        name="lucide:folder"
-        size="3rem"
-        class="mx-auto text-muted mb-4"
+      <ContentsIcon
+        class="mx-auto text-muted mb-6 w-32"
       />
       <h3 class="text-xl font-bold mb-2">No Content Found</h3>
       <p class="text-muted mb-6">Get started by creating your first content page</p>

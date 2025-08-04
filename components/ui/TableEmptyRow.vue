@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<{
   label?: string
 }>(), {
   colspan: 3,
-  icon: 'lucide:text-select',
+  icon: '',
   label: undefined
 })
 
@@ -25,13 +25,12 @@ const labelText = computed(() => {
   <TableRow>
     <TableCell
       :colspan="colspan"
-      class="py-6 text-center bg-surface"
+      class="py-12 text-center bg-surface"
     >
-      <div class="flex flex-col items-center justify-center gap-2 ">
-        <Icon
-          :name="icon"
-          size="3rem"
-          class="text-muted"
+      <div class="flex flex-col items-center justify-center gap-6">
+        <Component
+          :is="icon"
+          class="text-muted w-32"
         />
         <div class="text-muted font-semibold">{{ labelText }}</div>
         <slot name="actions"/>

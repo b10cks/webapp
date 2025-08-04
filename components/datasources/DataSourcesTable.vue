@@ -2,7 +2,6 @@
 import type { DataSourceResource } from '~/types/data-sources'
 import { useRouter } from 'vue-router'
 import { useClipboard } from '@vueuse/core'
-import { Input } from '~/components/ui/input'
 import {
   Table,
   TableBody,
@@ -12,17 +11,18 @@ import {
   TableHeader,
   TableRow,
   TableSortableHead
-} from '~/components/ui/table'
+} from '/components/ui/table'
+import DataSourcesIcon from '~/assets/images/datasources.svg?component'
 import { Button } from '~/components/ui/button'
 import { Badge } from '~/components/ui/badge'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import { useDataSources } from '~/composables/useDataSources'
-import type { RedirectsQueryParams } from '~/api/resources/dataSources'
 import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
 import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import SortSelect from '~/components/ui/SortSelect.vue'
 import SearchFilter from '~/components/SearchFilter.vue'
 import type { DataSourcesQueryParams } from '~/api/resources/data-sources'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
 
 const props = defineProps<{
   spaceId: string
@@ -255,12 +255,12 @@ const confirmDelete = async () => {
               </TableCell>
             </TableRow>
           </template>
-          <TableEmpty
+          <TableEmptyRow
             v-else
             :colspan="8"
-          >
-            {{ searchQuery ? $t('labels.datasets.noSearchResults') : $t('labels.datasets.noDataSources') }}
-          </TableEmpty>
+            :icon="DataSourcesIcon"
+            :label="searchQuery ? $t('labels.datasets.noSearchResults') : $t('labels.datasets.noDataSources')"
+          />
         </TableBody>
       </Table>
     </div>

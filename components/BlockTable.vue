@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { useRouteHash, useRouteQuery } from '@vueuse/router'
+import { useRouteQuery } from '@vueuse/router'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Button } from '~/components/ui/button'
 import CreateBlockDialog from '~/components/blocks/CreateBlockDialog.vue'
@@ -12,6 +12,7 @@ import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
 import { Badge } from '~/components/ui/badge'
 import IconName from '~/components/ui/IconName.vue'
 import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import BlocksIcon from '~/assets/images/blocks.svg?component'
 
 const props = defineProps<{
   spaceId: string
@@ -173,6 +174,7 @@ const handleDelete = async (block: BlockResource) => {
               />
               <TableEmptyRow
                 v-else-if="blocks.meta?.total === 0"
+                :icon="BlocksIcon"
                 :colspan="5"
               />
               <template v-else>

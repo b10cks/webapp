@@ -24,9 +24,11 @@ import {
 import SearchFilter from '~/components/SearchFilter.vue'
 import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
 
+import RedirectsIcon from '~/assets/images/redirects.svg?component'
 import type { RedirectsQueryParams } from '~/api/resources/redirects'
 import SortSelect from '~/components/ui/SortSelect.vue'
 import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
 
 const { $t } = useI18n()
 const { alert } = useAlertDialog()
@@ -593,12 +595,12 @@ watch(() => currentPage.value, () => {
               </TableCell>
             </TableRow>
           </template>
-          <TableEmpty
+          <TableEmptyRow
             v-else
             :colspan="8"
-          >
-            {{ $t('labels.redirects.noRedirects') }}
-          </TableEmpty>
+            :icon="RedirectsIcon"
+            :label="$t('labels.redirects.noRedirects')"
+          />
         </TableBody>
       </Table>
     </div>

@@ -3,6 +3,7 @@ import { Breadcrumb, BreadcrumbItem } from '~/components/ui/breadcrumb'
 import AssetFolder from '~/components/assets/AssetFolder.vue'
 import UploadDialog from '~/components/assets/UploadDialog.vue'
 import AssetItem from '~/components/assets/AssetItem.vue'
+import AssetsIcon from '~/assets/images/assets.svg?component'
 import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
 import CreateFolderDialog from '~/components/assets/CreateFolderDialog.vue'
 import type { AssetsQueryParams } from '~/api/resources/assets'
@@ -593,10 +594,8 @@ const assetItemProps = computed(() => {
           v-if="assetResponse.data.length === 0"
           class="bg-surface p-8 rounded-lg flex flex-col items-center justify-center min-h-[200px]"
         >
-          <Icon
-            name="lucide:image"
-            size="3rem"
-            class="mb-4 text-muted"
+          <AssetsIcon
+            class="mb-4 text-muted w-32"
           />
           <h3 class="text-xl font-semibold mb-2 text-center">
             {{ $t('labels.assets.noAssetsFound') }}

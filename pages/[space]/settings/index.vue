@@ -120,7 +120,8 @@ const handleUploadIcon = () => {
           :description="$t('labels.settings.space.spaceIdDescription')"
           name="space-id"
           :model-value="space.id"
-          disabled
+          readonly
+          :actions="['copy']"
         />
 
         <ServerLocationSelect

@@ -5,6 +5,12 @@ import { useVModel } from '@vueuse/core'
 import FormField from './FormField.vue'
 import Input from '../input/Input.vue'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+import { Button } from '~/components/ui/button'
+import { toast } from 'vue-sonner'
+
+type InputActionType = 'clear' | 'copy'
+
+const { $t } = useI18n()
 
 const props = defineProps<{
   // FormField props
@@ -17,6 +23,7 @@ const props = defineProps<{
   autoFocus?: boolean
   class?: HTMLAttributes['class']
   inputClass?: HTMLAttributes['class']
+  actions: Array<InputActionType>
 
   // Input props
   modelValue?: string | number
@@ -28,17 +35,20 @@ const props = defineProps<{
   name: string
 }>()
 
+const icons = {
+  clear: 'lucide:x-circle',
+  copy: 'lucide:copy',
+}
+
 const emits = defineEmits<{
-  (e: 'update:modelValue', payload: string | number): void
+  (e: 'update:modelValue' | InputActionType, payload: string | number): void
 }>()
 
-// Create two-way binding for modelValue
 const modelValue = useVModel(props, 'modelValue', emits, {
   passive: true,
   defaultValue: props.defaultValue,
 })
 
-// Additional input props that should be passed to the Input component
 const inputProps = computed(() => {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -49,6 +59,15 @@ const inputProps = computed(() => {
 
   return { ...rest, class: props.inputClass }
 })
+
+const trigger = (action: InputActionType) => {
+  if (action === 'clear') {
+    modelValue.value = ''
+  } else if (action === 'copy') {
+    navigator.clipboard.writeText(modelValue.value as string)
+    toast.info($t('labels.inputField.copied'))
+  }
+}
 
 </script>
 
@@ -64,12 +83,28 @@ const inputProps = computed(() => {
     :class="props.class"
   >
     <template #default="{ id, hasError }">
-      <Input
-        :id="id"
-        v-model="modelValue"
-        :class="{ 'border-red-500': hasError }"
-        v-bind="{ ...inputProps, ...$attrs }"
-      />
+      <div class="relative">
+        <Input
+          :id="id"
+          v-model="modelValue"
+          :class="{ 'border-red-500': hasError }"
+          v-bind="{ ...inputProps, ...$attrs }"
+        />
+        <div
+          v-if="actions?.length"
+          class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5"
+        >
+          <Button
+            v-for="action in actions"
+            :key="action"
+            size="xs"
+            :aria-label="action"
+            @click="trigger(action)"
+          >
+            <Icon :name="icons[action]" />
+          </Button>
+        </div>
+      </div>
     </template>
   </FormField>
 </template>

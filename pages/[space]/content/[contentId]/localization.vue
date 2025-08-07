@@ -57,7 +57,7 @@ watch([translatableOriginalContent, language, originalContent], () => {
 }, { immediate: true })
 
 const { useBlocksQuery } = useBlocks(spaceId)
-const { data: blocks } = useBlocksQuery()
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const block = computed(() => {
   if (!originalContent.value || !blocks.value) return null

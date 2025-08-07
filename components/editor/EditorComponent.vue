@@ -64,7 +64,7 @@ onMounted(() => {
 })
 
 const { useBlocksQuery, getBlockById, getBlockBySlug } = useBlocks(props.spaceId)
-const { data: blocks } = useBlocksQuery()
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const rootBlock = inject<ContentBlock>('rootBlock')
 const updatePreviewItem = inject<(data: never) => void>('updatePreviewItem')

@@ -20,7 +20,7 @@ const { $t } = useI18n()
 const { alert } = useAlertDialog()
 
 const { useBlocksQuery } = useBlocks(props.spaceId)
-const { data: blocks } = useBlocksQuery({ per_page: 500 })
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const { useFolderStructure, useDeleteBlockFolderMutation } = useBlockFolders(props.spaceId)
 const { rootFolders, getChildrenOfFolder } = useFolderStructure()

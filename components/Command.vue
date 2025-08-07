@@ -18,7 +18,7 @@ const spaceId = computed<string>(() => route.params.space as string)
 const { useSpacesQuery } = useSpaces()
 const { data: spaces } = useSpacesQuery()
 const { useBlocksQuery } = useBlocks(spaceId)
-const { data: blocks } = useBlocksQuery()
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 const { useContentMenuQuery } = useContentMenu(spaceId)
 const { data: contents } = useContentMenuQuery()
 

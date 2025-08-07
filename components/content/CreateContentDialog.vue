@@ -18,7 +18,7 @@ const { useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(props.spaceId)
 
 const { useBlocksQuery } = useBlocks(props.spaceId)
-const { data: blocks } = useBlocksQuery()
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const { useCreateContentMutation } = useContent(props.spaceId)
 const { mutate: createContent } = useCreateContentMutation()

@@ -23,7 +23,7 @@ const type = ref<string>()
 const isOpen = ref(false)
 
 const { useBlocksQuery } = useBlocks(props.spaceId)
-const { data: blocks } = useBlocksQuery()
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const possibleBlocks = computed(() => {
   return blocks.value.data.filter((block: BlockResource) => {

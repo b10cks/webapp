@@ -11,7 +11,7 @@ const { mutate: updateSpace } = useUpdateSpaceMutation()
 const props = defineProps<{ space: SpaceResource }>()
 
 const { useBlocksQuery } = useBlocks(props.space.id)
-const { data: blocks } = useBlocksQuery()
+const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const defaultBlock = ref(props.space.settings.default_block)
 

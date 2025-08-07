@@ -328,7 +328,8 @@ Resources:
               - OPTIONS
             ViewerProtocolPolicy: redirect-to-https
             CachePolicyId: 09765723-8078-477b-a2c4-873e926bb034
-            OriginRequestPolicyId: fff6e727-a5cd-4c46-8c26-f7877668275c # Managed-AllViewerExceptHostHeader
+            OriginRequestPolicyId: fff6e727-a5cd-4c46-8c26-f7877668275c
+            ResponseHeadersPolicyId: eaab4381-ed33-4a86-88ca-d9558dc6cd63 # Managed-CORS-with-preflight-and-SecurityHeadersPolicy
 
           - PathPattern: /auth/*
             TargetOriginId: elb

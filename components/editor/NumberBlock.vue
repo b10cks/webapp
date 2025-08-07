@@ -2,17 +2,23 @@
 
 import { InputField } from '~/components/ui/form'
 
+const value = defineModel<string>()
+
 defineProps<{
-  item: SchemaType & { key: string }
+  item: NumberSchema & { key: string }
 }>()
 
 </script>
 
 <template>
-  <div>
-    <InputField
-      :label="item.name || item.key"
-      :description="item.description"
-    />
-  </div>
+  <InputField
+    v-model="value"
+    :name="item.key"
+    :label="item.name || item.key"
+    :description="item.description"
+    type="number"
+    :min="item.min"
+    :max="item.max"
+    :step="item.step"
+  />
 </template>

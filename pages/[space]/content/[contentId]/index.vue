@@ -16,7 +16,6 @@ const spaceId = computed<string>(() => route.params.space as string)
 const contentId = computed<string>(() => route.params.contentId as string)
 
 const { useContentQuery } = useContent(spaceId)
-const { useBlocksQuery } = useBlocks(spaceId)
 
 const { data: originalContent } = useContentQuery(contentId)
 
@@ -105,6 +104,7 @@ const updateField = (update: FieldUpdateEvent) => {
 // }
 
 
+provide('content', content)
 provide('rootBlock', rootBlock)
 provide('updatePreviewItem', updatePreviewItem)
 provide('updateHoverItem', (id) => previewRef.value && previewRef.value.updateHover(id))

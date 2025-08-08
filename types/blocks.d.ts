@@ -22,6 +22,12 @@ interface LinkSchema extends Schema {
   allow_target_blank: boolean
 }
 
+interface MetaSchema extends Schema {
+  type: 'meta'
+  translatable: boolean
+  has_og_tags: boolean
+}
+
 type FileTypes = 'image' | 'video' | 'audio' | 'document' | 'archive' | 'other' | 'all'
 
 interface AssetSchema extends Schema {

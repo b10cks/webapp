@@ -4,6 +4,7 @@ import { useAlertDialog } from '~/composables/useAlertDialog'
 import AssetGrid from '~/components/assets/AssetGrid.vue'
 import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
+import AssetsIcon from '~/assets/images/assets.svg?component'
 
 interface AssetValue {
   id: string
@@ -96,10 +97,8 @@ const handleAssetDelete = async () => {
       class="border-2 border-dashed border-input rounded-lg p-8 text-center bg-surface/50 hover:bg-surface transition-colors cursor-pointer"
       @click="showAssetPicker = true"
     >
-      <Icon
-        name="lucide:image"
-        size="2rem"
-        class="mx-auto mb-3 text-muted"
+      <AssetsIcon
+        class="mx-auto mb-3 text-muted size-16"
       />
       <p class="text-sm font-medium text-primary mb-1">
         {{ $t('labels.assets.addAsset') }}

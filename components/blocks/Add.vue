@@ -17,6 +17,7 @@ const types = [
   'boolean',
   'asset',
   'multiAsset',
+  'meta',
 ]
 
 const slugBlacklist = ['key', 'block']

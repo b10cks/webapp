@@ -19,6 +19,7 @@ const types: Record<string, BlockType> = {
   'options': { cls: 'text-violet-300 border border-violet-400 bg-violet-800', icon: 'lucide:square-menu' },
   'asset': { cls: 'text-yellow-300 border border-yellow-400 bg-yellow-800', icon: 'lucide:image' },
   'multiAsset': { cls: 'text-yellow-300 border border-yellow-400 bg-yellow-800', icon: 'lucide:images' },
+  'meta': { cls: 'text-gray-400 border border-gray-500 bg-gray-800', icon: 'lucide:search' }
 }
 
 const props = defineProps<{ type: keyof typeof types }>()

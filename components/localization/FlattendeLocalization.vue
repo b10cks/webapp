@@ -8,11 +8,13 @@ import type { ApiResponse } from '~/types'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { CheckboxField } from '~/components/ui/form'
+import MetaLocalization from '~/components/localization/MetaLocalization.vue'
 
 const localizers = {
   text: TextLocalization,
   textarea: TextareaLocalization,
   markdown: MarkdownLocalization,
+  meta: MetaLocalization
 }
 
 const props = defineProps<{

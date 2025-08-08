@@ -20,6 +20,7 @@ import { CheckboxField, InputField, TextField } from '~/components/ui/form'
 import ReferencesBlock from '~/components/blocks/ReferencesBlock.vue'
 import AssetBlock from '~/components/blocks/AssetBlock.vue'
 import MultiAssetBlock from '~/components/blocks/MultiAssetBlock.vue'
+import MetaBlock from '~/components/blocks/MetaBlock.vue'
 
 const emit = defineEmits(['delete', 'to-page', 'update:name', 'update:item'])
 
@@ -32,7 +33,7 @@ const props = defineProps<{
 }>()
 
 const localItem = ref({ ...props.item })
-const translatable = ['text', 'textarea', 'markdown', 'number', 'link']
+const translatable = ['text', 'textarea', 'markdown', 'number', 'link', 'meta']
 
 const schemas = {
   asset: AssetBlock,
@@ -44,7 +45,8 @@ const schemas = {
   option: OptionBlock,
   reference: ReferencesBlock,
   text: TextBlock,
-  textarea: TextareaBlock
+  textarea: TextareaBlock,
+  meta: MetaBlock
 }
 
 watch(props.item as SchemaType, (newItem) => {

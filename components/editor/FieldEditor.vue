@@ -10,6 +10,7 @@ import LinkBlock from '~/components/editor/LinkBlock.vue'
 import AssetBlock from '~/components/editor/AssetBlock.vue'
 import MultiAssetsBlock from '~/components/editor/MultiAssetsBlock.vue'
 import ReferenceBlock from '~/components/editor/ReferenceBlock.vue'
+import MetaBlock from '~/components/editor/MetaBlock.vue'
 
 const editors = {
   text: TextBlock,
@@ -22,7 +23,8 @@ const editors = {
   number: NumberBlock,
   asset: AssetBlock,
   multiAsset: MultiAssetsBlock,
-  reference: ReferenceBlock
+  reference: ReferenceBlock,
+  meta: MetaBlock
 } as const
 
 const props = defineProps<{

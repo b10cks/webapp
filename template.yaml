@@ -207,7 +207,6 @@ Resources:
         HttpVersion: http2and3
         Aliases:
           - !If [IsDomainProvided, !Ref AppDomainName, !Ref AWS::NoValue]
-          - !If [IsDomainProvided, !Ref ApiDomainName, !Ref AWS::NoValue]
         ViewerCertificate:
           Fn::If:
             - IsDomainProvided

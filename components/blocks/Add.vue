@@ -6,6 +6,7 @@ import BlockTypeSelect from '~/components/ui/BlockTypeSelect.vue'
 
 const types = [
   'text',
+  'date',
   'number',
   'textarea',
   'markdown',

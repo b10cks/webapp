@@ -193,6 +193,23 @@ const createDefaultSchemaForType = (type: string, key: string) => {
         tag_whitelist: [],
         default: []
       }
+    case 'meta':
+      return {
+        ...baseSchema,
+        type: 'meta',
+        translatable: true,
+        has_og_tags: false
+      }
+    case 'date':
+      return {
+        ...baseSchema,
+        type: 'date',
+        translatable: false,
+        format: 'date',
+        min: undefined,
+        max: undefined,
+        use_current_as_default: false
+      }
     default:
       return baseSchema
   }

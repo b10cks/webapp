@@ -11,6 +11,7 @@ import AssetBlock from '~/components/editor/AssetBlock.vue'
 import MultiAssetsBlock from '~/components/editor/MultiAssetsBlock.vue'
 import ReferenceBlock from '~/components/editor/ReferenceBlock.vue'
 import MetaBlock from '~/components/editor/MetaBlock.vue'
+import DateBlock from '~/components/editor/DateBlockEditor.vue'
 
 const editors = {
   text: TextBlock,
@@ -24,7 +25,8 @@ const editors = {
   asset: AssetBlock,
   multiAsset: MultiAssetsBlock,
   reference: ReferenceBlock,
-  meta: MetaBlock
+  meta: MetaBlock,
+  date: DateBlock
 } as const
 
 const props = defineProps<{

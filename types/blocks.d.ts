@@ -14,6 +14,15 @@ interface BlocksSchema extends Schema {
   tag_whitelist: string[]
 }
 
+interface DateSchema extends Schema {
+  type: 'date'
+  translatable: boolean
+  format: 'date' | 'time' | 'datetime-local'
+  min?: string
+  max?: string
+  use_current_as_default: boolean
+}
+
 interface LinkSchema extends Schema {
   type: 'link'
   translatable: boolean
@@ -85,8 +94,8 @@ interface OptionSchema extends Schema {
   exclude_empty: boolean
 }
 
-type TranslatableSchema = TextSchema | TextareaSchema | MarkdownSchema | LinkSchema
-type SchemaType = BlocksSchema | LinkSchema | TextSchema | TextareaSchema | MarkdownSchema | NumberSchema | BooleanSchema | OptionSchema | AssetSchema | MultiAssetsSchema | ReferencesSchema
+type TranslatableSchema = TextSchema | TextareaSchema | MarkdownSchema | LinkSchema | MetaSchema
+type SchemaType = BlocksSchema | LinkSchema | TextSchema | TextareaSchema | MarkdownSchema | NumberSchema | BooleanSchema | OptionSchema | AssetSchema | MultiAssetsSchema | ReferencesSchema | DateSchema | MetaSchema
 
 interface EditorPage {
   header: string

@@ -287,7 +287,22 @@
         "minDescription": "Leave empty to allow zero items.",
         "max": "Allowed maximum",
         "maxPlaceholder": "Enter maximum number of items",
-        "maxDescription": "Leave empty to allow unlimited items."
+        "maxDescription": "Leave empty to allow unlimited items.",
+        "date": {
+          "format": "Date Format",
+          "formatDescription": "Choose how the date should be displayed and stored",
+          "formats": {
+            "date": "Date Only (YYYY-MM-DD)",
+            "time": "Time Only (HH:MM)",
+            "datetime": "Date & Time (YYYY-MM-DD HH:MM)"
+          },
+          "min": "Minimum Date",
+          "minDescription": "The earliest date that can be selected",
+          "max": "Maximum Date",
+          "maxDescription": "The latest date that can be selected",
+          "useCurrentAsDefault": "Use Current Date as Default",
+          "useCurrentAsDefaultDescription": "When enabled, new content will default to the current date"
+        }
       },
       "types": {
         "root": {
@@ -308,6 +323,10 @@
         }
       },
       "fieldTypes": {
+        "date": {
+          "label": "Date",
+          "description": "A date field with different formats"
+        },
         "boolean": {
           "label": "Boolean",
           "description": "A boolean value (true/false)"

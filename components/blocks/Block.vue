@@ -21,11 +21,12 @@ import ReferencesBlock from '~/components/blocks/ReferencesBlock.vue'
 import AssetBlock from '~/components/blocks/AssetBlock.vue'
 import MultiAssetBlock from '~/components/blocks/MultiAssetBlock.vue'
 import MetaBlock from '~/components/blocks/MetaBlock.vue'
+import DateBlock from '~/components/blocks/DateBlock.vue'
 
 const emit = defineEmits(['delete', 'to-page', 'update:name', 'update:item'])
 
 const props = defineProps<{
-  item: BooleanSchema | LinkSchema | ReferencesSchema | NumberSchema | OptionSchema | TextSchema | TextareaSchema | BlocksSchema
+  item: SchemaType
   pages: EditorPage[]
   currentPage: number
   isOpen: boolean
@@ -46,7 +47,8 @@ const schemas = {
   reference: ReferencesBlock,
   text: TextBlock,
   textarea: TextareaBlock,
-  meta: MetaBlock
+  meta: MetaBlock,
+  date: DateBlock
 }
 
 watch(props.item as SchemaType, (newItem) => {

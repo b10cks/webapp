@@ -12,6 +12,7 @@ const types: Record<string, BlockType> = {
   'link': { cls: 'text-blue-400 border border-accent bg-blue-900', icon: 'lucide:link' },
   'reference': { cls: 'text-blue-400 border border-accent bg-blue-900', icon: 'lucide:link-2' },
   'number': { cls: 'text-green-400 border border-green-600 bg-green-800', icon: 'lucide:hash' },
+  'date': { cls: 'text-green-400 border border-green-600 bg-green-800', icon: 'lucide:calendar' },
   'text': { cls: 'text-green-400 border border-green-600 bg-green-800', text: 'Aa' },
   'textarea': { cls: 'text-green-400 border border-green-600 bg-green-800', text: 'Tx' },
   'markdown': { cls: 'text-green-400 border border-green-600 bg-green-800', text: 'Md' },
@@ -25,7 +26,7 @@ const types: Record<string, BlockType> = {
 const props = defineProps<{ type: keyof typeof types }>()
 
 const currentType = computed(() => {
-  return types[props.type]
+  return types[props.type] ?? { cls: props.type }
 })
 
 </script>

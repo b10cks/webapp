@@ -52,7 +52,7 @@ const baseSrc = computed(() => {
 const src = computed(() => {
   const timestamp = props.updatedAt ? new Date(props.updatedAt).getTime() : Date.now()
 
-  return baseSrc?.value ? `${baseSrc.value}?b10cks_vid=draft&b10cks_ts=${timestamp}` : null
+  return baseSrc?.value ? `${baseSrc.value}?b10cks_vid=draft&b10cks_rv=${timestamp}` : null
 })
 
 

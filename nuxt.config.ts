@@ -83,6 +83,9 @@ export default defineNuxtConfig({
     size: '1rem',
     mode: 'svg',
     collections: ['lucide', 'flag'],
+    serverBundle: {
+      collections: ['lucide'],
+    },
     customCollections: [
       {
         prefix: 'b10cks',

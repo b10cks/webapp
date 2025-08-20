@@ -159,7 +159,24 @@ const hasContent = computed(() => {
       :label="$t('labels.contents.fields.meta.description')"
       :placeholder="$t('labels.contents.fields.meta.descriptionPlaceholder')"
       :disabled="isGenerating"
+      auto-size
       @update:model-value="updateValue('description', $event)"
+    />
+    <InputField
+      v-model="localValue.canonical"
+      :name="item.key + '-canonical'"
+      :label="$t('labels.contents.fields.meta.canonical')"
+      :tooltip="$t('labels.contents.fields.meta.canonicalDescription')"
+      :disabled="isGenerating"
+      @update:model-value="updateValue('title', $event)"
+    />
+    <InputField
+      v-model="localValue.robots"
+      :name="item.key + '-robots'"
+      :label="$t('labels.contents.fields.meta.robots')"
+      :tooltip="$t('labels.contents.fields.meta.robotsDescription')"
+      :disabled="isGenerating"
+      @update:model-value="updateValue('title', $event)"
     />
     <template v-if="item.has_og_tags">
       <AssetBlock
@@ -182,6 +199,7 @@ const hasContent = computed(() => {
         :label="$t('labels.contents.fields.meta.ogDescription')"
         :placeholder="$t('labels.contents.fields.meta.ogDescriptionPlaceholder')"
         :disabled="isGenerating"
+        auto-size
         @update:model-value="updateValue('ogDescription', $event)"
       />
     </template>

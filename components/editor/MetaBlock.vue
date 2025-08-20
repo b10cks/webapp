@@ -91,7 +91,7 @@ const generateMetaWithAI = async () => {
       description: string
       ogTitle: string
       ogDescription: string
-    }>>('mgmt/v1/ai/meta-tags', { context: requestData })
+    }>>('mgmt/v1/ai/meta-tags', { context: requestData }, { query: { spaceId: props.spaceId } })
 
     // Update local values and emit changes
     const generatedMeta = response.data
@@ -148,16 +148,16 @@ const hasContent = computed(() => {
     <InputField
       v-model="localValue.title"
       :name="item.key + '-title'"
-      :label="$t('labels.blocks.fields.meta.title')"
-      :placeholder="$t('labels.blocks.fields.meta.titlePlaceholder')"
+      :label="$t('labels.contents.fields.meta.title')"
+      :placeholder="$t('labels.contents.fields.meta.titlePlaceholder')"
       :disabled="isGenerating"
       @update:model-value="updateValue('title', $event)"
     />
     <TextField
       v-model="localValue.description"
       :name="item.key + '-description'"
-      :label="$t('labels.blocks.fields.meta.description')"
-      :placeholder="$t('labels.blocks.fields.meta.descriptionPlaceholder')"
+      :label="$t('labels.contents.fields.meta.description')"
+      :placeholder="$t('labels.contents.fields.meta.descriptionPlaceholder')"
       :disabled="isGenerating"
       @update:model-value="updateValue('description', $event)"
     />
@@ -171,16 +171,16 @@ const hasContent = computed(() => {
       <InputField
         v-model="localValue.ogTitle"
         :name="item.key + '-ogTitle'"
-        :label="$t('labels.blocks.fields.meta.ogTitle')"
-        :placeholder="$t('labels.blocks.fields.meta.ogTitlePlaceholder')"
+        :label="$t('labels.contents.fields.meta.ogTitle')"
+        :placeholder="$t('labels.contents.fields.meta.ogTitlePlaceholder')"
         :disabled="isGenerating"
         @update:model-value="updateValue('ogTitle', $event)"
       />
       <TextField
         v-model="localValue.ogDescription"
         :name="item.key + '-ogDescription'"
-        :label="$t('labels.blocks.fields.meta.ogDescription')"
-        :placeholder="$t('labels.blocks.fields.meta.ogDescriptionPlaceholder')"
+        :label="$t('labels.contents.fields.meta.ogDescription')"
+        :placeholder="$t('labels.contents.fields.meta.ogDescriptionPlaceholder')"
         :disabled="isGenerating"
         @update:model-value="updateValue('ogDescription', $event)"
       />

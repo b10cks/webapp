@@ -248,7 +248,7 @@ const translateWithAI = async () => {
       fields: fieldsToTranslate
     }
 
-    const response = await apiClient.post<ApiResponse<Record<string, string>>>('/mgmt/v1/ai/translate', requestData,)
+    const response = await apiClient.post<ApiResponse<Record<string, string>>>('/mgmt/v1/ai/translate', requestData, { query: { spaceId: props.spaceId } })
     updateTranslatedValues(response.data)
 
     toast.success(`Successfully translated ${Object.keys(response.data).length} fields`)

@@ -578,7 +578,22 @@
         "of": "of",
         "tokensUsed": "tokens used",
         "resetInfo": "Your plan resets on {date}. Need more tokens?",
-        "upgradePlan": "Upgrade your plan"
+        "upgradePlan": "Upgrade your plan",
+        "modelSelection": "AI Model",
+        "modelSelectionDescription": "Choose the AI model to use for content generation and processing",
+        "selectModel": "Select AI model",
+        "freeModel": "Free model",
+        "tags": {
+          "free": "Free",
+          "hot": "Hot",
+          "premium": "Premium",
+          "new": "New"
+        },
+        "provider": "Provider",
+        "tokenMultiplier": "Token multiplier",
+        "loadingModels": "Loading available models...",
+        "loadingUsage": "Loading usage data...",
+        "noUsageData": "No usage data available"
       },
       "members": {
         "title": "Members",

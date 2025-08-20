@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import AssetBlock from '~/components/editor/AssetBlock.vue'
 import { InputField, TextField } from '~/components/ui/form'
+import { Button } from '~/components/ui/button'
+import { toast } from 'vue-sonner'
+import type { ApiResponse } from '~/types'
 
 const props = defineProps<{
   item: MetaSchema & { key: string }
@@ -9,12 +12,14 @@ const props = defineProps<{
 }>()
 
 const content = inject('content')
+const { client: apiClient } = useApiClient()
 
 const emit = defineEmits<{
   (e: 'update:model-value', value: unknown): void
 }>()
 
 const localValue = ref({ ...props.modelValue })
+const isGenerating = ref(false)
 
 const updateValue = (key: string, value: unknown) => {
   emit('update:model-value', {
@@ -63,15 +68,89 @@ const truncatedTitle = computed(() => {
     ? truncated.substring(0, lastSpace) + '...'
     : truncated + '...'
 })
+
+const generateMetaWithAI = async () => {
+  try {
+    isGenerating.value = true
+    toast.info('Generating meta tags with AI...')
+
+    const requestData = {
+      name: content.value.name,
+      slug: content.value.full_slug,
+      body: content.value.content || '',
+      current_meta: {
+        title: localValue.value?.title || '',
+        description: localValue.value?.description || '',
+        ogTitle: localValue.value?.ogTitle || '',
+        ogDescription: localValue.value?.ogDescription || ''
+      }
+    }
+
+    const response = await apiClient.post<ApiResponse<{
+      title: string
+      description: string
+      ogTitle: string
+      ogDescription: string
+    }>>('mgmt/v1/ai/meta-tags', { context: requestData })
+
+    // Update local values and emit changes
+    const generatedMeta = response.data
+    const newValue = {
+      ...localValue.value,
+      title: generatedMeta.title,
+      description: generatedMeta.description,
+      ...(props.item.has_og_tags && {
+        ogTitle: generatedMeta.ogTitle,
+        ogDescription: generatedMeta.ogDescription
+      })
+    }
+
+    localValue.value = newValue
+    emit('update:model-value', newValue)
+
+    toast.success('Meta tags generated successfully!')
+  } catch (error) {
+    toast.error(`Meta generation failed: ${error.message}`)
+  } finally {
+    isGenerating.value = false
+  }
+}
+
+const hasContent = computed(() => {
+  return content.value?.name || content.value?.content
+})
 </script>
 
 <template>
   <div class="flex flex-col gap-6">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-primary">Meta Tags</h3>
+      <Button
+        size="sm"
+        :disabled="isGenerating || !hasContent"
+        class="flex items-center gap-2"
+        @click="generateMetaWithAI"
+      >
+        <Icon
+          v-if="isGenerating"
+          name="lucide:loader"
+          class="animate-spin text-ai"
+        />
+        <Icon
+          v-else
+          name="lucide:sparkles"
+          class="text-ai"
+        />
+        <span>{{ isGenerating ? 'Generating...' : 'AI Generate' }}</span>
+      </Button>
+    </div>
+
     <InputField
       v-model="localValue.title"
       :name="item.key + '-title'"
       :label="$t('labels.blocks.fields.meta.title')"
       :placeholder="$t('labels.blocks.fields.meta.titlePlaceholder')"
+      :disabled="isGenerating"
       @update:model-value="updateValue('title', $event)"
     />
     <TextField
@@ -79,6 +158,7 @@ const truncatedTitle = computed(() => {
       :name="item.key + '-description'"
       :label="$t('labels.blocks.fields.meta.description')"
       :placeholder="$t('labels.blocks.fields.meta.descriptionPlaceholder')"
+      :disabled="isGenerating"
       @update:model-value="updateValue('description', $event)"
     />
     <template v-if="item.has_og_tags">
@@ -93,6 +173,7 @@ const truncatedTitle = computed(() => {
         :name="item.key + '-ogTitle'"
         :label="$t('labels.blocks.fields.meta.ogTitle')"
         :placeholder="$t('labels.blocks.fields.meta.ogTitlePlaceholder')"
+        :disabled="isGenerating"
         @update:model-value="updateValue('ogTitle', $event)"
       />
       <TextField
@@ -100,6 +181,7 @@ const truncatedTitle = computed(() => {
         :name="item.key + '-ogDescription'"
         :label="$t('labels.blocks.fields.meta.ogDescription')"
         :placeholder="$t('labels.blocks.fields.meta.ogDescriptionPlaceholder')"
+        :disabled="isGenerating"
         @update:model-value="updateValue('ogDescription', $event)"
       />
     </template>

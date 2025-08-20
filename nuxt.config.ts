@@ -19,10 +19,48 @@ export default defineNuxtConfig({
 
   modules: [
     ...(process.env.NODE_ENV === 'development' ? ['@nuxt/eslint'] : []),
+    '@vite-pwa/nuxt',
     '@nuxt/icon',
     '@nuxt/image',
     'nuxt-i18n-micro',
   ],
+
+  pwa: {
+    registerType: 'autoUpdate',
+    workbox: {
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+    },
+    client: {
+      installPrompt: true,
+      periodicSyncForUpdates: 20
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module'
+    },
+    manifest: {
+      name: 'b10cks CMS',
+      short_name: 'b10cks',
+      description: 'b10cks – the opinionated headless cms',
+      theme_color: '#ffffff',
+      background_color: '#0B0B0F',
+      display: 'standalone',
+      start_url: '/',
+      icons: [
+        {
+          src: '/web-app-manifest-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: '/web-app-manifest-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
+    }
+  },
 
   image: {
     provider: 'ilum',

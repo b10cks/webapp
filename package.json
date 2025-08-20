@@ -23,6 +23,7 @@
     "@iconify-json/lucide": "^1.2.57",
     "@tanstack/vue-query": "^5.83.0",
     "@tanstack/vue-table": "^8.21.3",
+    "@vite-pwa/nuxt": "^1.0.4",
     "@vueuse/integrations": "^13.5.0",
     "class-variance-authority": "^0.7.1",
     "dayjs": "^1.11.13",

@@ -95,6 +95,7 @@ Resources:
       Timeout: 10
       Environment:
         Variables:
+          NUXT_PWA_ENABLED: true
           NUXT_API_PROXY_URL: !Ref NuxtApiProxyUrl
           NUXT_PUBLIC_VERSION: !Ref NuxtPublicVersion
           NUXT_PUBLIC_REVERB_APP_ID: !Ref NuxtPublicReverbAppId
@@ -334,6 +335,21 @@ Resources:
             ViewerProtocolPolicy: redirect-to-https
             CachePolicyId: de90d3a3-a76e-4c8a-9448-aff0ec3f1d25
             OriginRequestPolicyId: c582687b-19bf-4796-aff9-a4866462ac32
+
+          - PathPattern: /sw.js
+            TargetOriginId: s3
+            Compress: true
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            CachedMethods:
+              - GET
+              - HEAD
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # Managed-CachingDisabled
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+            ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03
 
           - PathPattern: /ilum/*
             TargetOriginId: elb

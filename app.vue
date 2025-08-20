@@ -13,6 +13,7 @@ provide('commandOpen', commandOpen)
 
 <template>
   <div>
+    <NuxtPwaManifest />
     <NuxtRouteAnnouncer />
     <AlertDialogProvider>
       <NuxtPage />

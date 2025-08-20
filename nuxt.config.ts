@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    '@nuxt/eslint',
+    ...(process.env.NODE_ENV === 'development' ? ['@nuxt/eslint'] : []),
     '@nuxt/icon',
     '@nuxt/image',
     'nuxt-i18n-micro',
@@ -57,6 +57,8 @@ export default defineNuxtConfig({
 
   nitro: {
     inlineDynamicImports: true,
+    minify: true,
+    ignore: ['**/*.map', '**/*.d.ts'],
     prerender: {
       failOnError: false,
     },

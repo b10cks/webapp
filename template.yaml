@@ -74,17 +74,24 @@ Conditions:
   HasEcsOriginHeader: !Not [!Equals [!Ref AppDomainName, ""]]
   HasClient: !Not [!Equals [!Ref Client, ""]]
 
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Architectures:
+      - arm64
+    Environment:
+      Variables:
+        AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+        NODE_OPTIONS: "--max-old-space-size=512"
+
 Resources:
   NuxtFunction:
     Type: AWS::Serverless::Function
     Properties:
       Description: !Ref AWS::StackName
-      Runtime: nodejs22.x
-      Architectures:
-        - x86_64
       CodeUri: .output/server/
       Handler: index.handler
-      MemorySize: 1024
+      MemorySize: 512
       Timeout: 10
       Environment:
         Variables:
@@ -99,6 +106,8 @@ Resources:
           NUXT_PUBLIC_POSTHOG_KEY: !Ref NuxtPublicPosthogKey
           NUXT_PUBLIC_POSTHOG_HOST: !Ref NuxtPublicPosthogHost
           NUXT_ILUM_BASE_URL: !Ref NuxtIlumBaseUrl
+          NODE_ENV: production
+          NITRO_PRESET: aws-lambda
       FunctionUrlConfig:
         AuthType: NONE
       Tags:
@@ -113,11 +122,18 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteIncompleteMultipartUploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 1
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders: [ ]
             AllowedMethods:
               - "GET"
+              - "HEAD"
             AllowedOrigins:
               - "*"
             ExposedHeaders: [ ]
@@ -156,7 +172,7 @@ Resources:
     Type: 'AWS::CloudFront::CachePolicy'
     Properties:
       CachePolicyConfig:
-        Name: !Sub '${AWS::StackName}-Nuxt'
+        Name: !Sub '${AWS::StackName}-Optimized'
         Comment: !Sub 'Cache Policy for AWS SAM Project ${AWS::StackName}'
         DefaultTTL: 0
         MaxTTL: 31536000
@@ -205,6 +221,7 @@ Resources:
         Enabled: true
         PriceClass: PriceClass_100
         HttpVersion: http2and3
+        IPV6Enabled: true
         Aliases:
           - !If [IsDomainProvided, !Ref AppDomainName, !Ref AWS::NoValue]
         ViewerCertificate:
@@ -239,6 +256,8 @@ Resources:
               OriginProtocolPolicy: https-only
               OriginSSLProtocols:
                 - TLSv1.2
+              OriginKeepaliveTimeout: 5
+              OriginReadTimeout: 30
           - Id: s3
             DomainName: !GetAtt S3Bucket.RegionalDomainName
             OriginAccessControlId: !Ref CloudFrontOriginAccessControl
@@ -250,6 +269,8 @@ Resources:
               OriginProtocolPolicy: https-only
               OriginSSLProtocols:
                 - TLSv1.2
+              OriginKeepaliveTimeout: 5
+              OriginReadTimeout: 30
             OriginCustomHeaders:
               - HeaderName: X-ECS-Origin
                 HeaderValue:

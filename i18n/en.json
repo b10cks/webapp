@@ -224,7 +224,22 @@
         "createdAt": "Created at",
         "slug": "Slug",
         "block": "Block",
-        "fullSlug": "Full slug"
+        "fullSlug": "Full slug",
+        "meta": {
+          "title": "Title",
+          "titlePlaceholder": "Enter SEO title (50-60 characters)",
+          "description": "Description",
+          "descriptionPlaceholder": "Enter SEO description (150-160 characters)",
+          "robots": "Robots Meta Tag",
+          "robotsDescription": "Control how search engines index this content",
+          "canonical": "Canonical URL",
+          "canonicalDescription": "The canonical URL for this content. This helps prevent duplicate content issues.",
+          "ogTitle": "Open Graph Title",
+          "ogTitlePlaceholder": "Enter Open Graph title (50-60 characters)",
+          "ogDescription": "Open Graph Description",
+          "ogDescriptionPlaceholder": "Enter Open Graph description (150-160 characters)",
+          "ogImage": "Open Graph Image"
+        }
       },
       "localization": {
         "label": "Localization",

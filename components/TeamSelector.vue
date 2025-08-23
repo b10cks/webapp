@@ -98,7 +98,7 @@ const hierarchicalTeams = computed(() => {
             name="lucide:loader-2"
             class="shrink-0 animate-spin"
           />
-          <span>{{ $t('labels.teams.loading') }}</span>
+          <span>{{ $t('labels.loading') }}</span>
         </div>
         <div
           v-else-if="selectedTeam"

@@ -49,21 +49,21 @@ const possibleFilters = [
     key: 'name',
     label: $t('labels.datasets.fields.name'),
     type: 'text',
-    placeholder: $t('labels.dataSources.placeholders.name'),
+    placeholder: $t('labels.datasets.placeholders.name'),
   },
   {
     key: 'slug',
     label: $t('labels.datasets.fields.slug'),
     type: 'text',
-    placeholder: $t('labels.dataSources.placeholders.slug'),
+    placeholder: $t('labels.datasets.placeholders.slug'),
   },
   {
     key: 'is_active',
     label: $t('labels.datasets.fields.status'),
     type: 'select',
     options: [
-      { value: true, label: $t('labels.dataSources.status.active') },
-      { value: false, label: $t('labels.dataSources.status.inactive') },
+      { value: true, label: $t('labels.datasets.status.active') },
+      { value: false, label: $t('labels.datasets.status.inactive') },
     ],
   }
 ]

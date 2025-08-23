@@ -1,5 +1,6 @@
 {
   "labels": {
+    "loading": "Loading...",
     "login": {
       "header": "Welcome back to b10cks",
       "fields": {
@@ -81,6 +82,8 @@
         "slug": "Technical name (Slug)",
         "description": "Description",
         "dimensions": "Dimensions",
+        "dimensionsTranslatable": "Are dimensions translatable",
+        "dimensionsTranslatableDescription": "Enable this if dimensions represent translatable content. This allows you to use AI features like translation.",
         "cacheTtl": "Cache TTL",
         "cacheTtlDescription": "Time in seconds for which the dataset will be cached. Set to 0 for no caching.",
         "dimensionTranslatable": "Are dimensions translatable",
@@ -156,6 +159,9 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter folder description"
       }
+    },
+    "preview": {
+      "liveEdit": "Live Edit available"
     },
     "assets": {
       "allAssets": "All Assets",
@@ -303,6 +309,8 @@
         "max": "Allowed maximum",
         "maxPlaceholder": "Enter maximum number of items",
         "maxDescription": "Leave empty to allow unlimited items.",
+        "createdAt": "Created at",
+        "updatedAt": "Last updated at",
         "date": {
           "format": "Date Format",
           "formatDescription": "Choose how the date should be displayed and stored",
@@ -405,6 +413,8 @@
       "deleteConfirmTitle": "Delete Tag",
       "deleteConfirmMessage": "Are you sure you want to delete the tag \"{name}\"?",
       "noTags": "No tags found",
+      "updatedAt": "Last updated at",
+      "blocks_count": "Blocks count",
       "fields": {
         "name": "Name",
         "color": "Color",
@@ -646,6 +656,10 @@
         }
       }
     },
+    "fields": {
+      "createdAt": "Created at",
+      "updatedAt": "Last updated at"
+    },
     "sortBy": "Sort by",
     "selectionCount": "Selected {count} items",
     "showingEntries": "Showing {from} to {to} of {total} items",
@@ -658,6 +672,7 @@
     }
   },
   "actions": {
+    "open": "Open",
     "toDashboard": "Go to dashboard",
     "quickActions": "Quick actions...",
     "saveClose": "Save & close",
@@ -697,6 +712,12 @@
         "add": "Add new option",
         "delete": "Delete option"
       }
+    },
+    "blockTags": {
+      "add": "Add new tag",
+      "edit": "Edit tag",
+      "delete": "Delete tag",
+      "save": "Save tag"
     },
     "redirects": {
       "add": "Add Redirect",

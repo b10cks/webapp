@@ -416,8 +416,8 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                   <SortSelect
                     v-model="sortBy"
                     :options="sortOptions"
-                    :label="$t('labels.assets.sortBy')"
-                    :placeholder="$t('labels.assets.sortBy')"
+                    :label="$t('labels.sortBy')"
+                    :placeholder="$t('labels.sortBy')"
                   />
                 </div>
               </div>

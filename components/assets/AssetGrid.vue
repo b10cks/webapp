@@ -143,7 +143,7 @@ const imageSize = computed(() => {
 const sortOptions = [
   { value: 'created_at', label: $t('labels.assets.createdAt') },
   { value: 'updated_at', label: $t('labels.assets.updatedAt') },
-  { value: 'filename', label: $t('labels.assets.filename') },
+  { value: 'filename', label: $t('labels.assets.fields.filename') },
   { value: 'size', label: $t('labels.assets.size') },
 ]
 
@@ -566,8 +566,8 @@ const assetItemProps = computed(() => {
           <SortSelect
             v-model="sortBy"
             :options="sortOptions"
-            :label="$t('labels.assets.sortBy')"
-            :placeholder="$t('labels.assets.sortBy')"
+            :label="$t('labels.sortBy')"
+            :placeholder="$t('labels.sortBy')"
           />
           <Select v-model="settings.assets.gridSize">
             <SelectTrigger>

@@ -63,9 +63,9 @@ const sortOptions = [
 ]
 
 const possibleFilters = computed(() => [
-  { id: 'name', label: $t('labels.blocks.name') },
+  { id: 'name', label: $t('labels.blocks.fields.name') },
   {
-    id: 'type', label: $t('labels.blocks.type'), items: [
+    id: 'type', label: $t('labels.blocks.fields.type'), items: [
       { value: 'root', label: $t('labels.blocks.types.root.label') },
       { value: 'nestable', label: $t('labels.blocks.types.nestable.label') },
       { value: 'single', label: $t('labels.blocks.types.single.label') },
@@ -73,7 +73,7 @@ const possibleFilters = computed(() => [
     ]
   },
   {
-    id: 'tags', label: $t('labels.blocks.tags'), items: blockTags.value?.data.map(tag => ({
+    id: 'tags', label: $t('labels.blocks.fields.tags'), items: blockTags.value?.data.map(tag => ({
       value: tag.name,
       label: tag.name
     }))
@@ -136,8 +136,8 @@ const handleDelete = async (block: BlockResource) => {
           <SortSelect
             v-model="sortBy"
             :options="sortOptions"
-            :label="$t('labels.assets.sortBy')"
-            :placeholder="$t('labels.assets.sortBy')"
+            :label="$t('labels.sortBy')"
+            :placeholder="$t('labels.sortBy')"
           />
         </div>
 

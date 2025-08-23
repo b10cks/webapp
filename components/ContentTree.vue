@@ -137,7 +137,7 @@ const initDelete = async (item: ContentResource) => {
       >
         <Icon
           name="lucide:globe"
-          class="text-primary"
+          class="text-primary shrink-0"
         />
         <span>{{ selectedSpace.name }}</span>
         <Button

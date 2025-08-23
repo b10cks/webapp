@@ -2,13 +2,14 @@
 import { Badge } from '~/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
 import { cn } from '~/lib/utils'
+import type { TeamResource } from '~/types/teams'
 
 const {
   selectedTeam,
   selectedTeamId,
-  teamOptions,
   isLoading,
   selectTeam,
+  teams,
 } = useGlobalTeam()
 
 withDefaults(defineProps<{
@@ -17,7 +18,6 @@ withDefaults(defineProps<{
   size: 'md'
 })
 
-// Size classes
 const sizeClasses = {
   sm: 'h-8 text-sm',
   md: 'h-10',
@@ -32,14 +32,53 @@ const handleSelect = (value: string) => {
   }
 }
 
-const getTeamIcon = (team: any) => {
+const getTeamIcon = (team: Pick<TeamResource, 'icon' | 'type'>) => {
   if (team.icon) return team.icon
   return team.type === 'department' ? 'lucide:building-2' : 'lucide:users'
 }
+
+interface TreeNode { team: Readonly<TeamResource>; children: TreeNode[] }
+
+const hierarchicalTeams = computed(() => {
+  const list = teams?.value ?? []
+  const nodeMap = new Map<string, TreeNode>()
+  const roots: TreeNode[] = []
+
+  for (const t of list) {
+    nodeMap.set(t.id, { team: t as Readonly<TeamResource>, children: [] })
+  }
+
+  for (const t of list) {
+    const node = nodeMap.get(t.id)!
+    const pid = t.parent_id ?? null
+    if (pid && nodeMap.has(pid)) {
+      nodeMap.get(pid)!.children.push(node)
+    } else {
+      roots.push(node)
+    }
+  }
+
+  const sortNodes = (arr: TreeNode[]) => {
+    arr.sort((a, b) => a.team.name.localeCompare(b.team.name))
+    for (const n of arr) sortNodes(n.children)
+  }
+  sortNodes(roots)
+
+  const flat: Array<{ team: Readonly<TeamResource>; depth: number }> = []
+  const walk = (arr: TreeNode[], depth: number) => {
+    for (const n of arr) {
+      flat.push({ team: n.team, depth })
+      if (n.children.length) walk(n.children, depth + 1)
+    }
+  }
+  walk(roots, 0)
+  return flat
+})
 </script>
 
 <template>
   <Select
+    aria-label="Team"
     :model-value="selectedTeamId || undefined"
     :disabled="isLoading"
     @update:model-value="handleSelect"
@@ -93,35 +132,38 @@ const getTeamIcon = (team: any) => {
     </SelectTrigger>
     <SelectContent>
       <SelectItem
-        v-for="team in teamOptions"
-        :key="team.value"
-        :value="team.value"
+        v-for="item in hierarchicalTeams"
+        :key="item.team.id"
+        :value="item.team.id"
         class="cursor-pointer"
       >
         <div class="flex items-center justify-between gap-2 w-full">
-          <div class="flex items-center gap-2 min-w-0">
+          <div
+            class="flex items-center gap-2 min-w-0"
+            :style="{ paddingLeft: `${item.depth * 16}px` }"
+          >
             <Icon
-              :name="getTeamIcon(team)"
+              :name="getTeamIcon(item.team)"
               class="shrink-0"
-              :style="{ color: team.color }"
+              :style="{ color: item.team.color }"
             />
             <span
               class="truncate"
-              :style="{ color: team.color }"
-            >{{ team.label }}
+              :style="{ color: item.team.color }"
+            >{{ item.team.name }}
             </span>
           </div>
           <Badge
-            v-if="team.type"
+            v-if="item.team.type"
             variant="surface"
             size="sm"
           >
-            {{ team.type }}
+            {{ item.team.type }}
           </Badge>
         </div>
       </SelectItem>
       <SelectItem
-        v-if="!teamOptions.length && !isLoading"
+        v-if="!(teams && teams.length) && !isLoading"
         value=""
         disabled
         class="text-center text-muted-foreground"

@@ -2,11 +2,8 @@
 import { AccordionContent, AccordionHeader, AccordionItem, AccordionRoot, AccordionTrigger } from 'reka-ui'
 import EditorComponent from './EditorComponent.vue'
 import { useSortable } from '@vueuse/integrations/useSortable'
-import { useClipboard } from '@vueuse/core'
 import AddDropdown from '~/components/editor/AddDropdown.vue'
-
-const { copy, text } = useClipboard({ read: true })
-const clipboardItemKey = 'blocks-editor-clipboard-item'
+import { Button } from '~/components/ui/button'
 
 const props = defineProps<{
   item: BlocksSchema & { key: string }
@@ -22,6 +19,8 @@ const route = useRoute()
 const router = useRouter()
 const handlebars = useHandlebars()
 
+const { copyItem: globalCopyItem, cutItem: globalCutItem, pasteItem: globalPasteItem, getClipboardItem } = useGlobalClipboard()
+
 const emit = defineEmits<{
   'update:modelValue': [value: Array<Record<string, unknown>>]
 }>()
@@ -36,6 +35,21 @@ const blockItems = computed({
 })
 
 const accordionContainer = ref<HTMLElement | null>(null)
+const hasClipboardItem = ref(false)
+
+const checkClipboard = async () => {
+  const item = await getClipboardItem()
+  hasClipboardItem.value = !!item
+}
+
+onMounted(() => {
+  checkClipboard()
+  window.addEventListener('focus', checkClipboard)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('focus', checkClipboard)
+})
 
 const addItem = (slug: string, index: number = -1) => {
   const newItem = { block: slug, id: ulid() }
@@ -56,50 +70,35 @@ const deleteItem = (index: number) => {
   blockItems.value = updatedItems
 }
 
-const copyItem = (index: number, isRemoved: boolean = false) => {
+const copyItem = async (index: number) => {
   const itemToCopy = { ...blockItems.value[index] }
-  if (!isRemoved) {
-    itemToCopy.id = undefined
-  }
-
-  copy(JSON.stringify({
-    type: clipboardItemKey,
-    data: itemToCopy
-  }))
+  const block = getBlockBySlug(blocks, itemToCopy.block as string)
+  await globalCopyItem(itemToCopy, props.spaceId, block?.name || itemToCopy.block as string)
+  checkClipboard()
 }
 
-const cutItem = (index: number) => {
-  copyItem(index, true)
+const cutItem = async (index: number) => {
+  const itemToCut = { ...blockItems.value[index] }
+  const block = getBlockBySlug(blocks, itemToCut.block as string)
+  await globalCutItem(itemToCut, props.spaceId, block?.name || itemToCut.block as string)
   deleteItem(index)
+  checkClipboard()
 }
 
-function replaceIds(obj: unknown): unknown {
-  if (Array.isArray(obj)) {
-    return obj.map(replaceIds)
-  } else if (obj && typeof obj === 'object') {
-    const newObj: Record<string, unknown> = {}
-    for (const key in obj as Record<string, unknown>) {
-      if (key === 'id') {
-        newObj[key] = ulid()
-      } else {
-        newObj[key] = replaceIds((obj as Record<string, unknown>)[key])
-      }
-    }
-    return newObj
+const pasteItem = async (event?: ClipboardEvent, insertIndex?: number) => {
+  // Prevent event bubbling to parent components
+  if (event) {
+    event.stopPropagation()
+    event.preventDefault()
   }
-  return obj
-}
 
-const pasteItem = async (data?: string) => {
-  try {
-    const clipboardData = JSON.parse(data || text.value)
-
-    if (clipboardData.type === clipboardItemKey && clipboardData.data) {
-      const item = replaceIds(clipboardData.data)
-      blockItems.value = [...blockItems.value, item as Record<string, unknown>]
-    }
-  } catch (error) {
-    console.error('Failed to paste item:', error)
+  const pastedItem = await globalPasteItem()
+  if (pastedItem) {
+    const updatedItems = [...blockItems.value]
+    const index = insertIndex ?? updatedItems.length
+    updatedItems.splice(index, 0, pastedItem)
+    emit('update:modelValue', updatedItems)
+    checkClipboard()
   }
 }
 
@@ -121,7 +120,7 @@ watch(() => blockItems.value.length, () => {
   setupSortable()
 }, { immediate: true })
 
-const updateContent = (index: number, newContent: Record<string, never>) => {
+const updateContent = (index: number, newContent: Record<string, unknown>) => {
   if (newContent === blockItems.value[index]) return
 
   const updatedItems = [...blockItems.value]
@@ -134,7 +133,7 @@ function blockTitle(block: BlockResource | null): string {
   return block.name || block.slug || block.key || 'Untitled'
 }
 
-function guessTitle(content: Record<string, never>, block: BlockResource | null): string {
+function guessTitle(content: Record<string, unknown>, block: BlockResource | null): string {
   if (!content) return 'Untitled'
   if (block?.preview_template) {
     try {
@@ -165,13 +164,13 @@ const navigateToItem = (itemId: string) => {
 
 <template>
   <div class="grid gap-2">
-    <div class="text-sm font-semibold text-primary">{{ blockTitle(item) }}</div>
+    <div class="text-sm font-semibold text-primary">{{ item.name || item.key || 'Untitled' }}</div>
     <div class="bg-surface border border-border rounded-lg px-2">
       <AccordionRoot
         ref="accordionContainer"
         type="multiple"
         class="relative pt-2"
-        @paste="pasteItem($event.clipboardData?.getData('text'))"
+        @paste="pasteItem"
       >
         <AccordionItem
           v-for="(content, i) in blockItems"
@@ -186,14 +185,14 @@ const navigateToItem = (itemId: string) => {
               <Icon
                 name="lucide:grip-vertical"
                 class="shrink-0 cursor-ns-resize opacity-0 group-hover:opacity-100"
-                draggable
+                :draggable="true"
               />
               <div class="grow grid text-left leading-none">
                 <h4 class="font-semibold text-primary">{{
-                    guessTitle(content, getBlockBySlug(blocks, content.block))
+                    guessTitle(content, getBlockBySlug(blocks, content.block as string))
                   }}</h4>
                 <div class="flex text-sm text-muted ">
-                  {{ blockTitle(getBlockBySlug(blocks, content.block)) }}
+                  {{ blockTitle(getBlockBySlug(blocks, content.block as string)) }}
                 </div>
               </div>
               <div class="ml-auto flex opacity-0 group-hover:opacity-100 gap-2 items-center">
@@ -202,7 +201,7 @@ const navigateToItem = (itemId: string) => {
                   type="button"
                   title="Edit nested content"
                   class="transform cursor-pointer hover:text-primary flex items-center"
-                  @click.stop="navigateToItem(content.id)"
+                  @click.stop="navigateToItem(content.id as string)"
                 >
                   <Icon name="lucide:edit-3"/>
                 </button>
@@ -251,7 +250,7 @@ const navigateToItem = (itemId: string) => {
             <div class="grid gap-4 items-start p-1 pt-2 mt-2 border-t-2 border-surface">
               <EditorComponent
                 :model-value="content"
-                :block-slug="content.block"
+                :block-slug="content.block as string"
                 :space-id="spaceId"
                 is-child
                 @update:model-value="updateContent(i, $event)"
@@ -259,6 +258,8 @@ const navigateToItem = (itemId: string) => {
             </div>
           </AccordionContent>
         </AccordionItem>
+
+        <!-- Add item dropdown at the end -->
         <AddDropdown
           :item="item"
           :space-id="spaceId"
@@ -273,19 +274,25 @@ const navigateToItem = (itemId: string) => {
             </button>
           </div>
         </AddDropdown>
-        <button
-          v-if="text"
-          type="button"
-          title="Paste item"
-          class="transform cursor-pointer hover:text-primary flex items-center gap-1 relative z-10"
-          @click="pasteItem()"
+        <div
+          v-if="hasClipboardItem"
+          class="flex justify-center mt-2 pb-2"
         >
-          <Icon
-            name="lucide:clipboard-paste"
-            size="0.9rem"
-          />
-          <span class="text-sm">Paste</span>
-        </button>
+          <Button
+            type="button"
+            title="Paste item"
+            variant="ghost"
+            size="xs"
+            class="relative z-10"
+            @click="pasteItem()"
+          >
+            <Icon
+              name="lucide:clipboard-paste"
+              size="0.75rem"
+            />
+            <span>Paste</span>
+          </Button>
+        </div>
       </AccordionRoot>
     </div>
   </div>

@@ -8,6 +8,7 @@ import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { FormField, InputField } from '~/components/ui/form'
 import { Button } from '~/components/ui/button'
 import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
+import { useFileUpload } from '~/composables/useFileUpload'
 
 const route = useRoute()
 const spaceId = route.params.space as string
@@ -17,12 +18,16 @@ const { data: space } = useSpaceQuery(spaceId)
 const { mutate: updateSpace, isPending: isUpdating } = useUpdateSpaceMutation()
 
 const spaceName = ref('')
-const isUploading = ref(false)
+const spaceIcon = ref<string | null>(null)
+const iconInputRef = ref<HTMLInputElement | null>(null)
+const uploadProgress = ref(0)
+const { upload, isUploading: fileUploadIsUploading, error } = useFileUpload()
 
 // Set initial values when space data is loaded
 watch(() => space.value, (newSpace) => {
   if (newSpace) {
     spaceName.value = newSpace.name
+    spaceIcon.value = newSpace.icon || null
   }
 }, { immediate: true })
 
@@ -40,13 +45,53 @@ const handleSave = async () => {
   }
 }
 
+// Update space icon locally after upload
+const updateSpaceIcon = (url: string) => {
+  if (space.value) {
+    spaceIcon.value = url
+  }
+}
+
+const handleIconFile = async (file: File) => {
+  if (!file) return
+  uploadProgress.value = 0
+  try {
+    const response = await upload(file, {
+      url: `/mgmt/v1/spaces/${spaceId}/icon`,
+      fieldName: 'icon',
+      onProgress: (p) => (uploadProgress.value = p),
+    })
+    if (response?.data?.icon) {
+      updateSpaceIcon(response.data.icon)
+      toast.success('Icon uploaded successfully')
+    } else {
+      toast.error('Upload succeeded but no icon returned')
+    }
+  } catch (e) {
+    toast.error(error.value || 'Failed to upload icon')
+  }
+}
+
 const handleUploadIcon = () => {
-  isUploading.value = true
-  // Simulate upload process
-  setTimeout(() => {
-    isUploading.value = false
-    toast.success('Icon uploaded successfully')
-  }, 2000)
+  iconInputRef.value?.click()
+}
+
+const onIconInputChange = (e: Event) => {
+  const files = (e.target as HTMLInputElement).files
+  if (files && files[0]) {
+    handleIconFile(files[0])
+  }
+}
+
+const onDropIcon = (e: DragEvent) => {
+  e.preventDefault()
+  if (e.dataTransfer?.files && e.dataTransfer.files[0]) {
+    handleIconFile(e.dataTransfer.files[0])
+  }
+}
+
+const onDragOverIcon = (e: DragEvent) => {
+  e.preventDefault()
 }
 </script>
 
@@ -77,40 +122,47 @@ const handleUploadIcon = () => {
 
         <div class="space-y-2">
           <FormField
+            name="space-icon"
             :label="$t('labels.settings.space.icon')"
             :description="$t('labels.settings.space.iconDescription')"
           >
-            <div class="flex items-center gap-4">
+            <div
+              class="flex items-center gap-4"
+              @drop="onDropIcon"
+              @dragover="onDragOverIcon"
+            >
               <div
                 v-if="space?.icon"
-                class="h-16 w-16 rounded-md flex items-center justify-center bg-surface"
+                class="h-16 w-16 rounded-sm flex items-center justify-center bg-surface cursor-pointer"
+                @click="handleUploadIcon"
               >
-                <img
-                  :src="space.icon"
+                <NuxtImg
+                  :src="spaceIcon"
                   alt="Space icon"
-                  class="h-12 w-12"
-                >
+                  class="h-14 w-14"
+                />
               </div>
               <div
                 v-else
-                class="h-16 w-16 rounded-md border border-dashed border-muted flex items-center justify-center bg-surface"
+                class="h-16 w-16 rounded-md border border-dashed border-muted flex items-center justify-center bg-surface cursor-pointer"
+                @click="handleUploadIcon"
               >
                 <Icon
                   name="lucide:image"
                   class="h-8 w-8 text-muted"
                 />
               </div>
-              <Button
-                :disabled="isUploading"
-                @click="handleUploadIcon"
+              <input
+                ref="iconInputRef"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                @change="onIconInputChange"
               >
-                <Icon
-                  v-if="isUploading"
-                  name="lucide:loader"
-                  class="mr-2 h-4 w-4 animate-spin"
-                />
-                {{ isUploading ? $t('labels.settings.space.uploading') : $t('labels.settings.space.uploadIcon') }}
-              </Button>
+              <span
+                v-if="fileUploadIsUploading"
+                class="ml-2 text-muted text-xs"
+              >{{ uploadProgress }}%</span>
             </div>
           </FormField>
         </div>

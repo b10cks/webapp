@@ -162,18 +162,18 @@ const teamRelatedSpaces = computed(() => {
                 <div
                   class="min-h-36 rounded-lg shadow-lg bg-input p-4 grid place-items-center transition-transform justify-center duration-500 group-hover:-translate-y-2 ease-micro-bounce relative overflow-clip"
                 >
-                  <img
+                  <NuxtImg
                     v-if="space.icon"
                     :src="space.icon"
                     :alt="space.name"
-                    class="absolute inset-0 blur-2xl w-full h-full object-cover scale-110"
-                  >
-                  <img
+                    class="absolute inset-0 blur-xl w-full h-full object-cover scale-110"
+                  />
+                  <NuxtImg
                     v-if="space.icon"
                     :src="space.icon"
                     :alt="space.name"
-                    class="size-8 relative z-10"
-                  >
+                    class="size-16 relative z-10"
+                  />
                 </div>
                 <div class="flex items-center">
                   <div>

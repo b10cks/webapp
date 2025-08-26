@@ -31,7 +31,7 @@ b10cks is a modern, developer-friendly headless CMS built for flexibility and sp
 
 b10cks Admin interface is built with:
 
-- **Vue 3 + Nuxt 3**: For a powerful and efficient frontend experience
+- **Vue 3 + Nuxt 4**: For a powerful and efficient frontend experience
 - **TypeScript**: For robust type safety throughout the codebase
 - **TanStack Query**: For efficient data fetching and cache management
 - **Tailwind CSS**: For beautiful, responsive UI components

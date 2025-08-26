@@ -73,13 +73,30 @@ const cutItem = (index: number) => {
   deleteItem(index)
 }
 
+function replaceIds(obj: unknown): unknown {
+  if (Array.isArray(obj)) {
+    return obj.map(replaceIds)
+  } else if (obj && typeof obj === 'object') {
+    const newObj: Record<string, unknown> = {}
+    for (const key in obj as Record<string, unknown>) {
+      if (key === 'id') {
+        newObj[key] = ulid()
+      } else {
+        newObj[key] = replaceIds((obj as Record<string, unknown>)[key])
+      }
+    }
+    return newObj
+  }
+  return obj
+}
+
 const pasteItem = async (data?: string) => {
   try {
     const clipboardData = JSON.parse(data || text.value)
 
     if (clipboardData.type === clipboardItemKey && clipboardData.data) {
-      const item = { id: ulid(), ...clipboardData.data }
-      blockItems.value = [...blockItems.value, item]
+      const item = replaceIds(clipboardData.data)
+      blockItems.value = [...blockItems.value, item as Record<string, unknown>]
     }
   } catch (error) {
     console.error('Failed to paste item:', error)
@@ -260,7 +277,7 @@ const navigateToItem = (itemId: string) => {
           v-if="text"
           type="button"
           title="Paste item"
-          class="transform cursor-pointer hover:text-primary flex items-center gap-1"
+          class="transform cursor-pointer hover:text-primary flex items-center gap-1 relative z-10"
           @click="pasteItem()"
         >
           <Icon

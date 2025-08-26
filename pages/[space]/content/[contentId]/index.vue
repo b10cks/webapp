@@ -19,7 +19,7 @@ const { useContentQuery } = useContent(spaceId)
 
 const { data: originalContent } = useContentQuery(contentId)
 
-const content = ref<ContentResource>(null)
+const content = ref<ContentResource | null>(null)
 watch(originalContent, (newContent) => {
   if (newContent) {
     content.value = JSON.parse(JSON.stringify(newContent))
@@ -36,6 +36,7 @@ const selectedItemId = computed({
     }
   }
 })
+
 const handleNavigate = (itemId: string | null) => {
   selectedItemId.value = itemId
 }
@@ -66,49 +67,47 @@ const rootBlock = computed(() => {
   return null
 })
 
-const updatePreviewItem = (item: never) => {
-  previewRef.value.updateItem({ ...item })
+const updatePreviewItem = (item: Record<string, unknown>) => {
+  if (previewRef.value) {
+    previewRef.value.updateItem({ ...item })
+  }
 }
 
-const findNestedObjectById = (data: Array<object> | object & { id: string }, id: string): unknown => {
-  if (Array.isArray(data)) {
-    for (const item of data) {
-      const result = findNestedObjectById(item, id)
-      if (result) return result
-    }
-  } else if (data && typeof data === 'object') {
-    if (data.id === id) return data
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        const result = findNestedObjectById(data[key], id)
-        if (result) return result
+const findNestedObjectById = (data: unknown[], id: string): Record<string, unknown> | null => {
+  for (const item of data) {
+    if (typeof item === 'object' && item !== null) {
+      const obj = item as Record<string, unknown>
+      if (obj.id === id) return obj
+
+      // Search in nested arrays
+      for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key) && Array.isArray(obj[key])) {
+          const result = findNestedObjectById(obj[key] as unknown[], id)
+          if (result) return result
+        }
       }
     }
   }
   return null
 }
 
-const updateField = (update: FieldUpdateEvent) => {
-  if (!content.value) return
+const updateField = (update: { itemId: string; field: string; value: unknown }) => {
+  if (!content.value?.content || !Array.isArray(content.value.content)) return
 
   const target = findNestedObjectById(content.value.content, update.itemId)
-  target[update.field] = update.value
+  if (target) {
+    target[update.field] = update.value
+  }
 }
-
-// const updateField = ({ itemId, field, value }) => {
-// console.log('Update field:', itemId, field, value)
-// console.log('Content before update:', content.value)
-
-// const block
-// const temp = content.value.content
-// }
-
 
 provide('content', content)
 provide('rootBlock', rootBlock)
 provide('updatePreviewItem', updatePreviewItem)
-provide('updateHoverItem', (id) => previewRef.value && previewRef.value.updateHover(id))
-
+provide('updateHoverItem', (id: string) => {
+  if (previewRef.value) {
+    previewRef.value.updateHover(id)
+  }
+})
 </script>
 
 <template>

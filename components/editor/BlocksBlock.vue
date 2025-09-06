@@ -170,7 +170,6 @@ const navigateToItem = (itemId: string) => {
         ref="accordionContainer"
         type="multiple"
         class="relative pt-2"
-        @paste="pasteItem"
       >
         <AccordionItem
           v-for="(content, i) in blockItems"

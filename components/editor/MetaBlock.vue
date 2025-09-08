@@ -72,8 +72,6 @@ const truncatedTitle = computed(() => {
 const generateMetaWithAI = async () => {
   try {
     isGenerating.value = true
-    toast.info('Generating meta tags with AI...')
-
     const requestData = {
       name: content.value.name,
       slug: content.value.full_slug,

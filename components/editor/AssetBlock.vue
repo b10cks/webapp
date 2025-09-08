@@ -110,7 +110,7 @@ const handleAssetDelete = async () => {
 
     <div
       v-else
-      class="group relative border border-input rounded-lg overflow-hidden bg-surface"
+      class="group relative border border-input rounded-lg overflow-hidden bg-surface max-w-sm"
     >
       <div class="flex items-center gap-3 p-2">
         <div class="flex-shrink-0">

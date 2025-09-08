@@ -70,7 +70,7 @@ const tabs = computed(() => ({
 </script>
 
 <template>
-  <div class="min-w-2xs p-2">
+  <div class="min-w-2xs p-2 h-[calc(100vh-3.5rem)] flex flex-col overflow-hidden sticky top-14">
     <TabsRoot
       v-model="mode"
       default-value="list"
@@ -92,7 +92,7 @@ const tabs = computed(() => ({
           </Badge>
         </TabsTrigger>
       </TabsList>
-      <ScrollArea class="overflow-y-scroll grow">
+       <ScrollArea class="flex-1 overflow-y-auto">
         <TreeRoot
           v-slot="{ flattenItems }"
           class="list-none select-none w-full"

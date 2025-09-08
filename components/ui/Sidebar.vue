@@ -40,8 +40,8 @@ const buildLink = (name: string) => ({
 </script>
 
 <template>
-  <div class="flex h-full w-14 flex-col border-r border-r-border p-3">
-    <div class="flex min-h-0 flex-1 flex-col overflow-auto">
+  <div class="flex h-full w-14 flex-col border-r border-r-border p-3 overflow-hidden">
+    <div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <div class="relative flex w-full min-w-0 flex-col gap-2">
         <SimpleTooltip
           v-for="m in menu"

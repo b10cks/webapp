@@ -40,7 +40,7 @@ watch(mode, (newMode) => {
 
 <template>
   <div class="flex w-full">
-    <div class="w-xs overflow-y-auto shrink-0 p-2">
+    <div class="w-xs overflow-hidden shrink-0 p-2 h-[calc(100vh-3.5rem)] flex flex-col sticky top-14">
       <TabsRoot
         v-model="mode"
         default-value="folders"
@@ -56,7 +56,7 @@ watch(mode, (newMode) => {
             <span>{{ label }}</span>
           </TabsTrigger>
         </TabsList>
-        <ScrollArea class="overflow-y-scroll grow">
+        <ScrollArea class="flex-1 overflow-y-auto">
           <TabsContent value="folders">
             <AssetFolderTree
               v-model="selectedFolder"

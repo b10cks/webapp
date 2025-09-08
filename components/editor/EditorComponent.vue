@@ -4,8 +4,10 @@ import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import FieldEditor from '~/components/editor/FieldEditor.vue'
 import ContentBreadcrumbs from '~/components/editor/ContentBreadcrumbs.vue'
 import { useContentTree } from '~/composables/useContentTree'
+import { useGlobalClipboard } from '~/composables/useGlobalClipboard'
 import type { ContentBlock } from '~/types/contents'
 import { useElementHover } from '@vueuse/core'
+import { Button } from '~/components/ui/button'
 
 const content = defineModel<Record<string, unknown>>()
 const containerRef = useTemplateRef('containerRef')
@@ -69,14 +71,12 @@ const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 const rootBlock = inject<ContentBlock>('rootBlock')
 const updatePreviewItem = inject<(data: never) => void>('updatePreviewItem')
 
-watch(content, () => {
-  console.log('Content updated:', content.value)
-})
-
 const contentTree = useContentTree(content, rootBlock)
 const currentItem = computed(() => props.itemId ? contentTree.findItemById(props.itemId) : null)
 const breadcrumbs = computed(() => props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : [])
 const id = computed(() => props.itemId || rootBlock.slug)
+
+const { hasClipboardItem, clearClipboard } = useGlobalClipboard()
 
 const currentBlock = computed(() => {
   if (!currentItem.value) {
@@ -170,5 +170,18 @@ const updateItem = (updatedValue: unknown) => {
         </div>
       </TabsContent>
     </TabsRoot>
+    <Button
+      v-if="hasClipboardItem"
+      title="Clear clipboard"
+      size="xs"
+      variant="ghost"
+      class="absolute bottom-4 left-1/2 -translate-x-1/2 z-50"
+      @click="clearClipboard"
+    >
+      <Icon
+        name="lucide:trash-2"
+      />
+      <span>Clear Clipboard</span>
+    </Button>
   </div>
 </template>

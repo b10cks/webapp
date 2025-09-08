@@ -19,7 +19,7 @@ const route = useRoute()
 const router = useRouter()
 const handlebars = useHandlebars()
 
-const { copyItem: globalCopyItem, cutItem: globalCutItem, pasteItem: globalPasteItem, getClipboardItem } = useGlobalClipboard()
+const { copyItem: globalCopyItem, cutItem: globalCutItem, pasteItem: globalPasteItem, hasClipboardItem } = useGlobalClipboard()
 
 const emit = defineEmits<{
   'update:modelValue': [value: Array<Record<string, unknown>>]
@@ -35,21 +35,6 @@ const blockItems = computed({
 })
 
 const accordionContainer = ref<HTMLElement | null>(null)
-const hasClipboardItem = ref(false)
-
-const checkClipboard = async () => {
-  const item = await getClipboardItem()
-  hasClipboardItem.value = !!item
-}
-
-onMounted(() => {
-  checkClipboard()
-  window.addEventListener('focus', checkClipboard)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('focus', checkClipboard)
-})
 
 const addItem = (slug: string, index: number = -1) => {
   const newItem = { block: slug, id: ulid() }
@@ -74,7 +59,6 @@ const copyItem = async (index: number) => {
   const itemToCopy = { ...blockItems.value[index] }
   const block = getBlockBySlug(blocks, itemToCopy.block as string)
   await globalCopyItem(itemToCopy, props.spaceId, block?.name || itemToCopy.block as string)
-  checkClipboard()
 }
 
 const cutItem = async (index: number) => {
@@ -82,7 +66,6 @@ const cutItem = async (index: number) => {
   const block = getBlockBySlug(blocks, itemToCut.block as string)
   await globalCutItem(itemToCut, props.spaceId, block?.name || itemToCut.block as string)
   deleteItem(index)
-  checkClipboard()
 }
 
 const pasteItem = async (event?: ClipboardEvent, insertIndex?: number) => {
@@ -98,7 +81,6 @@ const pasteItem = async (event?: ClipboardEvent, insertIndex?: number) => {
     const index = insertIndex ?? updatedItems.length
     updatedItems.splice(index, 0, pastedItem)
     emit('update:modelValue', updatedItems)
-    checkClipboard()
   }
 }
 

@@ -23,7 +23,7 @@ const props = defineProps<{
   autoFocus?: boolean
   class?: HTMLAttributes['class']
   inputClass?: HTMLAttributes['class']
-  actions: Array<InputActionType>
+  actions?: Array<InputActionType>
 
   // Input props
   modelValue?: string | number

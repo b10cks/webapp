@@ -248,10 +248,10 @@ const openInTab = () => {
   <div class="w-full h-full flex flex-col p-6">
     <ResizablePanelGroup
       direction="vertical"
-      class="h-full"
+      class="h-full min-h-0"
     >
       <ResizablePanel>
-        <div class="h-full flex flex-col gap-4">
+        <div class="h-full flex flex-col gap-4 min-h-0">
           <div class="flex justify-between items-center">
             <h2 class="text-lg font-semibold">Version History</h2>
             <div class="flex gap-2 w-2/3">
@@ -439,7 +439,7 @@ const openInTab = () => {
 
       <ResizablePanel
         :default-size="settings.content.history.panelHeight"
-        class="flex flex-col"
+        class="flex flex-col h-full"
         @resize="size => settings.content.history.panelHeight = size"
       >
         <div
@@ -473,9 +473,9 @@ const openInTab = () => {
             </div>
             <TabsContent
               value="changes"
-              class="flex flex-col rounded-md grow gap-4"
+              class="flex flex-col rounded-md h-full gap-4 overflow-hidden"
             >
-              <ScrollArea class="flex-1 bg-surface rounded-lg p-4">
+              <ScrollArea class="flex-1 bg-surface rounded-lg p-4 h-full">
                 <DiffViewer
                   v-if="selectedVersionData"
                   :changes="selectedVersionData.diff.entries"

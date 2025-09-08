@@ -83,7 +83,7 @@ const getFilterButtonClasses = (filter) => {
 </script>
 
 <template>
-  <div>
+  <div class="w-full min-h-0">
     <div class="flex items-center justify-between mb-6">
       <div>
         <h2 class="text-xl font-semibold text-secondary-foreground">Changes Overview</h2>

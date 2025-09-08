@@ -276,7 +276,7 @@ const updateSchemaItem = (key: string, value: unknown) => {
 }
 
 watch(() => props.schema, (newSchema) => {
-  localSchema.value = { ...newSchema }
+  localSchema.value = JSON.parse(JSON.stringify(newSchema))
 }, { deep: true })
 
 watch(() => props.editor, (newEditor) => {

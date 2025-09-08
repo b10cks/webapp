@@ -40,13 +40,10 @@ let previewBridge: PreviewBridge = undefined
 
 const baseSrc = computed(() => {
   const env = settings.value.content.environment
-  if (!env?.url) return false
+  if (!env?.url) return null
 
-  if (env.url.endsWith('/')) {
-    env.url = env.url.slice(0, -1)
-  }
-
-  return `${env.url}${props.fullSlug}`
+  const url = env.url.replace(/\/$/, '')
+  return `${url}${props.fullSlug}`
 })
 
 const src = computed(() => {
@@ -163,18 +160,18 @@ const handleLoad = () => {
         <div class="ml-auto flex gap-3 items-center">
           <icon
             name="lucide:external-link"
-            :class="['cursor-pointer', src || 'invisible']"
+            :class="['cursor-pointer shrink-0', src || 'invisible']"
             @click="openExternal"
           />
           <icon
             name="lucide:link"
-            :class="['cursor-pointer', src || 'invisible']"
+            :class="['cursor-pointer shrink-0', src || 'invisible']"
             @click="copyLink"
           />
           <div class="h-6 w-px bg-elevated"/>
           <Icon
             name="lucide:monitor-smartphone"
-            class="cursor-pointer"
+            class="cursor-pointer shrink-0"
             @click="mode === 'desktop' ? mode = 'mobile' : mode = 'desktop'"
           />
           <DropdownMenu>
@@ -185,7 +182,7 @@ const handleLoad = () => {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuRadioGroup :model-value="selectedEnvironment?.url">
+              <DropdownMenuRadioGroup :model-value="settings.content.environment?.url">
                 <DropdownMenuRadioItem
                   v-for="env in currentSpace?.settings.environments"
                   :key="env.url"

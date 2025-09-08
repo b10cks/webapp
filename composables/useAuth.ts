@@ -75,7 +75,7 @@ export function useAuth() {
       const response = await api.client.get<ApiResponse<User>>('/mgmt/v1/users/me')
       user.value = response.data
 
-    } catch (err: Error) {
+    } catch (err) {
       logout()
       error.value = err?.message || 'Failed to load user information'
     } finally {
@@ -133,10 +133,35 @@ export function useAuth() {
       processQueue(null)
       return true
     } catch (err: Error) {
+      // Check if refresh token has expired (401 on refresh endpoint)
+      if (err?.response?.status === 401) {
+        error.value = 'Your session has expired. Please log in again.'
+        processQueue(new Error('Refresh token expired'))
+
+        // Clear refresh token related data but don't call logout() to avoid redirect loop
+        if (refreshTimerId.value) {
+          clearTimeout(refreshTimerId.value)
+          refreshTimerId.value = null
+        }
+
+        if (import.meta.client) {
+          localStorage.removeItem('authToken')
+          localStorage.removeItem('tokenExpiresAt')
+        }
+
+        api.setAuthToken(undefined)
+        $queryClient.clear()
+
+        // Navigate to login with a specific message
+        router.push({ name: 'login', query: { message: 'session_expired' } })
+        return false
+      }
+
+      // For other errors, treat as temporary failure
       error.value = err?.message || 'Failed to refresh token'
       processQueue(new Error('Failed to refresh token'))
 
-      logout()
+      await logout()
       return false
     } finally {
       isRefreshing.value = false
@@ -155,9 +180,6 @@ export function useAuth() {
       localStorage.removeItem('authToken')
       localStorage.removeItem('tokenExpiresAt')
     }
-
-    // Try to call logout endpoint (but don't wait for it)
-    // api.client.delete('/auth/v1/token').catch(() => {})
 
     api.setAuthToken(undefined)
     $queryClient.clear()

@@ -7,6 +7,7 @@ import Logo from '~/assets/logo.svg'
 import Markdown from '~/components/Markdown.vue'
 
 const { login, error } = useAuth()
+const route = useRoute()
 
 const formData = ref<{
   email: string,
@@ -14,6 +15,13 @@ const formData = ref<{
 }>({
   email: '',
   password: ''
+})
+
+// Handle session expired message
+onMounted(() => {
+  if (route.query.message === 'session_expired') {
+    error.value = 'Your session has expired. Please log in again.'
+  }
 })
 
 </script>

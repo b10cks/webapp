@@ -53,12 +53,10 @@ export class ApiClient {
           ...options.headers,
         },
       })
-    } catch (error: Error) {
+    } catch (error) {
       if (error?.response?.status === 401 && endpoint !== '/auth/v1/token') {
-        // const auth = useAuth()
-        // const route= useRoute()
-        navigateTo({ name: 'login' })
-        // await auth.logout(route.fullPath)
+        const auth = useAuth()
+        await auth.refreshToken()
       }
 
       throw error

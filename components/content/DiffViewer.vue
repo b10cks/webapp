@@ -120,72 +120,67 @@ const getFilterButtonClasses = (filter) => {
     </div>
 
     <div class="space-y-3">
-      <TransitionGroup
-        tag="div"
-        class="space-y-1.5"
+      <div
+        v-for="change in filteredChanges"
+        :key="change.path"
+        :class="getChangeClasses(change.type)"
+        class="px-4 py-3 rounded-lg border-l-4 transition-all duration-200 hover:shadow-sm"
       >
-        <div
-          v-for="change in filteredChanges"
-          :key="change.path"
-          :class="getChangeClasses(change.type)"
-          class="px-4 py-3 rounded-lg border-l-4 transition-all duration-200 hover:shadow-sm"
-        >
-          <div class="flex items-start justify-between mb-2">
-            <div class="flex items-center gap-2">
-              <Icon
-                :name="getChangeIcon(change.type)"
-                class="w-4 h-4 shrink-0"
-              />
-              <div class="text-sm font-mono">
-                {{ formatPath(change.path) }}
-              </div>
+        <div class="flex items-start justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <Icon
+              :name="getChangeIcon(change.type)"
+              class="w-4 h-4 shrink-0"
+            />
+            <div class="text-sm font-mono">
+              {{ formatPath(change.path) }}
             </div>
-            <span
-              :class="getBadgeClasses(change.type)"
-              class="px-2 py-1 text-xs font-semibold rounded-full"
-            >
+          </div>
+          <span
+            :class="getBadgeClasses(change.type)"
+            class="px-2 py-1 text-xs font-semibold rounded-full"
+          >
               {{ change.type.toUpperCase() }}
             </span>
+        </div>
+        <div class="ml-6">
+          <div
+            v-if="change.type === 'added'"
+            class="space-y-1"
+          >
+            <div class="text-xs uppercase tracking-wide font-semibold">New Value</div>
+            <div class="font-mono text-sm bg-success/5 border border-success/20 rounded px-3 py-2">
+              <ValueRenderer :value="change.newValue"/>
+            </div>
           </div>
-          <div class="ml-6">
-            <div
-              v-if="change.type === 'added'"
-              class="space-y-1"
-            >
+          <div
+            v-else-if="change.type === 'removed'"
+            class="space-y-1"
+          >
+            <div class="text-xs uppercase tracking-wide font-semibold">Removed Value</div>
+            <div class="font-mono text-sm bg-destructive/5 border border-destructive/20 rounded px-3 py-2">
+              <ValueRenderer :value="change.oldValue"/>
+            </div>
+          </div>
+          <div
+            v-else-if="change.type === 'changed'"
+            class="space-x-3 grid grid-cols-2"
+          >
+            <div class="space-y-1">
+              <div class="text-xs uppercase tracking-wide font-semibold">Previous Value</div>
+              <div class="font-mono text-sm bg-destructive/5 border border-destructive/20 rounded px-3 py-2">
+                <ValueRenderer :value="change.oldValue"/>
+              </div>
+            </div>
+            <div class="space-y-1">
               <div class="text-xs uppercase tracking-wide font-semibold">New Value</div>
               <div class="font-mono text-sm bg-success/5 border border-success/20 rounded px-3 py-2">
                 <ValueRenderer :value="change.newValue"/>
               </div>
             </div>
-            <div
-              v-else-if="change.type === 'removed'"
-              class="space-y-1"
-            >
-              <div class="text-xs uppercase tracking-wide font-semibold">Removed Value</div>
-              <div class="font-mono text-sm bg-destructive/5 border border-destructive/20 rounded px-3 py-2">
-                <ValueRenderer :value="change.oldValue"/>
-              </div>
-            </div>
-            <div
-              v-else-if="change.type === 'changed'"
-              class="space-x-3 grid grid-cols-2"
-            >
-              <div class="space-y-1">
-                <div class="text-xs uppercase tracking-wide font-semibold">Previous Value</div>
-                <div class="font-mono text-sm bg-destructive/5 border border-destructive/20 rounded px-3 py-2">
-                  <ValueRenderer :value="change.oldValue"/>
-                </div>
-              </div>
-              <div class="space-y-1">
-                <div class="text-xs uppercase tracking-wide font-semibold">New Value</div>
-                <div class="font-mono text-sm bg-success/5 border border-success/20 rounded px-3 py-2">
-                  <ValueRenderer :value="change.newValue"/>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-      </TransitionGroup>
+      </div>
     </div>
   </div>
 </template>

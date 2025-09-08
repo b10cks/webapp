@@ -4,6 +4,7 @@ import EditorComponent from './EditorComponent.vue'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import AddDropdown from '~/components/editor/AddDropdown.vue'
 import { Button } from '~/components/ui/button'
+import BlockHeader from '~/components/editor/BlockHeader.vue'
 
 const props = defineProps<{
   item: BlocksSchema & { key: string }
@@ -17,9 +18,13 @@ const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 const ulid = useUlid()
 const route = useRoute()
 const router = useRouter()
-const handlebars = useHandlebars()
 
-const { copyItem: globalCopyItem, cutItem: globalCutItem, pasteItem: globalPasteItem, hasClipboardItem } = useGlobalClipboard()
+const {
+  copyItem: globalCopyItem,
+  cutItem: globalCutItem,
+  pasteItem: globalPasteItem,
+  hasClipboardItem
+} = useGlobalClipboard()
 
 const emit = defineEmits<{
   'update:modelValue': [value: Array<Record<string, unknown>>]
@@ -110,31 +115,6 @@ const updateContent = (index: number, newContent: Record<string, unknown>) => {
   blockItems.value = updatedItems
 }
 
-function blockTitle(block: BlockResource | null): string {
-  if (!block) return 'Untitled'
-  return block.name || block.slug || block.key || 'Untitled'
-}
-
-function guessTitle(content: Record<string, unknown>, block: BlockResource | null): string {
-  if (!content) return 'Untitled'
-  if (block?.preview_template) {
-    try {
-      return handlebars.render(block.preview_template, content)
-    } catch (_) { /* empty */ }
-  }
-
-  const keys = Object.keys(content)
-  if (keys.length > 0 && typeof content[keys[0]] === 'string') {
-    return content[keys[0]]
-  }
-
-  if (content.block) {
-    const block = getBlockBySlug(blocks, content.block)
-    return block?.name || 'Untitled Block'
-  }
-
-  return 'Untitled'
-}
 
 const navigateToItem = (itemId: string) => {
   router.push({
@@ -163,19 +143,10 @@ const navigateToItem = (itemId: string) => {
             <AccordionTrigger
               class="flex items-center gap-2 w-full"
             >
-              <Icon
-                name="lucide:grip-vertical"
-                class="shrink-0 cursor-ns-resize opacity-0 group-hover:opacity-100"
-                :draggable="true"
+              <BlockHeader
+                :content="content"
+                :block="getBlockBySlug(blocks, content.block as string)"
               />
-              <div class="grow grid text-left leading-none">
-                <h4 class="font-semibold text-primary">{{
-                    guessTitle(content, getBlockBySlug(blocks, content.block as string))
-                  }}</h4>
-                <div class="flex text-sm text-muted ">
-                  {{ blockTitle(getBlockBySlug(blocks, content.block as string)) }}
-                </div>
-              </div>
               <div class="ml-auto flex opacity-0 group-hover:opacity-100 gap-2 items-center">
                 <button
                   v-if="content.id"

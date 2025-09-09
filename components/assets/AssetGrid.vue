@@ -49,8 +49,9 @@ const { $t } = useI18n()
 const { alert } = useAlertDialog()
 const { settings } = useSpaceSettings(props.spaceId)
 
-const { useFolderStructure, useDeleteAssetFolderMutation } = useAssetFolders(props.spaceId)
+const { useFolderStructure, useDeleteAssetFolderMutation, useUpdateAssetFolderMutation } = useAssetFolders(props.spaceId)
 const { mutate: deleteFolder } = useDeleteAssetFolderMutation()
+const { mutate: updateFolder } = useUpdateAssetFolderMutation()
 const { getBreadcrumbs, getChildrenOfFolder } = useFolderStructure()
 
 const { useAssetsQuery, useDeleteAssetMutation, useUpdateAssetMutation } = useAssets(props.spaceId)
@@ -255,15 +256,6 @@ const handleFolderCreate = (folder: AssetFolderResource | null) => {
   folderId.value = folder.id || null
 }
 
-const navigateToFolder = (folder: AssetFolderResource) => {
-  folderId.value = folder.id
-  emit('folder-change', folder.id)
-}
-
-const handlePageChange = (page: number) => {
-  currentPage.value = page
-}
-
 // Selection management (manage mode only)
 const deleteSelection = () => {
   if (props.mode !== 'manage') return
@@ -348,12 +340,12 @@ async function handleItemsMove(targetFolderId: string, itemsToMove: { type: stri
     for (const items of itemsToMove) {
       if (items.type === 'asset') {
         for (const assetId of items.ids) {
-          movePromises.push(updateAsset(assetId, { folder_id: targetFolderId }))
+          movePromises.push(updateAsset({ id: assetId, payload: { folder_id: targetFolderId } }))
         }
       } else if (items.type === 'folder') {
         for (const folderId of items.ids) {
           if (folderId !== targetFolderId) {
-            movePromises.push(updateFolder(folderId, { parent_id: targetFolderId }))
+            movePromises.push(updateFolder({ id: folderId, payload: { parent_id: targetFolderId } }))
           }
         }
       }
@@ -381,7 +373,7 @@ const assetQueryParams = computed<AssetsQueryParams>(() => {
   }
 })
 
-const { data: assetResponse, refetch: refetchAssets, isPending: isLoading } = useAssetsQuery(assetQueryParams)
+const { data: assetResponse, refetch: refetchAssets } = useAssetsQuery(assetQueryParams)
 
 watch([folderId, tagId], async () => {
   clearSelection()
@@ -401,9 +393,9 @@ const assetFilters = computed(() => [
   { id: 'filename', label: 'Filename' },
   {
     id: 'size', label: 'Size', operators: [
-      { value: 'gt', label: '>' },
-      { value: 'lt', label: '<' },
-      { value: 'eq', label: '=' },
+      { value: 'gt' as const, label: '>' },
+      { value: 'lt' as const, label: '<' },
+      { value: 'eq' as const, label: '=' },
     ]
   },
 ])
@@ -528,7 +520,7 @@ const assetItemProps = computed(() => {
         role="listbox"
         aria-label="Folders"
         aria-multiselectable="true"
-        @keydown="(e) => handleKeyNavigation(e, folders, Array.from(folders).findIndex(f => e.target.closest('[role=option]')?.getAttribute('data-id') === f.id), '[role=option]')"
+        @keydown="(e) => handleKeyNavigation(e, folders, Array.from(folders).findIndex(f => (e.target as HTMLElement).closest('[role=option]')?.getAttribute('data-id') === f.id), '[role=option]')"
       >
         <AssetFolder
           v-for="folder in folders"
@@ -566,8 +558,8 @@ const assetItemProps = computed(() => {
           <SortSelect
             v-model="sortBy"
             :options="sortOptions"
-            :label="$t('labels.sortBy')"
-            :placeholder="$t('labels.sortBy')"
+            :label="String($t('labels.sortBy'))"
+            :placeholder="String($t('labels.sortBy'))"
           />
           <Select v-model="settings.assets.gridSize">
             <SelectTrigger>
@@ -624,7 +616,7 @@ const assetItemProps = computed(() => {
           role="listbox"
           aria-label="Assets"
           aria-multiselectable="true"
-          @keydown="(e) => handleKeyNavigation(e, assetResponse.data, Array.from(assetResponse.data).findIndex(a => e.target.closest('[role=option]')?.getAttribute('data-id') === a.id), '[role=option]')"
+          @keydown="(e) => handleKeyNavigation(e, assetResponse.data, Array.from(assetResponse.data).findIndex(a => (e.target as HTMLElement).closest('[role=option]')?.getAttribute('data-id') === a.id), '[role=option]')"
         >
           <AssetItem
             v-for="asset in assetResponse?.data"

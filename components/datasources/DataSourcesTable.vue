@@ -6,7 +6,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableEmpty,
   TableHead,
   TableHeader,
   TableRow,
@@ -29,7 +28,7 @@ const props = defineProps<{
 }>()
 
 const { useDataSourcesQuery, useDeleteDataSourceMutation } = useDataSources(props.spaceId)
-const { mutate: deleteDataSource, isPending: isDeleting } = useDeleteDataSourceMutation()
+const { mutate: deleteDataSource } = useDeleteDataSourceMutation()
 
 const emit = defineEmits<{
   (e: 'edit' | 'delete', dataSource: DataSourceResource): void
@@ -46,19 +45,19 @@ const perPage = ref(10)
 
 const possibleFilters = [
   {
-    key: 'name',
+    id: 'name',
     label: $t('labels.datasets.fields.name'),
     type: 'text',
     placeholder: $t('labels.datasets.placeholders.name'),
   },
   {
-    key: 'slug',
+    id: 'slug',
     label: $t('labels.datasets.fields.slug'),
     type: 'text',
     placeholder: $t('labels.datasets.placeholders.slug'),
   },
   {
-    key: 'is_active',
+    id: 'is_active',
     label: $t('labels.datasets.fields.status'),
     type: 'select',
     options: [
@@ -93,7 +92,7 @@ const queryParams = computed<DataSourcesQueryParams>(() => {
 const {
   data: dataSources,
   isLoading,
-  refetch: refetchDataSources,
+  refetch,
 } = useDataSourcesQuery(queryParams)
 
 const deleteDialogOpen = ref(false)
@@ -144,8 +143,8 @@ const confirmDelete = async () => {
       <SortSelect
         v-model="sortBy"
         :options="sortOptions"
-        :label="$t('labels.sortBy')"
-        :placeholder="$t('labels.sortBy')"
+        :label="String($t('labels.sortBy'))"
+        :placeholder="String($t('labels.sortBy'))"
       />
     </div>
     <div class="rounded-md border border-input">
@@ -259,7 +258,7 @@ const confirmDelete = async () => {
             v-else
             :colspan="8"
             :icon="DataSourcesIcon"
-            :label="searchQuery ? $t('labels.datasets.noSearchResults') : $t('labels.datasets.noDataSources')"
+            :label="searchQuery ? String($t('labels.datasets.noSearchResults')) : String($t('labels.datasets.noDataSources'))"
           />
         </TableBody>
       </Table>

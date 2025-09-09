@@ -4,7 +4,7 @@ import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
 interface FilterableItem {
   value: string | number
-  label: string
+  label: string | CleanTranslation
 }
 
 interface FilterableOperator {
@@ -52,7 +52,7 @@ const dropdownOpen = ref(false)
 const activeFilters = ref<FilterValue[]>([])
 const stage = ref<'field' | 'operator' | 'value'>('field')
 const selectedField = ref<FilterableField | null>(null)
-const selectedOperator = ref<FilterableItem | null>(null)
+const selectedOperator = ref<FilterableOperator | null>(null)
 const containerRef = ref<HTMLElement | null>(null)
 const inputRef = ref<HTMLInputElement | null>(null)
 const dateValue = ref('')
@@ -63,31 +63,29 @@ const editingFilterIndex = ref<number | null>(null)
 // Input placeholder
 const placeholder = computed(() => {
   if (stage.value === 'field') {
-    return $t('labels.search.searchOrSelectField')
+    return String($t('labels.search.searchOrSelectField'))
   } else if (stage.value === 'operator') {
-    return $t('labels.search.selectOperatorFor', { field: selectedField.value?.label })
+    return String($t('labels.search.selectOperatorFor', { field: String(selectedField.value?.label || '') }))
   } else if (stage.value === 'value') {
     if (selectedField.value?.items && selectedField.value.items.length > 0) {
-      return $t('labels.search.selectValueFor', { field: selectedField.value.label })
+      return String($t('labels.search.selectValueFor', { field: String(selectedField.value.label) }))
     } else if (selectedField.value?.datepicker) {
-      return $t('labels.search.enterDateFor', { field: selectedField.value.label })
+      return String($t('labels.search.enterDateFor', { field: String(selectedField.value.label) }))
     } else {
-      return $t('labels.search.enterValueFor', { field: selectedField.value?.label })
+      return String($t('labels.search.enterValueFor', { field: String(selectedField.value?.label || '') }))
     }
   }
-  return $t('labels.search.search')
+  return String($t('labels.search.search'))
 })
 
-const dropdownItems = computed(() => {
+const dropdownItems = computed((): (FilterableField | FilterableOperator | FilterableItem)[] => {
   if (stage.value === 'field') {
-    const availableFields = editingFilterIndex.value !== null
-      ? props.filterableFields
-      : props.filterableFields.filter(field =>
-        !activeFilters.value.some(filter => filter.field === field.id)
-      )
+    const availableFields = editingFilterIndex.value === null ? props.filterableFields.filter(field =>
+      !activeFilters.value.some(filter => filter.field === field.id)
+    ) : props.filterableFields
 
     return availableFields.filter(field =>
-      !inputValue.value || field.label.toLowerCase().includes(inputValue.value.toLowerCase())
+      !inputValue.value || String(field.label).toLowerCase().includes(inputValue.value.toLowerCase())
     )
   } else if (stage.value === 'operator' && selectedField.value?.operators) {
     return selectedField.value.operators
@@ -105,8 +103,8 @@ watch(dropdownItems, () => {
 })
 
 // Computed property for all filters, encoded as {field}={operator}:{value}
-const allFilters = computed(() => {
-  const result: Record<string, any> = {}
+const allFilters = computed((): Record<string, string | number> => {
+  const result: Record<string, string | number> = {}
 
   // Add search query if it exists and we're in field stage
   if (inputValue.value && stage.value === 'field') {
@@ -127,20 +125,20 @@ const allFilters = computed(() => {
   return result
 })
 
-const pendingFilter = computed(() => {
+const pendingFilter = computed((): Partial<FilterValue> | null => {
   if (!selectedField.value) return null
 
   return {
     field: selectedField.value.id,
-    fieldLabel: selectedField.value.label,
-    operator: selectedOperator.value?.value,
-    operatorLabel: selectedOperator.value?.label,
+    fieldLabel: String(selectedField.value.label),
+    operator: selectedOperator.value?.value ? String(selectedOperator.value.value) : undefined,
+    operatorLabel: selectedOperator.value?.label ? String(selectedOperator.value.label) : undefined,
     value: stage.value === 'value' ? inputValue.value : '',
     valueLabel: stage.value === 'value' ? inputValue.value : ''
   }
 })
 
-const resetSelectionState = () => {
+const resetSelectionState = (): void => {
   selectedField.value = null
   selectedOperator.value = null
   stage.value = 'field'
@@ -150,7 +148,7 @@ const resetSelectionState = () => {
   editingFilterIndex.value = null
 }
 
-const clearAllFilters = () => {
+const clearAllFilters = (): void => {
   activeFilters.value = []
   resetSelectionState()
   emit('update:modelValue', {})
@@ -165,7 +163,7 @@ const clearAllFilters = () => {
 }
 
 // Scroll to selected item in dropdown
-const scrollToSelected = () => {
+const scrollToSelected = (): void => {
   nextTick(() => {
     if (dropdownRef.value && dropdownRef.value.children[selectedDropdownIndex.value]) {
       const selectedEl = dropdownRef.value.children[selectedDropdownIndex.value] as HTMLElement
@@ -177,7 +175,7 @@ const scrollToSelected = () => {
 }
 
 // Handle field selection
-const handleFieldSelect = (field: FilterableField) => {
+const handleFieldSelect = (field: FilterableField): void => {
   selectedField.value = field
   inputValue.value = ''
 
@@ -194,10 +192,10 @@ const handleFieldSelect = (field: FilterableField) => {
   dropdownOpen.value = true
   selectedDropdownIndex.value = 0
 
-  announceToScreenReader($t('labels.search.fieldSelected', { field: field.label }))
+  announceToScreenReader(String($t('labels.search.fieldSelected', { field: String(field.label) })))
 }
 
-const handleOperatorSelect = (operator: FilterableItem) => {
+const handleOperatorSelect = (operator: FilterableOperator): void => {
   selectedOperator.value = operator
   inputValue.value = ''
 
@@ -215,25 +213,26 @@ const handleOperatorSelect = (operator: FilterableItem) => {
   dropdownOpen.value = !!selectedField.value?.items
   selectedDropdownIndex.value = 0
 
-  announceToScreenReader($t('labels.search.operatorSelected', { operator: operator.label }))
+  announceToScreenReader(String($t('labels.search.operatorSelected', { operator: String(operator.label) })))
 }
 
-const handleValueSelect = (item?: FilterableItem) => {
+const handleValueSelect = (item?: FilterableItem): void => {
   if (!selectedField.value) return
 
   const newFilter: FilterValue = {
     field: selectedField.value.id,
-    fieldLabel: selectedField.value.label
+    fieldLabel: String(selectedField.value.label),
+    value: '' // Initialize with empty value, will be set below
   }
 
   if (selectedOperator.value) {
     newFilter.operator = String(selectedOperator.value.value)
-    newFilter.operatorLabel = selectedOperator.value.label
+    newFilter.operatorLabel = String(selectedOperator.value.label)
   }
 
   if (item) {
     newFilter.value = item.value
-    newFilter.valueLabel = item.label
+    newFilter.valueLabel = String(item.label)
   } else if (dateValue.value && selectedField.value.datepicker) {
     newFilter.value = dateValue.value
     newFilter.valueLabel = dateValue.value
@@ -243,16 +242,16 @@ const handleValueSelect = (item?: FilterableItem) => {
   }
 
   if (newFilter.value !== undefined && newFilter.value !== null && String(newFilter.value).trim() !== '') {
-    if (editingFilterIndex.value !== null) {
-      activeFilters.value[editingFilterIndex.value] = newFilter
-      announceToScreenReader($t('labels.search.filterUpdated', {
+    if (editingFilterIndex.value === null) {
+      activeFilters.value.push(newFilter)
+      announceToScreenReader($t('labels.search.filterAdded', {
         field: newFilter.fieldLabel,
         operator: newFilter.operatorLabel || '',
         value: newFilter.valueLabel || newFilter.value
       }))
     } else {
-      activeFilters.value.push(newFilter)
-      announceToScreenReader($t('labels.search.filterAdded', {
+      activeFilters.value[editingFilterIndex.value] = newFilter
+      announceToScreenReader($t('labels.search.filterUpdated', {
         field: newFilter.fieldLabel,
         operator: newFilter.operatorLabel || '',
         value: newFilter.valueLabel || newFilter.value
@@ -266,13 +265,13 @@ const handleValueSelect = (item?: FilterableItem) => {
   dropdownOpen.value = false
 }
 
-const handleDateSelect = () => {
+const handleDateSelect = (): void => {
   if (dateValue.value) {
     handleValueSelect()
   }
 }
 
-const removeFilter = (index: number) => {
+const removeFilter = (index: number): void => {
   const filter = activeFilters.value[index]
   activeFilters.value.splice(index, 1)
   emit('update:modelValue', allFilters.value)
@@ -282,7 +281,7 @@ const removeFilter = (index: number) => {
   }))
 }
 
-const editFilter = (index: number) => {
+const editFilter = (index: number): void => {
   const filter = activeFilters.value[index]
   editingFilterIndex.value = index
 
@@ -322,7 +321,7 @@ const editFilter = (index: number) => {
   })
 }
 
-const handleRemoveLastFilter = () => {
+const handleRemoveLastFilter = (): boolean => {
   if (activeFilters.value.length > 0) {
     removeFilter(activeFilters.value.length - 1)
     return true
@@ -330,7 +329,7 @@ const handleRemoveLastFilter = () => {
   return false
 }
 
-const handleInputFocus = () => {
+const handleInputFocus = (): void => {
   if (stage.value === 'field') {
     dropdownOpen.value = true
   } else if (stage.value === 'value' && selectedField.value?.items) {
@@ -338,7 +337,7 @@ const handleInputFocus = () => {
   }
 }
 
-const handleInputChange = (e: Event) => {
+const handleInputChange = (e: Event): void => {
   const target = e.target as HTMLInputElement
   inputValue.value = target.value
 
@@ -348,23 +347,23 @@ const handleInputChange = (e: Event) => {
   }
 }
 
-const announceToScreenReader = (message: string | CleanTranslation) => {
+const announceToScreenReader = (message: string | CleanTranslation): void => {
   const announcer = document.getElementById('sr-announcer')
   if (announcer) {
-    announcer.textContent = message
+    announcer.textContent = String(message)
   } else {
     const newAnnouncer = document.createElement('div')
     newAnnouncer.id = 'sr-announcer'
     newAnnouncer.setAttribute('aria-live', 'polite')
     newAnnouncer.setAttribute('aria-atomic', 'true')
     newAnnouncer.classList.add('sr-only')
-    newAnnouncer.textContent = message
+    newAnnouncer.textContent = String(message)
     document.body.appendChild(newAnnouncer)
   }
 }
 
 // Handle navigation and selection with keyboard
-const handleKeyDown = (e: KeyboardEvent) => {
+const handleKeyDown = (e: KeyboardEvent): void => {
   // Handle arrow up/down for dropdown navigation with cycling
   if (dropdownOpen.value && dropdownItems.value.length > 0) {
     if (e.key === 'ArrowDown') {
@@ -390,11 +389,11 @@ const handleKeyDown = (e: KeyboardEvent) => {
       const selectedItem = dropdownItems.value[selectedDropdownIndex.value]
 
       if (stage.value === 'field') {
-        handleFieldSelect(selectedItem, selectedDropdownIndex.value)
+        handleFieldSelect(selectedItem as FilterableField, selectedDropdownIndex.value)
       } else if (stage.value === 'operator') {
-        handleOperatorSelect(selectedItem, selectedDropdownIndex.value)
+        handleOperatorSelect(selectedItem as FilterableOperator, selectedDropdownIndex.value)
       } else if (stage.value === 'value') {
-        handleValueSelect(selectedItem, selectedDropdownIndex.value)
+        handleValueSelect(selectedItem as FilterableItem, selectedDropdownIndex.value)
       }
     } else if (stage.value === 'value') {
       // Use input value when no dropdown or no selection
@@ -461,7 +460,7 @@ const handleKeyDown = (e: KeyboardEvent) => {
   }
 }
 
-const handleClickOutside = (event: MouseEvent) => {
+const handleClickOutside = (event: MouseEvent): void => {
   if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
     dropdownOpen.value = false
 
@@ -534,8 +533,8 @@ onBeforeUnmount(() => {
           v-model="inputValue"
           type="text"
           class="w-full bg-transparent border-none text-primary p-1 focus:outline-none text-sm font-semibold"
-          :placeholder="placeholder"
-          :aria-label="placeholder"
+          :placeholder="String(placeholder)"
+          :aria-label="String(placeholder)"
           :aria-autocomplete="dropdownItems.length > 0 ? 'list' : 'none'"
           :aria-controls="dropdownOpen ? 'search-filter-dropdown' : undefined"
           :aria-activedescendant="dropdownOpen && dropdownItems.length > 0 ?
@@ -550,7 +549,7 @@ onBeforeUnmount(() => {
         v-if="activeFilters.length > 0 || inputValue"
         type="button"
         class="absolute h-5 w-5 p-0.5 right-1 top-2 items-center rounded-full hover:bg-elevated focus:outline-none focus:ring-2 focus:ring-ring"
-        :aria-label="$t('labels.search.clearAllFilters')"
+        :aria-label="String($t('labels.search.clearAllFilters'))"
         @click="clearAllFilters"
       >
         <Icon
@@ -566,7 +565,7 @@ onBeforeUnmount(() => {
       ref="dropdownRef"
       class="absolute z-50 w-full mt-1 p-1 bg-input rounded-md shadow-lg max-h-60 overflow-y-auto"
       role="listbox"
-      :aria-label="$t(`labels.search.${stage}DropdownLabel`)"
+      :aria-label="String($t(`labels.search.${stage}DropdownLabel`))"
     >
       <template v-if="dropdownItems.length > 0">
         <div
@@ -581,10 +580,10 @@ onBeforeUnmount(() => {
           :aria-selected="index === selectedDropdownIndex"
           @click="
             stage === 'field'
-              ? handleFieldSelect(item, index)
+              ? handleFieldSelect(item as FilterableField)
               : stage === 'operator'
-                ? handleOperatorSelect(item, index)
-                : handleValueSelect(item, index)
+                ? handleOperatorSelect(item as FilterableOperator)
+                : handleValueSelect(item as FilterableItem)
           "
         >
           {{ item.label }}
@@ -606,7 +605,7 @@ onBeforeUnmount(() => {
           class="w-full p-2 bg-elevated border border-gray-600 rounded text-primary"
           :max="selectedField.datepicker.max?.split('T')[0]"
           :min="selectedField.datepicker.min?.split('T')[0]"
-          :aria-label="$t('labels.search.enterDateFor', { field: selectedField.label })"
+          :aria-label="String($t('labels.search.enterDateFor', { field: String(selectedField.label) }))"
           @change="handleDateSelect"
         >
       </div>

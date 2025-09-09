@@ -91,7 +91,7 @@ export function useContentMenu(spaceIdRef: MaybeRefOrComputed<string>) {
       const echo = useEcho()
       echo.channel(`spaces.${spaceId.value}.content`)
         .listen('.content:updated', (content: ContentResource) => {
-          const contentTree = queryClient.getQueryData(queryKeys.contentMenu(spaceId.value).all())
+          const contentTree = queryClient.getQueryData(queryKeys.contentMenu(spaceId.value).all()) as Record<string, FlatContentMenuItem> || {}
           const item: FlatContentMenuItem | null = content.i18n_parent_id ? contentTree[content.i18n_parent_id] : {
             id: content.id,
             name: content.name,

@@ -18,7 +18,12 @@ const props = withDefaults(defineProps<{
   isCreate: false,
 })
 
-const editableBlock = ref<BlockResource>({ ...props.block, type: props.block.type || 'nestable' })
+const editableBlock = ref<BlockResource>({
+  ...props.block,
+  type: props.block.type || 'nestable',
+  icon: props.block.icon || 'block',
+  color: props.block.color
+})
 
 const { useBlockTagsQuery } = useBlockTags(props.spaceId)
 const { data: blockTags } = useBlockTagsQuery({ per_page: 500 })
@@ -54,10 +59,11 @@ const enforceSlugFormat = () => {
 <template>
   <div class="flex flex-col gap-6">
     <IconNameField
-      v-model="editableBlock"
+      :model-value="editableBlock as { icon: string; color: string; name: string }"
       :label="$t('labels.blocks.fields.name')"
       name="name"
       @update:name="createSlug"
+      @update:model-value="Object.assign(editableBlock, $event)"
     />
     <InputField
       v-model="editableBlock.slug"
@@ -86,8 +92,8 @@ const enforceSlugFormat = () => {
             :key="type"
             :class="['text-left cursor-pointer flex gap-3 px-3 py-2 border rounded-lg', editableBlock.type === type ? 'border-border bg-input' : 'border-border']"
             tabindex="-1"
-            @click="editableBlock.type = type"
-            @keydown.enter="editableBlock.type = type"
+            @click="editableBlock.type = type as 'root' | 'nestable' | 'single' | 'universal'"
+            @keydown.enter="editableBlock.type = type as 'root' | 'nestable' | 'single' | 'universal'"
           >
             <RadioGroupItem
               :value="type"

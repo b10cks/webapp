@@ -109,8 +109,10 @@ const handleAssetReplace = (index: number) => {
 const replaceIndex = ref<number | null>(null)
 
 const handleAssetSelectForReplace = (asset: AssetResource) => {
-  if (replaceIndex.value !== null) {
-    const newAsset: AssetValue = {
+  if (replaceIndex.value === null) {
+    handleAssetSelect(asset)
+  } else {
+    localValue.value[replaceIndex.value] = {
       id: asset.id,
       type: 'asset',
       full_path: asset.full_path,
@@ -120,12 +122,8 @@ const handleAssetSelectForReplace = (asset: AssetResource) => {
       filename: asset.filename,
       data: {}
     }
-
-    localValue.value[replaceIndex.value] = newAsset
     updateValue()
     replaceIndex.value = null
-  } else {
-    handleAssetSelect(asset)
   }
   showAssetPicker.value = false
 }
@@ -253,21 +251,21 @@ const closeAssetDetails = () => {
             <div class="flex opacity-0 group-hover:opacity-100 gap-2 items-center">
               <button
                 class="transform cursor-pointer hover:text-primary flex items-center"
-                :title="$t('actions.assets.replace')"
+                :title="$t('actions.assets.replace') as string"
                 @click.stop="handleAssetReplace(index)"
               >
                 <Icon name="lucide:replace"/>
               </button>
               <button
                 class="transform cursor-pointer hover:text-primary flex items-center"
-                :title="$t('actions.assets.edit')"
+                :title="$t('actions.assets.edit') as string"
                 @click.stop="handleAssetEdit(asset)"
               >
                 <Icon name="lucide:pencil"/>
               </button>
               <button
                 class="transform cursor-pointer hover:text-red-500 flex items-center"
-                :title="$t('actions.assets.remove')"
+                :title="$t('actions.assets.remove') as string"
                 @click.stop="handleAssetDelete(index)"
               >
                 <Icon name="lucide:trash-2"/>
@@ -304,7 +302,7 @@ const closeAssetDetails = () => {
       <DialogContent class="!max-w-[90dvw] h-[90dvh] p-0">
         <DialogHeader>
           <DialogTitle>
-            {{ replaceIndex !== null ? $t('labels.assets.replaceAsset') : $t('labels.assets.selectAssets') }}
+            {{ replaceIndex === null ? $t('labels.assets.selectAssets') : $t('labels.assets.replaceAsset') }}
           </DialogTitle>
         </DialogHeader>
 

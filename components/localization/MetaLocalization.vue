@@ -1,20 +1,31 @@
 <script setup lang="ts">
 import { InputField, TextField } from '~/components/ui/form'
 
-defineProps<{
+interface MetaValue {
+  title?: string
+  description?: string
+  canonical?: string
+  robots?: string
+  ogTitle?: string
+  ogDescription?: string
+}
+
+const props = defineProps<{
   item: MetaSchema & { key: string }
-  originalValue: string
-  modelValue: string
+  originalValue: MetaValue
+  modelValue: MetaValue
   isMachineTranslated?: boolean
 }>()
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
+  'update:modelValue': [value: MetaValue]
 }>()
 
-const updateValue = (key: string, value: unknown) => {
-  const target = e.target as HTMLInputElement
-  emit('update:modelValue', target.value)
+const updateValue = (key: keyof MetaValue, value: string | number) => {
+  emit('update:modelValue', {
+    ...props.modelValue,
+    [key]: value
+  })
 }
 </script>
 

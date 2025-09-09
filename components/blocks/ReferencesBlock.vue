@@ -26,11 +26,7 @@ const filterBlocks = (option: ComboboxOption<string>, search: string, selectedVa
     return false
   }
 
-  if (search && !option.value.toLowerCase().includes(searchLower) && !option.label.toLowerCase().includes(searchLower)) {
-    return false
-  }
-
-  return true
+  return !(search && !option.value.toLowerCase().includes(searchLower) && !String(option.label).toLowerCase().includes(searchLower));
 }
 
 </script>

@@ -147,9 +147,9 @@ const handleNameChange = (event: Event) => {
     .replace(/\s+/g, '-')
 }
 
-const handleDimensionAdd = (item: DimensionItem) => {
+const handleDimensionAdd = (item: Record<string, unknown>) => {
   if (!item.key && item.label) {
-    item.key = item.label
+    item.key = (item.label as string)
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '_')

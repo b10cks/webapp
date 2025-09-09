@@ -1,9 +1,9 @@
 interface Schema {
   name: string
-  description: string
-  required: boolean
-  order: number
-  default: string | undefined
+  description?: string | null
+  required?: boolean
+  order?: number
+  default?: string | undefined
 }
 
 interface BlocksSchema extends Schema {
@@ -42,7 +42,7 @@ type FileTypes = 'image' | 'video' | 'audio' | 'document' | 'archive' | 'other' 
 interface AssetSchema extends Schema {
   type: 'asset'
   file_types: FileTypes[]
-  folder_id: string | null
+  folder_id?: string | null
 }
 
 interface MultiAssetSchema extends Schema {

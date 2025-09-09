@@ -9,13 +9,40 @@ import type { ContentBlock } from '~/types/contents'
 import { useElementHover } from '@vueuse/core'
 import { Button } from '~/components/ui/button'
 
+interface EditorPage {
+  header: string
+  items: string[]
+}
+
+interface BlockResource {
+  id: string
+  name: string
+  slug: string
+  editor: EditorPage[]
+  schema?: Record<string, unknown>
+}
+
+interface ContentItem {
+  item: Record<string, unknown> & {
+    block?: string
+  }
+}
+
+interface Breadcrumb {
+  id: string
+  label: string
+}
+
+type HoverUpdateFunction = (data: string | null) => void
+type PreviewUpdateFunction = (data: Record<string, unknown>) => void
+
 const content = defineModel<Record<string, unknown>>()
-const containerRef = useTemplateRef('containerRef')
+const containerRef = useTemplateRef<HTMLElement>('containerRef')
 const isHovered = useElementHover(containerRef)
 
 const props = withDefaults(defineProps<{
-  blockId?: string
-  blockSlug?: string
+  blockId?: string | null
+  blockSlug?: string | null
   spaceId: string
   isChild?: boolean
   rootId?: string
@@ -33,26 +60,28 @@ const emit = defineEmits<{
 }>()
 
 const hoverRegistry = inject<Map<string, boolean>>('hoverRegistry', new Map())
-const componentId = computed(() => content.value.id || props.itemId)
+const componentId = computed((): string => {
+  return (content.value?.id as string) || props.itemId || ''
+})
 
 provide('hoverRegistry', hoverRegistry)
 
-const updateHoverItem = inject<(data: never) => void>('updateHoverItem')
+const updateHoverItem = inject<HoverUpdateFunction>('updateHoverItem')
 
-const updateRegistry = (isComponentHovered: boolean) => {
+const updateRegistry = (isComponentHovered: boolean): void => {
   hoverRegistry.set(componentId.value, isComponentHovered)
-  let innermostId = null
+  let innermostId: string | null = null
   for (const [id, hovered] of hoverRegistry.entries()) {
     if (hovered) {
       innermostId = id
     }
   }
   if (updateHoverItem) {
-    updateHoverItem(innermostId as never)
+    updateHoverItem(innermostId)
   }
 }
 
-watch(isHovered, (hovered) => {
+watch(isHovered, (hovered: boolean) => {
   updateRegistry(hovered)
 }, { immediate: true })
 
@@ -69,16 +98,22 @@ const { useBlocksQuery, getBlockById, getBlockBySlug } = useBlocks(props.spaceId
 const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 
 const rootBlock = inject<ContentBlock>('rootBlock')
-const updatePreviewItem = inject<(data: never) => void>('updatePreviewItem')
+const updatePreviewItem = inject<PreviewUpdateFunction>('updatePreviewItem')
 
 const contentTree = useContentTree(content, rootBlock)
-const currentItem = computed(() => props.itemId ? contentTree.findItemById(props.itemId) : null)
-const breadcrumbs = computed(() => props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : [])
-const id = computed(() => props.itemId || rootBlock.slug)
+const currentItem = computed((): ContentItem | null => {
+  return props.itemId ? contentTree.findItemById(props.itemId) : null
+})
+const breadcrumbs = computed((): Breadcrumb[] => {
+  return props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : []
+})
+const id = computed((): string => {
+  return props.itemId || rootBlock?.slug || ''
+})
 
 const { hasClipboardItem, clearClipboard } = useGlobalClipboard()
 
-const currentBlock = computed(() => {
+const currentBlock = computed((): BlockResource | null => {
   if (!currentItem.value) {
     if (props.blockSlug) {
       return getBlockBySlug(blocks, props.blockSlug)
@@ -93,18 +128,24 @@ const currentBlock = computed(() => {
   return null
 })
 
-const handleBreadcrumbNavigation = (itemId: string | null) => {
+const handleBreadcrumbNavigation = (itemId: string | null): void => {
   emit('navigate', itemId)
 }
 
-const updateSubItem = (updatedValue: unknown) => {
-  if (!props.itemId || !currentItem.value) return
+const updateSubItem = (updatedValue: unknown): void => {
+  if (!props.itemId || !currentItem.value || !updatePreviewItem) return
 
-  updatePreviewItem(updatedValue)
+  updatePreviewItem(updatedValue as Record<string, unknown>)
   contentTree.updateItem(props.itemId, updatedValue)
 }
-const updateItem = (updatedValue: unknown) => {
-  updatePreviewItem({ id: props.rootId, ...updatedValue })
+
+const updateItem = (updatedValue: unknown): void => {
+  if (!updatePreviewItem) return
+  
+  updatePreviewItem({ 
+    id: props.rootId, 
+    ...(updatedValue as Record<string, unknown>) 
+  })
 }
 </script>
 

@@ -14,9 +14,21 @@ const props = defineProps<{
   onReplace: () => void
 }>()
 
-const { useFolderStructure } = useAssetFolders(props.spaceId)
-
 const localFile = ref<UploadFile>(props.file)
+
+// Ensure data object exists and properties are strings
+if (!localFile.value.data) {
+  localFile.value.data = {}
+}
+if (typeof localFile.value.data.altText !== 'string') {
+  localFile.value.data.altText = ''
+}
+if (typeof localFile.value.data.description !== 'string') {
+  localFile.value.data.description = ''
+}
+if (typeof localFile.value.data.copyright !== 'string') {
+  localFile.value.data.copyright = ''
+}
 const emit = defineEmits(['update:open', 'update:file'])
 
 const handleFinish = () => {
@@ -79,21 +91,21 @@ const onOpenChange = (open: boolean) => {
 
           <div class="grid gap-4">
             <InputField
-              v-model="localFile.data.altText"
-              :label="$t('labels.assets.fields.altText')"
-              :placeholder="$t('labels.assets.fields.altTextPlaceholder')"
+              v-model="localFile.data.altText as string"
+              :label="String($t('labels.assets.fields.altText'))"
+              :placeholder="String($t('labels.assets.fields.altTextPlaceholder'))"
               name="altText"
             />
             <InputField
-              v-model="localFile.data.description"
-              :label="$t('labels.assets.fields.description')"
-              :placeholder="$t('labels.assets.fields.descriptionPlaceholder')"
+              v-model="localFile.data.description as string"
+              :label="String($t('labels.assets.fields.description'))"
+              :placeholder="String($t('labels.assets.fields.descriptionPlaceholder'))"
               name="description"
             />
             <InputField
-              v-model="localFile.data.copyright"
-              :label="$t('labels.assets.fields.copyright')"
-              :placeholder="$t('labels.assets.fields.copyrightPlaceholder')"
+              v-model="localFile.data.copyright as string"
+              :label="String($t('labels.assets.fields.copyright'))"
+              :placeholder="String($t('labels.assets.fields.copyrightPlaceholder'))"
               name="copyright"
             />
           </div>

@@ -34,7 +34,7 @@ const value = ref<AddBlockProps>({
 })
 
 const emit = defineEmits<{
-  (e: 'add', payload: AddBlockProps & { resolve: Promise<boolean> }): void
+  (e: 'add', payload: AddBlockProps & { resolve: (value: boolean) => void }): void
 }>()
 
 async function add() {
@@ -42,7 +42,7 @@ async function add() {
   if (slugBlacklist.includes(value.value.key)) {
     return
   }
-  const result = await new Promise((resolve) => emit('add', { ...value.value, resolve }))
+  const result = await new Promise<boolean>((resolve) => emit('add', { ...value.value, resolve }))
   if (result) {
     value.value.key = ''
   }
@@ -122,7 +122,7 @@ onUnmounted(() => {
     />
     <Input
       v-model="value.key"
-      :placeholder="$t(`labels.blocks.fields.slugOf`, { name: $t(`labels.blocks.fieldTypes.${value.type}.label`)})"
+      :placeholder="String($t(`labels.blocks.fields.slugOf`, { name: String($t(`labels.blocks.fieldTypes.${value.type}.label`)) }))"
       aria-label="Block slug"
       aria-required="true"
       @keydown="handleKeydown"

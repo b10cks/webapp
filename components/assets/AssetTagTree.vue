@@ -21,6 +21,17 @@ const newTag = ref<UpsertAssetTagPayload>({
   icon: 'tag'
 })
 
+const { useCreateAssetTagMutation } = useAssetTags(route.params.spaceId as string)
+const { mutate: createTag } = useCreateAssetTagMutation()
+
+function create() {
+  if (newTag.value.name) {
+    createTag(newTag.value)
+    newTag.value = { name: '', color: null, icon: 'tag' }
+    showNewTag.value = false
+  }
+}
+
 </script>
 
 <template>
@@ -50,10 +61,7 @@ const newTag = ref<UpsertAssetTagPayload>({
     >
       <IconGrid v-model="newTag.icon"/>
       <Input v-model="newTag.name"/>
-      <Button
-        variant="secondary"
-        @click="create"
-      >
+      <Button @click="create">
         <Icon name="lucide:plus"/>
       </Button>
     </div>
@@ -78,7 +86,7 @@ const newTag = ref<UpsertAssetTagPayload>({
       <div class="truncate">
         {{ item.value.name }}
       </div>
-      <Badge>{{ item.value.count || 0 }}</Badge>
+      <Badge>{{ item.value.assets_count || 0 }}</Badge>
     </TreeItem>
   </TreeRoot>
 </template>

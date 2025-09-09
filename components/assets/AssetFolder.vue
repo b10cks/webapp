@@ -23,8 +23,8 @@ function handleSelect(event: Event) {
   emit('select', props.folder, !props.selected)
 }
 
-function handleClick(event: MouseEvent) {
-  if (event.shiftKey || event.ctrlKey || event.metaKey) {
+function handleClick(event?: MouseEvent) {
+  if (event && (event.shiftKey || event.ctrlKey || event.metaKey)) {
     emit('select', props.folder, !props.selected)
   } else {
     emit('click', props.folder)

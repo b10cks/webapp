@@ -10,6 +10,35 @@ import { Input } from '~/components/ui/input'
 import { CheckboxField } from '~/components/ui/form'
 import MetaLocalization from '~/components/localization/MetaLocalization.vue'
 
+interface SchemaType {
+  type: string
+  name?: string
+  translatable?: boolean
+}
+
+interface TranslatableField {
+  key: string
+  path: string[]
+  fieldName: string
+  schemaItem: SchemaType
+  originalValue: unknown
+  translatedValue: unknown
+  isTranslated: boolean
+}
+
+interface BlockItem {
+  block?: string
+  [key: string]: unknown
+}
+
+interface SpaceSettings {
+  default_language: string
+}
+
+interface Space {
+  settings: SpaceSettings
+}
+
 const localizers = {
   text: TextLocalization,
   textarea: TextareaLocalization,
@@ -18,8 +47,8 @@ const localizers = {
 }
 
 const props = defineProps<{
-  originalContent: Record<string, never>
-  translationContent: Record<string, never>
+  originalContent: Record<string, unknown>
+  translationContent: Record<string, unknown>
   blockSchema: Record<string, SchemaType>
   spaceId: string
   targetLanguage: string
@@ -27,7 +56,7 @@ const props = defineProps<{
 }>()
 
 const { useSpaceQuery } = useSpaces()
-const { data: space } = useSpaceQuery(props.spaceId)
+const { data: space } = useSpaceQuery(props.spaceId) as { data: Ref<Space> }
 
 
 const showUntranslatedOnly = ref(false)
@@ -35,27 +64,19 @@ const searchQuery = ref('')
 const { client: apiClient } = useApiClient()
 
 const isTranslating = ref(false)
-const sourceLanguage = computed(() => space.value.settings.default_language)
+const sourceLanguage = computed((): string => space.value?.settings?.default_language || '')
 
 const machineTranslatedFields = ref(new Set<string>())
 
-const translatableFields = ref<Array<{
-  key: string
-  path: string[]
-  fieldName: string
-  schemaItem: SchemaType
-  originalValue: never
-  translatedValue: never
-  isTranslated: boolean
-}>>([])
+const translatableFields = ref<TranslatableField[]>([])
 
 const traverseContent = (
-  original: never,
-  translation: never,
+  original: Record<string, unknown>,
+  translation: Record<string, unknown>,
   schema: Record<string, SchemaType>,
   currentPath: string[] = [],
-  result: never[] = []
-) => {
+  result: TranslatableField[] = []
+): TranslatableField[] => {
   if (typeof original !== 'object' || original === null) {
     return result
   }
@@ -67,7 +88,7 @@ const traverseContent = (
     if (!schemaItem) return
 
     if (schemaItem.type === 'blocks' && Array.isArray(value)) {
-      value.forEach((blockItem, index) => {
+      value.forEach((blockItem: BlockItem, index: number) => {
         if (!blockItem || !blockItem.block) return
 
         const blockPath = [...path, index.toString()]
@@ -76,12 +97,12 @@ const traverseContent = (
         const blockSchemaItem = props.getBlockSchema ? props.getBlockSchema(blockSlug) : undefined
         if (!blockSchemaItem?.schema) return
 
-        const translatedBlockItems = translation?.[key] || []
+        const translatedBlockItems = (translation?.[key] as BlockItem[]) || []
         const translatedBlockItem = translatedBlockItems[index] || {}
 
         traverseContent(
-          blockItem,
-          translatedBlockItem,
+          blockItem as Record<string, unknown>,
+          translatedBlockItem as Record<string, unknown>,
           blockSchemaItem.schema,
           blockPath,
           result
@@ -117,8 +138,8 @@ watch(
     }
 
     translatableFields.value = traverseContent(
-      props.originalContent,
-      props.translationContent,
+      props.originalContent as Record<string, unknown>,
+      props.translationContent as Record<string, unknown>,
       props.blockSchema
     )
   },
@@ -148,16 +169,16 @@ const filteredFields = computed(() => {
 })
 
 
-const getFieldIdentifier = (field) => {
+const getFieldIdentifier = (field: TranslatableField): string => {
   return `${field.path.join('-')}-${field.key}`
 }
 
 
-const isMachineTranslated = (field) => {
+const isMachineTranslated = (field: TranslatableField): boolean => {
   return machineTranslatedFields.value.has(getFieldIdentifier(field))
 }
 
-const updateTranslatedValue = (field, newValue) => {
+const updateTranslatedValue = (field: TranslatableField, newValue: unknown): void => {
   const fieldToUpdate = translatableFields.value.find(f =>
     f.key === field.key && JSON.stringify(f.path) === JSON.stringify(field.path)
   )
@@ -166,7 +187,7 @@ const updateTranslatedValue = (field, newValue) => {
     fieldToUpdate.translatedValue = newValue
     fieldToUpdate.isTranslated = newValue !== '' && newValue !== null && newValue !== undefined
 
-    let current = props.translationContent
+    let current: Record<string, unknown> = props.translationContent
 
     for (let i = 0; i < field.path.length - 1; i++) {
       const pathPart = field.path[i]
@@ -181,14 +202,15 @@ const updateTranslatedValue = (field, newValue) => {
 
       if (Array.isArray(current[pathPart])) {
         const nextIndex = parseInt(field.path[i + 1])
-        if (!isNaN(nextIndex) && nextIndex >= current[pathPart].length) {
-          for (let j = current[pathPart].length; j <= nextIndex; j++) {
-            current[pathPart].push({})
+        const currentArray = current[pathPart] as unknown[]
+        if (!isNaN(nextIndex) && nextIndex >= currentArray.length) {
+          for (let j = currentArray.length; j <= nextIndex; j++) {
+            currentArray.push({})
           }
         }
       }
 
-      current = current[pathPart]
+      current = current[pathPart] as Record<string, unknown>
     }
 
     const finalKey = field.path[field.path.length - 1]
@@ -197,10 +219,10 @@ const updateTranslatedValue = (field, newValue) => {
 }
 
 
-const updateTranslatedValues = (translatedTexts) => {
+const updateTranslatedValues = (translatedTexts: Record<string, string>): void => {
   Object.entries(translatedTexts).forEach(([fieldPath, translation]) => {
     const pathParts = fieldPath.split('-')
-    const key = pathParts.pop()
+    const key = pathParts.pop() as string
 
     const field = translatableFields.value.find(f =>
       f.key === key && JSON.stringify(f.path.slice(0, -1)) === JSON.stringify(pathParts)
@@ -214,22 +236,22 @@ const updateTranslatedValues = (translatedTexts) => {
 }
 
 
-const getUntranslatedFields = () => {
-  const untranslatedFields = {}
+const getUntranslatedFields = (): Record<string, string> => {
+  const untranslatedFields: Record<string, string> = {}
 
   translatableFields.value
     .filter(field => !field.isTranslated && typeof field.originalValue === 'string' && field.originalValue.trim() !== '')
     .forEach(field => {
 
       const fieldPath = [...field.path.slice(0, -1), field.key].join('-')
-      untranslatedFields[fieldPath] = field.originalValue
+      untranslatedFields[fieldPath] = field.originalValue as string
     })
 
   return untranslatedFields
 }
 
 
-const translateWithAI = async () => {
+const translateWithAI = async (): Promise<void> => {
   const fieldsToTranslate = getUntranslatedFields()
 
   const fieldCount = Object.keys(fieldsToTranslate).length
@@ -252,8 +274,9 @@ const translateWithAI = async () => {
     updateTranslatedValues(response.data)
 
     toast.success(`Successfully translated ${Object.keys(response.data).length} fields`)
-  } catch (error) {
-    toast.error(`Translation failed: ${error.message}`)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    toast.error(`Translation failed: ${errorMessage}`)
   } finally {
     isTranslating.value = false
   }
@@ -362,7 +385,7 @@ const translationStats = computed(() => {
             <div class="p-2 border border-elevated rounded bg-gray-850">
               <Input
                 :value="field.translatedValue"
-                @input="e => updateTranslatedValue(field, e.target.value)"
+                @input="(e: Event) => updateTranslatedValue(field, (e.target as HTMLInputElement).value)"
               />
               <div class="mt-2 text-xs text-muted">
                 No specialized editor for type: {{ field.schemaItem.type }}

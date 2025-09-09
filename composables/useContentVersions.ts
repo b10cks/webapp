@@ -104,46 +104,10 @@ export function useContentVersions(
     })
   }
 
-  // Helper to find the current version
-  const useCurrentVersion = () => {
-    const { data: versions, isLoading, error } = useContentVersionsQuery()
-
-    const currentVersion = computed(() => {
-      if (!versions.value) return null
-      return versions.value.find(v => v.isCurrentVersion) || null
-    })
-
-    return {
-      currentVersion,
-      isLoading,
-      error,
-    }
-  }
-
-  const usePublishedVersion = () => {
-    const { data: versions, isLoading, error } = useContentVersionsQuery()
-
-    const publishedVersion = computed(() => {
-      if (!versions.value) return null
-      return versions.value.find(v => v.isPublished) || null
-    })
-
-    return {
-      publishedVersion,
-      isLoading,
-      error,
-    }
-  }
-
-
   return {
     // Queries
     useContentVersionsQuery,
     useContentVersionQuery,
-
-    // Helpers
-    useCurrentVersion,
-    usePublishedVersion,
 
     // Mutations
     useUpdateVersionMutation,

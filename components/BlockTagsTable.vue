@@ -51,8 +51,8 @@ const sortOptions = [
 ]
 
 const possibleFilters = [
-  { value: 'name', label: $t('labels.blockTags.fields.name') },
-  { value: 'block_count', label: $t('labels.blockTags.fields.blocks_count') },
+  { id: 'name', label: $t('labels.blockTags.fields.name') },
+  { id: 'block_count', label: $t('labels.blockTags.fields.blocks_count') },
 ]
 
 const handleDelete = async (tag: BlockTagResource) => {

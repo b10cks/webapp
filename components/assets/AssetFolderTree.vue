@@ -30,6 +30,12 @@ const selectedFolderId = defineModel<string>()
 const parentFolderId = ref(null)
 const showCreateFolderDialog = ref(false)
 
+defineEmits<{
+  view: [folder: AssetFolderResource]
+  edit: [folder: AssetFolderResource]
+  move: [folder: AssetFolderResource]
+}>()
+
 const isDraggingOver = ref<string | null>(null)
 const currentlyEditingId = ref<string | null>(null)
 
@@ -73,7 +79,7 @@ async function handleDrop(event: DragEvent, targetFolderId: string) {
       }
     } else if (dragData.type === 'folder') {
       if (dragData.id !== targetFolderId) {
-        await updateFolder(dragData.id, { parent_id: targetFolderId })
+        await updateFolder({ id: dragData.id, payload: { parent_id: targetFolderId } })
 
         if (dragData.selected) {
           const selectedFoldersData = JSON.parse(
@@ -82,7 +88,7 @@ async function handleDrop(event: DragEvent, targetFolderId: string) {
 
           for (const folderId of selectedFoldersData) {
             if (folderId !== dragData.id && folderId !== targetFolderId) {
-              await updateFolder(folderId, { parent_id: targetFolderId })
+              await updateFolder({ id: folderId, payload: { parent_id: targetFolderId } })
             }
           }
         }
@@ -124,8 +130,6 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
   if (confirmed) {
     try {
       await deleteFolder(folder.id)
-      selectedFolders.value.delete(folder.id)
-      emitSelectionChange()
     } catch (error) {
       console.error('Error deleting folder:', error)
     }

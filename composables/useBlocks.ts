@@ -43,8 +43,8 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
 
     // Find block by slug
     const block = computed(() => {
-      if (!blocks.value) return null
-      return blocks.value.find(b => b.slug === slug.value) || null
+      if (!blocks.value?.data) return null
+      return blocks.value.data.find(b => b.slug === slug.value) || null
     })
 
     return {
@@ -111,16 +111,16 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
     const blocks = unref(blocksRef)
     const slug = slugRef
 
-    if (!blocks) return []
-    return blocks.data.find(block => block.slug == slug)
+    if (!blocks) return null
+    return blocks.find(block => block.slug == slug)
   }
 
   const getBlockById = (blocksRef: MaybeRefOrComputed<BlockResource[] | undefined>, idRef: MaybeRefOrComputed<string>) => {
     const blocks = unref(blocksRef)
     const id = idRef
 
-    if (!blocks) return []
-    return blocks.data.find(block => block.id == id)
+    if (!blocks) return null
+    return blocks.find(block => block.id == id)
   }
 
   return {

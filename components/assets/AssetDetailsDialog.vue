@@ -57,13 +57,13 @@ const openAssetInNewWindow = () => {
   window.open(assetCopy.value.url, '_blank', 'noopener,noreferrer')
 }
 const toggleFocusPoint = () => {
-  if (!assetCopy.value?.data.focus) {
+  if (assetCopy.value?.data.focus) {
+    assetCopy.value.data.focus = undefined
+  } else {
     if (!assetCopy.value.data) {
       assetCopy.value.data = {}
     }
     assetCopy.value.data.focus = { x: 50, y: 50 }
-  } else {
-    assetCopy.value.data.focus = undefined
   }
 }
 
@@ -154,23 +154,23 @@ const onOpenChange = (open: boolean) => {
             class="relative w-full flex items-center justify-center"
           >
             <div class="relative inline-block">
-              <NuxtImg
-                ref="imageRef"
-                :src="asset.full_path"
-                :alt="assetCopy?.data?.altText || asset.filename"
-                height="600"
-                width="600"
-                class="object-contain max-h-[calc(60svh)] max-w-full"
-              />
-              <div
-                v-if="assetCopy.data?.focus"
-                class="absolute w-5 h-5 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-difference"
-                :style="{
-                  left: `${assetCopy.data?.focus.x}%`,
-                  top: `${assetCopy.data?.focus.y}%`
-                }"
-                aria-hidden="true"
-              >
+               <NuxtImg
+                 ref="imageRef"
+                 :src="asset.full_path"
+                 :alt="String(assetCopy?.data?.altText || asset.filename)"
+                 height="600"
+                 width="600"
+                 class="object-contain max-h-[calc(60svh)] max-w-full"
+               />
+               <div
+                 v-if="assetCopy.data?.focus"
+                 class="absolute w-5 h-5 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-difference"
+                 :style="{
+                   left: `${assetCopy.data?.focus?.x}%`,
+                   top: `${assetCopy.data?.focus?.y}%`
+                 }"
+                 aria-hidden="true"
+               >
                 <Icon
                   name="lucide:crosshair"
                   size="1.25rem"
@@ -261,7 +261,7 @@ const onOpenChange = (open: boolean) => {
                   v-for="(value, key) in asset.metadata"
                   :key="key"
                 >
-                  <dt class="font-semibold">{{ $t(`labels.assets.metadata.${key}`, formatKey(key)) }}:</dt>
+                   <dt class="font-semibold">{{ String($t(`labels.assets.metadata.${key}`) || formatKey(key)) }}:</dt>
                   <dd class="break-words">{{ value }}</dd>
                 </template>
               </dl>
@@ -274,14 +274,14 @@ const onOpenChange = (open: boolean) => {
               :label="$t('labels.assets.fields.name')"
               required
             />
-           <InputField
-              v-for="field in assetFields"
-              :key="field.key"
-              v-model="assetCopy.data[field.key]"
-              :label="field.label"
-              :name="field.key"
-              :required="field.required"
-            />
+            <InputField
+               v-for="field in assetFields"
+               :key="field.key"
+               v-model="assetCopy.data[field.key] as string"
+               :label="String(field.label)"
+               :name="field.key"
+               :required="field.required"
+             />
           </div>
         </div>
       </div>

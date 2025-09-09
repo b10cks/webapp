@@ -2,10 +2,11 @@
 import { computed } from 'vue'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '~/components/ui/select'
 import { Button } from '~/components/ui/button'
+import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
 interface SortOption {
   value: string
-  label: string
+  label: string | CleanTranslation
 }
 
 const props = defineProps<{
@@ -14,7 +15,7 @@ const props = defineProps<{
     column: string
     direction: 'asc' | 'desc'
   }
-  placeholder?: string
+  placeholder?: string | CleanTranslation
 }>()
 
 const emit = defineEmits(['update:modelValue'])

@@ -17,11 +17,11 @@ export function useTokens(spaceIdRef: MaybeRefOrComputed<string>) {
       queryFn: async () => {
         const response = await spaceAPI.value.tokens.index({
           ...params.value,
-          sort: '+name', // Default sorting
+          sort: '+name',
         })
         return response.data
       },
-      enabled: computed(() => !!spaceId.value), // Only run query if spaceId is provided
+      enabled: computed(() => !!spaceId.value),
     })
   }
 
@@ -32,9 +32,8 @@ export function useTokens(spaceIdRef: MaybeRefOrComputed<string>) {
         return await spaceAPI.value.tokens.create(payload)
       },
       onSuccess: (data) => {
-        // Invalidate the tokens list query to trigger a refetch
         queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId.value).lists() })
-        toast.success(`Token "${data.token.name}" created successfully`)
+        toast.success(`Token "${data.data.name}" created successfully`)
       },
       onError: (error: Error) => {
         toast.error(`Failed to create token: ${error.message || 'Unknown error'}`)

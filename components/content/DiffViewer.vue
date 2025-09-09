@@ -2,32 +2,46 @@
 
 import ValueRenderer from '~/components/content/ValueRenderer.vue'
 
-const props = defineProps({
-  changes: {
-    type: Array,
-    default: () => []
-  }
-})
+type ChangeType = 'added' | 'removed' | 'changed'
 
-const activeFilter = ref('all')
+interface Change {
+  type: ChangeType
+  path: string
+  oldValue?: unknown
+  newValue?: unknown
+}
 
-const stats = computed(() => {
+interface ChangeStats {
+  added: number
+  removed: number
+  changed: number
+}
+
+type FilterType = ChangeType | 'all'
+
+const props = defineProps<{
+  changes: Change[]
+}>()
+
+const activeFilter = ref<FilterType>('all')
+
+const stats = computed((): ChangeStats => {
   return props.changes.reduce((acc, change) => {
     acc[change.type] = (acc[change.type] || 0) + 1
     return acc
   }, { added: 0, removed: 0, changed: 0 })
 })
 
-const filteredChanges = computed(() => {
+const filteredChanges = computed((): Change[] => {
   if (activeFilter.value === 'all') return props.changes
   return props.changes.filter(change => change.type === activeFilter.value)
 })
 
-const formatPath = (path) => {
+const formatPath = (path: string): string => {
   return path.replace(/\./g, ' → ')
 }
 
-const getChangeClasses = (type) => {
+const getChangeClasses = (type: ChangeType): string => {
   const baseClasses = 'border-l-4'
 
   switch (type) {
@@ -42,7 +56,7 @@ const getChangeClasses = (type) => {
   }
 }
 
-const getChangeIcon = (type) => {
+const getChangeIcon = (type: ChangeType): string => {
   switch (type) {
     case 'added':
       return 'lucide:plus'
@@ -53,7 +67,7 @@ const getChangeIcon = (type) => {
   }
 }
 
-const getBadgeClasses = (type) => {
+const getBadgeClasses = (type: ChangeType): string => {
   switch (type) {
     case 'added':
       return 'bg-success/20 text-success'
@@ -66,7 +80,7 @@ const getBadgeClasses = (type) => {
   }
 }
 
-const toggleFilter = (filter) => {
+const toggleFilter = (filter: ChangeType): void => {
   if (activeFilter.value === filter) {
     activeFilter.value = 'all'
   } else {
@@ -74,7 +88,7 @@ const toggleFilter = (filter) => {
   }
 }
 
-const getFilterButtonClasses = (filter) => {
+const getFilterButtonClasses = (filter: ChangeType): string => {
   return activeFilter.value === filter || activeFilter.value === 'all'
     ? ''
     : 'opacity-50 hover:opacity-100'
@@ -95,7 +109,7 @@ const getFilterButtonClasses = (filter) => {
           :class="getFilterButtonClasses('added')"
           @click="toggleFilter('added')"
         >
-          <div class="w-3 h-3 bg-success rounded-full"/>
+          <span class="w-3 h-3 bg-success rounded-full"/>
           <span class="text-sm font-semibold text-success">{{ stats.added }} added</span>
         </button>
         <button
@@ -104,7 +118,7 @@ const getFilterButtonClasses = (filter) => {
           :class="getFilterButtonClasses('changed')"
           @click="toggleFilter('changed')"
         >
-          <div class="w-3 h-3 bg-info rounded-full"/>
+          <span class="w-3 h-3 bg-info rounded-full"/>
           <span class="text-sm font-semibold text-info">{{ stats.changed }} changed</span>
         </button>
         <button
@@ -113,7 +127,7 @@ const getFilterButtonClasses = (filter) => {
           :class="getFilterButtonClasses('removed')"
           @click="toggleFilter('removed')"
         >
-          <div class="w-3 h-3 bg-destructive rounded-full"/>
+          <span class="w-3 h-3 bg-destructive rounded-full"/>
           <span class="text-sm font-semibold text-destructive">{{ stats.removed }} removed</span>
         </button>
       </div>

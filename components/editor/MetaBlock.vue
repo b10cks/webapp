@@ -5,46 +5,69 @@ import { Button } from '~/components/ui/button'
 import { toast } from 'vue-sonner'
 import type { ApiResponse } from '~/types'
 
+interface MetaSchema {
+  key: string
+  has_og_tags?: boolean
+}
+
+interface ContentValue {
+  name?: string
+  full_slug?: string
+  content?: string | Record<string, unknown>
+}
+
+interface MetaValue {
+  title?: string
+  description?: string
+  canonical?: string
+  robots?: string
+  ogTitle?: string
+  ogDescription?: string
+  ogImage?: AssetValue
+}
+
 const props = defineProps<{
   item: MetaSchema & { key: string }
   modelValue?: unknown
   spaceId: string
 }>()
 
-const content = inject('content')
+const content = inject<Ref<ContentValue>>('content')
 const { client: apiClient } = useApiClient()
 
 const emit = defineEmits<{
   (e: 'update:model-value', value: unknown): void
 }>()
 
-const localValue = ref({ ...props.modelValue })
+const localValue = ref<MetaValue>((props.modelValue as MetaValue) || {})
 const isGenerating = ref(false)
 
-const updateValue = (key: string, value: unknown) => {
-  emit('update:model-value', {
+const updateValue = (key: keyof MetaValue, value: unknown): void => {
+  const newValue = {
     ...localValue.value,
     [key]: value
-  })
+  }
+  localValue.value = newValue
+  emit('update:model-value', newValue)
 }
 
-watch(() => props.modelValue, (newValue) => {
-  localValue.value = newValue ? { ...newValue } : {}
+watch(() => props.modelValue, (newValue: unknown) => {
+  localValue.value = newValue ? { ...(newValue as MetaValue) } : {}
 }, { immediate: true, deep: true })
 
-const serpTitle = computed(() => {
-  return localValue.value?.title || content.value.name
+const serpTitle = computed((): string => {
+  return localValue.value?.title || content.value?.name || ''
 })
 
-const serpDescription = computed(() => {
+const serpDescription = computed((): string => {
   return localValue.value?.description || ''
 })
 
-const serpUrl = computed(() => {
-  return `https://example.com${content.value.full_slug}`
+const serpUrl = computed((): string => {
+  return `https://example.com${content.value?.full_slug || ''}`
 })
 
-const truncatedDescription = computed(() => {
+const truncatedDescription = computed((): string => {
   const desc = serpDescription.value
   if (desc.length <= 155) return desc
 
@@ -57,7 +80,7 @@ const truncatedDescription = computed(() => {
     : truncated + '...'
 })
 
-const truncatedTitle = computed(() => {
+const truncatedTitle = computed((): string => {
   const title = serpTitle.value
   if (title.length <= 60) return title
 
@@ -69,13 +92,13 @@ const truncatedTitle = computed(() => {
     : truncated + '...'
 })
 
-const generateMetaWithAI = async () => {
+const generateMetaWithAI = async (): Promise<void> => {
   try {
     isGenerating.value = true
     const requestData = {
-      name: content.value.name,
-      slug: content.value.full_slug,
-      body: content.value.content || '',
+      name: content.value?.name || '',
+      slug: content.value?.full_slug || '',
+      body: typeof content.value?.content === 'string' ? content.value.content : JSON.stringify(content.value?.content || {}),
       current_meta: {
         title: localValue.value?.title || '',
         description: localValue.value?.description || '',
@@ -107,15 +130,16 @@ const generateMetaWithAI = async () => {
     emit('update:model-value', newValue)
 
     toast.success('Meta tags generated successfully!')
-  } catch (error) {
-    toast.error(`Meta generation failed: ${error.message}`)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    toast.error(`Meta generation failed: ${errorMessage}`)
   } finally {
     isGenerating.value = false
   }
 }
 
-const hasContent = computed(() => {
-  return content.value?.name || content.value?.content
+const hasContent = computed((): boolean => {
+  return !!(content.value?.name || content.value?.content)
 })
 </script>
 
@@ -166,7 +190,7 @@ const hasContent = computed(() => {
       :label="$t('labels.contents.fields.meta.canonical')"
       :tooltip="$t('labels.contents.fields.meta.canonicalDescription')"
       :disabled="isGenerating"
-      @update:model-value="updateValue('title', $event)"
+      @update:model-value="updateValue('canonical', $event)"
     />
     <InputField
       v-model="localValue.robots"
@@ -174,13 +198,13 @@ const hasContent = computed(() => {
       :label="$t('labels.contents.fields.meta.robots')"
       :tooltip="$t('labels.contents.fields.meta.robotsDescription')"
       :disabled="isGenerating"
-      @update:model-value="updateValue('title', $event)"
+      @update:model-value="updateValue('robots', $event)"
     />
     <template v-if="item.has_og_tags">
       <AssetBlock
         :model-value="localValue.ogImage"
         :space-id="spaceId"
-        :item="{ key: 'ogImage', type: 'asset', file_types: ['image'] }"
+        :item="{ name: 'ogImage', key: 'ogImage', type: 'asset', file_types: ['image'] }"
         @update:model-value="updateValue('ogImage', $event)"
       />
       <InputField
@@ -205,17 +229,17 @@ const hasContent = computed(() => {
       <div class="text-sm text-muted mb-1">
         {{ serpUrl }}
       </div>
-      <h3 class="text-lg text-blue-500 font-semibold cursor-pointer mb-1 leading-tight">
+      <h3 class="text-lg text-info font-semibold cursor-pointer mb-1 leading-tight">
         {{ truncatedTitle }}
       </h3>
       <p class="text-sm text-muted leading-relaxed">
         {{ truncatedDescription }}
       </p>
       <div class="mt-3 pt-3 border-t border-border text-xs text-muted flex gap-4">
-          <span :class="{ 'text-red-500': serpTitle.length > 60 }">
+          <span :class="{ 'text-destructive': serpTitle.length > 60 }">
             Title: {{ serpTitle.length }}/60 chars
           </span>
-        <span :class="{ 'text-red-500': serpDescription.length > 155 }">
+        <span :class="{ 'text-destructive': serpDescription.length > 155 }">
             Description: {{ serpDescription.length }}/155 chars
           </span>
       </div>

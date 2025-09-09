@@ -2,6 +2,7 @@ interface FlatContentMenuItem {
   id: string
   name: string
   type: 'root' | 'nestable' | 'single' | 'universal'
+  color: string | null
   pid: string | null
   children: boolean
   icon?: string

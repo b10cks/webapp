@@ -27,7 +27,7 @@ export function useAuth() {
   const tokenExpiresAt = useState<number>('token_expires_at', () => 0)
   const refreshTimerId = useState<NodeJS.Timeout | null>('token_refresh_timer', () => null)
   const isRefreshing = ref(false)
-  const failedQueue: Array<{ resolve: (value: unknown) => void; reject: (reason?: never) => void }> = []
+  const failedQueue: Array<{ resolve: (value: unknown) => void; reject: (reason?: any) => void }> = []
 
   // Process the queued requests after token refresh
   const processQueue = (error: Error | null) => {
@@ -99,7 +99,7 @@ export function useAuth() {
 
       router.push('/')
       return true
-    } catch (err: Error) {
+    } catch (err: any) {
       error.value = 'Login failed. Please check your credentials.'
       return false
     } finally {
@@ -132,7 +132,7 @@ export function useAuth() {
 
       processQueue(null)
       return true
-    } catch (err: Error) {
+    } catch (err: any) {
       // Check if refresh token has expired (401 on refresh endpoint)
       if (err?.response?.status === 401) {
         error.value = 'Your session has expired. Please log in again.'

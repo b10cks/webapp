@@ -108,7 +108,7 @@ function onDragStart(event: DragEvent) {
       <NuxtImg
         v-if="getFileType(asset.mime_type) === 'image'"
         :src="asset.full_path"
-        :alt="asset.data?.alt || asset.filename"
+        :alt="String(asset.data?.alt || asset.filename)"
         :width="size"
         :height="size"
         :modifiers="{ crop: 'fill' }"

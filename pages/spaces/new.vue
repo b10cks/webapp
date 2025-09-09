@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { Badge } from '~/components/ui/badge'
+import { Badge, type BadgeVariants } from '~/components/ui/badge'
 import { Label } from 'reka-ui'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
@@ -22,8 +22,24 @@ import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
 const { useCreateSpaceMutation } = useSpaces()
 const { mutate: createSpace, isPending } = useCreateSpaceMutation()
 
+type Plan = {
+  id: string
+  name: string
+  description: string
+  price: string
+  period: string
+  features: string[]
+  aiFeatures?: string[]
+  badge?: {
+    text: string;
+    variant: BadgeVariants['variant']
+  }
+  disabled?: boolean
+  buttonText?: string
+}
+
 // Plan data
-const plans = [
+const plans: Plan[] = [
   {
     id: 'free',
     name: 'Free',

@@ -127,6 +127,8 @@ const tabs = computed(() => ({
           <TreeItem
             v-for="item in flattenItems"
             :key="item._id"
+            :value="item"
+            :level="item.level"
             :style="{ 'padding-left': `${item.level - 0.5}rem` }"
             :class="[
               'group relative flex items-center py-1 pl-0 pr-2 my-0.5 rounded-md outline-none gap-2',

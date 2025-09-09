@@ -6,17 +6,6 @@ import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import AssetsIcon from '~/assets/images/assets.svg?component'
 
-interface AssetValue {
-  id: string
-  type: 'asset'
-  full_path: string
-  extension: string
-  mime_type: string
-  size: number
-  filename: string
-  data: object
-}
-
 const props = defineProps<{
   item: AssetSchema & { key: string }
   modelValue?: AssetValue | null

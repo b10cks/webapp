@@ -12,6 +12,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
   const spaceId = computed(() => unref(spaceIdRef))
   const spaceAPI = computed(() => api.forSpace(spaceId.value))
   const apiClient = useApiClient()
+  const error = ref<string | null>(null)
 
   const useAssetsQuery = (paramsRef: MaybeRefOrComputed<AssetsQueryParams> = {}) => {
     const params = computed(() => unref(paramsRef))
@@ -141,7 +142,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).detail(data.id) })
-        toast.success(`Asset "${data.name}" updated successfully`)
+        toast.success(`Asset updated successfully`)
       },
       onError: (error: Error) => {
         toast.error(`Failed to update asset: ${error.message || 'Unknown error'}`)
@@ -167,6 +168,9 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
   }
 
   return {
+    // State
+    error,
+
     // Queries
     useAssetQuery,
     useAssetsQuery,

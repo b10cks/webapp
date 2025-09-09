@@ -21,12 +21,24 @@ interface AssetResource {
   folder_id: string | null
   folder?: AssetFolderResource
   metadata: Record<string, unknown>
-  data: Record<string, unknown>
+  data: Record<string, unknown> & { focus?: { x: number; y: number } }
   tags: string[]
   url: string
   created_at: string
   updated_at: string
 }
+
+interface AssetValue {
+  id: string
+  type: 'asset'
+  full_path: string
+  extension: string
+  mime_type: string
+  size: number
+  filename: string
+  data: Record<string, unknown> & { focus?: { x: number; y: number } }
+}
+
 
 interface AssetTagResource {
   id: string
@@ -43,7 +55,7 @@ interface AssetTagResource {
 }
 
 interface UpsertAssetFolderPayload {
-  name: string
+  name?: string
   description?: string | null
   icon?: string | null
   color?: string | null

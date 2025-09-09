@@ -211,11 +211,13 @@ const handleReplaceFile = () => {
         ...selectedFile.value,
         file: newFile,
         preview,
-        type: fileType,
-        progress: 0,
-        status: 'pending',
-        errorMessage: undefined
-      }
+        type: fileType
+      } as UploadFileWithProgress
+      
+      // Add progress tracking properties
+      ;(selectedFile.value as UploadFileWithProgress).progress = 0
+      ;(selectedFile.value as UploadFileWithProgress).status = 'pending'
+      ;(selectedFile.value as UploadFileWithProgress).errorMessage = undefined
     }
   }
   specificFileInput.click()

@@ -13,6 +13,7 @@ import {
 } from '~/components/ui/alert-dialog'
 import { buttonVariants } from '~/components/ui/button'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+import type { PluginsInjections } from 'nuxt-i18n-micro'
 type ActionType = 'primary' | 'secondary' | 'destructive' | 'cancel'
 export interface DialogAction {
   type: ActionType
@@ -60,7 +61,7 @@ export function setAlertDialogDefaultLabels(labels: Partial<DefaultLabels>): voi
   Object.assign(defaultLabels, labels)
 }
 const useAlertDialogBase = () => {
-  let i18n: never
+  let i18n: PluginsInjections = null
   try {
     i18n = useI18n()
   } catch (_) { /* empty */ }
@@ -70,10 +71,10 @@ const useAlertDialogBase = () => {
 
     if (i18n) {
       const i18nKey = `alertDialog.${key}`
-      const translated = i18n.t(i18nKey)
+      const translated = i18n.$t(i18nKey)
 
       if (translated && translated !== i18nKey) {
-        return translated
+        return translated as string
       }
     }
 

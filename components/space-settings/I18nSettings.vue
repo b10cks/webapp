@@ -1,39 +1,51 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { FormField } from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
 import { deepClone } from '@vue/devtools-shared'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import { Button } from '~/components/ui/button'
+import SettingsTable, { type ColumnDefinition } from '~/components/ui/settings-table'
 
 const { useUpdateSpaceMutation } = useSpaces()
 const { mutate: updateSpace } = useUpdateSpaceMutation()
-
+const { $t } = useI18n()
 const props = defineProps<{ space: SpaceResource }>()
 
-const languages = ref(deepClone(props.space.settings.languages))
+const languages = ref(deepClone(props.space.settings.languages || []))
 const defaultLanguage = ref(props.space.settings.default_language)
 
-const newLangCode = ref('')
-const newLangName = ref('')
-
-const addLanguage = () => {
-  if (newLangCode.value && newLangName.value) {
-    if (!Array.isArray(languages.value)) {
-      languages.value = []
-    }
-    languages.value.push({
-      code: newLangCode.value,
-      name: newLangName.value
-    })
-    newLangCode.value = ''
-    newLangName.value = ''
+const columns: ColumnDefinition[] = [
+  {
+    key: 'code',
+    label: $t('labels.settings.i18n.code'),
+    type: 'text',
+    placeholder: $t('labels.settings.i18n.codePlaceholder'),
+    required: true,
+    readonly: true
+  },
+  {
+    key: 'name',
+    label: $t('labels.settings.i18n.label'),
+    type: 'text',
+    placeholder: $t('labels.settings.i18n.labelPlaceholder'),
+    required: true
   }
+]
+
+const newItemTemplate = {
+  code: '',
+  name: ''
 }
 
-const removeLanguage = (code: string) => {
-  languages.value = languages.value.filter(lang => lang.code !== code)
+const removeLanguage = (index: number) => {
+  languages.value.splice(index, 1)
+}
+
+const addLanguage = (newLanguage: { code: string; name: string }) => {
+  if (languages.value.find(lang => lang.code === newLanguage.code)) {
+    return
+  }
+  languages.value.push(newLanguage)
 }
 
 const saveSettings = async () => {
@@ -72,76 +84,17 @@ const saveSettings = async () => {
         <p class="text-xs text-muted mb-4">
           {{ $t('labels.settings.i18n.languagesDescription') }}
         </p>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{{ $t('labels.settings.i18n.code') }}</TableHead>
-              <TableHead>
-                {{ $t('labels.settings.i18n.label') }}
-              </TableHead>
-              <TableHead class="w-[50px]"/>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow
-              v-for="lang in languages"
-              :key="lang.code"
-            >
-              <TableCell class="font-mono">{{ lang.code }}</TableCell>
-              <TableCell>
-                <Input
-                  v-model="lang.name"
-                  name="name"
-                  :placeholder="$t('labels.settings.i18n.label')"
-                />
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  @click="removeLanguage(lang.code)"
-                >
-                  <Icon
-                    name="lucide:trash"
-                    class="h-4 w-4"
-                  />
-                  <span class="sr-only">{{ $t('actions.remove') }}</span>
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Input
-                  v-model="newLangCode"
-                  :placeholder="$t('labels.settings.i18n.codePlaceholder')"
-                  maxlength="5"
-                  @keydown.enter="addLanguage"
-                />
-              </TableCell>
-              <TableCell>
-                <Input
-                  v-model="newLangName"
-                  :placeholder="$t('labels.settings.i18n.labelPlaceholder')"
-                  @keydown.enter="addLanguage"
-                />
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  :disabled="!newLangCode || !newLangName"
-                  @click="addLanguage"
-                >
-                  <Icon
-                    name="lucide:plus"
-                    class="h-4 w-4"
-                  />
-                  <span class="sr-only">{{ $t('actions.add') }}</span>
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <SettingsTable
+          v-model:items="languages"
+          :columns="columns"
+          :new-item-template="newItemTemplate"
+          :allow-sort="true"
+          :empty-message="$t('labels.settings.i18n.noLanguages')"
+          :add-button-label="$t('actions.add')"
+          :remove-button-label="$t('actions.remove')"
+          @add="addLanguage"
+          @remove="removeLanguage"
+        />
       </div>
     </CardContent>
     <CardFooter>

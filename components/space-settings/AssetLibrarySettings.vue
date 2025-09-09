@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
-import { Input } from '~/components/ui/input'
 import { Switch } from '~/components/ui/switch'
 import { deepClone } from '@vue/devtools-shared'
 import { Button } from '~/components/ui/button'
 import { SimpleTooltip } from '~/components/ui/tooltip'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import { InputField } from '~/components/ui/form'
+import SettingsTable, { type ColumnDefinition, type TableItem } from '~/components/ui/settings-table'
 
 const { useUpdateSpaceMutation } = useSpaces()
 const { mutate: updateSpace } = useUpdateSpaceMutation()
+const { $t } = useI18n()
 
 const props = defineProps<{ space: SpaceResource }>()
 const assetFields = ref(deepClone(props.space.settings.asset_fields ?? []))
@@ -21,23 +20,41 @@ const newFieldRequired = ref(false)
 
 const defaultFields = ['alt', 'description']
 
-const addField = () => {
-  if (newFieldKey.value && newFieldLabel.value) {
-    assetFields.value.push({
-      key: newFieldKey.value,
-      label: newFieldLabel.value,
-      required: newFieldRequired.value
-    })
-    newFieldKey.value = ''
-    newFieldLabel.value = ''
-    newFieldRequired.value = false
+const columns: ColumnDefinition[] = [
+  {
+    key: 'key',
+    label: $t('labels.settings.assetLibrary.key'),
+    type: 'text',
+    placeholder: $t('labels.settings.assetLibrary.fieldKeyPlaceholder'),
+    required: true,
+    readonly: true
+  },
+  {
+    key: 'label',
+    label: $t('labels.settings.assetLibrary.label'),
+    type: 'text',
+    placeholder: $t('labels.settings.assetLibrary.fieldLabelPlaceholder'),
+    required: true
+  },
+  {
+    key: 'required',
+    label: $t('labels.settings.assetLibrary.required'),
+    type: 'switch'
+  }
+]
+
+const removeField = (index: number) => {
+  const item = assetFields.value[index] as TableItem
+  if (!defaultFields.includes(item.key as string)) {
+    assetFields.value.splice(index, 1)
   }
 }
 
-const removeField = (key: string) => {
-  if (!defaultFields.includes(key)) {
-    assetFields.value = assetFields.value.filter(field => field.key !== key)
+const addField = (newField: { key: string; label: string; required: boolean }) => {
+  if (assetFields.value.find(field => field.key === newField.key)) {
+    return
   }
+  assetFields.value.push(newField)
 }
 
 const saveSettings = async () => {
@@ -63,97 +80,16 @@ const saveSettings = async () => {
 
       <div class="space-y-2">
         <h4 class="text-sm font-medium">{{ $t('labels.settings.assetLibrary.metadataFields') }}</h4>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{{ $t('labels.settings.assetLibrary.key') }}</TableHead>
-              <TableHead>{{ $t('labels.settings.assetLibrary.label') }}</TableHead>
-              <TableHead>{{ $t('labels.settings.assetLibrary.required') }}</TableHead>
-              <TableHead class="w-[50px]"/>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow
-              v-for="field in assetFields"
-              :key="field.key"
-            >
-              <TableCell class="font-mono">{{ field.key }}</TableCell>
-              <TableCell>
-                <Input v-model="field.label"/>
-              </TableCell>
-              <TableCell>
-                <Switch
-                  v-model="field.required"
-                />
-              </TableCell>
-              <TableCell class="h-14 flex items-center justify-end">
-                <SimpleTooltip :tooltip="$t('labels.settings.assetLibrary.defaultField') ">
-                  <Button
-                    :disabled="defaultFields.includes(field.key)"
-                    variant="ghost"
-                    size="icon"
-                    @click="removeField(field.key)"
-                  >
-                    <Icon
-                      name="lucide:trash"
-                      class="h-4 w-4"
-                    />
-                    <span class="sr-only">{{ $t('actions.remove') }}</span>
-                  </Button>
-                </SimpleTooltip>
-              </TableCell>
-            </TableRow>
-            <TableRow v-if="assetFields.length === 0">
-              <TableCell
-                colspan="4"
-                class="text-center text-muted"
-              >
-                {{ $t('labels.settings.assetLibrary.noMetadataFields') }}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-      <div class="space-y-2">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <InputField
-            v-model="newFieldKey"
-            :label="$t('labels.settings.assetLibrary.fieldKey')"
-            :placeholder="$t('labels.settings.assetLibrary.fieldKeyPlaceholder')"
-            name="field-key"
-            @keydown.enter="addField"
-          />
-          <InputField
-            v-model="newFieldLabel"
-            :label="$t('labels.settings.assetLibrary.fieldLabel')"
-            :placeholder="$t('labels.settings.assetLibrary.fieldLabelPlaceholder')"
-            name="field-label"
-            @keydown.enter="addField"
-          />
-          <div class="flex items-end gap-2">
-            <div class="flex items-center gap-2 pb-2.5">
-              <Switch
-                id="field-required"
-                v-model="newFieldRequired"
-                aria-label="Required field"
-              />
-              <Label
-                :for="'field-required'"
-                class="text-sm font-medium"
-              >
-                {{ $t('labels.settings.assetLibrary.required') }}
-              </Label>
-            </div>
-            <Button
-              variant="primary"
-              :disabled="!newFieldKey || !newFieldLabel"
-              class="ml-auto"
-              @click="addField"
-            >
-              {{ $t('labels.settings.assetLibrary.addField') }}
-            </Button>
-          </div>
-        </div>
+        <SettingsTable
+          v-model:items="assetFields"
+          :columns="columns"
+          :new-item-template="newItemTemplate"
+          :allow-sort="true"
+          :empty-message="$t('labels.settings.assetLibrary.noMetadataFields')"
+          :remove-button-label="$t('actions.remove')"
+          @add="addField"
+          @remove="removeField"
+        />
       </div>
     </CardContent>
     <CardFooter>

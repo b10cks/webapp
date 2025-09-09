@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { deepClone } from '@vue/devtools-shared'
-import { InputField, Label } from '~/components/ui/form'
+import { Label } from '~/components/ui/form'
 import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 import { Switch } from '~/components/ui/switch'
+import SettingsTable, { type ColumnDefinition } from '~/components/ui/settings-table'
 
+const { $t } = useI18n()
 const { useUpdateSpaceMutation } = useSpaces()
 const { mutate: updateSpace } = useUpdateSpaceMutation()
 
@@ -16,25 +15,30 @@ const props = defineProps<{ space: SpaceResource }>()
 const environments = ref(deepClone(props.space.settings.environments ?? []))
 const visualEditorEnabled = ref(props.space.settings.visual_editor)
 
-const newEnvName = ref('')
-const newEnvUrl = ref('')
-
-const addEnvironment = () => {
-  if (newEnvName.value && newEnvUrl.value) {
-    if (!Array.isArray(environments.value)) {
-      environments.value = []
-    }
-    environments.value.push({
-      name: newEnvName.value,
-      url: newEnvUrl.value
-    })
-    newEnvName.value = ''
-    newEnvUrl.value = ''
+const columns: ColumnDefinition[] = [
+  {
+    key: 'name',
+    label: $t('labels.settings.editor.name'),
+    type: 'text',
+    placeholder: $t('labels.settings.editor.namePlaceholder'),
+    required: true
+  },
+  {
+    key: 'url',
+    label: $t('labels.settings.editor.url'),
+    type: 'text',
+    placeholder: $t('labels.settings.editor.urlPlaceholder'),
+    required: true
   }
+]
+
+const newItemTemplate = {
+  name: '',
+  url: ''
 }
 
-const removeEnvironment = (id: string) => {
-  environments.value = environments.value.filter(env => env.id !== id)
+const removeEnvironment = (index: number) => {
+  environments.value.splice(index, 1)
 }
 
 const openInTab = (url: string) => {
@@ -69,83 +73,24 @@ const saveSettings = async () => {
             <p class="text-xs text-muted">{{ $t('labels.settings.editor.environmentsDescription') }}</p>
           </div>
         </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{{ $t('labels.settings.editor.name') }}</TableHead>
-              <TableHead>{{ $t('labels.settings.editor.url') }}</TableHead>
-              <TableHead class="w-[50px]"/>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow
-              v-for="env in environments"
-              :key="env.url"
+        <SettingsTable
+          v-model:items="environments"
+          :columns="columns"
+          :new-item-template="newItemTemplate"
+          :allow-sort="true"
+          @remove="removeEnvironment"
+        >
+          <template #actions="{ item }">
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="openInTab(item.url)"
             >
-              <TableCell>
-                <InputField
-                  v-model="env.name"
-                  name="name"
-                />
-              </TableCell>
-              <TableCell>
-                <InputField
-                  v-model="env.url"
-                  name="url"
-                />
-              </TableCell>
-              <TableCell class="flex">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  @click="openInTab(env.url)"
-                >
-                  <Icon name="lucide:external-link"/>
-                  <span class="sr-only">{{ $t('actions.open') }}</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  @click="removeEnvironment(env.id)"
-                >
-                  <Icon name="lucide:trash"/>
-                  <span class="sr-only">{{ $t('actions.remove') }}</span>
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Input
-                  v-model="newEnvName"
-                  :placeholder="$t('labels.settings.editor.namePlaceholder')"
-                  @keydown.enter="addEnvironment"
-                />
-              </TableCell>
-              <TableCell>
-                <Input
-                  v-model="newEnvUrl"
-                  :placeholder="$t('labels.settings.editor.urlPlaceholder')"
-                  @keydown.enter="addEnvironment"
-                />
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  :disabled="!newEnvName || !newEnvUrl"
-                  @click="addEnvironment"
-                >
-                  <Icon
-                    name="lucide:plus"
-                    class="h-4 w-4"
-                  />
-                  <span class="sr-only">{{ $t('actions.add') }}</span>
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+              <Icon name="lucide:external-link"/>
+              <span class="sr-only">{{ $t('actions.open') }}</span>
+            </Button>
+          </template>
+        </SettingsTable>
       </div>
 
       <div class="space-y-4">

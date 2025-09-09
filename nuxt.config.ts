@@ -139,7 +139,6 @@ export default defineNuxtConfig({
     defaultLocale: 'en',
     fallbackLocale: 'en',
     translationDir: 'i18n',
-    lazy: true,
     define: false,
     disablePageLocales: true,
     locales: [

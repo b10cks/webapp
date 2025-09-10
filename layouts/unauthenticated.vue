@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import Markdown from '~/components/Markdown.vue'
 import GradientText from '~/components/ui/GradientText.vue'
 </script>

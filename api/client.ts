@@ -1,9 +1,14 @@
 import type { NitroFetchOptions } from 'nitropack'
 
+interface AuthHandler {
+  handleUnauthorized: (endpoint: string, options: any) => Promise<any>
+}
+
 export class ApiClient {
   private readonly baseURL: string
   private readonly defaultHeaders: Record<string, string>
   private authToken?: string
+  private authHandler?: AuthHandler
 
   constructor(options: {
     baseURL?: string
@@ -11,9 +16,7 @@ export class ApiClient {
     defaultHeaders?: Record<string, string>
   } = {}) {
     this.baseURL = options.baseURL || ''
-    if (import.meta.client) {
-      this.authToken = localStorage.getItem('authToken') || undefined
-    }
+    this.authToken = options.authToken
     this.defaultHeaders = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -25,6 +28,10 @@ export class ApiClient {
     this.authToken = token
   }
 
+  public setAuthHandler(handler: AuthHandler): void {
+    this.authHandler = handler
+  }
+
   private get headers(): Record<string, string> {
     return {
       ...this.defaultHeaders,
@@ -32,9 +39,6 @@ export class ApiClient {
     }
   }
 
-  /**
-   * Get just the auth headers - used for XMLHttpRequest uploads
-   */
   public getAuthHeaders(): Record<string, string> {
     return this.authToken ? { 'Authorization': `Bearer ${this.authToken}` } : {}
   }
@@ -45,18 +49,36 @@ export class ApiClient {
   ): Promise<T> {
     const url = endpoint.startsWith('http') ? endpoint : `${this.baseURL}${endpoint}`
 
-    try {
-      return await $fetch<T>(url, {
+    const makeRequest = async (headers: Record<string, string>) => {
+      return $fetch<T>(url, {
         ...options,
         headers: {
-          ...this.headers,
+          ...headers,
           ...options.headers,
         },
       })
-    } catch (error) {
-      if (error?.response?.status === 401 && endpoint !== '/auth/v1/token') {
-        const auth = useAuth()
-        await auth.refreshToken()
+    }
+
+    try {
+      return await makeRequest(this.headers)
+    } catch (error: any) {
+      if (error?.response?.status === 401 && this.authHandler) {
+        try {
+          const retryInfo = await this.authHandler.handleUnauthorized(endpoint, options)
+          
+          if (retryInfo.token) {
+            const authHeaders: Record<string, string> = {
+              ...this.defaultHeaders,
+              'Authorization': `Bearer ${retryInfo.token}`
+            }
+            if (options.headers) {
+              Object.assign(authHeaders, options.headers)
+            }
+            return await makeRequest(authHeaders)
+          }
+        } catch (authError) {
+          throw authError
+        }
       }
 
       throw error

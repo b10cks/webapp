@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import AppHeader from '~/components/AppHeader.vue'
 import AppSidebar from '~/components/AppSidebar.vue'
 
@@ -8,6 +7,7 @@ const { data: currentSpace } = useCurrentSpaceQuery()
 
 const route = useRoute()
 const spaceId = computed(() => route.params?.space as string || null)
+const { isAuthenticated } = useAuth()
 
 useSeoMeta({
   titleTemplate: (title) => {
@@ -20,8 +20,17 @@ useSeoMeta({
   },
 })
 
-provide('spaceId', spaceId)
 
+if (import.meta.client) {
+  if (!isAuthenticated.value) {
+    navigateTo({
+      name: 'login',
+      query: { return: route.fullPath }
+    })
+  }
+}
+
+provide('spaceId', spaceId)
 </script>
 
 <template>

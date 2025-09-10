@@ -32,6 +32,10 @@ export class API {
     this.client.setAuthToken(token)
   }
 
+  public setAuthHandler(handler: any): void {
+    this.client.setAuthHandler(handler)
+  }
+
   public get spaces(): Spaces {
     return this._spaces
   }

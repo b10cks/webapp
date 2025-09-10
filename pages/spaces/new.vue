@@ -212,185 +212,187 @@ const handleBack = () => {
 </script>
 
 <template>
-  <div class="min-h-svh flex w-full flex-col">
-    <AppHeader/>
-    <div class="grow w-full bg-background pt-10">
-      <main class="content-grid py-6">
-        <div class="content-narrow grid gap-6">
-          <ContentHeader
-            header="Create a new space"
-            description="Set up your content management space in just a few steps"
-          />
-          <Stepper
-            v-model="step"
-            class="flex justify-center items-start w-full"
-          >
-            <StepperItem
-              v-for="item in steps"
-              :key="item.step"
-              :step="item.step"
-              :disabled="item?.disabled"
+  <div>
+    <NuxtLayout name="start">
+      <AppHeader/>
+      <div class="grow w-full bg-background pt-10">
+        <main class="content-grid py-6">
+          <div class="content-narrow grid gap-6">
+            <ContentHeader
+              header="Create a new space"
+              description="Set up your content management space in just a few steps"
+            />
+            <Stepper
+              v-model="step"
+              class="flex justify-center items-start w-full"
             >
-              <StepperTrigger>
-                <StepperIndicator>
-                  <Icon :name="item.icon"/>
-                </StepperIndicator>
-                <div class="flex flex-col">
-                  <StepperTitle>{{ item.title }}</StepperTitle>
-                  <StepperDescription>{{ item.description }}</StepperDescription>
-                </div>
-              </StepperTrigger>
-              <StepperSeparator
-                v-if="item.step !== steps[steps.length - 1].step"
-                class="w-[10rem] h-px"
-              />
-            </StepperItem>
-          </Stepper>
-          <div
-            v-if="step === 1"
-            class="space-y-6"
-          >
-            <h2 class="text-xl font-semibold text-primary">Select a plan</h2>
-            <RadioGroup v-model="selectedPlan">
-              <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <Card
-                  v-for="plan in plans"
-                  :key="plan.id"
-                  :class="[
+              <StepperItem
+                v-for="item in steps"
+                :key="item.step"
+                :step="item.step"
+                :disabled="item?.disabled"
+              >
+                <StepperTrigger>
+                  <StepperIndicator>
+                    <Icon :name="item.icon"/>
+                  </StepperIndicator>
+                  <div class="flex flex-col">
+                    <StepperTitle>{{ item.title }}</StepperTitle>
+                    <StepperDescription>{{ item.description }}</StepperDescription>
+                  </div>
+                </StepperTrigger>
+                <StepperSeparator
+                  v-if="item.step !== steps[steps.length - 1].step"
+                  class="w-[10rem] h-px"
+                />
+              </StepperItem>
+            </Stepper>
+            <div
+              v-if="step === 1"
+              class="space-y-6"
+            >
+              <h2 class="text-xl font-semibold text-primary">Select a plan</h2>
+              <RadioGroup v-model="selectedPlan">
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <Card
+                    v-for="plan in plans"
+                    :key="plan.id"
+                    :class="[
                     'bg-surface flex flex-col',
                     plan.disabled ? 'opacity-30' : '',
                     selectedPlan === plan.id ? 'ring ring-ring' : ''
                   ]"
-                  @click="plan.id === selectedPlan ? handleNext() : () => {}"
-                >
-                  <CardHeader class="pb-2 relative">
-                    <Badge
-                      v-if="plan.badge"
-                      :variant="plan.badge.variant"
-                      class="absolute -right-2 -top-2 rounded-full"
-                    >
-                      {{ plan.badge.text }}
-                    </Badge>
-                    <CardTitle class="text-xl text-primary">{{ plan.name }}</CardTitle>
-                    <CardDescription>{{ plan.description }}</CardDescription>
-                  </CardHeader>
-                  <CardContent class="grow">
-                    <div class="flex items-baseline gap-2">
-                      <div class="text-3xl text-primary font-bold">{{ plan.price }}</div>
-                      <div class="text-sm text-text-muted">{{ plan.period }}</div>
-                    </div>
-                    <ul class="mt-6 grid gap-3">
-                      <li
-                        v-for="(feature, featureIndex) in plan.features"
-                        :key="featureIndex"
-                        class="flex item-start gap-2"
+                    @click="plan.id === selectedPlan ? handleNext() : () => {}"
+                  >
+                    <CardHeader class="pb-2 relative">
+                      <Badge
+                        v-if="plan.badge"
+                        :variant="plan.badge.variant"
+                        class="absolute -right-2 -top-2 rounded-full"
                       >
-                        <Icon
-                          name="lucide:check"
-                          class="mt-1 text-success"
-                        />
-                        <span>{{ feature }}</span>
-                      </li>
-                      <li
-                        v-for="(feature, featureIndex) in plan?.aiFeatures"
-                        :key="featureIndex"
-                        class="flex item-start gap-2"
-                      >
-                        <Icon
-                          name="lucide:sparkles"
-                          size="0.825rem"
-                          class="mt-1 text-ai"
-                        />
-                        <span>{{ feature }}</span>
-                      </li>
-                    </ul>
-                  </CardContent>
-                  <CardFooter>
-                    <RadioGroupItem
-                      :id="plan.id"
-                      :value="plan.id"
-                      class="sr-only"
-                      :disabled="plan.disabled"
-                    />
-                    <Label
-                      :for="plan.id"
-                      :class="[
+                        {{ plan.badge.text }}
+                      </Badge>
+                      <CardTitle class="text-xl text-primary">{{ plan.name }}</CardTitle>
+                      <CardDescription>{{ plan.description }}</CardDescription>
+                    </CardHeader>
+                    <CardContent class="grow">
+                      <div class="flex items-baseline gap-2">
+                        <div class="text-3xl text-primary font-bold">{{ plan.price }}</div>
+                        <div class="text-sm text-text-muted">{{ plan.period }}</div>
+                      </div>
+                      <ul class="mt-6 grid gap-3">
+                        <li
+                          v-for="(feature, featureIndex) in plan.features"
+                          :key="featureIndex"
+                          class="flex item-start gap-2"
+                        >
+                          <Icon
+                            name="lucide:check"
+                            class="mt-1 text-success"
+                          />
+                          <span>{{ feature }}</span>
+                        </li>
+                        <li
+                          v-for="(feature, featureIndex) in plan?.aiFeatures"
+                          :key="featureIndex"
+                          class="flex item-start gap-2"
+                        >
+                          <Icon
+                            name="lucide:sparkles"
+                            size="0.825rem"
+                            class="mt-1 text-ai"
+                          />
+                          <span>{{ feature }}</span>
+                        </li>
+                      </ul>
+                    </CardContent>
+                    <CardFooter>
+                      <RadioGroupItem
+                        :id="plan.id"
+                        :value="plan.id"
+                        class="sr-only"
+                        :disabled="plan.disabled"
+                      />
+                      <Label
+                        :for="plan.id"
+                        :class="[
                         'flex w-full cursor-pointer items-center justify-center rounded-md border py-2 text-sm font-semibold',
                         selectedPlan === plan.id ? 'border-accent bg-accent text-accent-foreground' : 'border-elevated',
                         plan.disabled ? 'cursor-not-allowed opacity-50' : ''
                       ]"
-                    >
-                      {{
-                        selectedPlan === plan.id ? `Continue with ${plan.name}` : (plan.buttonText || `Select ${plan.name}`)
-                      }}
-                    </Label>
-                  </CardFooter>
-                </Card>
+                      >
+                        {{
+                          selectedPlan === plan.id ? `Continue with ${plan.name}` : (plan.buttonText || `Select ${plan.name}`)
+                        }}
+                      </Label>
+                    </CardFooter>
+                  </Card>
+                </div>
+              </RadioGroup>
+            </div>
+            <div
+              v-if="step === 2"
+              class="space-y-6"
+            >
+              <h2 class="text-xl font-semibold">Space details</h2>
+              <div class="space-y-4">
+                <InputField
+                  v-model="spaceName"
+                  name="name"
+                  label="Space Name"
+                  placeholder="My Awesome Space"
+                  required
+                  description="A friendly name for your content space"
+                  :autofocus="true"
+                  @input="handleNameChange"
+                />
+                <InputField
+                  v-model="spaceSlug"
+                  name="slug"
+                  label="Space Slug"
+                  placeholder="my-awesome-space"
+                  required
+                  :description="`Used in URLs and API calls (e.g., api.cms.com/${spaceSlug || 'my-awesome-space' })`"
+                />
+                <ServerLocationSelect
+                  v-model="serverLocation"
+                  disabled
+                />
               </div>
-            </RadioGroup>
-          </div>
-          <div
-            v-if="step === 2"
-            class="space-y-6"
-          >
-            <h2 class="text-xl font-semibold">Space details</h2>
-            <div class="space-y-4">
-              <InputField
-                v-model="spaceName"
-                name="name"
-                label="Space Name"
-                placeholder="My Awesome Space"
-                required
-                description="A friendly name for your content space"
-                :autofocus="true"
-                @input="handleNameChange"
-              />
-              <InputField
-                v-model="spaceSlug"
-                name="slug"
-                label="Space Slug"
-                placeholder="my-awesome-space"
-                required
-                :description="`Used in URLs and API calls (e.g., api.cms.com/${spaceSlug || 'my-awesome-space' })`"
-              />
-              <ServerLocationSelect
-                v-model="serverLocation"
-                disabled
-              />
+            </div>
+            <div class="mt-8 flex justify-between">
+              <Button
+                variant="outline"
+                :disabled="step === 1"
+                @click="handleBack"
+              >
+                Back
+              </Button>
+              <Button
+                variant="primary"
+                :disabled="(step === 1 && !selectedPlan) || (step === 2 && (!spaceName || !spaceSlug || !serverLocation))"
+                @click="handleNext"
+              >
+                <template v-if="step < 2">
+                  Next
+                  <Icon
+                    name="lucide:chevron-right"
+                    class="ml-2 h-4 w-4"
+                  />
+                </template>
+                <template v-else>
+                  <Icon
+                    v-if="isPending"
+                    name="lucide:loader"
+                    class="mr-2 h-4 w-4 animate-spin"
+                  />
+                  Create Space
+                </template>
+              </Button>
             </div>
           </div>
-          <div class="mt-8 flex justify-between">
-            <Button
-              variant="outline"
-              :disabled="step === 1"
-              @click="handleBack"
-            >
-              Back
-            </Button>
-            <Button
-              variant="primary"
-              :disabled="(step === 1 && !selectedPlan) || (step === 2 && (!spaceName || !spaceSlug || !serverLocation))"
-              @click="handleNext"
-            >
-              <template v-if="step < 2">
-                Next
-                <Icon
-                  name="lucide:chevron-right"
-                  class="ml-2 h-4 w-4"
-                />
-              </template>
-              <template v-else>
-                <Icon
-                  v-if="isPending"
-                  name="lucide:loader"
-                  class="mr-2 h-4 w-4 animate-spin"
-                />
-                Create Space
-              </template>
-            </Button>
-          </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </NuxtLayout>
   </div>
 </template>

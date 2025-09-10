@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
-import { ApiClient } from '~/api/client'
 import StatsCard from '~/components/StatsCard.vue'
+import { api } from '~/api'
 
 const { formatDuration, formatNumber } = useFormat()
 
@@ -56,7 +56,7 @@ const dateRangeValues = computed(() => {
 const fetchDashboardStats = async () => {
   loading.value = true
   error.value = null
-  const client = new ApiClient()
+  const client = api.client
 
   try {
     const { startDate, endDate } = dateRangeValues.value

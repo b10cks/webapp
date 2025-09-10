@@ -130,7 +130,7 @@ const hierarchicalTeams = computed(() => {
         </div>
       </SelectValue>
     </SelectTrigger>
-    <SelectContent>
+    <SelectContent v-if="hierarchicalTeams.length">
       <SelectItem
         v-for="item in hierarchicalTeams"
         :key="item.team.id"

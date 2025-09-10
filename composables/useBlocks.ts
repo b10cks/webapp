@@ -3,7 +3,7 @@ import { toast } from 'vue-sonner'
 import type { BlocksQueryParams } from '~/api/resources/blocks'
 import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
-import type { MaybeRefOrComputed } from '~/types'
+import type { ApiResponse, MaybeRefOrComputed } from '~/types'
 
 export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
   const queryClient = useQueryClient()
@@ -107,20 +107,20 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
     })
   }
 
-  const getBlockBySlug = (blocksRef: MaybeRefOrComputed<BlockResource[] | undefined>, slugRef: MaybeRefOrComputed<string>) => {
+  const getBlockBySlug = (blocksRef: ApiResponse<BlockResource[] | undefined>, slugRef: MaybeRefOrComputed<string>) => {
     const blocks = unref(blocksRef)
     const slug = slugRef
 
     if (!blocks) return null
-    return blocks.find(block => block.slug == slug)
+    return blocks.data.find(block => block.slug == slug)
   }
 
-  const getBlockById = (blocksRef: MaybeRefOrComputed<BlockResource[] | undefined>, idRef: MaybeRefOrComputed<string>) => {
+  const getBlockById = (blocksRef: ApiResponse<BlockResource[] | undefined>, idRef: MaybeRefOrComputed<string>) => {
     const blocks = unref(blocksRef)
     const id = idRef
 
     if (!blocks) return null
-    return blocks.find(block => block.id == id)
+    return blocks.data.find(block => block.id == id)
   }
 
   return {

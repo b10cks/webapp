@@ -200,6 +200,25 @@ const hasContent = computed((): boolean => {
       :disabled="isGenerating"
       @update:model-value="updateValue('robots', $event)"
     />
+    <div class="p-3 rounded-lg border-input border bg-background">
+      <div class="text-sm text-muted mb-1">
+        {{ serpUrl }}
+      </div>
+      <h3 class="text-lg text-info font-semibold cursor-pointer mb-1 leading-tight">
+        {{ truncatedTitle }}
+      </h3>
+      <p class="text-sm text-muted leading-relaxed">
+        {{ truncatedDescription }}
+      </p>
+      <div class="mt-3 pt-3 border-t border-border text-xs text-muted flex gap-4">
+          <span :class="{ 'text-destructive': serpTitle.length > 60 }">
+            Title: {{ serpTitle.length }}/60 chars
+          </span>
+        <span :class="{ 'text-destructive': serpDescription.length > 155 }">
+            Description: {{ serpDescription.length }}/155 chars
+          </span>
+      </div>
+    </div>
     <template v-if="item.has_og_tags">
       <AssetBlock
         :model-value="localValue.ogImage"
@@ -225,24 +244,5 @@ const hasContent = computed((): boolean => {
         @update:model-value="updateValue('ogDescription', $event)"
       />
     </template>
-    <div class="p-3 rounded-lg border-input border bg-background">
-      <div class="text-sm text-muted mb-1">
-        {{ serpUrl }}
-      </div>
-      <h3 class="text-lg text-info font-semibold cursor-pointer mb-1 leading-tight">
-        {{ truncatedTitle }}
-      </h3>
-      <p class="text-sm text-muted leading-relaxed">
-        {{ truncatedDescription }}
-      </p>
-      <div class="mt-3 pt-3 border-t border-border text-xs text-muted flex gap-4">
-          <span :class="{ 'text-destructive': serpTitle.length > 60 }">
-            Title: {{ serpTitle.length }}/60 chars
-          </span>
-        <span :class="{ 'text-destructive': serpDescription.length > 155 }">
-            Description: {{ serpDescription.length }}/155 chars
-          </span>
-      </div>
-    </div>
   </div>
 </template>

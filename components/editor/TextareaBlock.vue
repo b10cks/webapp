@@ -16,6 +16,6 @@ defineProps<{
     :name="item.key"
     :label="item.name || item.key"
     :description="item.description"
-    auto-size
+    :auto-size="600"
   />
 </template>

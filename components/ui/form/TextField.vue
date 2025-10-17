@@ -18,7 +18,7 @@ const props = defineProps<{
   inputClass?: HTMLAttributes['class']
 
   // Input props
-  autoSize?: boolean
+  autoSize?: boolean | number
   modelValue?: string | number
   defaultValue?: string | number
   placeholder?: unknown

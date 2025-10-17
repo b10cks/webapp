@@ -7,7 +7,7 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
   defaultValue?: string | number
   modelValue?: string | number
-  autoSize?: boolean
+  autoSize?: boolean | number
 }>()
 
 const emits = defineEmits<{
@@ -20,11 +20,15 @@ const modelValue = useVModel(props, 'modelValue', emits, {
   passive: true,
   defaultValue: props.defaultValue,
 })
-
 const resizeTextarea = () => {
   if (props.autoSize && textareaRef.value) {
     textareaRef.value.style.height = 'auto'
-    textareaRef.value.style.height = textareaRef.value.scrollHeight + 'px'
+    const maxHeight = typeof props.autoSize === 'number'
+      ? Math.min(textareaRef.value.scrollHeight, props.autoSize)
+      : textareaRef.value.scrollHeight
+
+    console.log('Resizing textarea to height:', textareaRef.value.scrollHeight, props.autoSize)
+    textareaRef.value.style.height = `${maxHeight}px`
   }
 }
 

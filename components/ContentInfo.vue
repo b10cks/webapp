@@ -37,8 +37,6 @@ defineProps<{
     <dd class="mt-1 mb-4">
       {{ content.published_at ? formatDateTime(content.published_at) : 'Not published' }}
     </dd>
-    <dt class="text-sm font-medium text-muted"/>
-    <dd>{{ content.i18n_translations }}</dd>
     <dt class="text-sm font-medium text-muted">
       {{ $t('labels.contents.fields.createdAt') }}
     </dt>

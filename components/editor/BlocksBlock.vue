@@ -127,7 +127,7 @@ const navigateToItem = (itemId: string) => {
 <template>
   <div class="grid gap-2">
     <div class="text-sm font-semibold text-primary">{{ item.name || item.key || 'Untitled' }}</div>
-    <div class="bg-surface border border-border rounded-lg px-2">
+    <div class="bg-surface border border-border rounded-2xl px-2">
       <AccordionRoot
         ref="accordionContainer"
         type="multiple"

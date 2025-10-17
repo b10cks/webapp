@@ -65,7 +65,7 @@ const trigger = (action: InputActionType) => {
     modelValue.value = ''
   } else if (action === 'copy') {
     navigator.clipboard.writeText(modelValue.value as string)
-    toast.info($t('labels.inputField.copied'))
+    toast.info($t('notifications.inputField.copied'))
   }
 }
 

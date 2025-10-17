@@ -259,7 +259,7 @@ const getContentColor = (contentId: string): string => {
         @click="showContentPicker = true"
       >
         <Icon name="lucide:plus"/>
-        {{ $t('labels.references.addReference') }}
+        {{ $t('actions.references.add') }}
       </Button>
 
       <div

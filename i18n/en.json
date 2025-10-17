@@ -164,6 +164,8 @@
       "liveEdit": "Live Edit available"
     },
     "assets": {
+      "addAsset": "Add Asset",
+      "addAssetDescription": "Select an asset from your library",
       "allAssets": "All Assets",
       "selectAsset": "Select an Asset",
       "noAssetsFound": "No Assets found",
@@ -551,6 +553,8 @@
         "description": "Configure language settings for your content.",
         "languages": "Languages",
         "languagesDescription": "Add and manage supported languages for your content.",
+        "defaultLanguage": "Default Language",
+        "defaultLanguageDescription": "This language will be used as the default for content creation. It is recommended to set this to your primary audience's language. It will be used for AI translations as well.",
         "code": "Code",
         "label": "Label",
         "codePlaceholder": "Code (e.g., de)",
@@ -656,6 +660,9 @@
         }
       }
     },
+    "teams": {
+      "selectPlaceholder": "Select a team..."
+    },
     "fields": {
       "createdAt": "Created at",
       "updatedAt": "Last updated at"
@@ -667,6 +674,9 @@
     "no": "No"
   },
   "notifications": {
+    "inputField": {
+      "copied": "Value copied to clipboard"
+    },
     "preview": {
       "copied": "Link copied to clipboard"
     }
@@ -726,6 +736,9 @@
       "reset": "Reset  Usage Stats",
       "save": "Save Redirect"
     },
+    "references": {
+      "add": "Add Reference"
+    },
     "spaces": {
       "add": "Add new space",
       "select": "Select space",
@@ -744,7 +757,8 @@
     "delete": "Delete",
     "create": "Create",
     "cancel": "Cancel",
-    "login": "Login"
+    "login": "Login",
+    "retry": "Retry"
   },
   "alertDialog": {
     "ok": "OK",

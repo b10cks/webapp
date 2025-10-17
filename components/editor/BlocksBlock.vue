@@ -140,6 +140,13 @@ const navigateToItem = (itemId: string) => {
           class="relative p-2 rounded-lg bg-background mb-2 border border-border"
         >
           <AccordionHeader class="group">
+            <AddDropdown
+              :item="item"
+              :space-id="spaceId"
+              :has-clipboard-item="hasClipboardItem"
+              @paste="() => pasteItem(null, i)"
+              @select="(slug: string) => addItem(slug, i)"
+            />
             <AccordionTrigger
               class="flex items-center gap-2 w-full"
             >
@@ -183,20 +190,6 @@ const navigateToItem = (itemId: string) => {
                 </button>
               </div>
             </AccordionTrigger>
-            <AddDropdown
-              :item="item"
-              :space-id="spaceId"
-              class="absolute inset-x-0 -top-1.5 w-full"
-              @select="(slug: string) => addItem(slug, i)"
-            >
-              <div class="border-t-2 border-t-accent flex opacity-0 hover:opacity-100 transition-opacity">
-                <button
-                  class="cursor-pointer mx-auto w-4 h-4 rounded-full bg-accent transform -translate-y-1/2 text-accent-foreground"
-                >
-                  <Icon name="lucide:plus"/>
-                </button>
-              </div>
-            </AddDropdown>
           </AccordionHeader>
           <AccordionContent>
             <div class="grid gap-4 items-start p-1 pt-2 mt-2 border-t-2 border-surface">
@@ -210,22 +203,13 @@ const navigateToItem = (itemId: string) => {
             </div>
           </AccordionContent>
         </AccordionItem>
-
-        <!-- Add item dropdown at the end -->
         <AddDropdown
           :item="item"
           :space-id="spaceId"
-          class="absolute inset-x-0 -mt-1"
+          :has-clipboard-item="hasClipboardItem"
+          @paste="pasteItem"
           @select="(slug: string) => addItem(slug, blockItems.length)"
-        >
-          <div class="border-t-2 border-t-accent flex opacity-0 hover:opacity-100 transition-opacity">
-            <button
-              class="cursor-pointer mx-auto w-4 h-4 rounded-full bg-accent transform -translate-y-1/2 text-accent-foreground"
-            >
-              <Icon name="lucide:plus"/>
-            </button>
-          </div>
-        </AddDropdown>
+        />
         <div
           v-if="hasClipboardItem"
           class="flex justify-center mt-2 pb-2"

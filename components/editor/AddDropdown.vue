@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import type { HTMLAttributes } from 'vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +10,13 @@ import {
 
 const emit = defineEmits<{
   (e: 'select', blockSlug: string): void
+  (e: 'paste'): void
 }>()
 
 const props = defineProps<{
   item: BlocksSchema
+  hasClipboardItem: boolean
   spaceId: string
-  class?: HTMLAttributes['class']
 }>()
 
 const type = ref<string>()
@@ -54,9 +54,23 @@ const autofill = (newIsOpen) => {
     v-model:open="isOpen"
     @update:open="autofill"
   >
-    <DropdownMenuTrigger :class="props.class">
-      <slot/>
-    </DropdownMenuTrigger>
+    <div class="flex opacity-0 hover:opacity-100 transition-opacity">
+      <div class="border-t-2 border-accent pt-4 absolute inset-x-0 -mt-3"/>
+      <div class="mx-auto transform flex gap-2 absolute inset-x-0 justify-center z-10 -mt-6">
+        <DropdownMenuTrigger>
+          <button class="cursor-pointer size-6 rounded-full bg-accent text-accent-foreground flex justify-center items-center">
+            <Icon name="lucide:plus"/>
+          </button>
+        </DropdownMenuTrigger>
+        <button
+          v-if="hasClipboardItem"
+          class="cursor-pointer size-6 rounded-full bg-accent text-accent-foreground flex justify-center items-center"
+          @click="emit('paste')"
+        >
+          <Icon name="lucide:clipboard-paste"/>
+        </button>
+      </div>
+    </div>
     <DropdownMenuContent>
       <DropdownMenuRadioGroup v-model="type">
         <DropdownMenuItem

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
 import { useAlertDialog } from '~/composables/useAlertDialog'
+import Label from '~/components/ui/form/Label.vue'
 import AssetGrid from '~/components/assets/AssetGrid.vue'
 import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
@@ -81,6 +82,7 @@ const handleAssetDelete = async () => {
 
 <template>
   <div class="space-y-3">
+    <Label :label="item.name || item.key"/>
     <div
       v-if="!hasAsset"
       class="border-2 border-dashed border-input rounded-lg p-8 text-center bg-surface/50 hover:bg-surface transition-colors cursor-pointer"

@@ -4,6 +4,7 @@ import { useAlertDialog } from '~/composables/useAlertDialog'
 import AssetGrid from '~/components/assets/AssetGrid.vue'
 import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
 import { Button } from '~/components/ui/button'
+import Label from '../ui/form/Label.vue'
 
 interface AssetValue {
   id: string
@@ -168,9 +169,7 @@ const closeAssetDetails = () => {
 
 <template>
   <div class="space-y-3">
-    <label class="font-semibold text-primary">
-      {{ item.name || item.key }}
-    </label>
+    <Label :label="item.name || item.key"/>
     <div
       v-if="!hasAssets"
       class="border border-dashed border-input rounded-lg gap-2 flex items-center p-4 bg-surface/50 hover:bg-surface transition-colors cursor-pointer"

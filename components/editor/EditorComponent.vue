@@ -60,9 +60,7 @@ const emit = defineEmits<{
 }>()
 
 const hoverRegistry = inject<Map<string, boolean>>('hoverRegistry', new Map())
-const componentId = computed((): string => {
-  return (content.value?.id as string) || props.itemId || ''
-})
+const componentId = computed((): string => (content.value?.id || props.itemId || '') as string)
 
 provide('hoverRegistry', hoverRegistry)
 
@@ -101,28 +99,22 @@ const rootBlock = inject<ContentBlock>('rootBlock')
 const updatePreviewItem = inject<PreviewUpdateFunction>('updatePreviewItem')
 
 const contentTree = useContentTree(content, rootBlock)
-const currentItem = computed((): ContentItem | null => {
-  return props.itemId ? contentTree.findItemById(props.itemId) : null
-})
-const breadcrumbs = computed((): Breadcrumb[] => {
-  return props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : []
-})
-const id = computed((): string => {
-  return props.itemId || rootBlock?.slug || ''
-})
+const currentItem = computed((): ContentItem | null => props.itemId ? contentTree.findItemById(props.itemId) : null)
+const breadcrumbs = computed((): Breadcrumb[] => props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : [])
+const id = computed((): string => props.itemId || rootBlock?.slug || '')
 
 const { hasClipboardItem, clearClipboard } = useGlobalClipboard()
 
 const currentBlock = computed((): BlockResource | null => {
   if (!currentItem.value) {
     if (props.blockSlug) {
-      return getBlockBySlug(blocks, props.blockSlug)
+      return getBlockBySlug(blocks.value, props.blockSlug)
     }
-    return getBlockById(blocks, props.blockId)
+    return getBlockById(blocks.value, props.blockId)
   }
 
   if (currentItem.value.item.block) {
-    return getBlockBySlug(blocks, currentItem.value.item.block)
+    return getBlockBySlug(blocks.value, currentItem.value.item.block)
   }
 
   return null

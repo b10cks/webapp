@@ -4,35 +4,28 @@ import type { ContentBlock } from '~/types/contents'
 export interface ContentTreeItem {
   id: string
   block: string
-  [key: string]: unknown
+  [key: string]: ContentTreeItem | ContentTreeItem[] | unknown
 }
 
 export interface FindResult {
   item: ContentTreeItem | null
-  path: ContentTreeItem[]
+  path: Array<ContentTreeItem | ContentBlock>
   parent: ContentTreeItem | null
   parentKey: string | null
   index: number | null
 }
 
-export function useContentTree(contentRef: MaybeRef<ContentTreeItem[]>, root: MaybeRef<ContentBlock>) {
+export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: MaybeRef<ContentBlock>) {
   const findItemById = (itemId: string): FindResult => {
     const content = unref(contentRef)
     if (!content) {
       return { item: null, path: [], parent: null, parentKey: null, index: null }
     }
 
-    // Check if itemId matches the root
-    const rootValue = unref(root)
-    if (rootValue?.id === itemId) {
-      const rootItem: ContentTreeItem = { 
-        id: rootValue.id, 
-        block: rootValue.name || rootValue.slug || '',
-        ...rootValue 
-      }
+    if (content.id === itemId) {
       return {
-        item: rootItem,
-        path: [rootItem],
+        item: content,
+        path: [unref(root), content],
         parent: null,
         parentKey: null,
         index: null
@@ -47,7 +40,7 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem[]>, root: Ma
       index: null
     }
 
-    const findInObject = (obj: any, currentPath: ContentTreeItem[] = []): boolean => {
+    const findInObject = (obj: ContentTreeItem, currentPath: ContentTreeItem[] = []): boolean => {
       if (!obj || typeof obj !== 'object') return false
 
       if (obj.id === itemId) {
@@ -57,7 +50,7 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem[]>, root: Ma
       }
 
       for (const key in obj) {
-        const value = obj[key]
+        const value = obj[key] as ContentTreeItem
 
         if (typeof value !== 'object' || value === null) continue
 
@@ -92,22 +85,7 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem[]>, root: Ma
       return false
     }
 
-    // Search through the content array
-    const rootItem: ContentTreeItem = { 
-      id: rootValue?.id || '', 
-      block: rootValue?.name || rootValue?.slug || '',
-      ...rootValue 
-    }
-    for (let i = 0; i < content.length; i++) {
-      if (findInObject(content[i], [rootItem])) {
-        if (result.parent === null && content[i].id === itemId) {
-          result.parent = rootItem
-          result.parentKey = 'content'
-          result.index = i
-        }
-        break
-      }
-    }
+    findInObject(content)
     return result
   }
 
@@ -140,7 +118,7 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem[]>, root: Ma
       return true
     }
 
-    let current: any = content
+    let current: ContentTreeItem = content
     const pathItemIds = path.map(p => p.id).filter(Boolean)
     for (let i = 0; i < pathItemIds.length - 1; i++) {
       const pathItemId = pathItemIds[i]
@@ -164,7 +142,7 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem[]>, root: Ma
 
         if (foundInObject) {
           const [_, obj] = foundInObject
-          current = obj
+          current = obj as ContentTreeItem
         } else {
           return false // Path item not found
         }

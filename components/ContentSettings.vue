@@ -8,10 +8,6 @@ const content = defineModel<ContentResource>()
 
 <template>
   <div>
-    <h2
-      v-if="content.block"
-      class="text-xl font-bold mb-2 text-primary"
-    >{{ content.block.name || content.block.slug }}</h2>
     <div class="flex flex-col gap-6">
       <InputField
         v-model="content.name"

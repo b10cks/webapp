@@ -753,6 +753,8 @@
     "add": "Add",
     "remove": "Remove",
     "edit": "Edit",
+    "view": "View",
+    "createFolder": "Create Folder",
     "copy": "Copy",
     "delete": "Delete",
     "create": "Create",

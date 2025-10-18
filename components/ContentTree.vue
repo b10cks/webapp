@@ -139,7 +139,7 @@ const initDelete = async (item: ContentResource) => {
           name="lucide:globe"
           class="text-primary shrink-0"
         />
-        <span>{{ selectedSpace.name }}</span>
+        <span class="truncate">{{ selectedSpace.name }}</span>
         <Button
           class="ml-auto"
           variant="ghost"

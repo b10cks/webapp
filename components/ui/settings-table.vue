@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Switch } from '~/components/ui/switch'
-import { useSortable } from '@vueuse/integrations/useSortable'
+import { useSortable, moveArrayElement } from '@vueuse/integrations/useSortable'
 
 export interface ColumnDefinition {
   key: string
@@ -43,7 +43,7 @@ const emit = defineEmits<{
   'remove': [index: number, item: TableItem]
 }>()
 
-const tableBodyRef = ref<HTMLElement>()
+const tableBodyRef = useTemplateRef<HTMLElement>('tableBodyRef')
 const localItems = ref<TableItem[]>([...props.items || []])
 const newItem = ref<TableItem>({ ...props.newItemTemplate })
 
@@ -52,14 +52,11 @@ watch(() => props.items, (newItems) => {
 }, { deep: true })
 
 if (props.allowSort) {
-  nextTick(() => {
-    if (tableBodyRef.value) {
-      useSortable(tableBodyRef.value, localItems.value, {
-        handle: '.sort-handle',
-        onEnd: () => {
-          emit('update:items', [...localItems.value])
-        }
-      })
+  useSortable(tableBodyRef, localItems, {
+    handle: '.sort-handle',
+    animation: 150,
+    onEnd: () => {
+      nextTick(() => emit('update:items', [...localItems.value]))
     }
   })
 }

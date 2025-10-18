@@ -148,6 +148,7 @@ export function useAuth() {
           response.expires_in
         )
 
+        console.log('A1')
         api.setAuthToken(response.access_token)
         setupTokenRefresh(response.expires_in)
         await loadUser()
@@ -222,6 +223,7 @@ export function useAuth() {
           response.expires_in
         )
 
+        console.log('A2')
         api.setAuthToken(response.access_token)
         setupTokenRefresh(response.expires_in)
         processRequestQueue(true, response.access_token)

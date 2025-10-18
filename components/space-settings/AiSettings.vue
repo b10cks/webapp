@@ -87,7 +87,7 @@ const fetchAiUsage = async () => {
   usageError.value = null
 
   try {
-    const response = await apiClient.get<AiUsageResponse>(`mgmt/v1/spaces/${props.space.id}/ai-usage`)
+    const response = await apiClient.get<AiUsageResponse>(`/mgmt/v1/spaces/${props.space.id}/ai-usage`)
     aiUsage.value = response.data
   } catch (error: any) {
     usageError.value = error.message || 'Failed to load AI usage data'
@@ -103,7 +103,7 @@ const fetchAiModels = async () => {
   modelError.value = null
 
   try {
-    const response = await apiClient.get<AiModelsResponse>('mgmt/v1/ai/available-models')
+    const response = await apiClient.get<AiModelsResponse>('/mgmt/v1/ai/available-models')
     availableModels.value = response.data || []
 
     // If no model is selected but we have available models, select the first active one

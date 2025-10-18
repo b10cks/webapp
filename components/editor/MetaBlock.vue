@@ -112,7 +112,7 @@ const generateMetaWithAI = async (): Promise<void> => {
       description: string
       ogTitle: string
       ogDescription: string
-    }>>('mgmt/v1/ai/meta-tags', { context: requestData }, { query: { spaceId: props.spaceId } })
+    }>>('/mgmt/v1/ai/meta-tags', { context: requestData }, { query: { spaceId: props.spaceId } })
 
     // Update local values and emit changes
     const generatedMeta = response.data

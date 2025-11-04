@@ -1,0 +1,122 @@
+<script setup lang="ts">
+import { Line } from 'vue-chartjs'
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  type ChartOptions,
+  Filler,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip
+} from 'chart.js'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+
+interface Dataset {
+  label: string
+  data: number[]
+  color: string
+}
+
+interface Props {
+  title: string | CleanTranslation
+  labels: string[]
+  datasets: Dataset[]
+  height?: number
+  fill?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  height: 300,
+  fill: true
+})
+
+const chartData = computed(() => ({
+  labels: props.labels,
+  datasets: props.datasets.map(dataset => ({
+    label: dataset.label,
+    data: dataset.data,
+    borderColor: dataset.color,
+    backgroundColor: props.fill ? dataset.color.replace('0.8)', '0.1)') : 'transparent',
+    fill: props.fill,
+    tension: 0.4,
+    pointRadius: 2,
+    pointHoverRadius: 5
+  }))
+}))
+
+const chartOptions: ChartOptions<'line'> = {
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: {
+    mode: 'index',
+    intersect: false
+  },
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: {
+        padding: 15,
+        font: {
+          size: 12
+        },
+        usePointStyle: true,
+        pointStyle: 'circle'
+      }
+    },
+    tooltip: {
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      padding: 12,
+      titleFont: {
+        size: 14
+      },
+      bodyFont: {
+        size: 13
+      }
+    }
+  },
+  scales: {
+    x: {
+      grid: {
+        display: false
+      },
+      ticks: {
+        maxTicksLimit: 10,
+        font: {
+          size: 11
+        }
+      }
+    },
+    y: {
+      beginAtZero: true,
+      grid: {
+        color: 'rgba(0, 0, 0, 0.05)'
+      },
+      ticks: {
+        font: {
+          size: 11
+        }
+      }
+    }
+  }
+}
+</script>
+
+<template>
+  <Card>
+    <CardHeader>
+      <CardTitle>{{ title }}</CardTitle>
+    </CardHeader>
+    <CardContent :style="{ height: `${height}px` }">
+      <Line
+        :data="chartData"
+        :options="chartOptions"
+      />
+    </CardContent>
+  </Card>
+</template>

@@ -80,6 +80,33 @@ export default function useFormat() {
     }).format(value)
   }
 
+  function formatTrafficSize(bytes: number, unit: 'B' | 'KB' | 'MB' | 'GB' | 'TB' = 'KB'): string {
+    if (bytes === 0) return `0 ${unit}`
+
+    let value: number
+    switch (unit) {
+      case 'B':
+        value = bytes
+        break
+      case 'MB':
+        value = bytes / (1024 ** 2)
+        break
+      case 'GB':
+        value = bytes / (1024 ** 3)
+        break
+      case 'TB':
+        value = bytes / (1024 ** 4)
+        break
+      default:
+        value = bytes / 1024
+    }
+
+    return new Intl.NumberFormat(locale.value, {
+      maximumFractionDigits: unit === 'B' ? 0 : 2,
+      minimumFractionDigits: unit === 'B' ? 0 : 2,
+    }).format(value) + ` ${unit}`
+  }
+
   function formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 B'
 
@@ -97,6 +124,7 @@ export default function useFormat() {
     formatFileSize,
     formatCurrency,
     formatVersionTime,
+    formatTrafficSize,
     formatRelativeTime,
     formatCalendarTime,
     formatDuration,

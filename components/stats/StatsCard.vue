@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
 defineProps<{
   icon?: string
-  title?: string
-  description?: string
+  title?: string | CleanTranslation
+  description?: string | CleanTranslation
 }>()
 
 </script>
@@ -17,7 +18,7 @@ defineProps<{
       <Icon
         :name="icon"
         size="1.25rem"
-        class="text-muted"
+        class="text-muted shrink-0"
       />
     </CardHeader>
     <CardContent>

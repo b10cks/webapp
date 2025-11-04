@@ -681,6 +681,67 @@
       "copied": "Link copied to clipboard"
     }
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "loading": "Loading statistics...",
+    "no_data": "No statistics available.",
+    "filters": {
+      "date_range": "Date Range",
+      "last_7_days": "Last 7 days",
+      "last_30_days": "Last 30 days",
+      "last_90_days": "Last 90 days",
+      "this_month": "This month",
+      "this_year": "This year",
+      "period": "Period",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "sections": {
+      "content_stats": "Content Stats",
+      "content_distribution": "Content Distribution",
+      "usage_stats": "Usage Stats",
+      "trends": "Trends",
+      "space_stats": "Space Stats"
+    },
+    "cards": {
+      "total_content": "Total Content",
+      "published": "published",
+      "draft": "draft",
+      "assets": "Assets",
+      "assets_count": "Assets",
+      "blocks": "Blocks",
+      "data_sources": "Data Sources",
+      "redirects": "Redirects",
+      "traffic_usage": "Traffic usage",
+      "cache_hit_rate": "Cache hit rate",
+      "api_requests": "API Requests",
+      "success_rate": "success rate",
+      "avg_response_time": "Avg Response Time",
+      "api_response_time": "API response time",
+      "total_users": "Total Users",
+      "languages": "Languages"
+    },
+    "charts": {
+      "assets_by_type": "Assets by Type",
+      "content_by_type": "Content by Type",
+      "traffic_usage": "Traffic Usage",
+      "bytes": "Bytes",
+      "kb": "KB",
+      "mb": "MB",
+      "gb": "GB",
+      "tb": "TB",
+      "api_usage": "API Usage",
+      "requests": "Requests",
+      "asset_upload_trend": "Asset Upload Trend",
+      "upload_count": "Upload Count",
+      "upload_size_mb": "Upload Size (MB)",
+      "content_activity": "Content Activity",
+      "content_created": "Content Created",
+      "content_edited": "Content Edited",
+      "content_published": "Content Published"
+    }
+  },
   "actions": {
     "open": "Open",
     "toDashboard": "Go to dashboard",

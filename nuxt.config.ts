@@ -101,9 +101,9 @@ export default defineNuxtConfig({
       failOnError: false,
     },
     devProxy: {
-      '/auth': { target: `${process.env.NUXT_API_PROXY_URL}auth`, changeOrigin: true },
-      '/mgmt/v1': { target: `${process.env.NUXT_API_PROXY_URL}mgmt/v1`, changeOrigin: true },
-      '/api/v1': { target: `${process.env.NUXT_API_PROXY_URL}api/v1`, changeOrigin: true },
+      '/auth': { target: `${process.env.NUXT_API_PROXY_URL}auth`, changeOrigin: true, headers: { 'accept-encoding': 'identity' } },
+      '/mgmt/v1': { target: `${process.env.NUXT_API_PROXY_URL}mgmt/v1`, changeOrigin: true, headers: { 'accept-encoding': 'identity' } },
+      '/api/v1': { target: `${process.env.NUXT_API_PROXY_URL}api/v1`, changeOrigin: true, headers: { 'accept-encoding': 'identity' } },
     }
   },
 

@@ -86,8 +86,8 @@ const formatRoleDistribution = (roleDistribution: Record<string, number>): strin
 
 // Chart data transformers
 const assetsByTypeChartData = computed(() => {
-  if (!stats.value?.content?.assets?.count?.by_type) return []
-  return stats.value.content.assets.count.by_type.map((item: any) => ({
+  if (!stats.value?.assets?.count?.by_type) return []
+  return stats.value.assets.count.by_type.map((item: any) => ({
     name: item.category,
     count: item.count
   }))

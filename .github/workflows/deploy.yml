@@ -171,6 +171,41 @@ jobs:
 
       - name: Display deployment information
         run: |
+          - name: Post deployment notification to Discord
+        if: always()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            COLOR="3066993"  # Green
+            STATUS="✅ Deployment Successful"
+          else
+            COLOR="15158332"  # Red
+            STATUS="❌ Deployment Failed"
+          fi
+
+          COMMITS="${{ steps.commits.outputs.commits }}"
+          COMMITS="${COMMITS//'%0A'/$'\n'}"
+
+          # Truncate if too long (Discord has a 4096 char limit for description)
+          if [ ${#COMMITS} -gt 3800 ]; then
+            COMMITS="${COMMITS:0:3800}\n... (truncated)"
+          fi
+
+          curl -H "Content-Type: application/json" \
+            -d "{
+              \"embeds\": [{
+                \"title\": \"$STATUS\",
+                \"description\": \"**Version:** \`${{ steps.version.outputs.version }}\`\n**Cluster:** \`${{ env.ECS_CLUSTER }}\`\n**Service:** \`${{ env.ECS_SERVICE }}\`\n\n**Changes since ${{ steps.commits.outputs.previous_tag }}:**\n${COMMITS}\",
+                \"color\": $COLOR,
+                \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)\",
+                \"footer\": {
+                  \"text\": \"Commit: ${{ steps.version.outputs.short_sha }}\"
+                }
+              }]
+            }" \
+            $DISCORD_WEBHOOK
+          
           echo "## 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY

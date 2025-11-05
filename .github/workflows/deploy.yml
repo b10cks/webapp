@@ -170,8 +170,6 @@ jobs:
             --include "*.txt"
 
       - name: Display deployment information
-        run: |
-          - name: Post deployment notification to Discord
         if: always()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}

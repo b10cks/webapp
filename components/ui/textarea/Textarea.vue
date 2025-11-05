@@ -27,7 +27,6 @@ const resizeTextarea = () => {
       ? Math.min(textareaRef.value.scrollHeight, props.autoSize)
       : textareaRef.value.scrollHeight
 
-    console.log('Resizing textarea to height:', textareaRef.value.scrollHeight, props.autoSize)
     textareaRef.value.style.height = `${maxHeight}px`
   }
 }

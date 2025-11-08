@@ -76,7 +76,7 @@ jobs:
           # Extract version from tag (remove 'v' prefix)
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "Deploying version: ${VERSION}"
+          echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Cache Bun dependencies
         uses: actions/cache@v4
@@ -183,11 +183,7 @@ jobs:
             COMMITS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"• %s" --no-merges)
           fi
 
-          # Escape and format for JSON
-          COMMITS="${COMMITS//'%'/'%25'}"
-          COMMITS="${COMMITS//$'\n'/'%0A'}"
-          COMMITS="${COMMITS//$'\r'/'%0D'}"
-
+          COMMITS=$(echo -n "$COMMITS" | base64 | tr -d '\n')
           echo "commits=${COMMITS}" >> $GITHUB_OUTPUT
           echo "previous_tag=${PREVIOUS_TAG:-'Initial Release'}" >> $GITHUB_OUTPUT
 
@@ -204,26 +200,37 @@ jobs:
             STATUS="❌ Deployment Failed"
           fi
 
-          COMMITS="${{ steps.commits.outputs.commits }}"
-          COMMITS="${COMMITS//'%0A'/$'\n'}"
+          # Use jq to properly escape the commits for JSON
+          COMMITS=$(echo "${{ steps.commits.outputs.commits }}" | base64 --decode)
+          DESCRIPTION=$(echo -e "**Project:** https://github.com/b10cks/webapp\n**Version:** \`${{ steps.version.outputs.version }}\`\n\n**Changes since ${{ steps.commits.outputs.previous_tag }}:**\n${COMMITS}")
 
           # Truncate if too long (Discord has a 4096 char limit for description)
-          if [ ${#COMMITS} -gt 3800 ]; then
-            COMMITS="${COMMITS:0:3800}\n... (truncated)"
+          if [ ${#DESCRIPTION} -gt 3800 ]; then
+            DESCRIPTION=$(echo "${DESCRIPTION:0:3800}... (truncated)")
           fi
 
-          curl -H "Content-Type: application/json" \
-            -d "{
-              \"embeds\": [{
-                \"title\": \"$STATUS\",
-                \"description\": \"**Project**: \`webapp\`\n**Version:** \`${{ steps.version.outputs.version }}\`\n**S3 Bucket:** \`${{ steps.stack-outputs.outputs.bucket-name }}\`\n\n**Changes since ${{ steps.commits.outputs.previous_tag }}:**\n${COMMITS}\",
-                \"color\": $COLOR,
-                \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)\",
-                \"footer\": {
-                  \"text\": \"Commit: ${{ steps.version.outputs.short_sha }}\"
+          # Create JSON payload with proper escaping
+          PAYLOAD=$(jq -n \
+            --arg title "$STATUS" \
+            --arg description "$DESCRIPTION" \
+            --arg color "$COLOR" \
+            --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%S.000Z)" \
+            --arg footer_text "Commit: ${{ steps.version.outputs.short_sha }}" \
+            '{
+              "embeds": [{
+                "title": $title,
+                "description": $description,
+                "color": $color|tonumber,
+                "timestamp": $timestamp,
+                "footer": {
+                  "text": $footer_text
                 }
               }]
-            }" \
+            }')
+
+          # Send to Discord
+          curl -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
             $DISCORD_WEBHOOK
           
           echo "## 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY

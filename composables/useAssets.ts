@@ -11,7 +11,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const spaceId = computed(() => unref(spaceIdRef))
   const spaceAPI = computed(() => api.forSpace(spaceId.value))
-  const apiClient = useApiClient()
+  const { client: apiClient } = useApiClient()
   const error = ref<string | null>(null)
 
   const useAssetsQuery = (paramsRef: MaybeRefOrComputed<AssetsQueryParams> = {}) => {
@@ -108,7 +108,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
         })
 
         const apiBaseUrl = ''
-        const authToken = apiClient.getAuthToken() || ''
+        const authToken = apiClient.getAuthHeaders()['Authorization']?.replace('Bearer ', '') || ''
 
         xhr.open('POST', `${apiBaseUrl}/mgmt/v1/spaces/${spaceId.value}/assets`)
 
@@ -122,6 +122,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
 
       return await promise
     } catch (err) {
+      console.error(err)
       error.value = err instanceof Error ? err.message : 'Failed to upload asset'
       return null
     } finally {

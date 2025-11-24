@@ -259,8 +259,6 @@ const getProgressColor = (status: 'pending' | 'uploading' | 'error' | 'complete'
 
 // Retry uploading a failed file
 const retryUpload = async (file: UploadFileWithProgress) => {
-  const { uploadAsset } = useAssets(props.spaceId)
-
   updateFileStatus(file.id, 'uploading')
   updateFileProgress(file.id, 0)
 

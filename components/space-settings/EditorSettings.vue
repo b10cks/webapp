@@ -12,7 +12,13 @@ const { mutate: updateSpace } = useUpdateSpaceMutation()
 
 const props = defineProps<{ space: SpaceResource }>()
 
-const environments = ref(deepClone(props.space.settings.environments ?? []))
+const environments = ref(
+  deepClone(
+    Array.isArray(props.space.settings?.environments)
+      ? props.space.settings!.environments
+      : []
+  )
+)
 const visualEditorEnabled = ref(props.space.settings.visual_editor)
 
 const columns: ColumnDefinition[] = [
@@ -78,7 +84,9 @@ const saveSettings = async () => {
           :columns="columns"
           :new-item-template="newItemTemplate"
           :allow-sort="true"
+          @add="(item) => environments.push(item)"
           @remove="removeEnvironment"
+          @update:items="(items) => environments = items"
         >
           <template #actions="{ item }">
             <Button

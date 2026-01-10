@@ -65,7 +65,7 @@ export class ApiClient {
       if (error?.response?.status === 401 && this.authHandler) {
         try {
           const retryInfo = await this.authHandler.handleUnauthorized(endpoint, options)
-          
+
           if (retryInfo.token) {
             const authHeaders: Record<string, string> = {
               ...this.defaultHeaders,
@@ -76,7 +76,13 @@ export class ApiClient {
             }
             return await makeRequest(authHeaders)
           }
-        } catch (authError) {
+
+          // If no token is returned, authentication handler failed
+          console.error('Token refresh failed: Error: Authentication failed - No token returned from auth handler')
+          throw new Error('Token refresh failed: Error: Authentication failed')
+        } catch (authError: any) {
+          // Re-throw authentication errors with context
+          console.error('Token refresh failed: Error: Authentication failed', authError?.message || authError)
           throw authError
         }
       }

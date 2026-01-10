@@ -72,6 +72,7 @@ class TokenManager {
 
 export function useAuth() {
   const router = useRouter()
+  const route = useRoute()
   const { $posthog } = useNuxtApp()
 
   const user = useState<User>('auth_user', () => null)
@@ -90,7 +91,7 @@ export function useAuth() {
       if (success && newToken) {
         resolve({ endpoint, options, token: newToken })
       } else {
-        reject(new Error('Token refresh failed'))
+        reject(new Error('Token refresh failed: Error: Authentication failed'))
       }
     })
   }
@@ -233,12 +234,9 @@ export function useAuth() {
     } catch (err: any) {
       processRequestQueue(false)
 
-      if (err?.response?.status === 401) {
-        error.value = 'Your session has expired. Please log in again.'
-        await logout()
-      } else {
-        console.error('Token refresh failed:', err)
-      }
+      error.value = 'Your session has expired. Please log in again.'
+      console.error('Token refresh failed: Error: Authentication failed', err)
+      await logout()
 
       return false
     } finally {
@@ -248,7 +246,9 @@ export function useAuth() {
 
   const handleUnauthorized = async (endpoint: string, options: any): Promise<any> => {
     if (endpoint.includes('/auth/v1/token')) {
-      throw new Error('Authentication failed')
+      error.value = 'Your session has expired. Please log in again.'
+      await logout()
+      throw new Error('Token refresh failed: Error: Authentication failed')
     }
 
     if (isRefreshing.value) {
@@ -262,7 +262,7 @@ export function useAuth() {
       return { endpoint, options, token: TokenManager.getAccessToken() }
     }
 
-    throw new Error('Authentication required')
+    throw new Error('Token refresh failed: Error: Authentication failed')
   }
 
   const logout = async (returnPath?: string): Promise<void> => {
@@ -288,10 +288,9 @@ export function useAuth() {
     const { api } = await import('~/api')
     api.setAuthToken(undefined)
 
-    const currentRoute = router.currentRoute.value.fullPath
-    router.push({
+    navigateTo({
       name: 'login',
-      query: { return: returnPath || currentRoute }
+      query: { return: returnPath || route.fullPath || '/' }
     })
   }
 

@@ -19,7 +19,7 @@ import type { SpaceQueryParams } from '~/api/resources/spaces'
 
 const { $t } = useI18n()
 const { useSpacesQuery, useArchiveSpaceMutation } = useSpaces()
-const { formatDateTime } = useFormat()
+const { formatRelativeTime } = useFormat()
 const router = useRouter()
 
 const { selectedTeam } = useGlobalTeam()
@@ -75,6 +75,14 @@ const teamRelatedSpaces = computed(() => {
   return spaces.value?.filter(space => space.team_id === selectedTeam.value?.id) || []
 })
 
+const formatLastUpdated = (space: SpaceResource) => {
+  const contentTs = space.content_updated_at ? Date.parse(space.content_updated_at) : 0
+  const updatedTs = space.updated_at ? Date.parse(space.updated_at) : 0
+  const date = (contentTs >= updatedTs ? space.content_updated_at : space.updated_at) ?? null
+
+  return date ? formatRelativeTime(date) : ''
+}
+
 </script>
 
 <template>
@@ -129,7 +137,6 @@ const teamRelatedSpaces = computed(() => {
               >
                 <Icon
                   name="lucide:layout-grid"
-                  class="mr-2"
                 />
                 All
               </Button>
@@ -139,7 +146,6 @@ const teamRelatedSpaces = computed(() => {
               >
                 <Icon
                   name="lucide:trash-2"
-                  class="mr-2"
                 />
                 Archived
               </Button>
@@ -179,15 +185,11 @@ const teamRelatedSpaces = computed(() => {
                   <div class="flex items-center">
                     <div>
                       <h4 class="font-semibold text-primary">{{ space.name }}</h4>
-                      <p class="text-sm text-muted">{{ formatDateTime(space.updated_at) }}</p>
+                      <p class="text-sm text-muted">{{ $t('labels.fields.lastUpdated', {timeAgo: formatLastUpdated(space)}) }}</p>
                     </div>
                     <div class="ml-auto grid">
-                      <div
-                        class="group-hover:hidden grid-area-stack flex items-center"
-                      >
-                        <Badge
-                          size="xs"
-                        >Free
+                      <div class="group-hover:hidden grid-area-stack flex items-center">
+                        <Badge size="xs">Free
                         </Badge>
                       </div>
                       <DropdownMenu>

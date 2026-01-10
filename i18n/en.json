@@ -665,7 +665,8 @@
     },
     "fields": {
       "createdAt": "Created at",
-      "updatedAt": "Last updated at"
+      "updatedAt": "Last updated at",
+      "lastUpdated": "Last updated {timeAgo}"
     },
     "sortBy": "Sort by",
     "selectionCount": "Selected {count} items",
@@ -821,6 +822,7 @@
     "create": "Create",
     "cancel": "Cancel",
     "login": "Login",
+    "logout": "Logout",
     "retry": "Retry"
   },
   "alertDialog": {

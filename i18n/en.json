@@ -399,6 +399,10 @@
         "textarea": {
           "label": "Textarea",
           "description": "A larger text field"
+        },
+        "meta": {
+          "label": "SEO Meta",
+          "description": "SEO and social media metadata"
         }
       },
       "options": {

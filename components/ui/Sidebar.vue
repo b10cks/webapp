@@ -89,12 +89,12 @@ const buildLink = (name: string) => ({
                   <Icon
                     v-if="isDark"
                     name="lucide:moon"
-                    size="0.625rem"
+                    size="0.75rem"
                   />
                   <Icon
                     v-else
                     name="lucide:sun"
-                    size="0.625rem"
+                    size="0.75rem"
                   />
                 </template>
               </Switch>

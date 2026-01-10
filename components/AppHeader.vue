@@ -103,6 +103,9 @@ const selectedSpace = computed(() => {
             <DropdownMenuItem>
               {{ $t('actions.user.account') }}
             </DropdownMenuItem>
+            <DropdownMenuItem @select="useAuth().logout()">
+              {{ $t('actions.logout') }}
+            </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

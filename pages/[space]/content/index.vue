@@ -5,7 +5,7 @@ import { Button } from '~/components/ui/button'
 
 const route = useRoute()
 
-const { useContentMenuQuery, getRootItems } = useContentMenu(route.params.spaceId as string)
+const { useContentMenuQuery, getRootItems } = useContentMenu(route.params.space as string)
 const { data } = useContentMenuQuery()
 
 const rootItems = computed(() => getRootItems(data.value) || [])
@@ -21,19 +21,18 @@ const rootItems = computed(() => getRootItems(data.value) || [])
       <ContentsIcon
         class="mx-auto text-muted mb-6 w-32"
       />
-      <h3 class="text-xl font-bold mb-2">No Content Found</h3>
-      <p class="text-muted mb-6">Get started by creating your first content page</p>
-      <Button>
-        <Icon name="lucide:plus"/>
-        <span>Create Content</span>
-      </Button>
+      <h3 class="text-xl font-bold mb-2">No Content Selected</h3>
+      <p class="text-muted mb-6">Start by creating your first content page</p>
     </div>
-
-    <div v-else>
-      <h1 class="text-2xl font-bold mb-6">Content Manager</h1>
-      <p class="text-muted mb-4">
-        Select an item from the content menu to edit or create new content.
-      </p>
+    <div
+      v-else
+      class="text-center py-12"
+    >
+      <ContentsIcon
+        class="mx-auto text-muted mb-6 w-32"
+      />
+      <h3 class="text-xl font-bold mb-2">Content Manager</h3>
+      <p class="text-muted mb-6">Select an item from the content menu to edit or create new content.</p>
     </div>
   </div>
 </template>

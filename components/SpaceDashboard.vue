@@ -97,6 +97,7 @@ const contentByTypeChartData = computed(() => {
   if (!stats.value?.content?.by_type) return []
   return stats.value.content.by_type.map((item: any) => ({
     name: item.name,
+    color: item.color,
     count: item.count
   }))
 })

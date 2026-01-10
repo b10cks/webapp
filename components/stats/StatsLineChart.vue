@@ -69,10 +69,12 @@ const chartOptions: ChartOptions<'line'> = {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       padding: 12,
       titleFont: {
+        family: '"Inter", ui-sans-serif',
         size: 14
       },
       bodyFont: {
-        size: 13
+        family: '"Inter", ui-sans-serif',
+        size: 14
       }
     }
   },
@@ -82,9 +84,11 @@ const chartOptions: ChartOptions<'line'> = {
         display: false
       },
       ticks: {
-        maxTicksLimit: 10,
+        maxTicksLimit: 5,
+        color: '#6D7292',
         font: {
-          size: 11
+          family: '"Inter", ui-sans-serif',
+          size: 14
         }
       }
     },
@@ -94,8 +98,10 @@ const chartOptions: ChartOptions<'line'> = {
         color: 'rgba(0, 0, 0, 0.05)'
       },
       ticks: {
+        color: '#6D7292',
         font: {
-          size: 11
+          family: '"Inter", ui-sans-serif',
+          size: 14
         }
       }
     }

@@ -61,9 +61,11 @@ const chartOptions: ChartOptions<'line'> = {
     legend: {
       position: 'bottom',
       labels: {
-        padding: 15,
+        padding: 24,
+        color: '#6D7292',
         font: {
-          size: 12
+          family: '"Inter", ui-sans-serif',
+          size: 14
         },
         usePointStyle: true,
         pointStyle: 'circle'
@@ -73,10 +75,13 @@ const chartOptions: ChartOptions<'line'> = {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       padding: 12,
       titleFont: {
-        size: 14
+        family: '"Inter", ui-sans-serif',
+        size: 14,
+        weight: 'bold'
       },
       bodyFont: {
-        size: 13
+        family: '"Inter", ui-sans-serif',
+        size: 14
       }
     }
   },
@@ -86,9 +91,11 @@ const chartOptions: ChartOptions<'line'> = {
         display: false
       },
       ticks: {
-        maxTicksLimit: 10,
+        color: '#6D7292',
+        maxTicksLimit: 5,
         font: {
-          size: 11
+          family: '"Inter", ui-sans-serif',
+          size: 14
         }
       }
     },
@@ -98,8 +105,10 @@ const chartOptions: ChartOptions<'line'> = {
         color: 'rgba(0, 0, 0, 0.05)'
       },
       ticks: {
+        color: '#6D7292',
         font: {
-          size: 11
+          family: '"Inter", ui-sans-serif',
+          size: 14
         }
       }
     }

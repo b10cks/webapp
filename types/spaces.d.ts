@@ -36,6 +36,7 @@ interface SpaceResource {
   team_id?: string | null
   settings: SpaceSettings
   user_count?: string
+  content_updated_at?: string | null
   created_at: string
   updated_at: string
 }

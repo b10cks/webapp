@@ -22,6 +22,7 @@ import AssetBlock from '~/components/blocks/AssetBlock.vue'
 import MultiAssetBlock from '~/components/blocks/MultiAssetBlock.vue'
 import MetaBlock from '~/components/blocks/MetaBlock.vue'
 import DateBlock from '~/components/blocks/DateBlock.vue'
+import { deepClone } from '@vue/devtools-shared'
 
 const emit = defineEmits(['delete', 'to-page', 'update:name', 'update:item'])
 
@@ -57,7 +58,7 @@ watch(props.item as SchemaType, (newItem) => {
 
 const updateValue = (key: string, value: unknown) => {
   emit('update:item', {
-    ...localItem.value,
+    ...deepClone(props.item),
     [key]: value
   })
 }

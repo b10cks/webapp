@@ -11,7 +11,7 @@ interface UploadOptions {
 export function useFileUpload() {
   const isUploading = ref(false)
   const error = ref<string | null>(null)
-  const apiClient = useApiClient()
+  const { client: apiClient } = useApiClient()
 
   const upload = async (
     file: File,
@@ -57,7 +57,7 @@ export function useFileUpload() {
       })
       xhr.open('POST', options.url)
       // Set headers
-      const authToken = apiClient.getAuthToken() || ''
+      const authToken = apiClient.getAuthHeaders()['Authorization']?.replace('Bearer ', '') || ''
       if (authToken) {
         xhr.setRequestHeader('Authorization', `Bearer ${authToken}`)
         xhr.setRequestHeader('accept', 'application/json')

@@ -68,7 +68,7 @@ const handleIconFile = async (file: File) => {
       toast.error('Upload succeeded but no icon returned')
     }
   } catch (e) {
-    toast.error(error.value || 'Failed to upload icon')
+    toast.error(e.message || 'Failed to upload icon')
   }
 }
 

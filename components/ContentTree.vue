@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TreeItemToggleEvent} from 'reka-ui';
 import { TreeItem, TreeRoot } from 'reka-ui'
 import RenamableTitle from '~/components/ui/RenamableTitle.vue'
 import { Button } from '~/components/ui/button'
@@ -69,6 +70,23 @@ const handleSelect = (contentId: string) => {
   })
 }
 
+const handleToggle = (e: TreeItemToggleEvent<ContentResource>) => {
+  if (e.detail.originalEvent instanceof PointerEvent) {
+    e.preventDefault()
+  }
+}
+
+const toggleExpanded = (contentId: string) => {
+  const expanded = settings.value.content.expanded || []
+  const index = expanded.indexOf(contentId)
+  if (index > -1) {
+    expanded.splice(index, 1)
+  } else {
+    expanded.push(contentId)
+  }
+  settings.value.content.expanded = expanded
+}
+
 // Set the current item based on the route
 const setCurrentItemFromRoute = () => {
   if (route.params.contentId) {
@@ -122,7 +140,7 @@ const initDelete = async (item: ContentResource) => {
       class="list-none select-none w-full p-2"
       :items="rootItems"
       :get-children="(item) => getChildren(data, item.id)"
-      :get-key="(item) => item.id"
+      :get-key="({id}) => id"
     >
       <h2
         v-if="title && !isLoading"
@@ -163,16 +181,18 @@ const initDelete = async (item: ContentResource) => {
           item.value.id === selectedItemId ? 'bg-border text-primary' : ''
         ]"
         @select="handleSelect(item.value.id)"
+        @toggle="(e) => handleToggle(e)"
       >
-        <span
+        <button
           v-if="item.value.children"
           class="w-3 h-4"
+          @click.stop.prevent="toggleExpanded(item.value.id)"
         >
           <Icon
             name="lucide:chevron-right"
             :class="['transition-transform duration-200', isExpanded && 'rotate-90']"
           />
-        </span>
+        </button>
         <span
           v-else
           class="size-3"

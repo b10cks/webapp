@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { TreeItem, TreeRoot } from 'reka-ui'
+import { TreeItem, type TreeItemToggleEvent, TreeRoot } from 'reka-ui'
 import RenamableTitle from '~/components/ui/RenamableTitle.vue'
 import { Button } from '~/components/ui/button'
 import CreateFolderDialog from '~/components/assets/CreateFolderDialog.vue'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu'
+import type { ContentResource } from '~/types/contents'
 
 const props = defineProps<{
   spaceId: string
@@ -105,6 +106,23 @@ function triggerCreateFolderDialog(pid: string | null = null) {
   showCreateFolderDialog.value = true
 }
 
+const handleToggle = (e: TreeItemToggleEvent<AssetFolderResource>) => {
+  if (e.detail.originalEvent instanceof PointerEvent) {
+    e.preventDefault()
+  }
+}
+
+const toggleExpanded = (folderId: string) => {
+  const expanded = settings.value.assets.expanded || []
+  const index = expanded.indexOf(folderId)
+  if (index > -1) {
+    expanded.splice(index, 1)
+  } else {
+    expanded.push(folderId)
+  }
+  settings.value.assets.expanded = expanded
+}
+
 function handleDragOver(event: DragEvent, folderId: string) {
   event.preventDefault()
   if (!event.dataTransfer) return
@@ -172,6 +190,7 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
     </div>
     <TreeItem
       v-for="item in flattenItems"
+      v-slot="{ isExpanded }"
       :key="item._id"
       v-bind="item.bind"
       :style="{ 'padding-left': `${item.level - 0.5}rem` }"
@@ -186,17 +205,22 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
       :aria-selected="item.value.id === selectedFolderId"
       :aria-expanded="item.value.children_count ? (expanded.includes(item.value.id)).toString() : undefined"
       @select="selectedFolderId = item.value.id"
+      @toggle="(e) => handleToggle(e)"
       @drop="handleDrop($event, item.value.id)"
       @dragover="handleDragOver($event, item.value.id)"
       @dragleave="handleDragLeave"
     >
       <div class="flex items-center w-5">
-        <Icon
+        <button
           v-if="item.value.children_count"
-          name="lucide:chevron-right"
-          :class="['transition-transform duration-200', expanded.includes(item.value.id) && 'rotate-90']"
-          aria-hidden="true"
-        />
+          @click.stop.prevent="toggleExpanded(item.value.id)"
+        >
+          <Icon
+            name="lucide:chevron-right"
+            :class="['transition-transform duration-200', isExpanded && 'rotate-90']"
+            aria-hidden="true"
+          />
+        </button>
       </div>
       <div class="flex gap-2 items-center flex-1">
         <Icon

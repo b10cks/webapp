@@ -103,8 +103,6 @@ const currentItem = computed((): ContentItem | null => props.itemId ? contentTre
 const breadcrumbs = computed((): Breadcrumb[] => props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : [])
 const id = computed((): string => props.itemId || rootBlock?.slug || '')
 
-const { hasClipboardItem, clearClipboard } = useGlobalClipboard()
-
 const currentBlock = computed((): BlockResource | null => {
   if (!currentItem.value) {
     if (props.blockSlug) {
@@ -203,18 +201,5 @@ const updateItem = (updatedValue: unknown): void => {
         </div>
       </TabsContent>
     </TabsRoot>
-    <Button
-      v-if="hasClipboardItem"
-      title="Clear clipboard"
-      size="xs"
-      variant="ghost"
-      class="absolute bottom-4 left-1/2 -translate-x-1/2 z-50"
-      @click="clearClipboard"
-    >
-      <Icon
-        name="lucide:trash-2"
-      />
-      <span>Clear Clipboard</span>
-    </Button>
   </div>
 </template>

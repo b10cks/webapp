@@ -9,14 +9,17 @@ import { ScrollArea } from '~/components/ui/scroll-area'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import ContentHeader from '~/components/content/ContentHeader.vue'
 import EditorComponent from '~/components/editor/EditorComponent.vue'
+import { Button } from '~/components/ui/button'
+import { useGlobalClipboard } from '~/composables/useGlobalClipboard'
 
 const route = useRoute()
 const router = useRouter()
 const spaceId = computed<string>(() => route.params.space as string)
 const contentId = computed<string>(() => route.params.contentId as string)
 
-const { useContentQuery } = useContent(spaceId)
+const { hasClipboardItem, clearClipboard } = useGlobalClipboard()
 
+const { useContentQuery } = useContent(spaceId)
 const { data: originalContent } = useContentQuery(contentId)
 
 const content = ref<ContentResource | null>(null)
@@ -143,6 +146,19 @@ provide('updateHoverItem', (id: string) => {
             :item-id="selectedItemId"
             @navigate="handleNavigate"
           />
+          <Button
+            v-if="hasClipboardItem"
+            title="Clear clipboard"
+            size="xs"
+            variant="ghost"
+            class="absolute bottom-4 left-1/2 -translate-x-1/2 z-50"
+            @click="clearClipboard"
+          >
+            <Icon
+              name="lucide:trash-2"
+            />
+            <span>Clear Clipboard</span>
+          </Button>
         </TabsContent>
         <TabsContent
           value="info"

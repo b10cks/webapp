@@ -40,7 +40,7 @@ const status = computed<{ color: string, label: string }>(() => {
 <template>
   <div class="flex items-center gap-3">
     <div v-if="content">
-      <h1 class="flex items-center gap-3">
+      <h1 class="flex items-center gap-2 -mb-1">
         <span class="text-lg font-semibold text-primary">{{ content?.name }}</span>
         <Badge
           size="sm"
@@ -49,7 +49,7 @@ const status = computed<{ color: string, label: string }>(() => {
           {{ $t(`labels.contents.status.${status.label}`) }}
         </Badge>
       </h1>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center">
         <Breadcrumb>
           <BreadcrumbList>
             <template

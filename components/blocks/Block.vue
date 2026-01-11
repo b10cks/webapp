@@ -74,10 +74,10 @@ const updateValue = (key: string, value: unknown) => {
       >
         <Icon name="lucide:grip-vertical"/>
       </div>
-      <BlockType :type="item.type"/>
+      <BlockType :type="item?.type"/>
       <AccordionTrigger class="cursor-pointer flex flex-col grow text-left">
-        <h4 class="font-bold">{{ item.name || name }}</h4>
-        <div class="text-sm">{{ $t(`labels.blocks.fieldTypes.${item.type}.label`) }}</div>
+        <h4 class="font-bold">{{ item?.name || name }}</h4>
+        <div class="text-sm">{{ $t(`labels.blocks.fieldTypes.${item?.type}.label`) }}</div>
       </AccordionTrigger>
       <div
         class="ml-auto flex gap-3 items-center group-hover:opacity-100 opacity-0 transition-opacity duration-200 ease-in-out"

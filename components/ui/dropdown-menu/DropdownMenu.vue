@@ -8,7 +8,10 @@ const forwarded = useForwardPropsEmits(props, emits)
 </script>
 
 <template>
-  <DropdownMenuRoot v-bind="forwarded">
-    <slot/>
+  <DropdownMenuRoot
+    v-slot="slotProps"
+    v-bind="forwarded"
+  >
+    <slot v-bind="slotProps"/>
   </DropdownMenuRoot>
 </template>

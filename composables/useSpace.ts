@@ -2,20 +2,19 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { queryKeys } from './useQueryClient'
 import { toast } from 'vue-sonner'
 import { api } from '~/api'
-import type { MaybeRefOrComputed } from '~/types'
 import type { SpaceQueryParams } from '~/api/resources/spaces'
+import type { MaybeRefOrGetter } from '@vue/reactivity'
 
 export function useSpaces() {
   const queryClient = useQueryClient()
 
-  const useSpacesQuery =  (paramsRef: MaybeRefOrComputed<SpaceQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
+  const useSpacesQuery =  (params: MaybeRefOrGetter<SpaceQueryParams>) => {
     return useQuery({
-      queryKey: queryKeys.spaces.list(params.value),
+      queryKey: queryKeys.spaces.list(params),
       queryFn: async () => {
         const response = await api.spaces.index({
           sort: '+name',
-          ...params.value,
+          ...toValue(params),
         })
         return response.data
       },

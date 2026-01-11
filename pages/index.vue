@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
 import type { Translation } from 'nuxt-i18n-micro-types/src'
+import { SelectTrigger } from 'reka-ui'
+import { useClipboard } from '@vueuse/core'
 import { Badge } from '~/components/ui/badge'
 import {
   DropdownMenu,
@@ -16,14 +18,48 @@ import { NuxtLink } from '#components'
 import TeamSelector from '~/components/TeamSelector.vue'
 import { useAlertDialog } from '~/composables/useAlertDialog'
 import type { SpaceQueryParams } from '~/api/resources/spaces'
+import { Select, SelectContent, SelectItem } from '~/components/ui/select'
 
 const { $t } = useI18n()
 const { useSpacesQuery, useArchiveSpaceMutation } = useSpaces()
 const { formatRelativeTime } = useFormat()
+const route = useRoute()
 const router = useRouter()
 
 const { selectedTeam } = useGlobalTeam()
-const spaceFilter = ref<SpaceQueryParams>({})
+const sort = computed({
+  get() {
+    return (route.query.sort as string) || '-updated_at'
+  },
+  set(value: string) {
+    router.replace({
+      query: {
+        ...route.query,
+        sort: value
+      }
+    })
+  }
+})
+const archived = computed({
+  get() {
+    return route.query.archived === 'true'
+  },
+  set(value: boolean) {
+    router.replace({
+      query: {
+        ...route.query,
+        archived: value ? 'true' : undefined
+      }
+    })
+  }
+})
+
+const spaceFilter = computed<SpaceQueryParams>(() => {
+  return {
+    archived: archived.value || undefined,
+    sort: sort.value || '-updated_at'
+  }
+})
 
 const { data: spaces } = useSpacesQuery(spaceFilter)
 
@@ -57,7 +93,13 @@ const actions: Array<Action | string> = [
       window.open(s.id, '_blank')
     }
   },
-  { icon: 'lucide:copy', label: $t('actions.copyLink') },
+  {
+    icon: 'lucide:copy', label: $t('actions.copyLink'), action: (s) => {
+      const url = new URL(window.location.origin + router.resolve({ name: 'space', params: { space: s.id } }).href)
+      console.log(url.toString())
+      useClipboard().copy(url.toString())
+    }
+  },
   {
     icon: 'lucide:cog', label: $t('actions.settings'), action: (s) => {
       router.push({ name: 'space-settings', params: { space: s.id } })
@@ -70,6 +112,10 @@ const actions: Array<Action | string> = [
     action: handleArchive
   }
 ]
+
+const getSortLabel = (sort: string) => {
+  return $t(sort.replace(/^[+-]?(\w*)/, 'labels.sort.$1') + (sort.startsWith('-') ? 'Desc' : 'Asc'))
+}
 
 const teamRelatedSpaces = computed(() => {
   return spaces.value?.filter(space => space.team_id === selectedTeam.value?.id) || []
@@ -90,19 +136,14 @@ const formatLastUpdated = (space: SpaceResource) => {
     <NuxtLayout name="start">
       <AppHeader>
         <div class="flex items-start">
-          <TeamSelector
-            size="sm"
-            class="w-md"
-          />
+          <TeamSelector size="sm"/>
         </div>
         <template #headerActions>
           <div class="flex items-center gap-3">
             <template v-if="selectedTeam">
               <Button size="sm">
-                <Icon
-                  name="lucide:users"
-                />
-                {{ selectedTeam.user_count }}
+                <Icon name="lucide:users"/>
+                <span>{{ selectedTeam.user_count }}</span>
               </Button>
               <Button
                 size="sm"
@@ -123,41 +164,53 @@ const formatLastUpdated = (space: SpaceResource) => {
         </template>
       </AppHeader>
       <div class="grow w-full bg-background pt-14 flex">
-        <aside class="w-56 bg-surface flex-shrink-0">
+        <aside class="w-56 bg-surface shrink-0">
           <div class="flex flex-col gap-4 p-3">
             <div/>
             <hr class="border-border">
-            <div class="flex flex-col gap-2">
-              <div class="font-semibold text-sm text-primary">
-                Spaces
-              </div>
-              <Button
-                class="justify-start"
-                @click="spaceFilter.archived = undefined"
+            <div class="flex flex-col gap-px text-sm">
+              <h4 class="font-semibold text-primary mb-2">
+                {{ $t('labels.spaces.title') }}
+              </h4>
+              <NuxtLink
+                class="flex items-center gap-1 font-medium rounded-md p-2"
+                :class="[spaceFilter.archived ? '' : 'bg-secondary text-primary']"
+                :to="{ name: 'index', query: { ...route.query, archived: undefined } }"
               >
-                <Icon
-                  name="lucide:layout-grid"
-                />
-                All
-              </Button>
-              <Button
-                class="justify-start"
-                @click="spaceFilter.archived = true"
+                <Icon name="lucide:layout-grid"/>
+                <span>All</span>
+              </NuxtLink>
+              <NuxtLink
+                class="flex items-center gap-1 font-medium rounded-md p-2"
+                :class="[spaceFilter.archived ? 'bg-secondary text-primary' : '']"
+                :to="{ name: 'index', query: { ...route.query, archived: 'true' } }"
               >
-                <Icon
-                  name="lucide:trash-2"
-                />
-                Archived
-              </Button>
+                <Icon name="lucide:trash-2"/>
+                <span>Archived</span>
+              </NuxtLink>
             </div>
           </div>
         </aside>
         <main class="content-grid">
           <div class="flex flex-col gap-8">
-            <ContentHeader
-              header="Welcome to b10cks"
-              description="Create and share your blocks with the world. Start by creating a new space or exploring existing ones."
-            />
+            <ContentHeader :header="(selectedTeam?.name ?? '') + ' ' + $t('labels.spaces.title')">
+              <Select v-model="sort">
+                <SelectTrigger class="flex items-center gap-2">
+                  <span class="truncate">
+                    {{ getSortLabel(sort) }}
+                  </span>
+                  <Icon name="lucide:chevron-down"/>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="+name">{{ $t('labels.sort.nameAsc') }}</SelectItem>
+                  <SelectItem value="-name">{{ $t('labels.sort.nameDesc') }}</SelectItem>
+                  <SelectItem value="+created_at">{{ $t('labels.sort.created_atAsc') }}</SelectItem>
+                  <SelectItem value="-created_at">{{ $t('labels.sort.created_atDesc') }}</SelectItem>
+                  <SelectItem value="+updated_at">{{ $t('labels.sort.updated_atAsc') }}</SelectItem>
+                  <SelectItem value="-updated_at">{{ $t('labels.sort.updated_atDesc') }}</SelectItem>
+                </SelectContent>
+              </Select>
+            </ContentHeader>
             <div class="flex gap-8">
               <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4">
                 <NuxtLink
@@ -185,25 +238,29 @@ const formatLastUpdated = (space: SpaceResource) => {
                   <div class="flex items-center">
                     <div>
                       <h4 class="font-semibold text-primary">{{ space.name }}</h4>
-                      <p class="text-sm text-muted">{{ $t('labels.fields.lastUpdated', {timeAgo: formatLastUpdated(space)}) }}</p>
+                      <p class="text-sm text-muted">
+                        {{ $t('labels.fields.lastUpdated', { timeAgo: formatLastUpdated(space) }) }}</p>
                     </div>
                     <div class="ml-auto grid">
-                      <div class="group-hover:hidden grid-area-stack flex items-center">
-                        <Badge size="xs">Free
-                        </Badge>
-                      </div>
-                      <DropdownMenu>
+                      <DropdownMenu v-slot="{ open }">
+                        <div
+                          class="group-hover:hidden grid-area-stack flex items-center"
+                          :class="[open ? 'hidden' : '']"
+                        >
+                          <Badge size="xs">Free</Badge>
+                        </div>
                         <DropdownMenuTrigger class="grid-area-stack">
                           <Button
                             variant="outline"
                             size="icon"
                             class="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                            @click.prevent="() => {}"
+                            :class="[open ? 'opacity-100' : '']"
+                            @click.prevent
                           >
                             <Icon name="lucide:ellipsis"/>
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent>
+                        <DropdownMenuContent align="start">
                           <template
                             v-for="(action, i) in actions"
                             :key="`menu-${i}`"
@@ -214,7 +271,7 @@ const formatLastUpdated = (space: SpaceResource) => {
                               @select="action.action ? action.action(space) : () => {}"
                             >
                               <Icon
-                                v-if="false && action.icon"
+                                v-if="action.icon"
                                 :name="action.icon"
                               />
                               <span>{{ action.label }}</span>

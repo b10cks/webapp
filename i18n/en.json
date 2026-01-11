@@ -449,6 +449,14 @@
     "spaces": {
       "title": "Spaces"
     },
+    "sort": {
+      "nameAsc": "Name (A-Z)",
+      "nameDesc": "Name (Z-A)",
+      "updated_atDesc": "Last Updated (Newest)",
+      "updated_atAsc": "Last Updated (Oldest)",
+      "created_atDesc": "Created At (Newest)",
+      "created_atAsc": "Created At (Oldest)"
+    },
     "releases": {
       "title": "Releases",
       "description": "Manage your content releases and deployments.",

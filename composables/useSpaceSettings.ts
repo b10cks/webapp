@@ -9,19 +9,21 @@ export default function useSpaceSettings(spaceId: string) {
         mode: 'changes',
         panelHeight: 60,
       },
-      expanded: []
+      expanded: [],
     },
     assets: {
       gridSize: 'md',
-      expanded: []
+      expanded: [],
     },
     dataEntries: {
       mode: 'single',
       autoSave: true,
-    }
+    },
   }
 
-  const settings = useStorage(`space-${unref(spaceId)}-settings`, defaults, undefined, { mergeDefaults: true })
+  const settings = useStorage(`space-${unref(spaceId)}-settings`, defaults, undefined, {
+    mergeDefaults: true,
+  })
 
   return {
     // state
@@ -30,6 +32,6 @@ export default function useSpaceSettings(spaceId: string) {
     // methods
     reset() {
       settings.value = defaults
-    }
+    },
   }
 }

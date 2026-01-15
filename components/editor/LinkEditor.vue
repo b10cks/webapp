@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import { FormField, InputField } from '~/components/ui/form'
 import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
@@ -49,26 +55,30 @@ const rootItems = computed(() => getRootItems(contentMenu.value) || [])
 const localValue = ref<LinkValue>({
   type: 'url',
   url: '',
-  target: '_self'
+  target: '_self',
 })
 
 const showInternalPicker = ref(false)
 const showElementsForContent = ref<string | null>(null)
 
 // Sync with prop
-watch(() => props.modelValue, (newValue) => {
-  if (newValue) {
-    localValue.value = { ...newValue }
-  } else {
-    localValue.value = { type: 'url', url: '', target: '_self' }
-  }
-}, { immediate: true, deep: true })
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue) {
+      localValue.value = { ...newValue }
+    } else {
+      localValue.value = { type: 'url', url: '', target: '_self' }
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 // Computed properties
 const linkTypes = computed(() => [
   { value: 'url', label: 'URL' },
   { value: 'email', label: 'Email' },
-  { value: 'internal', label: 'Internal Page' }
+  { value: 'internal', label: 'Internal Page' },
 ])
 
 const targetOptions = computed(() => [
@@ -76,7 +86,7 @@ const targetOptions = computed(() => [
   { value: '_self', label: 'Same Window' },
   { value: '_blank', label: 'New Window' },
   { value: '_parent', label: 'Parent Frame' },
-  { value: '_top', label: 'Top Frame' }
+  { value: '_top', label: 'Top Frame' },
 ])
 
 // Get content elements for selected page (mock implementation)
@@ -85,7 +95,7 @@ const getContentElements = (contentId: string) => {
     { id: 'header', name: 'Header Section' },
     { id: 'main-content', name: 'Main Content' },
     { id: 'sidebar', name: 'Sidebar' },
-    { id: 'footer', name: 'Footer Section' }
+    { id: 'footer', name: 'Footer Section' },
   ]
 }
 
@@ -170,7 +180,7 @@ const getSelectedContentName = () => {
 </script>
 
 <template>
-  <div class="space-y-4 pl-3 border-l-1 border-l-border">
+  <div class="space-y-4 border-l-1 border-l-border pl-3">
     <FormField
       name="link-type"
       label="Link Type"
@@ -180,7 +190,7 @@ const getSelectedContentName = () => {
         @update:model-value="handleTypeChange"
       >
         <SelectTrigger>
-          <SelectValue placeholder="Select link type"/>
+          <SelectValue placeholder="Select link type" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem
@@ -209,7 +219,7 @@ const getSelectedContentName = () => {
           @update:model-value="handleTargetChange"
         >
           <SelectTrigger>
-            <SelectValue/>
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem
@@ -245,17 +255,15 @@ const getSelectedContentName = () => {
       >
         <div class="flex gap-2">
           <button
-            class="flex-1 px-3 py-2 bg-input border-input-border rounded-md border min-h-[2.5rem] flex items-center"
+            class="flex min-h-[2.5rem] flex-1 items-center rounded-md border border-input-border bg-input px-3 py-2"
             @click="showInternalPicker = true"
           >
             <span
               v-if="localValue.content"
-              class="text-sm text-input-foreground font-semibold truncate flex items-center gap-1"
+              class="text-input-foreground flex items-center gap-1 truncate text-sm font-semibold"
             >
               {{ getSelectedContentName() }}
-              <template
-                v-if="localValue.anchor"
-              >
+              <template v-if="localValue.anchor">
                 <span>#{{ localValue.anchor }}</span>
               </template>
             </span>
@@ -267,7 +275,7 @@ const getSelectedContentName = () => {
             </span>
             <Icon
               name="lucide:search"
-              class="w-4 h-4 ml-auto"
+              class="ml-auto h-4 w-4"
             />
           </button>
         </div>
@@ -281,7 +289,7 @@ const getSelectedContentName = () => {
           @update:model-value="handleTargetChange"
         >
           <SelectTrigger>
-            <SelectValue/>
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem

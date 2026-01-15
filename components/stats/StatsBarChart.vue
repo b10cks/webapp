@@ -9,7 +9,7 @@ import {
   Legend,
   LinearScale,
   Title,
-  Tooltip
+  Tooltip,
 } from 'chart.js'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
@@ -29,21 +29,21 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
-  color: 'rgba(139, 92, 246, 0.8)'
+  color: 'rgba(139, 92, 246, 0.8)',
 })
 
 const chartData = computed(() => ({
-  labels: props.data.map(item => item.name),
+  labels: props.data.map((item) => item.name),
   datasets: [
     {
       label: props.yAxisLabel || props.title,
-      data: props.data.map(item => item.value),
+      data: props.data.map((item) => item.value),
       backgroundColor: props.color,
       borderColor: props.color.replace('0.8', '1'),
       borderWidth: 1,
-      borderRadius: 4
-    }
-  ]
+      borderRadius: 4,
+    },
+  ],
 }))
 
 const chartOptions: ChartOptions<'bar'> = {
@@ -51,43 +51,43 @@ const chartOptions: ChartOptions<'bar'> = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      display: false
+      display: false,
     },
     tooltip: {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       padding: 12,
       titleFont: {
-        size: 14
+        size: 14,
       },
       bodyFont: {
-        size: 13
-      }
-    }
+        size: 13,
+      },
+    },
   },
   scales: {
     x: {
       grid: {
-        display: false
+        display: false,
       },
       ticks: {
         maxTicksLimit: 10,
         font: {
-          size: 11
-        }
-      }
+          size: 11,
+        },
+      },
     },
     y: {
       beginAtZero: true,
       grid: {
-        color: 'rgba(0, 0, 0, 0.05)'
+        color: 'rgba(0, 0, 0, 0.05)',
       },
       ticks: {
         font: {
-          size: 11
-        }
-      }
-    }
-  }
+          size: 11,
+        },
+      },
+    },
+  },
 }
 </script>
 

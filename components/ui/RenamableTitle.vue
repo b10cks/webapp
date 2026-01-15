@@ -2,17 +2,21 @@
 import { onClickOutside } from '@vueuse/core'
 import type { HTMLAttributes } from 'vue'
 
-const props = withDefaults(defineProps<{
-  name: string,
-  fallback?: string,
-  disabled?: boolean,
-  inputClass?: string
-  class?: HTMLAttributes['class']
-}>(), {
-  inputClass: 'rounded-md w-full px-1 flex shadow-sm transition-colors placeholder:text-muted focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50',
-  disabled: false,
-  fallback: undefined
-})
+const props = withDefaults(
+  defineProps<{
+    name: string
+    fallback?: string
+    disabled?: boolean
+    inputClass?: string
+    class?: HTMLAttributes['class']
+  }>(),
+  {
+    inputClass:
+      'rounded-md w-full px-1 flex shadow-sm transition-colors placeholder:text-muted focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50',
+    disabled: false,
+    fallback: undefined,
+  }
+)
 
 const emit = defineEmits<{
   (e: 'update', newName: string, itemId?: string | number): void
@@ -71,11 +75,14 @@ function handleKeyDown(event: KeyboardEvent) {
   }
 }
 
-watch(() => props.name, (newValue) => {
-  if (!isEditing.value) {
-    inputValue.value = newValue
+watch(
+  () => props.name,
+  (newValue) => {
+    if (!isEditing.value) {
+      inputValue.value = newValue
+    }
   }
-})
+)
 </script>
 
 <template>
@@ -89,7 +96,7 @@ watch(() => props.name, (newValue) => {
     @keydown="handleKeyDown"
     @blur="submitRename"
     @click.stop
-  >
+  />
   <span
     v-else
     type="button"

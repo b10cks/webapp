@@ -8,7 +8,7 @@ import {
   Legend,
   LinearScale,
   Title,
-  Tooltip
+  Tooltip,
 } from 'chart.js'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
@@ -31,19 +31,19 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
-  stacked: false
+  stacked: false,
 })
 
 const chartData = computed(() => ({
   labels: props.labels,
-  datasets: props.datasets.map(dataset => ({
+  datasets: props.datasets.map((dataset) => ({
     label: dataset.label,
     data: dataset.data,
     backgroundColor: dataset.color,
     borderColor: dataset.color.replace('0.8', '1'),
     borderWidth: 1,
-    borderRadius: 4
-  }))
+    borderRadius: 4,
+  })),
 }))
 
 const chartOptions: ChartOptions<'bar'> = {
@@ -51,7 +51,7 @@ const chartOptions: ChartOptions<'bar'> = {
   maintainAspectRatio: false,
   interaction: {
     mode: 'index',
-    intersect: false
+    intersect: false,
   },
   plugins: {
     legend: {
@@ -59,49 +59,49 @@ const chartOptions: ChartOptions<'bar'> = {
       labels: {
         padding: 15,
         font: {
-          size: 12
+          size: 12,
         },
         usePointStyle: true,
-        pointStyle: 'rect'
-      }
+        pointStyle: 'rect',
+      },
     },
     tooltip: {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       padding: 12,
       titleFont: {
-        size: 14
+        size: 14,
       },
       bodyFont: {
-        size: 13
-      }
-    }
+        size: 13,
+      },
+    },
   },
   scales: {
     x: {
       stacked: props.stacked,
       grid: {
-        display: false
+        display: false,
       },
       ticks: {
         maxTicksLimit: 10,
         font: {
-          size: 11
-        }
-      }
+          size: 11,
+        },
+      },
     },
     y: {
       stacked: props.stacked,
       beginAtZero: true,
       grid: {
-        color: 'rgba(0, 0, 0, 0.05)'
+        color: 'rgba(0, 0, 0, 0.05)',
       },
       ticks: {
         font: {
-          size: 11
-        }
-      }
-    }
-  }
+          size: 11,
+        },
+      },
+    },
+  },
 }
 </script>
 

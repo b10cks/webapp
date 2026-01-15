@@ -1,4 +1,3 @@
-
 interface SpaceEnvironment {
   url: string
   name: string
@@ -41,7 +40,6 @@ interface SpaceResource {
   updated_at: string
 }
 
-
 interface CreateSpacePayload {
   name: string
   slug: string
@@ -62,13 +60,13 @@ interface UpdateSpacePayload {
 }
 
 interface Token {
-  id: string;
-  name: string;
-  token: string;
-  abilities: string[];
-  expires_at: string | null;
-  execution_count: number;
-  last_used_at: string | null;
-  created_at: string;
-  updated_at: string;
+  id: string
+  name: string
+  token: string
+  abilities: string[]
+  expires_at: string | null
+  execution_count: number
+  last_used_at: string | null
+  created_at: string
+  updated_at: string
 }

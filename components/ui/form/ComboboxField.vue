@@ -10,14 +10,14 @@ import {
   ComboboxGroup,
   ComboboxInput,
   ComboboxItem,
-  ComboboxList
+  ComboboxList,
 } from '~/components/ui/combobox'
 import {
   TagsInput,
   TagsInputInput,
   TagsInputItem,
   TagsInputItemDelete,
-  TagsInputItemText
+  TagsInputItemText,
 } from '~/components/ui/tags-input'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
@@ -59,7 +59,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'update:modelValue', payload: T[] | T): void
-  (e: 'select' | 'remove', payload: { option: ComboboxOption<T>, value: T }): void
+  (e: 'select' | 'remove', payload: { option: ComboboxOption<T>; value: T }): void
 }>()
 
 const modelValue = useVModel(props, 'modelValue', emits, {
@@ -76,9 +76,13 @@ const selectedValues = computed(() => {
   return modelValue.value ? [modelValue.value] : []
 })
 
-const defaultFilterFn = (option: ComboboxOption<T>, search: string, selectedValues: T[]): boolean => {
+const defaultFilterFn = (
+  option: ComboboxOption<T>,
+  search: string,
+  selectedValues: T[]
+): boolean => {
   const searchLower = search.toLowerCase()
-  const isSelected = selectedValues.some(selected => {
+  const isSelected = selectedValues.some((selected) => {
     const optionValue = props.valueFn ? props.valueFn(option) : option.value
     return selected === optionValue
   })
@@ -96,9 +100,7 @@ const defaultFilterFn = (option: ComboboxOption<T>, search: string, selectedValu
 
 const filteredOptions = computed(() => {
   const filterFn = props.filterFn || defaultFilterFn
-  return props.options.filter(option =>
-    filterFn(option, searchValue.value, selectedValues.value)
-  )
+  return props.options.filter((option) => filterFn(option, searchValue.value, selectedValues.value))
 })
 
 const getDisplayValue = (option: ComboboxOption<T>): string => {
@@ -110,7 +112,7 @@ const getOptionValue = (option: ComboboxOption<T>): T => {
 }
 
 const getOptionByValue = (value: T): ComboboxOption<T> | undefined => {
-  return props.options.find(option => {
+  return props.options.find((option) => {
     const optionValue = getOptionValue(option)
     return optionValue === value
   })
@@ -156,7 +158,6 @@ const emptyTextComputed = computed(() => {
   }
   return props.emptyText || 'common.no_results'
 })
-
 </script>
 
 <template>
@@ -188,10 +189,10 @@ const emptyTextComputed = computed(() => {
               :key="value"
               :value="value"
             >
-              <TagsInputItemText>{{ getOptionByValue(value)?.label || String(value) }}</TagsInputItemText>
-              <TagsInputItemDelete
-                @click="handleRemove(value)"
-              />
+              <TagsInputItemText>{{
+                getOptionByValue(value)?.label || String(value)
+              }}</TagsInputItemText>
+              <TagsInputItemDelete @click="handleRemove(value)" />
             </TagsInputItem>
             <ComboboxInput
               v-if="searchable !== false"
@@ -200,7 +201,7 @@ const emptyTextComputed = computed(() => {
               :disabled="disabled || readonly"
               as-child
             >
-              <TagsInputInput/>
+              <TagsInputInput />
             </ComboboxInput>
           </TagsInput>
           <ComboboxInput

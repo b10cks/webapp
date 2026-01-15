@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { ComboboxField, InputField } from '~/components/ui/form'
 
 const { $t } = useI18n()
@@ -14,7 +13,6 @@ const options = ['image', 'video', 'audio', 'document', 'other', 'all'].map((typ
   value: type as FileTypes,
   label: $t(`labels.assets.fileTypes.${type}`),
 }))
-
 </script>
 
 <template>

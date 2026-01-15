@@ -16,13 +16,13 @@ const { isLoading, data: block } = useBlockQuery(blockId)
 const { mutate: updateBlock } = useUpdateBlockMutation()
 
 useSeoMeta({
-  title: computed(() => block.value?.name)
+  title: computed(() => block.value?.name),
 })
 
 const submit = async (b: BlockResource) => {
   updateBlock({
     id: b.id,
-    payload: { ...b }
+    payload: { ...b },
   })
 }
 </script>
@@ -30,16 +30,14 @@ const submit = async (b: BlockResource) => {
 <template>
   <div>
     <NuxtLayout>
-      <BlockMenu :space-id="spaceId"/>
+      <BlockMenu :space-id="spaceId" />
       <ScrollArea class="flex grow bg-background">
-        <div v-if="isLoading">
-          Loading ...
-        </div>
+        <div v-if="isLoading">Loading ...</div>
         <div
           v-if="block"
-          class="max-w-xl mx-auto w-full gap-6 flex-col flex pb-6"
+          class="mx-auto flex w-full max-w-xl flex-col gap-6 pb-6"
         >
-          <ContentHeader :header="block.name"/>
+          <ContentHeader :header="block.name" />
           <BlockEdit
             v-slot="{ editBlock }"
             :block="block"
@@ -53,7 +51,7 @@ const submit = async (b: BlockResource) => {
                 variant="primary"
                 class="ml-auto"
                 @click="submit(editBlock)"
-              >{{ $t('actions.blocks.save') }}
+                >{{ $t('actions.blocks.save') }}
               </Button>
             </div>
           </BlockEdit>

@@ -1,6 +1,8 @@
 import type { BaseQueryParams } from '~/types'
-import { BaseResource } from './base-resource'
+
 import type { ApiClient } from '../client'
+
+import { BaseResource } from './base-resource'
 
 export interface AssetTagsQueryParams extends BaseQueryParams {
   q?: string

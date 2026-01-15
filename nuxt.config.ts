@@ -1,12 +1,11 @@
 import tailwindcss from '@tailwindcss/vite'
 import svgLoader from 'vite-svg-loader'
 
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-22',
   components: {
-    dirs: []
+    dirs: [],
   },
 
   future: {
@@ -14,7 +13,7 @@ export default defineNuxtConfig({
   },
 
   devtools: {
-    enabled: false
+    enabled: false,
   },
 
   modules: [
@@ -29,15 +28,15 @@ export default defineNuxtConfig({
     registerType: 'autoUpdate',
     workbox: {
       navigateFallback: '/',
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
     client: {
       installPrompt: true,
-      periodicSyncForUpdates: 20
+      periodicSyncForUpdates: 20,
     },
     devOptions: {
       enabled: true,
-      type: 'module'
+      type: 'module',
     },
     manifest: {
       name: 'b10cks CMS',
@@ -51,15 +50,15 @@ export default defineNuxtConfig({
         {
           src: '/web-app-manifest-192x192.png',
           sizes: '192x192',
-          type: 'image/png'
+          type: 'image/png',
         },
         {
           src: '/web-app-manifest-512x512.png',
           sizes: '512x512',
-          type: 'image/png'
-        }
-      ]
-    }
+          type: 'image/png',
+        },
+      ],
+    },
   },
 
   image: {
@@ -69,10 +68,10 @@ export default defineNuxtConfig({
         name: 'ilum',
         provider: '~/lib/providers/ilum',
         options: {
-          baseURL: process.env.NUXT_ILUM_BASE_URL
-        }
-      }
-    }
+          baseURL: process.env.NUXT_ILUM_BASE_URL,
+        },
+      },
+    },
   },
 
   runtimeConfig: {
@@ -101,10 +100,22 @@ export default defineNuxtConfig({
       failOnError: false,
     },
     devProxy: {
-      '/auth': { target: `${process.env.NUXT_API_PROXY_URL}auth`, changeOrigin: true, headers: { 'accept-encoding': 'identity' } },
-      '/mgmt/v1': { target: `${process.env.NUXT_API_PROXY_URL}mgmt/v1`, changeOrigin: true, headers: { 'accept-encoding': 'identity' } },
-      '/api/v1': { target: `${process.env.NUXT_API_PROXY_URL}api/v1`, changeOrigin: true, headers: { 'accept-encoding': 'identity' } },
-    }
+      '/auth': {
+        target: `${process.env.NUXT_API_PROXY_URL}auth`,
+        changeOrigin: true,
+        headers: { 'accept-encoding': 'identity' },
+      },
+      '/mgmt/v1': {
+        target: `${process.env.NUXT_API_PROXY_URL}mgmt/v1`,
+        changeOrigin: true,
+        headers: { 'accept-encoding': 'identity' },
+      },
+      '/api/v1': {
+        target: `${process.env.NUXT_API_PROXY_URL}api/v1`,
+        changeOrigin: true,
+        headers: { 'accept-encoding': 'identity' },
+      },
+    },
   },
 
   devServer: {
@@ -123,7 +134,7 @@ export default defineNuxtConfig({
   router: {
     options: {
       scrollBehaviorType: 'smooth',
-    }
+    },
   },
 
   icon: {
@@ -136,7 +147,7 @@ export default defineNuxtConfig({
     customCollections: [
       {
         prefix: 'b10cks',
-        dir: './assets/icons'
+        dir: './assets/icons',
       },
     ],
   },
@@ -155,7 +166,8 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    plugins: [svgLoader({
+    plugins: [
+      svgLoader({
         svgoConfig: {
           plugins: [
             {
@@ -184,7 +196,7 @@ export default defineNuxtConfig({
           ],
         },
       }),
-      tailwindcss()
+      tailwindcss(),
     ],
   },
 })

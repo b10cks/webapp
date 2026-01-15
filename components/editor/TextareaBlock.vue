@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { TextField } from '~/components/ui/form'
 
 const value = defineModel<string>()
@@ -7,7 +6,6 @@ const value = defineModel<string>()
 defineProps<{
   item: TextareaSchema & { key: string }
 }>()
-
 </script>
 
 <template>

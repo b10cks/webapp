@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableSortableHead
+  TableSortableHead,
 } from '/components/ui/table'
 import DataSourcesIcon from '~/assets/images/datasources.svg?component'
 import { Button } from '~/components/ui/button'
@@ -64,7 +64,7 @@ const possibleFilters = [
       { value: true, label: $t('labels.datasets.status.active') },
       { value: false, label: $t('labels.datasets.status.inactive') },
     ],
-  }
+  },
 ]
 
 const sortOptions = [
@@ -77,7 +77,7 @@ const sortOptions = [
 
 const sortBy = ref<{ column: string; direction: 'asc' | 'desc' }>({
   column: 'name',
-  direction: 'asc'
+  direction: 'asc',
 })
 
 const queryParams = computed<DataSourcesQueryParams>(() => {
@@ -85,15 +85,11 @@ const queryParams = computed<DataSourcesQueryParams>(() => {
     ...filters.value,
     sort: `${sortBy.value.direction === 'asc' ? '+' : '-'}${sortBy.value.column}`,
     page: currentPage.value,
-    per_page: perPage.value
+    per_page: perPage.value,
   }
 })
 
-const {
-  data: dataSources,
-  isLoading,
-  refetch,
-} = useDataSourcesQuery(queryParams)
+const { data: dataSources, isLoading, refetch } = useDataSourcesQuery(queryParams)
 
 const deleteDialogOpen = ref(false)
 const dataSourceToDelete = ref<DataSourceResource | null>(null)
@@ -104,8 +100,8 @@ const viewDataEntries = (dataSource: DataSourceResource) => {
     name: 'space-datasources-dataSourceId',
     params: {
       space: route.params.space,
-      dataSourceId: dataSource.id
-    }
+      dataSourceId: dataSource.id,
+    },
   })
 }
 
@@ -113,7 +109,6 @@ const copySlug = (slug: string) => {
   const url = `${window.location.origin}/api/v1/datasources/${slug}/entries?token=[YOUR_PUBLIC_API_TOKEN]`
   useClipboard().copy(url)
 }
-
 
 const handleDeleteConfirm = (dataSource: DataSourceResource) => {
   dataSourceToDelete.value = dataSource
@@ -127,7 +122,6 @@ const confirmDelete = async () => {
     dataSourceToDelete.value = null
   }
 }
-
 </script>
 
 <template>
@@ -177,7 +171,7 @@ const confirmDelete = async () => {
             >
               {{ $t('labels.datasets.entries') }}
             </TableSortableHead>
-            <TableHead class="w-16"/>
+            <TableHead class="w-16" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -191,10 +185,10 @@ const confirmDelete = async () => {
               :key="dataSource.id"
               :class="{ 'bg-background/50': index % 2 === 0 }"
             >
-              <TableCell
-                class="cursor-pointer"
-              >
-                <NuxtLink :href="`/${spaceId}/datasources/${dataSource.id}`">{{ dataSource.name }}</NuxtLink>
+              <TableCell class="cursor-pointer">
+                <NuxtLink :href="`/${spaceId}/datasources/${dataSource.id}`">{{
+                  dataSource.name
+                }}</NuxtLink>
               </TableCell>
               <TableCell>
                 <SimpleTooltip
@@ -203,23 +197,25 @@ const confirmDelete = async () => {
                 >
                   <span class="font-mono">{{ dataSource.slug }}</span>
                   <button
-                    class="text-muted hover:text-primary cursor-pointer"
+                    class="cursor-pointer text-muted hover:text-primary"
                     @click.stop="copySlug(dataSource.slug)"
                   >
-                    <Icon
-                      name="lucide:copy"
-                    />
+                    <Icon name="lucide:copy" />
                   </button>
                 </SimpleTooltip>
               </TableCell>
-              <TableCell class="max-w-[300px] truncate">{{ dataSource.description || '-' }}</TableCell>
+              <TableCell class="max-w-[300px] truncate">{{
+                dataSource.description || '-'
+              }}</TableCell>
               <TableCell>
                 <Badge
                   :variant="dataSource.is_active ? 'success' : 'destructive'"
                   size="sm"
                 >
                   {{
-                    dataSource.is_active ? $t('labels.datasets.status.active') : $t('labels.datasets.status.inactive')
+                    dataSource.is_active
+                      ? $t('labels.datasets.status.active')
+                      : $t('labels.datasets.status.inactive')
                   }}
                 </Badge>
               </TableCell>
@@ -231,7 +227,7 @@ const confirmDelete = async () => {
                     size="icon"
                     @click="viewDataEntries(dataSource)"
                   >
-                    <Icon name="lucide:file-pen-line"/>
+                    <Icon name="lucide:file-pen-line" />
                     <span class="sr-only">{{ $t('actions.datasources.viewEntries') }}</span>
                   </Button>
                   <Button
@@ -239,7 +235,7 @@ const confirmDelete = async () => {
                     size="icon"
                     @click="emit('edit', dataSource)"
                   >
-                    <Icon name="lucide:pencil"/>
+                    <Icon name="lucide:pencil" />
                     <span class="sr-only">{{ $t('actions.datasources.edit') }}</span>
                   </Button>
                   <Button
@@ -247,7 +243,7 @@ const confirmDelete = async () => {
                     size="icon"
                     @click="emit('delete', dataSource)"
                   >
-                    <Icon name="lucide:trash-2"/>
+                    <Icon name="lucide:trash-2" />
                     <span class="sr-only">{{ $t('actions.datasources.delete') }}</span>
                   </Button>
                 </div>
@@ -258,7 +254,11 @@ const confirmDelete = async () => {
             v-else
             :colspan="8"
             :icon="DataSourcesIcon"
-            :label="searchQuery ? String($t('labels.datasets.noSearchResults')) : String($t('labels.datasets.noDataSources'))"
+            :label="
+              searchQuery
+                ? String($t('labels.datasets.noSearchResults'))
+                : String($t('labels.datasets.noDataSources'))
+            "
           />
         </TableBody>
       </Table>
@@ -269,8 +269,8 @@ const confirmDelete = async () => {
       :meta="dataSources.meta"
       :current-page="currentPage"
       :per-page="perPage"
-      @update:current-page="val => currentPage = val"
-      @update:per-page="val => perPage = val"
+      @update:current-page="(val) => (currentPage = val)"
+      @update:per-page="(val) => (perPage = val)"
     />
   </div>
 </template>

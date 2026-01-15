@@ -1,14 +1,19 @@
 <script setup lang="ts">
-
 import { FormField } from '~/components/ui/form'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 
 const value = defineModel<string>()
 
 defineProps<{
   item: OptionSchema & { key: string }
 }>()
-
 </script>
 
 <template>
@@ -18,7 +23,7 @@ defineProps<{
   >
     <Select v-model="value">
       <SelectTrigger>
-        <SelectValue/>
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

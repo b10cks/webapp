@@ -25,9 +25,13 @@ const draggedIndex = ref<number | null>(null)
 const editingIndex = ref<number | null>(null)
 
 // Sync with props
-watch(() => props.modelValue, (newValue) => {
-  localValue.value = newValue ? [...newValue] : []
-}, { immediate: true, deep: true })
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    localValue.value = newValue ? [...newValue] : []
+  },
+  { immediate: true, deep: true }
+)
 
 // Computed properties
 const hasReferences = computed(() => localValue.value.length > 0)
@@ -44,7 +48,10 @@ const minReferences = computed(() => props.item.min || 0)
 // Helper functions
 const updateValue = () => {
   const hasMinimumReferences = localValue.value.length >= minReferences.value
-  emit('update:modelValue', hasMinimumReferences && localValue.value.length > 0 ? localValue.value : null)
+  emit(
+    'update:modelValue',
+    hasMinimumReferences && localValue.value.length > 0 ? localValue.value : null
+  )
 }
 
 const getContentName = (contentId: string): string => {
@@ -64,14 +71,11 @@ const handleContentSelect = (contentId: string) => {
     if (!canAddMore.value) return
 
     // Check for duplicates
-    if (localValue.value.some(ref => ref === contentId)) {
-      alert.message(
-        $t('messages.references.duplicateReference'),
-        {
-          title: $t('labels.references.duplicateTitle'),
-          okLabel: $t('actions.ok')
-        }
-      )
+    if (localValue.value.some((ref) => ref === contentId)) {
+      alert.message($t('messages.references.duplicateReference'), {
+        title: $t('labels.references.duplicateTitle'),
+        okLabel: $t('actions.ok'),
+      })
       return
     }
 
@@ -89,14 +93,11 @@ const handleContentWithAnchorSelect = (contentId: string, anchorId: string) => {
   } else {
     if (!canAddMore.value) return
 
-    if (localValue.value.some(ref => ref === contentId)) {
-      alert.message(
-        $t('messages.references.duplicateReference'),
-        {
-          title: $t('labels.references.duplicateTitle'),
-          okLabel: $t('actions.ok')
-        }
-      )
+    if (localValue.value.some((ref) => ref === contentId)) {
+      alert.message($t('messages.references.duplicateReference'), {
+        title: $t('labels.references.duplicateTitle'),
+        okLabel: $t('actions.ok'),
+      })
       return
     }
 
@@ -121,7 +122,7 @@ const handleReferenceDelete = async (index: number) => {
     {
       title: $t('labels.references.removeReference'),
       confirmLabel: $t('actions.remove'),
-      cancelLabel: $t('actions.cancel')
+      cancelLabel: $t('actions.cancel'),
     }
   )
 
@@ -173,7 +174,6 @@ const getContentColor = (contentId: string): string => {
   const item = contentMenu.value[contentId]
   return item?.color || '#64748b'
 }
-
 </script>
 
 <template>
@@ -184,7 +184,7 @@ const getContentColor = (contentId: string): string => {
       </label>
       <p
         v-if="item.description"
-        class="text-xs text-muted-foreground"
+        class="text-muted-foreground text-xs"
       >
         {{ item.description }}
       </p>
@@ -209,23 +209,23 @@ const getContentColor = (contentId: string): string => {
         <div
           v-for="(reference, index) in localValue"
           :key="reference"
-          class="group relative border border-input rounded-lg overflow-hidden bg-surface"
+          class="group relative overflow-hidden rounded-lg border border-input bg-surface"
           :draggable="localValue.length > 1"
           @dragstart="handleDragStart($event, index)"
           @dragover="handleDragOver"
           @drop="handleDrop($event, index)"
         >
-          <div class="p-2 flex items-center">
+          <div class="flex items-center p-2">
             <Icon
               v-if="localValue.length > 1"
               name="lucide:grip-vertical"
-              class="opacity-0 group-hover:opacity-100 cursor-ns-resize text-muted hover:text-primary"
+              class="cursor-ns-resize text-muted opacity-0 group-hover:opacity-100 hover:text-primary"
             />
             <div
               v-else
               class="w-2"
             />
-            <div class="flex items-center gap-2 flex-1">
+            <div class="flex flex-1 items-center gap-2">
               <Icon
                 :name="`lucide:${getContentIcon(reference) || 'file'}`"
                 class="shrink-0"
@@ -235,18 +235,18 @@ const getContentColor = (contentId: string): string => {
                 {{ getContentName(reference) }}
               </div>
             </div>
-            <div class="flex opacity-0 group-hover:opacity-100 gap-2 items-center">
+            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100">
               <button
-                class="transform cursor-pointer hover:text-primary flex items-center"
+                class="flex transform cursor-pointer items-center hover:text-primary"
                 @click="handleReferenceEdit(index)"
               >
-                <Icon name="lucide:pencil"/>
+                <Icon name="lucide:pencil" />
               </button>
               <button
-                class="transform cursor-pointer hover:text-red-500 flex items-center"
+                class="flex transform cursor-pointer items-center hover:text-red-500"
                 @click="handleReferenceDelete(index)"
               >
-                <Icon name="lucide:trash-2"/>
+                <Icon name="lucide:trash-2" />
               </button>
             </div>
           </div>
@@ -258,13 +258,13 @@ const getContentColor = (contentId: string): string => {
         class="w-full"
         @click="showContentPicker = true"
       >
-        <Icon name="lucide:plus"/>
+        <Icon name="lucide:plus" />
         {{ $t('actions.references.add') }}
       </Button>
 
       <div
         v-if="item.max && item.max > 0"
-        class="text-xs text-muted-foreground text-center"
+        class="text-muted-foreground text-center text-xs"
       >
         {{ $t('labels.references.referencesCount', { current: localValue.length, max: item.max }) }}
       </div>

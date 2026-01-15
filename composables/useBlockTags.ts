@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { queryKeys } from './useQueryClient'
 import { toast } from 'vue-sonner'
 
-import { api } from '~/api'
 import type { BlockTagsQueryParams, UpsertBlockTagPayload } from '~/api/resources/block-tags'
 import type { MaybeRefOrComputed } from '~/types'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useBlockTags(spaceId: string) {
   const queryClient = useQueryClient()
@@ -33,7 +35,7 @@ export function useBlockTags(spaceId: string) {
         const response = await spaceAPI.blockTags.get(tagName.value)
         return response.data
       },
-      enabled: computed(() =>!!tagName.value),
+      enabled: computed(() => !!tagName.value),
     })
   }
 
@@ -57,9 +59,9 @@ export function useBlockTags(spaceId: string) {
   const useUpdateBlockTagMutation = () => {
     return useMutation({
       mutationFn: async ({
-                           tagName,
-                           payload
-                         }: {
+        tagName,
+        payload,
+      }: {
         tagName: string
         payload: UpsertBlockTagPayload
       }) => {
@@ -68,7 +70,9 @@ export function useBlockTags(spaceId: string) {
       },
       onSuccess: (data, variables) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.blockTags(spaceId).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.blockTags(spaceId).detail(variables.tagName) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.blockTags(spaceId).detail(variables.tagName),
+        })
         queryClient.invalidateQueries({ queryKey: queryKeys.blockTags(spaceId).detail(data.name) })
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
         toast.success(`Tag "${data.name}" updated successfully`)

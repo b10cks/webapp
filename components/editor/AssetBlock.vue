@@ -25,9 +25,13 @@ const localValue = ref<AssetValue | null>(null)
 const showAssetPicker = ref(false)
 const showAssetDetails = ref(false)
 
-watch(() => props.modelValue, (newValue) => {
-  localValue.value = newValue ? { ...newValue } : null
-}, { immediate: true, deep: true })
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    localValue.value = newValue ? { ...newValue } : null
+  },
+  { immediate: true, deep: true }
+)
 
 const hasAsset = computed(() => !!localValue.value)
 const isImage = computed(() => {
@@ -49,7 +53,7 @@ const handleAssetSelect = (asset: AssetResource) => {
     mime_type: asset.mime_type,
     size: asset.size,
     filename: asset.filename,
-    data: {}
+    data: {},
   }
   updateValue()
   showAssetPicker.value = false
@@ -64,14 +68,11 @@ const handleAssetEdit = () => {
 }
 
 const handleAssetDelete = async () => {
-  const confirmed = await alert.confirm(
-    $t('messages.assets.confirmDelete'),
-    {
-      title: $t('labels.assets.deleteAsset'),
-      confirmLabel: $t('actions.delete'),
-      cancelLabel: $t('actions.cancel')
-    }
-  )
+  const confirmed = await alert.confirm($t('messages.assets.confirmDelete'), {
+    title: $t('labels.assets.deleteAsset'),
+    confirmLabel: $t('actions.delete'),
+    cancelLabel: $t('actions.cancel'),
+  })
 
   if (confirmed) {
     localValue.value = null
@@ -82,16 +83,14 @@ const handleAssetDelete = async () => {
 
 <template>
   <div class="space-y-3">
-    <Label :label="item.name || item.key"/>
+    <Label :label="item.name || item.key" />
     <div
       v-if="!hasAsset"
-      class="border-2 border-dashed border-input rounded-lg p-8 text-center bg-surface/50 hover:bg-surface transition-colors cursor-pointer"
+      class="cursor-pointer rounded-lg border-2 border-dashed border-input bg-surface/50 p-8 text-center transition-colors hover:bg-surface"
       @click="showAssetPicker = true"
     >
-      <AssetsIcon
-        class="mx-auto mb-3 text-muted size-16"
-      />
-      <p class="text-sm font-medium text-primary mb-1">
+      <AssetsIcon class="mx-auto mb-3 size-16 text-muted" />
+      <p class="mb-1 text-sm font-medium text-primary">
         {{ $t('labels.assets.addAsset') }}
       </p>
       <p class="text-xs text-muted">
@@ -101,13 +100,13 @@ const handleAssetDelete = async () => {
 
     <div
       v-else
-      class="group relative border border-input rounded-lg overflow-hidden bg-surface max-w-sm"
+      class="group relative max-w-sm overflow-hidden rounded-lg border border-input bg-surface"
     >
       <div class="flex items-center gap-3 p-2">
         <div class="flex-shrink-0">
           <div
             v-if="isImage"
-            class="w-14 h-14 rounded border border-input overflow-hidden bg-background"
+            class="h-14 w-14 overflow-hidden rounded border border-input bg-background"
           >
             <NuxtImg
               :src="localValue.full_path"
@@ -115,12 +114,12 @@ const handleAssetDelete = async () => {
               width="56"
               height="56"
               :modifiers="{ crop: 'fill' }"
-              class="w-full h-full object-cover"
+              class="h-full w-full object-cover"
             />
           </div>
           <div
             v-else
-            class="w-12 h-12 rounded border border-input bg-background flex items-center justify-center"
+            class="flex h-12 w-12 items-center justify-center rounded border border-input bg-background"
           >
             <Icon
               :name="getFileIcon(getFileType(localValue.mime_type))"
@@ -129,7 +128,7 @@ const handleAssetDelete = async () => {
           </div>
         </div>
         <div class="min-w-0 flex-1">
-          <p class="font-semibold text-primary truncate">
+          <p class="truncate font-semibold text-primary">
             {{ localValue.filename }}
           </p>
           <p class="text-sm text-muted">
@@ -137,33 +136,27 @@ const handleAssetDelete = async () => {
           </p>
         </div>
 
-        <div class="ml-auto flex opacity-0 group-hover:opacity-100 gap-2 items-center">
+        <div class="ml-auto flex items-center gap-2 opacity-0 group-hover:opacity-100">
           <button
-            class="transform cursor-pointer hover:text-primary flex items-center"
+            class="flex transform cursor-pointer items-center hover:text-primary"
             :title="$t('actions.assets.replace')"
             @click.stop="handleAssetReplace"
           >
-            <Icon
-              name="lucide:replace"
-            />
+            <Icon name="lucide:replace" />
           </button>
           <button
-            class="transform cursor-pointer hover:text-primary flex items-center"
+            class="flex transform cursor-pointer items-center hover:text-primary"
             :title="$t('actions.assets.edit')"
             @click.stop="handleAssetEdit"
           >
-            <Icon
-              name="lucide:pencil"
-            />
+            <Icon name="lucide:pencil" />
           </button>
           <button
-            class="transform cursor-pointer hover:text-red-500 flex items-center"
+            class="flex transform cursor-pointer items-center hover:text-red-500"
             :title="$t('actions.assets.delete')"
             @click.stop="handleAssetDelete"
           >
-            <Icon
-              name="lucide:trash-2"
-            />
+            <Icon name="lucide:trash-2" />
           </button>
         </div>
       </div>
@@ -173,7 +166,7 @@ const handleAssetDelete = async () => {
       v-model:open="showAssetPicker"
       :modal="true"
     >
-      <DialogContent class="!max-w-[90dvw] h-[90dvh] p-0">
+      <DialogContent class="h-[90dvh] !max-w-[90dvw] p-0">
         <DialogHeader>
           <DialogTitle>{{ $t('labels.assets.selectAsset') }}</DialogTitle>
         </DialogHeader>

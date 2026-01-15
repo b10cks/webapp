@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
 import { Switch } from '~/components/ui/switch'
 import { deepClone } from '@vue/devtools-shared'
 import { Button } from '~/components/ui/button'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import { InputField } from '~/components/ui/form'
-import SettingsTable, { type ColumnDefinition, type TableItem } from '~/components/ui/settings-table'
+import SettingsTable, {
+  type ColumnDefinition,
+  type TableItem,
+} from '~/components/ui/settings-table'
 
 const { useUpdateSpaceMutation } = useSpaces()
 const { mutate: updateSpace } = useUpdateSpaceMutation()
@@ -27,20 +37,20 @@ const columns: ColumnDefinition[] = [
     type: 'text',
     placeholder: $t('labels.settings.assetLibrary.fieldKeyPlaceholder'),
     required: true,
-    readonly: true
+    readonly: true,
   },
   {
     key: 'label',
     label: $t('labels.settings.assetLibrary.label'),
     type: 'text',
     placeholder: $t('labels.settings.assetLibrary.fieldLabelPlaceholder'),
-    required: true
+    required: true,
   },
   {
     key: 'required',
     label: $t('labels.settings.assetLibrary.required'),
-    type: 'switch'
-  }
+    type: 'switch',
+  },
 ]
 
 const removeField = (index: number) => {
@@ -51,7 +61,7 @@ const removeField = (index: number) => {
 }
 
 const addField = (newField: { key: string; label: string; required: boolean }) => {
-  if (assetFields.value.find(field => field.key === newField.key)) {
+  if (assetFields.value.find((field) => field.key === newField.key)) {
     return
   }
   assetFields.value.push(newField)
@@ -64,8 +74,8 @@ const saveSettings = async () => {
       settings: {
         ...props.space.settings,
         asset_fields: assetFields.value,
-      }
-    }
+      },
+    },
   })
 }
 </script>
@@ -77,7 +87,6 @@ const saveSettings = async () => {
       <CardDescription>{{ $t('labels.settings.assetLibrary.description') }}</CardDescription>
     </CardHeader>
     <CardContent class="space-y-6">
-
       <div class="space-y-2">
         <h4 class="text-sm font-medium">{{ $t('labels.settings.assetLibrary.metadataFields') }}</h4>
         <SettingsTable
@@ -96,7 +105,7 @@ const saveSettings = async () => {
       <Button
         variant="primary"
         @click="saveSettings"
-      >{{ $t('actions.saveChanges') }}
+        >{{ $t('actions.saveChanges') }}
       </Button>
     </CardFooter>
   </Card>

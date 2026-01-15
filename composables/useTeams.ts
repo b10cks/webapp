@@ -1,17 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
-import { api } from '~/api'
-import { queryKeys } from './useQueryClient'
+
 import type { TeamsQueryParams } from '~/api/resources/teams'
+import type { MaybeRefOrComputed } from '~/types'
 import type {
   CreateTeamPayload,
   UpdateTeamPayload,
   AddTeamUserPayload,
   UpdateTeamUserPayload,
   TeamUserQueryParams,
-  TeamHierarchyItem
+  TeamHierarchyItem,
 } from '~/types/teams'
-import type { MaybeRefOrComputed } from '~/types'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useTeams() {
   const queryClient = useQueryClient()
@@ -96,10 +99,7 @@ export function useTeams() {
 
   const useUpdateTeamMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload }: {
-        id: string
-        payload: UpdateTeamPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateTeamPayload }) => {
         const response = await api.teams.update(id, payload)
         return response.data
       },
@@ -138,10 +138,7 @@ export function useTeams() {
   // Team User Mutations
   const useAddTeamUserMutation = () => {
     return useMutation({
-      mutationFn: async ({ teamId, payload }: {
-        teamId: string
-        payload: AddTeamUserPayload
-      }) => {
+      mutationFn: async ({ teamId, payload }: { teamId: string; payload: AddTeamUserPayload }) => {
         const response = await api.teams.addUser(teamId, payload)
         return { teamId, user: response.data }
       },
@@ -158,7 +155,11 @@ export function useTeams() {
 
   const useUpdateTeamUserMutation = () => {
     return useMutation({
-      mutationFn: async ({ teamId, userId, payload }: {
+      mutationFn: async ({
+        teamId,
+        userId,
+        payload,
+      }: {
         teamId: string
         userId: string
         payload: UpdateTeamUserPayload
@@ -178,10 +179,7 @@ export function useTeams() {
 
   const useRemoveTeamUserMutation = () => {
     return useMutation({
-      mutationFn: async ({ teamId, userId }: {
-        teamId: string
-        userId: string
-      }) => {
+      mutationFn: async ({ teamId, userId }: { teamId: string; userId: string }) => {
         await api.teams.removeUser(teamId, userId)
         return { teamId, userId }
       },

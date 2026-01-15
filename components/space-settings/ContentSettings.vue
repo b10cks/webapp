@@ -1,6 +1,19 @@
 <script setup lang="ts">
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import { FormField } from '~/components/ui/form'
 import { ref } from 'vue'
 import { Button } from '~/components/ui/button'
@@ -21,9 +34,9 @@ const handleSave = () => {
     payload: {
       settings: {
         ...props.space.settings,
-        default_block: defaultBlock.value
-      }
-    }
+        default_block: defaultBlock.value,
+      },
+    },
   })
 }
 </script>
@@ -42,7 +55,7 @@ const handleSave = () => {
       >
         <Select v-model="defaultBlock">
           <SelectTrigger id="default-block">
-            <SelectValue :placeholder="$t('labels.settings.content.selectDefaultBlock')"/>
+            <SelectValue :placeholder="$t('labels.settings.content.selectDefaultBlock')" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem
@@ -50,8 +63,7 @@ const handleSave = () => {
               :key="block.id"
               :value="block.id"
             >
-              <div class="flex gap-2 items-center">
-
+              <div class="flex items-center gap-2">
                 <Icon
                   :name="`lucide:${block.icon}`"
                   :style="{ color: block.color }"
@@ -67,7 +79,7 @@ const handleSave = () => {
       <Button
         variant="primary"
         @click="handleSave"
-      >{{ $t('actions.saveChanges') }}
+        >{{ $t('actions.saveChanges') }}
       </Button>
     </CardFooter>
   </Card>

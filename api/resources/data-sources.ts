@@ -1,6 +1,3 @@
-// api/resources/data-sources.ts
-import { BaseResource } from './base-resource'
-import type { ApiClient } from '../client'
 import type { ApiCollectionResponse, ApiResponse, BaseQueryParams } from '~/types'
 import type {
   CreateDataEntryPayload,
@@ -9,13 +6,18 @@ import type {
   DataEntryResource,
   DataSourceResource,
   UpdateDataEntryPayload,
-  UpdateDataSourcePayload
+  UpdateDataSourcePayload,
 } from '~/types/data-sources'
 
+import type { ApiClient } from '../client'
+
+// api/resources/data-sources.ts
+import { BaseResource } from './base-resource'
+
 export interface DataSourcesQueryParams extends BaseQueryParams {
-  name?: string;
-  slug?: string;
-  is_active?: boolean;
+  name?: string
+  slug?: string
+  is_active?: boolean
 }
 
 export class DataSources extends BaseResource<
@@ -59,8 +61,6 @@ export class DataSources extends BaseResource<
   }
 
   public async deleteEntry(dataSourceId: string, entryId: string) {
-    return this.client.delete(
-      `${this.basePath}/${dataSourceId}/entries/${entryId}`
-    )
+    return this.client.delete(`${this.basePath}/${dataSourceId}/entries/${entryId}`)
   }
 }

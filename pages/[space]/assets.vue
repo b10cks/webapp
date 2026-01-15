@@ -2,7 +2,7 @@
   <div>
     <NuxtLayout>
       <div class="flex h-full w-full">
-        <NuxtPage/>
+        <NuxtPage />
       </div>
     </NuxtLayout>
   </div>

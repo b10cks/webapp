@@ -12,6 +12,6 @@ const props = defineProps<{
 
 <template>
   <div :class="cn(cardVariants({ variant }), props.class)">
-    <slot/>
+    <slot />
   </div>
 </template>

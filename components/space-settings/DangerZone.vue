@@ -3,7 +3,13 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
-import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined, DialogTrigger } from '~/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeaderCombined,
+  DialogTrigger,
+} from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
@@ -36,9 +42,7 @@ const confirmDelete = async () => {
 </script>
 
 <template>
-  <Card
-    variant="destructiveOutline"
-  >
+  <Card variant="destructiveOutline">
     <CardHeader class="text-destructive">
       <CardTitle>{{ $t('labels.settings.dangerZone.title') }}</CardTitle>
       <CardDescription class="!text-destructive/80">
@@ -46,7 +50,7 @@ const confirmDelete = async () => {
       </CardDescription>
     </CardHeader>
     <CardContent>
-      <p class="text-sm mb-4">
+      <p class="mb-4 text-sm">
         {{ $t('labels.settings.dangerZone.warning') }}
       </p>
 
@@ -83,7 +87,9 @@ const confirmDelete = async () => {
                 class="mr-2 h-4 w-4 animate-spin"
               />
               {{
-                isDeleting ? $t('labels.settings.dangerZone.deleting') : $t('labels.settings.dangerZone.confirmDelete')
+                isDeleting
+                  ? $t('labels.settings.dangerZone.deleting')
+                  : $t('labels.settings.dangerZone.confirmDelete')
               }}
             </Button>
           </DialogFooter>

@@ -10,15 +10,17 @@ export class ApiClient {
   private authToken?: string
   private authHandler?: AuthHandler
 
-  constructor(options: {
-    baseURL?: string
-    authToken?: string
-    defaultHeaders?: Record<string, string>
-  } = {}) {
+  constructor(
+    options: {
+      baseURL?: string
+      authToken?: string
+      defaultHeaders?: Record<string, string>
+    } = {}
+  ) {
     this.baseURL = options.baseURL || ''
     this.authToken = options.authToken
     this.defaultHeaders = {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
       ...options.defaultHeaders,
     }
@@ -35,18 +37,15 @@ export class ApiClient {
   private get headers(): Record<string, string> {
     return {
       ...this.defaultHeaders,
-      ...(this.authToken ? { 'Authorization': `Bearer ${this.authToken}` } : {}),
+      ...(this.authToken ? { Authorization: `Bearer ${this.authToken}` } : {}),
     }
   }
 
   public getAuthHeaders(): Record<string, string> {
-    return this.authToken ? { 'Authorization': `Bearer ${this.authToken}` } : {}
+    return this.authToken ? { Authorization: `Bearer ${this.authToken}` } : {}
   }
 
-  public async request<T>(
-    endpoint: string,
-    options: NitroFetchOptions<any> = {}
-  ): Promise<T> {
+  public async request<T>(endpoint: string, options: NitroFetchOptions<any> = {}): Promise<T> {
     const url = endpoint.startsWith('http') ? endpoint : `${this.baseURL}${endpoint}`
 
     const makeRequest = async (headers: Record<string, string>) => {
@@ -69,7 +68,7 @@ export class ApiClient {
           if (retryInfo.token) {
             const authHeaders: Record<string, string> = {
               ...this.defaultHeaders,
-              'Authorization': `Bearer ${retryInfo.token}`
+              Authorization: `Bearer ${retryInfo.token}`,
             }
             if (options.headers) {
               Object.assign(authHeaders, options.headers)
@@ -78,11 +77,16 @@ export class ApiClient {
           }
 
           // If no token is returned, authentication handler failed
-          console.error('Token refresh failed: Error: Authentication failed - No token returned from auth handler')
+          console.error(
+            'Token refresh failed: Error: Authentication failed - No token returned from auth handler'
+          )
           throw new Error('Token refresh failed: Error: Authentication failed')
         } catch (authError: any) {
           // Re-throw authentication errors with context
-          console.error('Token refresh failed: Error: Authentication failed', authError?.message || authError)
+          console.error(
+            'Token refresh failed: Error: Authentication failed',
+            authError?.message || authError
+          )
           throw authError
         }
       }
@@ -99,34 +103,19 @@ export class ApiClient {
     return this.request<T>(endpoint, { method: 'GET', query, ...options })
   }
 
-  public post<T>(
-    endpoint: string,
-    data?: any,
-    options: NitroFetchOptions<any> = {}
-  ): Promise<T> {
+  public post<T>(endpoint: string, data?: any, options: NitroFetchOptions<any> = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'POST', body: data, ...options })
   }
 
-  public put<T>(
-    endpoint: string,
-    data?: any,
-    options: NitroFetchOptions<any> = {}
-  ): Promise<T> {
+  public put<T>(endpoint: string, data?: any, options: NitroFetchOptions<any> = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'PUT', body: data, ...options })
   }
 
-  public patch<T>(
-    endpoint: string,
-    data?: any,
-    options: NitroFetchOptions<any> = {}
-  ): Promise<T> {
+  public patch<T>(endpoint: string, data?: any, options: NitroFetchOptions<any> = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'PATCH', body: data, ...options })
   }
 
-  public delete<T>(
-    endpoint: string,
-    options: NitroFetchOptions<any> = {}
-  ): Promise<T> {
+  public delete<T>(endpoint: string, options: NitroFetchOptions<any> = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'DELETE', ...options })
   }
 }

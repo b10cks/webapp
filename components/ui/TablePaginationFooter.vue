@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import LaravelPagination from '~/components/ui/pagination/LaravelPagination.vue'
 import PerPageSelect from '~/components/PerPageSelect.vue'
 import type { LaravelMeta } from '~/types'
@@ -17,17 +16,17 @@ const emit = defineEmits<{
 
 const currentPageProxy = computed({
   get: () => props.currentPage,
-  set: (val: number) => emit('update:currentPage', val)
+  set: (val: number) => emit('update:currentPage', val),
 })
 const perPageProxy = computed({
   get: () => props.perPage,
-  set: (val: number) => emit('update:perPage', val)
+  set: (val: number) => emit('update:perPage', val),
 })
 </script>
 
 <template>
-  <div class="bg-surface px-2 py-2 rounded-lg flex items-center">
-    <div class="text-sm text-muted font-semibold pl-2">
+  <div class="flex items-center rounded-lg bg-surface px-2 py-2">
+    <div class="pl-2 text-sm font-semibold text-muted">
       {{ $t('labels.showingEntries', meta) }}
     </div>
     <LaravelPagination

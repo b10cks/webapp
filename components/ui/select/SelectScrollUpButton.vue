@@ -20,7 +20,7 @@ const forwardedProps = useForwardProps(delegatedProps)
     :class="cn('flex cursor-default items-center justify-center py-1', props.class)"
   >
     <slot>
-      <Icon name="lucide:chevron-up"/>
+      <Icon name="lucide:chevron-up" />
     </slot>
   </SelectScrollUpButton>
 </template>

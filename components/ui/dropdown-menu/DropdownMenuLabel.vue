@@ -3,7 +3,9 @@ import { cn } from '@/lib/utils'
 import { DropdownMenuLabel, type DropdownMenuLabelProps, useForwardProps } from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
 
-const props = defineProps<DropdownMenuLabelProps & { class?: HTMLAttributes['class'], inset?: boolean }>()
+const props = defineProps<
+  DropdownMenuLabelProps & { class?: HTMLAttributes['class']; inset?: boolean }
+>()
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props
@@ -19,6 +21,6 @@ const forwardedProps = useForwardProps(delegatedProps)
     v-bind="forwardedProps"
     :class="cn('px-2 py-1.5 text-xs font-medium text-muted', inset && 'pl-8', props.class)"
   >
-    <slot/>
+    <slot />
   </DropdownMenuLabel>
 </template>

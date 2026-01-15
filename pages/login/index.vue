@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
@@ -10,11 +9,11 @@ const { login, error } = useAuth()
 const route = useRoute()
 
 const formData = ref<{
-  email: string,
+  email: string
   password: string
 }>({
   email: '',
-  password: ''
+  password: '',
 })
 
 // Handle session expired message
@@ -23,7 +22,6 @@ onMounted(() => {
     error.value = 'Your session has expired. Please log in again.'
   }
 })
-
 </script>
 
 <template>
@@ -33,10 +31,10 @@ onMounted(() => {
         <div class="grid gap-4">
           <Logo
             alt="b10cks logo"
-            class="w-8 h-8 text-primary"
+            class="h-8 w-8 text-primary"
           />
           <h1
-            class="text-2xl font-script mb-6 text-primary font-semibold"
+            class="font-script mb-6 text-2xl font-semibold text-primary"
             v-text="$t('labels.login.header')"
           />
         </div>
@@ -46,7 +44,7 @@ onMounted(() => {
         >
           <div
             v-if="error"
-            class="animate-in fade-in-0 slide-in-from-top-1 duration-300 flex items-center gap-2 rounded-md p-2 border border-destructive bg-destructive-background text-destructive-foreground"
+            class="animate-in fade-in-0 slide-in-from-top-1 flex items-center gap-2 rounded-md border border-destructive bg-destructive-background p-2 text-destructive-foreground duration-300"
           >
             <Icon
               name="lucide:alert-circle"
@@ -78,10 +76,9 @@ onMounted(() => {
             </div>
           </div>
           <Button variant="primary">{{ $t('actions.login') }}</Button>
-          <Markdown :content="$t('labels.login.signup')"/>
+          <Markdown :content="$t('labels.login.signup')" />
         </form>
       </div>
     </NuxtLayout>
   </div>
-
 </template>

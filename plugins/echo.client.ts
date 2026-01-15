@@ -1,4 +1,5 @@
 import type { Broadcaster } from 'laravel-echo'
+
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
 
@@ -19,7 +20,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
     return {
       provide: {
         echo: null,
-      }
+      },
     }
   }
 
@@ -30,6 +31,6 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   return {
     provide: {
       echo: window.Echo,
-    }
+    },
   }
 })

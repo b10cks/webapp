@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from '~/components/ui/select'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
@@ -43,7 +43,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'update:modelValue', payload: T): void
-  (e: 'select' | 'remove', payload: { option: SelectOption<T>, value: T }): void
+  (e: 'select' | 'remove', payload: { option: SelectOption<T>; value: T }): void
 }>()
 
 const modelValue = useVModel(props, 'modelValue', emits, {
@@ -60,7 +60,7 @@ const getOptionValue = (option: SelectOption<T>): T => {
 }
 
 const getOptionByValue = (value: T): SelectOption<T> | undefined => {
-  return props.options.find(option => {
+  return props.options.find((option) => {
     const optionValue = getOptionValue(option)
     return optionValue === value
   })
@@ -126,4 +126,3 @@ const handleSelect = (value: T) => {
     </template>
   </FormField>
 </template>
-

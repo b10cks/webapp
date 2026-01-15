@@ -7,8 +7,8 @@ import IconNameField from '~/components/ui/IconNameField.vue'
 import { TextField } from '~/components/ui/form'
 
 const props = defineProps<{
-  spaceId: string,
-  parentFolderId?: string | null,
+  spaceId: string
+  parentFolderId?: string | null
   open: boolean
 }>()
 
@@ -23,7 +23,7 @@ const folder = ref<UpsertAssetFolderPayload>({
   description: null,
   color: null,
   icon: 'folder',
-  parent_id: props.parentFolderId || null
+  parent_id: props.parentFolderId || null,
 })
 
 const isLoading = ref(false)
@@ -41,7 +41,7 @@ const resetForm = () => {
     name: '',
     description: null,
     icon: 'folder',
-    parent_id: props.parentFolderId || null
+    parent_id: props.parentFolderId || null,
   }
   errorMessage.value = ''
 }
@@ -54,18 +54,19 @@ const handleSubmit = async () => {
     await createFolder(folder.value)
     updateOpenState(false)
   } catch (error) {
-    errorMessage.value = error instanceof Error
-      ? error.message
-      : t('errors.assetFolders.create')
+    errorMessage.value = error instanceof Error ? error.message : t('errors.assetFolders.create')
   } finally {
     isLoading.value = false
   }
 }
 
-watch(() => props.parentFolderId, () => {
-  resetForm()
-}, { immediate: true })
-
+watch(
+  () => props.parentFolderId,
+  () => {
+    resetForm()
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -97,7 +98,7 @@ watch(() => props.parentFolderId, () => {
           <div
             v-if="errorMessage"
             id="name-error"
-            class="text-red-500 text-sm mt-1 col-start-2 col-end-3"
+            class="col-start-2 col-end-3 mt-1 text-sm text-red-500"
           >
             {{ errorMessage }}
           </div>

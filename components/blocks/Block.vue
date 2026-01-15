@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger } from 'reka-ui'
 import BooleanBlock from '~/components/blocks/BooleanBlock.vue'
 import BlocksBlock from '~/components/blocks/BlocksBlock.vue'
@@ -13,7 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import BlockType from '~/components/ui/BlockType.vue'
 import { CheckboxField, InputField, TextField } from '~/components/ui/form'
@@ -49,45 +48,48 @@ const schemas = {
   text: TextBlock,
   textarea: TextareaBlock,
   meta: MetaBlock,
-  date: DateBlock
+  date: DateBlock,
 }
 
-watch(props.item as SchemaType, (newItem) => {
-  localItem.value = { ...newItem }
-}, { deep: true })
+watch(
+  props.item as SchemaType,
+  (newItem) => {
+    localItem.value = { ...newItem }
+  },
+  { deep: true }
+)
 
 const updateValue = (key: string, value: unknown) => {
   emit('update:item', {
     ...deepClone(props.item),
-    [key]: value
+    [key]: value,
   })
 }
-
 </script>
 
 <template>
   <AccordionItem :value="name">
-    <AccordionHeader class="flex items-center gap-3 group">
+    <AccordionHeader class="group flex items-center gap-3">
       <div
-        class="cursor-ns-resize flex h-full items-center"
+        class="flex h-full cursor-ns-resize items-center"
         draggable
       >
-        <Icon name="lucide:grip-vertical"/>
+        <Icon name="lucide:grip-vertical" />
       </div>
-      <BlockType :type="item?.type"/>
-      <AccordionTrigger class="cursor-pointer flex flex-col grow text-left">
+      <BlockType :type="item?.type" />
+      <AccordionTrigger class="flex grow cursor-pointer flex-col text-left">
         <h4 class="font-bold">{{ item?.name || name }}</h4>
         <div class="text-sm">{{ $t(`labels.blocks.fieldTypes.${item?.type}.label`) }}</div>
       </AccordionTrigger>
       <div
-        class="ml-auto flex gap-3 items-center group-hover:opacity-100 opacity-0 transition-opacity duration-200 ease-in-out"
+        class="ml-auto flex items-center gap-3 opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100"
       >
         <DropdownMenu>
           <DropdownMenuTrigger
-            class="hover:text-primary focus:text-primary cursor-pointer"
+            class="cursor-pointer hover:text-primary focus:text-primary"
             :disabled="pages.length <= 1"
           >
-            <Icon name="lucide:folder-input"/>
+            <Icon name="lucide:folder-input" />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuRadioGroup :model-value="`${currentPage}`">
@@ -103,11 +105,11 @@ const updateValue = (key: string, value: unknown) => {
           </DropdownMenuContent>
         </DropdownMenu>
         <button
-          class="hover:text-destructive focus:text-destructive cursor-pointer"
+          class="cursor-pointer hover:text-destructive focus:text-destructive"
           type="button"
           @click="$emit('delete', name)"
         >
-          <Icon name="lucide:trash-2"/>
+          <Icon name="lucide:trash-2" />
         </button>
         <AccordionTrigger class="cursor-pointer">
           <Icon

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TreeItemToggleEvent} from 'reka-ui';
+import type { TreeItemToggleEvent } from 'reka-ui'
 import { TreeItem, TreeRoot } from 'reka-ui'
 import RenamableTitle from '~/components/ui/RenamableTitle.vue'
 import { Button } from '~/components/ui/button'
@@ -35,7 +35,7 @@ const showCreateDialog = ref(false)
 const createParentId = ref<string | null>(null)
 
 const selectedSpace = computed(() => {
-  return spaces.value?.find(space => space.id === props.spaceId) || null
+  return spaces.value?.find((space) => space.id === props.spaceId) || null
 })
 
 function handleRename(newName: string, contentId: string) {
@@ -65,8 +65,8 @@ const handleSelect = (contentId: string) => {
     hash: '',
     params: {
       space: route.params.space,
-      contentId
-    }
+      contentId,
+    },
   })
 }
 
@@ -95,9 +95,13 @@ const setCurrentItemFromRoute = () => {
 }
 
 // Watch for route changes to update selection
-watch(() => route.params.contentId, () => {
-  setCurrentItemFromRoute()
-}, { immediate: true })
+watch(
+  () => route.params.contentId,
+  () => {
+    setCurrentItemFromRoute()
+  },
+  { immediate: true }
+)
 
 // Refresh content menu on component mount
 onMounted(() => {
@@ -110,26 +114,25 @@ const initCreate = (parentId: string | null) => {
 }
 
 const initDelete = async (item: ContentResource) => {
-  if (!await alert.confirm('Are you sure you want to delete this item?')) {
+  if (!(await alert.confirm('Are you sure you want to delete this item?'))) {
     return
   }
   deleteContent(item.id)
 }
-
 </script>
 
 <template>
   <aside>
     <div
       v-if="isLoading"
-      class="flex justify-center items-center py-4"
+      class="flex items-center justify-center py-4"
     >
       <span class="text-sm text-muted">Loading...</span>
     </div>
 
     <div
       v-else-if="error"
-      class="py-4 px-2 text-destructive text-sm"
+      class="px-2 py-4 text-sm text-destructive"
     >
       {{ error }}
     </div>
@@ -137,25 +140,25 @@ const initDelete = async (item: ContentResource) => {
     <TreeRoot
       v-slot="{ flattenItems }"
       v-model:expanded="settings.content.expanded"
-      class="list-none select-none w-full p-2"
+      class="w-full list-none p-2 select-none"
       :items="rootItems"
       :get-children="(item) => getChildren(data, item.id)"
-      :get-key="({id}) => id"
+      :get-key="({ id }) => id"
     >
       <h2
         v-if="title && !isLoading"
-        class="font-semibold text-sm text-primary px-2 pt-1 pb-3"
+        class="px-2 pt-1 pb-3 text-sm font-semibold text-primary"
       >
         {{ title }}
       </h2>
 
       <div
         v-if="selectedSpace"
-        class="flex items-center gap-2 ml-2 font-semibold py-1"
+        class="ml-2 flex items-center gap-2 py-1 font-semibold"
       >
         <Icon
           name="lucide:globe"
-          class="text-primary shrink-0"
+          class="shrink-0 text-primary"
         />
         <span class="truncate">{{ selectedSpace.name }}</span>
         <Button
@@ -164,7 +167,7 @@ const initDelete = async (item: ContentResource) => {
           size="xs"
           @click="initCreate(null)"
         >
-          <Icon name="lucide:plus"/>
+          <Icon name="lucide:plus" />
         </Button>
       </div>
 
@@ -175,17 +178,17 @@ const initDelete = async (item: ContentResource) => {
         :style="{ 'padding-left': `${item.level - 0.5}rem` }"
         v-bind="item.bind"
         :class="[
-          'group relative flex items-center py-1 pl-0 pr-2 my-0.5 rounded-md outline-none gap-2',
-          'hover:bg-border transition-colors duration-200',
+          'group relative my-0.5 flex items-center gap-2 rounded-md py-1 pr-2 pl-0 outline-none',
+          'transition-colors duration-200 hover:bg-border',
           'cursor-pointer font-semibold',
-          item.value.id === selectedItemId ? 'bg-border text-primary' : ''
+          item.value.id === selectedItemId ? 'bg-border text-primary' : '',
         ]"
         @select="handleSelect(item.value.id)"
         @toggle="(e) => handleToggle(e)"
       >
         <button
           v-if="item.value.children"
-          class="w-3 h-4"
+          class="h-4 w-3"
           @click.stop.prevent="toggleExpanded(item.value.id)"
         >
           <Icon
@@ -206,7 +209,7 @@ const initDelete = async (item: ContentResource) => {
 
         <RenamableTitle
           :name="item.value.name"
-          class="truncate w-full text-left"
+          class="w-full truncate text-left"
           @update="handleRename($event, item.value.id)"
           @edit-start="handleEditStart(item.value.id)"
           @cancel="handleEditCancel"
@@ -215,36 +218,34 @@ const initDelete = async (item: ContentResource) => {
         <div class="ml-auto flex items-center gap-2">
           <div
             v-if="!item.value.pat"
-            class="w-2 h-2 rounded-full bg-text-muted"
+            class="h-2 w-2 rounded-full bg-text-muted"
             title="Draft"
           />
           <SimpleTooltip
             v-else
             :tooltip="item.value.pat"
           >
-            <div
-              class="w-2 h-2 rounded-full bg-success"
-            />
+            <div class="h-2 w-2 rounded-full bg-success" />
           </SimpleTooltip>
         </div>
 
         <div
-          class="bg-border absolute right-6 overflow-clip group-hover:w-auto flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 gap-1"
+          class="absolute right-6 flex items-center gap-1 overflow-clip bg-border opacity-0 transition-opacity duration-200 group-hover:w-auto group-hover:opacity-100"
         >
           <button
             v-if="item.value.type !== 'single'"
-            class="transform cursor-pointer hover:text-primary flex items-center"
+            class="flex transform cursor-pointer items-center hover:text-primary"
             @click="initCreate(item.value.id)"
           >
-            <Icon name="lucide:plus"/>
+            <Icon name="lucide:plus" />
           </button>
           <button
             type="button"
             title="Delete item"
-            class="transform cursor-pointer hover:text-red-500 flex items-center"
+            class="flex transform cursor-pointer items-center hover:text-red-500"
             @click.stop="initDelete(item.value)"
           >
-            <Icon name="lucide:trash-2"/>
+            <Icon name="lucide:trash-2" />
           </button>
         </div>
       </TreeItem>

@@ -20,12 +20,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
   <StepperRoot
     v-slot="slotProps"
-    :class="cn(
-      'flex gap-2',
-      props.class,
-    )"
+    :class="cn('flex gap-2', props.class)"
     v-bind="forwarded"
   >
-    <slot v-bind="slotProps"/>
+    <slot v-bind="slotProps" />
   </StepperRoot>
 </template>

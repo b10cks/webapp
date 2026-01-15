@@ -12,7 +12,7 @@ export function useUlid() {
     if (nowStr === lastTime.value) {
       let i
       for (i = 3; i >= 0; i--) {
-        if (lastRandom.value[i] === 0xFFFFF) {
+        if (lastRandom.value[i] === 0xfffff) {
           lastRandom.value[i] = 0
         } else {
           lastRandom.value[i]++
@@ -44,17 +44,19 @@ export function useUlid() {
     }
     timeStr = timeStr.padStart(10, '0')
 
-    const randomStr = lastRandom.value.map(r => {
-      let s = ''
-      let val = r
+    const randomStr = lastRandom.value
+      .map((r) => {
+        let s = ''
+        let val = r
 
-      while (s.length < 4) {
-        s = ENCODING[val % ENCODING_LEN] + s
-        val = Math.floor(val / ENCODING_LEN)
-      }
+        while (s.length < 4) {
+          s = ENCODING[val % ENCODING_LEN] + s
+          val = Math.floor(val / ENCODING_LEN)
+        }
 
-      return s
-    }).join('')
+        return s
+      })
+      .join('')
 
     return (timeStr + randomStr).toLowerCase()
   }

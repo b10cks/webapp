@@ -1,9 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
-import { api } from '~/api'
+
 import type { ContentsQueryParams } from '~/api/resources/contents'
-import { queryKeys } from './useQueryClient'
 import type { CreateContentPayload, UpdateContentPayload } from '~/types/contents'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
   const queryClient = useQueryClient()
@@ -46,8 +49,8 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
       queryFn: async () => {
         const response = await spaceAPI.value.contents.index({
           filter: {
-            parent_id: parentId.value
-          }
+            parent_id: parentId.value,
+          },
         })
         return response.data
       },
@@ -75,18 +78,19 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const useUpdateContentMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload, }: {
-        id: string
-        payload: UpdateContentPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateContentPayload }) => {
         const response = await spaceAPI.value.contents.update(id, payload)
         return response.data
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).detail(data.id) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+        })
         queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists() })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+        })
 
         toast.success(`Content "${data.name}" updated successfully`)
       },
@@ -98,18 +102,19 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const usePublishContentMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload, }: {
-        id: string
-        payload: UpdateContentPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateContentPayload }) => {
         const response = await spaceAPI.value.contents.publish(id, payload)
         return response.data
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).detail(data.id) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+        })
         queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists() })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+        })
 
         toast.success(`Content "${data.name}" published successfully`)
       },
@@ -121,18 +126,19 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const useUnpublishContentMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload, }: {
-        id: string
-        payload: UpdateContentPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateContentPayload }) => {
         const response = await spaceAPI.value.contents.unpublish(id, payload)
         return response.data
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).detail(data.id) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+        })
         queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists() })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+        })
 
         toast.success(`Content "${data.name}" unpublished successfully`)
       },
@@ -145,11 +151,11 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
   const useDuplicateContentMutation = () => {
     return useMutation({
       mutationFn: async ({
-                           id,
-                           options
-                         }: {
-        id: string,
-        options?: { name?: string, parent_id?: string | null }
+        id,
+        options,
+      }: {
+        id: string
+        options?: { name?: string; parent_id?: string | null }
       }) => {
         const response = await spaceAPI.value.contents.duplicate(id, options)
         return response.data

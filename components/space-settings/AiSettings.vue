@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
 import { Switch } from '~/components/ui/switch'
 import { Progress } from '~/components/ui/progress'
 import { Button } from '~/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import { FormField } from '~/components/ui/form'
 import { Badge } from '~/components/ui/badge'
 
@@ -74,11 +87,11 @@ const resetDate = computed(() => {
 
 // Computed properties
 const selectedModel = computed(() => {
-  return availableModels.value.find(model => model.id === selectedModelId.value) || null
+  return availableModels.value.find((model) => model.id === selectedModelId.value) || null
 })
 
 const activeModels = computed(() => {
-  return availableModels.value.filter(model => model.is_active)
+  return availableModels.value.filter((model) => model.is_active)
 })
 
 // Fetch AI usage data
@@ -87,7 +100,9 @@ const fetchAiUsage = async () => {
   usageError.value = null
 
   try {
-    const response = await apiClient.get<AiUsageResponse>(`/mgmt/v1/spaces/${props.space.id}/ai-usage`)
+    const response = await apiClient.get<AiUsageResponse>(
+      `/mgmt/v1/spaces/${props.space.id}/ai-usage`
+    )
     aiUsage.value = response.data
   } catch (error: any) {
     usageError.value = error.message || 'Failed to load AI usage data'
@@ -125,12 +140,16 @@ onMounted(() => {
 })
 
 // Watch for space settings changes to sync local state
-watch(() => props.space.settings?.ai, (newAiSettings) => {
-  if (newAiSettings) {
-    enableAI.value = newAiSettings.enabled ?? true
-    selectedModelId.value = newAiSettings.model ?? null
-  }
-}, { immediate: true, deep: true })
+watch(
+  () => props.space.settings?.ai,
+  (newAiSettings) => {
+    if (newAiSettings) {
+      enableAI.value = newAiSettings.enabled ?? true
+      selectedModelId.value = newAiSettings.model ?? null
+    }
+  },
+  { immediate: true, deep: true }
+)
 
 // Save settings function
 const saveSettings = async () => {
@@ -143,10 +162,10 @@ const saveSettings = async () => {
           ai: {
             ...props.space.settings?.ai,
             enabled: enableAI.value,
-            model: selectedModelId.value
-          }
-        }
-      }
+            model: selectedModelId.value,
+          },
+        },
+      },
     })
     toast.success('AI settings saved successfully')
   } catch (error: any) {
@@ -222,7 +241,7 @@ const formatTags = (tags: string[]) => {
                 :key="model.id"
                 :value="model.id"
               >
-                <div class="w-full flex flex-col gap-1 py-1">
+                <div class="flex w-full flex-col gap-1 py-1">
                   <div class="flex items-center gap-2">
                     <span class="font-medium">{{ model.name }}</span>
                     <Badge
@@ -234,7 +253,7 @@ const formatTags = (tags: string[]) => {
                       {{ $t(`labels.settings.ai.tags.${tag}`) }}
                     </Badge>
                   </div>
-                  <div class="flex gap-2 items-center text-xs text-muted-foreground">
+                  <div class="text-muted-foreground flex items-center gap-2 text-xs">
                     <span class="font-mono">{{ model.model }}</span>
                     <span class="ml-auto">{{ model.token_multiplier }}x</span>
                   </div>
@@ -261,11 +280,14 @@ const formatTags = (tags: string[]) => {
                   {{ $t(`labels.settings.ai.tags.${tag}`) }}
                 </Badge>
               </div>
-              <p class="text-xs text-muted-foreground">{{ selectedModel.description }}</p>
-              <div class="flex items-center gap-3 text-xs text-muted-foreground">
+              <p class="text-muted-foreground text-xs">{{ selectedModel.description }}</p>
+              <div class="text-muted-foreground flex items-center gap-3 text-xs">
                 <span class="font-mono">{{ selectedModel.model }}</span>
                 <span>{{ $t('labels.settings.ai.provider') }}: {{ selectedModel.provider }}</span>
-                <span>{{ $t('labels.settings.ai.tokenMultiplier') }}: {{ selectedModel.token_multiplier }}x</span>
+                <span
+                  >{{ $t('labels.settings.ai.tokenMultiplier') }}:
+                  {{ selectedModel.token_multiplier }}x</span
+                >
               </div>
             </div>
           </div>
@@ -274,9 +296,11 @@ const formatTags = (tags: string[]) => {
         <!-- Loading State -->
         <div
           v-if="isLoadingModels"
-          class="flex items-center gap-2 text-sm text-muted-foreground"
+          class="text-muted-foreground flex items-center gap-2 text-sm"
         >
-          <div class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"/>
+          <div
+            class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"
+          />
           {{ $t('labels.settings.ai.loadingModels') }}
         </div>
 
@@ -289,7 +313,7 @@ const formatTags = (tags: string[]) => {
           <Button
             variant="link"
             size="sm"
-            class="h-auto p-0 ml-2"
+            class="ml-2 h-auto p-0"
             @click="fetchAiModels"
           >
             {{ $t('actions.retry') }}
@@ -308,9 +332,11 @@ const formatTags = (tags: string[]) => {
 
         <div
           v-if="isLoadingUsage"
-          class="flex items-center gap-2 text-sm text-muted-foreground"
+          class="text-muted-foreground flex items-center gap-2 text-sm"
         >
-          <div class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"/>
+          <div
+            class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"
+          />
           {{ $t('labels.settings.ai.loadingUsage') }}
         </div>
 
@@ -322,7 +348,7 @@ const formatTags = (tags: string[]) => {
           <Button
             variant="link"
             size="sm"
-            class="h-auto p-0 ml-2"
+            class="ml-2 h-auto p-0"
             @click="fetchAiUsage"
           >
             {{ $t('actions.retry') }}
@@ -335,11 +361,8 @@ const formatTags = (tags: string[]) => {
         >
           <div class="flex items-center justify-between">
             <span class="text-sm">
-              {{ aiUsage.used_tokens.toLocaleString() }} {{
-                $t('labels.settings.ai.of')
-              }} {{ aiUsage.max_tokens.toLocaleString() }} {{
-                $t('labels.settings.ai.tokensUsed')
-              }}
+              {{ aiUsage.used_tokens.toLocaleString() }} {{ $t('labels.settings.ai.of') }}
+              {{ aiUsage.max_tokens.toLocaleString() }} {{ $t('labels.settings.ai.tokensUsed') }}
             </span>
             <span class="text-sm text-muted">{{ usagePercentage }}%</span>
           </div>
@@ -363,7 +386,7 @@ const formatTags = (tags: string[]) => {
 
         <div
           v-else
-          class="text-sm text-muted-foreground"
+          class="text-muted-foreground text-sm"
         >
           {{ $t('labels.settings.ai.noUsageData') }}
         </div>

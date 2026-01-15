@@ -37,7 +37,7 @@ export const queryKeys = {
   tokens: (spaceId: string) => ({
     all: () => ['spaces', spaceId, 'tokens'] as const,
     lists: () => [...queryKeys.assetTags(spaceId).all(), 'list'] as const,
-    list: (filters: any = {}) => [...queryKeys.assetTags(spaceId).lists(), filters] as const
+    list: (filters: any = {}) => [...queryKeys.assetTags(spaceId).lists(), filters] as const,
   }),
   teams: {
     all: () => ['teams'] as const,
@@ -83,9 +83,11 @@ export const queryKeys = {
   contentVersions: (spaceId: string, contentId: string) => ({
     all: () => ['spaces', spaceId, 'contents', contentId, 'history'] as const,
     lists: () => [...queryKeys.contentVersions(spaceId, contentId).all(), 'list'] as const,
-    list: (filters: any = {}) => [...queryKeys.contentVersions(spaceId, contentId).lists(), filters] as const,
+    list: (filters: any = {}) =>
+      [...queryKeys.contentVersions(spaceId, contentId).lists(), filters] as const,
     details: () => [...queryKeys.contentVersions(spaceId, contentId).all(), 'detail'] as const,
-    detail: (id: string) => [...queryKeys.contentVersions(spaceId, contentId).details(), id] as const,
+    detail: (id: string) =>
+      [...queryKeys.contentVersions(spaceId, contentId).details(), id] as const,
   }),
   contentMenu: (spaceId: string) => ({
     all: () => ['spaces', spaceId, 'content-menu'] as const,
@@ -101,8 +103,10 @@ export const queryKeys = {
   dataEntries: (spaceId: string, dataSourceId: string) => ({
     all: () => ['spaces', spaceId, 'data-sources', dataSourceId, 'entries'] as const,
     lists: () => [...queryKeys.dataEntries(spaceId, dataSourceId).all(), 'list'] as const,
-    list: (filters: any = {}) => [...queryKeys.dataEntries(spaceId, dataSourceId).lists(), filters] as const,
+    list: (filters: any = {}) =>
+      [...queryKeys.dataEntries(spaceId, dataSourceId).lists(), filters] as const,
     details: () => [...queryKeys.dataEntries(spaceId, dataSourceId).all(), 'detail'] as const,
-    detail: (id: string) => [...queryKeys.dataEntries(spaceId, dataSourceId).details(), id] as const,
+    detail: (id: string) =>
+      [...queryKeys.dataEntries(spaceId, dataSourceId).details(), id] as const,
   }),
 }

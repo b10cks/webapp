@@ -14,8 +14,7 @@ const delegatedProps = computed(() => {
 })
 
 const { filterState } = useCommand()
-const isRender = computed(() => !!filterState.search && filterState.filtered.count === 0,
-)
+const isRender = computed(() => !!filterState.search && filterState.filtered.count === 0)
 </script>
 
 <template>
@@ -24,6 +23,6 @@ const isRender = computed(() => !!filterState.search && filterState.filtered.cou
     v-bind="delegatedProps"
     :class="cn('py-6 text-center text-sm', props.class)"
   >
-    <slot/>
+    <slot />
   </Primitive>
 </template>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { useRouteQuery } from '@vueuse/router'
 import BlockMenu from '~/components/BlockMenu.vue'
 import BlockTagsTable from '~/components/BlockTagsTable.vue'
@@ -35,7 +34,7 @@ const component = computed(() => {
           :space-id="spaceId"
           :mode="mode"
           :folder="folder"
-          class="flex grow max-w-7xl mx-auto w-full gap-6 flex-col"
+          class="mx-auto flex w-full max-w-7xl grow flex-col gap-6"
         />
       </div>
     </NuxtLayout>

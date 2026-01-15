@@ -1,8 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import type { CreateTokenRequest, TokenQueryParams } from '~/api/resources/tokens'
-import { api } from '~/api'
-import { queryKeys } from './useQueryClient'
 import { toast } from 'vue-sonner'
+
+import type { CreateTokenRequest, TokenQueryParams } from '~/api/resources/tokens'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useTokens(spaceIdRef: MaybeRefOrComputed<string>) {
   const queryClient = useQueryClient()

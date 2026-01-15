@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
@@ -9,17 +8,16 @@ import Markdown from '~/components/Markdown.vue'
 const { login } = useAuth()
 
 const formData = ref<{
-  firstname: string,
-  lastname: string,
-  email: string,
+  firstname: string
+  lastname: string
+  email: string
   password: string
 }>({
   firstname: '',
   lastname: '',
   email: '',
-  password: ''
+  password: '',
 })
-
 </script>
 
 <template>
@@ -29,13 +27,13 @@ const formData = ref<{
         <div class="grid gap-4">
           <Logo
             alt="b10cks logo"
-            class="w-8 h-8 text-primary"
+            class="h-8 w-8 text-primary"
           />
           <h1
-            class="text-2xl font-script mb-6 text-primary font-semibold"
+            class="font-script mb-6 text-2xl font-semibold text-primary"
             v-text="$t('labels.login.signupHeader')"
           />
-          <Markdown :content="$t('labels.login.signupDescription')"/>
+          <Markdown :content="$t('labels.login.signupDescription')" />
         </div>
         <form
           class="grid gap-6"
@@ -78,11 +76,11 @@ const formData = ref<{
           <Button
             disabled
             variant="primary"
-          >{{ $t('actions.signup') }}</Button>
-          <Markdown :content="$t('labels.login.login')"/>
+            >{{ $t('actions.signup') }}</Button
+          >
+          <Markdown :content="$t('labels.login.login')" />
         </form>
       </div>
     </NuxtLayout>
   </div>
-
 </template>

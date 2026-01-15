@@ -1,14 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
-import { api } from '~/api'
-import { queryKeys } from './useQueryClient'
+
+import type { ApiResponse } from '~/types'
 import type {
   CreateDataEntryPayload,
   DataEntryQueryParams,
   DataEntryResource,
-  UpdateDataEntryPayload
+  UpdateDataEntryPayload,
 } from '~/types/data-sources'
-import type { ApiResponse } from '~/types'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useDataEntries(
   spaceIdRef: MaybeRefOrComputed<string>,
@@ -30,7 +33,9 @@ export function useDataEntries(
     const params = computed(() => unref(paramsRef))
 
     return useQuery({
-      queryKey: computed(() => queryKeys.dataEntries(spaceId.value, dataSourceId.value).list(params.value)),
+      queryKey: computed(() =>
+        queryKeys.dataEntries(spaceId.value, dataSourceId.value).list(params.value)
+      ),
       queryFn: async () => {
         const response = await spaceAPI.value.dataSources.getEntries(dataSourceId.value, {
           sort: '+key',
@@ -49,7 +54,9 @@ export function useDataEntries(
     const id = computed(() => unref(idRef))
 
     return useQuery({
-      queryKey: computed(() => queryKeys.dataEntries(spaceId.value, dataSourceId.value).detail(id.value)),
+      queryKey: computed(() =>
+        queryKeys.dataEntries(spaceId.value, dataSourceId.value).detail(id.value)
+      ),
       queryFn: async () => {
         const response = await spaceAPI.value.dataSources.getEntry(dataSourceId.value, id.value)
         return response.data
@@ -69,10 +76,10 @@ export function useDataEntries(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists()
+          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataSources(spaceId.value).detail(dataSourceId.value)
+          queryKey: queryKeys.dataSources(spaceId.value).detail(dataSourceId.value),
         })
         toast.success(`Data entry "${data.key}" created successfully`)
       },
@@ -87,19 +94,20 @@ export function useDataEntries(
    */
   const useUpdateDataEntryMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload }: {
-        id: string;
-        payload: UpdateDataEntryPayload;
-      }) => {
-        const response = await spaceAPI.value.dataSources.updateEntry(dataSourceId.value, id, payload)
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateDataEntryPayload }) => {
+        const response = await spaceAPI.value.dataSources.updateEntry(
+          dataSourceId.value,
+          id,
+          payload
+        )
         return response.data
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists()
+          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).detail(data.id)
+          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).detail(data.id),
         })
         toast.success(`Data entry "${data.key}" updated successfully`)
       },
@@ -120,13 +128,13 @@ export function useDataEntries(
       },
       onSuccess: (id) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists()
+          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists(),
         })
         queryClient.removeQueries({
-          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).detail(id)
+          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).detail(id),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataSources(spaceId.value).detail(dataSourceId.value)
+          queryKey: queryKeys.dataSources(spaceId.value).detail(dataSourceId.value),
         })
         toast.success(`Data entry deleted successfully`)
       },
@@ -151,10 +159,10 @@ export function useDataEntries(
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists()
+          queryKey: queryKeys.dataEntries(spaceId.value, dataSourceId.value).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataSources(spaceId.value).detail(dataSourceId.value)
+          queryKey: queryKeys.dataSources(spaceId.value).detail(dataSourceId.value),
         })
         toast.success(`Batch update completed successfully`)
       },

@@ -40,9 +40,8 @@ const selectedTab = computed({
     } else {
       router.replace({ ...route, query: { ...route.query, mode: undefined } })
     }
-  }
+  },
 })
-
 
 // Get content versions data
 const {
@@ -50,18 +49,12 @@ const {
   useContentVersionQuery,
   useUpdateVersionMutation,
   useSetCurrentVersionMutation,
-  usePublishVersionMutation
+  usePublishVersionMutation,
 } = useContentVersions(props.spaceId, props.content.id)
 
-const {
-  data: versions,
-  isLoading,
-  error
-} = useContentVersionsQuery()
+const { data: versions, isLoading, error } = useContentVersionsQuery()
 
-const {
-  data: selectedVersionData,
-} = useContentVersionQuery(selectedVersionId)
+const { data: selectedVersionData } = useContentVersionQuery(selectedVersionId)
 
 const { mutate: setCurrentVersion, isPending: isSettingCurrent } = useSetCurrentVersionMutation()
 const { mutate: publishVersion, isPending: isPublishing } = usePublishVersionMutation()
@@ -71,20 +64,21 @@ const { mutate: updateVersion, isPending: isUpdating } = useUpdateVersionMutatio
 const groupedVersions = computed(() => {
   if (!versions.value) return {}
 
-  const filtered = versions.value
-    .filter(version => {
-      // Apply search query filter if any
-      if (!searchQuery.value) return true
-      return version.message?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        version.author?.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    })
+  const filtered = versions.value.filter((version) => {
+    // Apply search query filter if any
+    if (!searchQuery.value) return true
+    return (
+      version.message?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      version.author?.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  })
 
   const groups: Record<string, ContentVersionListResource[]> = {
     today: [],
     yesterday: [],
     thisWeek: [],
     lastWeek: [],
-    older: []
+    older: [],
   }
 
   const now = dayjs()
@@ -92,7 +86,7 @@ const groupedVersions = computed(() => {
   const startOfWeek = now.startOf('week')
   const startOfLastWeek = startOfWeek.subtract(1, 'week')
 
-  filtered.forEach(version => {
+  filtered.forEach((version) => {
     const versionDate = dayjs(version.created_at)
 
     if (versionDate.isAfter(now.startOf('day'))) {
@@ -109,7 +103,7 @@ const groupedVersions = computed(() => {
   })
 
   // Remove empty groups
-  Object.keys(groups).forEach(key => {
+  Object.keys(groups).forEach((key) => {
     if (groups[key].length === 0) {
       delete groups[key]
     }
@@ -124,7 +118,7 @@ const versionTreeMap = computed(() => {
 
   const map = new Map<string, string[]>()
 
-  versions.value.forEach(version => {
+  versions.value.forEach((version) => {
     if (version.parent_id) {
       if (!map.has(version.parent_id)) {
         map.set(version.parent_id, [])
@@ -142,7 +136,7 @@ const getVersionIndentLevel = (versionId: string): number => {
   let currentId = versionId
 
   while (true) {
-    const version = versions.value?.find(v => v.id === currentId)
+    const version = versions.value?.find((v) => v.id === currentId)
     if (!version?.parent_id) break
 
     // Check if this is not the first child of its parent
@@ -201,7 +195,7 @@ const versionFilterFields = [
   { id: 'message', label: 'Message' },
   { id: 'author', label: 'Author' },
   { id: 'published', label: 'Published' },
-  { id: 'created_at', label: 'Date', datepicker: { max: new Date().toISOString() } }
+  { id: 'created_at', label: 'Date', datepicker: { max: new Date().toISOString() } },
 ]
 
 const isCurrentDraft = (version: ContentVersionListResource) => {
@@ -222,7 +216,7 @@ const isMine = (version: ContentVersionListResource) => {
 
 const selectedVersion = computed(() => {
   if (!selectedVersionId.value || !versions.value) return null
-  return versions.value.find(v => v.id === selectedVersionId.value) || null
+  return versions.value.find((v) => v.id === selectedVersionId.value) || null
 })
 
 const previewSource = computed(() => {
@@ -241,20 +235,19 @@ const openInTab = () => {
   if (!previewSource.value) return
   window.open(previewSource.value, '_blank')
 }
-
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col p-6">
+  <div class="flex h-full w-full flex-col p-6">
     <ResizablePanelGroup
       direction="vertical"
       class="h-full min-h-0"
     >
       <ResizablePanel>
-        <div class="h-full flex flex-col gap-4 min-h-0">
-          <div class="flex justify-between items-center">
+        <div class="flex h-full min-h-0 flex-col gap-4">
+          <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Version History</h2>
-            <div class="flex gap-2 w-2/3">
+            <div class="flex w-2/3 gap-2">
               <SearchFilter
                 v-model="filterOptions"
                 :filterable-fields="versionFilterFields"
@@ -264,21 +257,21 @@ const openInTab = () => {
             </div>
           </div>
 
-          <ScrollArea class="flex-1 bg-surface rounded-md">
+          <ScrollArea class="flex-1 rounded-md bg-surface">
             <div
               v-if="isLoading"
-              class="flex justify-center items-center h-32"
+              class="flex h-32 items-center justify-center"
             >
               <Icon
                 name="lucide:loader"
-                class="animate-spin h-6 w-6 mr-2"
+                class="mr-2 h-6 w-6 animate-spin"
               />
               <span>Loading versions...</span>
             </div>
 
             <div
               v-else-if="error"
-              class="text-destructive p-4"
+              class="p-4 text-destructive"
             >
               {{ error }}
             </div>
@@ -300,20 +293,22 @@ const openInTab = () => {
                 class="mb-2"
               >
                 <div class="relative z-10 flex items-center px-2">
-                  <div class="bg-surface text-xs font-medium text-muted uppercase tracking-wider py-1">
+                  <div
+                    class="bg-surface py-1 text-xs font-medium tracking-wider text-muted uppercase"
+                  >
                     {{ getGroupLabel(groupKey) }}
                   </div>
-                  <div class="ml-2 h-px flex-1 bg-border"/>
+                  <div class="ml-2 h-px flex-1 bg-border" />
                 </div>
 
                 <div class="grid">
                   <RadioGroupItem
                     v-for="version in groupVersions"
                     :key="version.id"
-                    class="group relative flex items-center py-1 px-3 rounded-md transition-colors ring-none outline-none"
+                    class="group ring-none relative flex items-center rounded-md px-3 py-1 transition-colors outline-none"
                     :class="{
                       'bg-secondary/50': selectedVersionId === version.id,
-                      'hover:bg-secondary/20 cursor-pointer': selectedVersionId !== version.id
+                      'cursor-pointer hover:bg-secondary/20': selectedVersionId !== version.id,
                     }"
                     @select="selectVersion(version)"
                   >
@@ -324,17 +319,19 @@ const openInTab = () => {
                     />
                     <div
                       v-if="version.parent_id"
-                      class="absolute w-0.5 top-6 h-8 bg-border"
-                      :style="{left: `${1 + getVersionIndentLevel(version.id)}rem`}"
+                      class="absolute top-6 h-8 w-0.5 bg-border"
+                      :style="{ left: `${1 + getVersionIndentLevel(version.id)}rem` }"
                     />
                     <div
-                      class="relative flex-shrink-0 w-3 h-3 rounded-full border-2 mr-3 z-10"
+                      class="relative z-10 mr-3 h-3 w-3 flex-shrink-0 rounded-full border-2"
                       :class="[
-                        wasPublished(version) ? 'bg-success-background border-success' : 'border-border bg-background',
+                        wasPublished(version)
+                          ? 'border-success bg-success-background'
+                          : 'border-border bg-background',
                       ]"
                     />
-                    <div class="flex flex-1 items-center grow">
-                      <div class="flex items-center gap-2 grow justify-start">
+                    <div class="flex flex-1 grow items-center">
+                      <div class="flex grow items-center justify-start gap-2">
                         <div class="flex gap-1">
                           <Badge
                             v-if="isCurrentDraft(version)"
@@ -372,7 +369,7 @@ const openInTab = () => {
                         </Badge>
                       </div>
 
-                      <div class="flex items-center gap-2 ml-auto">
+                      <div class="ml-auto flex items-center gap-2">
                         <SimpleTooltip
                           v-if="version.author"
                           :tooltip="version.author.email"
@@ -388,15 +385,17 @@ const openInTab = () => {
                         <span v-else>System</span>
                         <span>•</span>
                         <SimpleTooltip :tooltip="formatDateTime(version.created_at)">
-                          <time class="text-primary">{{ formatRelativeTime(version.created_at) }}</time>
+                          <time class="text-primary">{{
+                            formatRelativeTime(version.created_at)
+                          }}</time>
                         </SimpleTooltip>
                       </div>
                     </div>
                     <div
-                      class="flex gap-1 transition-opacity ml-2"
+                      class="ml-2 flex gap-1 transition-opacity"
                       :class="{
                         'opacity-100': selectedVersionId === version.id,
-                        'opacity-0 group-hover:opacity-100': selectedVersionId !== version.id
+                        'opacity-0 group-hover:opacity-100': selectedVersionId !== version.id,
                       }"
                     >
                       <SimpleTooltip tooltip="Continue with this version as draft">
@@ -407,7 +406,7 @@ const openInTab = () => {
                           :disabled="isCurrentDraft(version) || isSettingCurrent"
                           @click.stop="handleSetAsCurrent(version.id)"
                         >
-                          <Icon name="lucide:square-pen"/>
+                          <Icon name="lucide:square-pen" />
                         </Button>
                       </SimpleTooltip>
 
@@ -419,7 +418,7 @@ const openInTab = () => {
                           :disabled="isCurrentlyPublished(version) || isPublishing"
                           @click.stop="handlePublishVersion(version.id)"
                         >
-                          <Icon name="lucide:send"/>
+                          <Icon name="lucide:send" />
                         </Button>
                       </SimpleTooltip>
                     </div>
@@ -439,30 +438,30 @@ const openInTab = () => {
 
       <ResizablePanel
         :default-size="settings.content.history.panelHeight"
-        class="flex flex-col h-full"
-        @resize="size => settings.content.history.panelHeight = size"
+        class="flex h-full flex-col"
+        @resize="(size) => (settings.content.history.panelHeight = size)"
       >
         <div
           v-if="!selectedVersion"
-          class="flex justify-center items-center h-full text-muted"
+          class="flex h-full items-center justify-center text-muted"
         >
           Select a version to view details
         </div>
         <div
           v-else
-          class="flex flex-col flex-1 h-full"
+          class="flex h-full flex-1 flex-col"
         >
           <Tabs
             v-model="selectedTab"
-            class="w-full h-full flex flex-col"
+            class="flex h-full w-full flex-col"
           >
-            <div class="flex justify-between items-center my-3">
+            <div class="my-3 flex items-center justify-between">
               <div>
-                <h3 class="text-lg text-primary font-medium">
+                <h3 class="text-lg font-medium text-primary">
                   {{ formatCalendarTime(selectedVersion.created_at) }} {{ selectedVersion.message }}
                 </h3>
                 <div class="flex items-center gap-2 text-sm">
-                  <Icon name="lucide:git-commit"/>
+                  <Icon name="lucide:git-commit" />
                   <span>Changes from previous version</span>
                 </div>
               </div>
@@ -473,9 +472,9 @@ const openInTab = () => {
             </div>
             <TabsContent
               value="changes"
-              class="flex flex-col rounded-md h-full gap-4 overflow-hidden"
+              class="flex h-full flex-col gap-4 overflow-hidden rounded-md"
             >
-              <ScrollArea class="flex-1 bg-surface rounded-lg p-4 h-full">
+              <ScrollArea class="h-full flex-1 rounded-lg bg-surface p-4">
                 <DiffViewer
                   v-if="selectedVersionData"
                   :changes="selectedVersionData.diff.entries"
@@ -486,9 +485,9 @@ const openInTab = () => {
               value="visual"
               class="grid grow"
             >
-              <div class="flex flex-col gap-4 grow">
+              <div class="flex grow flex-col gap-4">
                 <div class="flex items-center justify-between">
-                  <div class="text-xs text-muted mt-2">
+                  <div class="mt-2 text-xs text-muted">
                     Previewing version from {{ formatCalendarTime(selectedVersion.created_at) }}
                   </div>
                   <Button
@@ -496,14 +495,14 @@ const openInTab = () => {
                     size="sm"
                     @click="openInTab"
                   >
-                    <Icon name="lucide:external-link"/>
+                    <Icon name="lucide:external-link" />
                     Open in new tab
                   </Button>
                 </div>
-                <div class="bg-surface grow rounded-lg overflow-hidden flex">
+                <div class="flex grow overflow-hidden rounded-lg bg-surface">
                   <iframe
                     v-if="previewSource"
-                    class="grow flex-1 bg-white"
+                    class="flex-1 grow bg-white"
                     title="Content Preview"
                     :src="previewSource"
                   />

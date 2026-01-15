@@ -1,21 +1,33 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
-import { useDataSources } from '~/composables/useDataSources'
-import { useDataEntries } from '~/composables/useDataEntries'
-import type { CreateDataEntryPayload, DataEntryResource, UpdateDataEntryPayload } from '~/types/data-sources'
-import { Input } from '~/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableSortableHead } from '~/components/ui/table'
-import { Button } from '~/components/ui/button'
-import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import { Switch } from '~/components/ui/switch'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
-import SearchFilter from '~/components/SearchFilter.vue'
-import { Textarea } from '~/components/ui/textarea'
-import SortSelect from '~/components/ui/SortSelect.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import { useRouteQuery } from '@vueuse/router'
+import { computed, nextTick, ref } from 'vue'
 import DataEntriesIcon from '~/assets/images/data-entries.svg?component'
+import SearchFilter from '~/components/SearchFilter.vue'
+import { Button } from '~/components/ui/button'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
+import { Input } from '~/components/ui/input'
+import SortSelect from '~/components/ui/SortSelect.vue'
+import { Switch } from '~/components/ui/switch'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableSortableHead,
+} from '~/components/ui/table'
 import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { Textarea } from '~/components/ui/textarea'
+import { useDataEntries } from '~/composables/useDataEntries'
+import { useDataSources } from '~/composables/useDataSources'
+import type {
+  CreateDataEntryPayload,
+  DataEntryResource,
+  UpdateDataEntryPayload,
+} from '~/types/data-sources'
 
 const route = useRoute()
 const { alert } = useAlertDialog()
@@ -24,18 +36,14 @@ const spaceId = computed(() => route.params.space as string)
 const dataSourceId = computed(() => route.params.dataSourceId as string)
 
 const { useDataSourceQuery } = useDataSources(spaceId)
-const {
-  data: dataSource,
-  isLoading: isLoadingDataSource
-} = useDataSourceQuery(dataSourceId)
+const { data: dataSource, isLoading: isLoadingDataSource } = useDataSourceQuery(dataSourceId)
 
 const {
   useDataEntriesQuery,
   useCreateDataEntryMutation,
   useUpdateDataEntryMutation,
-  useDeleteDataEntryMutation
+  useDeleteDataEntryMutation,
 } = useDataEntries(spaceId, dataSourceId)
-
 
 const { settings } = useSpaceSettings(spaceId.value)
 
@@ -44,7 +52,7 @@ const currentPage = ref(1)
 const perPage = ref(25)
 const sortBy = ref<{ column: string; direction: 'asc' | 'desc' }>({
   column: 'created_at',
-  direction: 'desc'
+  direction: 'desc',
 })
 const filters = ref<Record<string, unknown>>({})
 
@@ -60,9 +68,12 @@ const possibleFilters = computed(() => {
   const result = [
     { id: 'key', label: 'Key' },
     {
-      id: 'active', label: 'Active', items: [
+      id: 'active',
+      label: 'Active',
+      items: [
         { value: 'true', label: $t('labels.common.yes') },
-        { value: 'false', label: $t('labels.common.no') }]
+        { value: 'false', label: $t('labels.common.no') },
+      ],
     },
     { id: 'value', label: 'Value' },
   ]
@@ -81,17 +92,14 @@ const possibleFilters = computed(() => {
   return result
 })
 
-const {
-  data: dataEntriesResponse,
-  isLoading: isLoadingEntries
-} = useDataEntriesQuery(queryParams)
+const { data: dataEntriesResponse, isLoading: isLoadingEntries } = useDataEntriesQuery(queryParams)
 
 const { mutate: createEntry, isPending: isCreatingEntry } = useCreateDataEntryMutation()
 const { mutate: updateEntry, isPending: isUpdatingEntry } = useUpdateDataEntryMutation()
 const { mutate: deleteEntry } = useDeleteDataEntryMutation()
 
 const selectedDimension = useRouteQuery('dimension', 'default', {
-  transform: (value: string) => value || 'default'
+  transform: (value: string) => value || 'default',
 })
 
 const editingEntries = ref<Map<string, DataEntryResource>>(new Map())
@@ -109,10 +117,12 @@ const dimensionTabs = computed(() => {
   const tabs = [{ key: 'default', label: $t('labels.datasets.dimensions.default') }]
 
   if (dataSource.value?.dimensions?.length > 0) {
-    tabs.push(...dataSource.value.dimensions.map(dim => ({
-      key: dim.key,
-      label: dim.label
-    })))
+    tabs.push(
+      ...dataSource.value.dimensions.map((dim) => ({
+        key: dim.key,
+        label: dim.label,
+      }))
+    )
   }
 
   return tabs
@@ -124,7 +134,7 @@ const newEntryData = ref<CreateDataEntryPayload>({
   key: '',
   value: '',
   dimensions: {},
-  is_active: true
+  is_active: true,
 })
 
 const handleDimensionChange = (dimension: string) => {
@@ -146,9 +156,13 @@ const handleSaveNewEntry = async () => {
   try {
     const payload = {
       ...newEntryData.value,
-      dimensions: selectedDimension.value === 'default'
-        ? {}
-        : { [selectedDimension.value]: newEntryData.value.dimensions[selectedDimension.value] || '' }
+      dimensions:
+        selectedDimension.value === 'default'
+          ? {}
+          : {
+              [selectedDimension.value]:
+                newEntryData.value.dimensions[selectedDimension.value] || '',
+            },
     }
 
     await createEntry(payload)
@@ -157,9 +171,10 @@ const handleSaveNewEntry = async () => {
       key: '',
       value: '',
       dimensions: {},
-      is_active: true
+      is_active: true,
     }
-  } catch (error) { /* empty */
+  } catch (error) {
+    /* empty */
   }
 }
 
@@ -167,7 +182,9 @@ const handleEditEntry = (entry: DataEntryResource) => {
   if (settings.value.dataEntries.mode === 'single') {
     editingEntries.value.set(entry.id, { ...entry })
     nextTick(() => {
-      const firstInput = document.querySelector(`[data-entry-id="${entry.id}"] input`) as HTMLInputElement
+      const firstInput = document.querySelector(
+        `[data-entry-id="${entry.id}"] input`
+      ) as HTMLInputElement
       firstInput?.focus()
     })
   }
@@ -183,7 +200,7 @@ const handleSaveEntry = async (entryId: string) => {
         key: editedEntry.key,
         value: editedEntry.value,
         dimensions: editedEntry.dimensions,
-        is_active: editedEntry.is_active
+        is_active: editedEntry.is_active,
       }
       await createEntry(payload)
     } else {
@@ -191,14 +208,15 @@ const handleSaveEntry = async (entryId: string) => {
         key: editedEntry.key,
         value: editedEntry.value,
         dimensions: editedEntry.dimensions,
-        is_active: editedEntry.is_active
+        is_active: editedEntry.is_active,
       }
       await updateEntry({ id: entryId, payload })
     }
 
     editingEntries.value.delete(entryId)
     pendingChanges.value.delete(entryId)
-  } catch (error) { /* empty */
+  } catch (error) {
+    /* empty */
   }
 }
 
@@ -207,14 +225,13 @@ const handleDiscardEntry = (entryId: string) => {
   pendingChanges.value.delete(entryId)
 }
 
-
 const handleDeleteEntry = async (entry: DataEntryResource) => {
   const confirmed = await alert.confirm(
     $t('messages.dataEntries.deleteConfirmation', { name: entry.name }),
     {
       title: $t('labels.dataEntries.deleteTitle'),
       confirmLabel: $t('actions.delete'),
-      cancelLabel: $t('actions.cancel')
+      cancelLabel: $t('actions.cancel'),
     }
   )
 
@@ -222,7 +239,6 @@ const handleDeleteEntry = async (entry: DataEntryResource) => {
     await deleteEntry(entry.id)
   }
 }
-
 
 const handleInputChange = (entry: DataEntryResource, field: string, value: any) => {
   if (!editingEntries.value.has(entry.id)) {
@@ -234,7 +250,7 @@ const handleInputChange = (entry: DataEntryResource, field: string, value: any) 
     const dimensionKey = field.replace('dimension.', '')
     editedEntry.dimensions = { ...editedEntry.dimensions, [dimensionKey]: value }
   } else {
-    (editedEntry as any)[field] = value
+    ;(editedEntry as any)[field] = value
   }
 
   pendingChanges.value.add(entry.id)
@@ -312,13 +328,12 @@ const hasEntryPendingChanges = (entryId: string) => {
 }
 
 const isDefaultSelected = computed(() => selectedDimension.value === 'default')
-
 </script>
 
 <template>
   <div>
     <NuxtLayout>
-      <div class="bg-background w-full">
+      <div class="w-full bg-background">
         <div class="content-grid">
           <ContentHeader
             :header="dataSource?.name || $t('labels.datasets.dataEntries')"
@@ -327,9 +342,9 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
             <template #before-header>
               <NuxtLink
                 :to="{ name: 'space-datasources', params: { space: spaceId } }"
-                class="flex gap-2 items-center cursor-pointer"
+                class="flex cursor-pointer items-center gap-2"
               >
-                <Icon name="lucide:chevron-left"/>
+                <Icon name="lucide:chevron-left" />
                 {{ $t('labels.datasets.backToDataSources') }}
               </NuxtLink>
             </template>
@@ -357,13 +372,13 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                   <TabsList class="h-8">
                     <TabsTrigger
                       value="single"
-                      class="text-xs px-2 py-1"
+                      class="px-2 py-1 text-xs"
                     >
                       {{ $t('labels.datasets.singleEdit') }}
                     </TabsTrigger>
                     <TabsTrigger
                       value="grid"
-                      class="text-xs px-2 py-1"
+                      class="px-2 py-1 text-xs"
                     >
                       {{ $t('labels.datasets.gridEdit') }}
                     </TabsTrigger>
@@ -375,7 +390,7 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
 
           <div
             v-if="isLoadingDataSource"
-            class="flex justify-center items-center py-12 gap-2"
+            class="flex items-center justify-center gap-2 py-12"
           >
             <Icon
               name="lucide:loader"
@@ -422,7 +437,7 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                 </div>
               </div>
 
-              <div class="rounded-md border border-input overflow-hidden">
+              <div class="overflow-hidden rounded-md border border-input">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -430,26 +445,28 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                         v-model="sortBy"
                         class="w-1/3"
                         column="key"
-                      >{{ $t('labels.dataEntries.fields.key') }}
+                        >{{ $t('labels.dataEntries.fields.key') }}
                       </TableSortableHead>
                       <TableSortableHead
                         v-model="sortBy"
                         class="w-1/2"
                         column="value"
-                      >{{ $t('labels.dataEntries.fields.value') }}
+                        >{{ $t('labels.dataEntries.fields.value') }}
                       </TableSortableHead>
                       <TableHead
                         v-if="!isDefaultSelected"
                         class="w-1/2"
                       >
-                        {{ dimensionTabs.find(tab => tab.key === selectedDimension)?.label }}
+                        {{ dimensionTabs.find((tab) => tab.key === selectedDimension)?.label }}
                       </TableHead>
                       <TableHead
                         v-if="isDefaultSelected"
                         class="w-16"
-                      >{{ $t('labels.dataEntries.fields.active') }}
+                        >{{ $t('labels.dataEntries.fields.active') }}
                       </TableHead>
-                      <TableHead class="w-24">{{ $t('labels.dataEntries.fields.actions') }}</TableHead>
+                      <TableHead class="w-24">{{
+                        $t('labels.dataEntries.fields.actions')
+                      }}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -477,7 +494,9 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                       <TableCell v-if="!isDefaultSelected">
                         <Input
                           v-model="newEntryData.dimensions[selectedDimension]"
-                          :placeholder="dimensionTabs.find(tab => tab.key === selectedDimension)?.label"
+                          :placeholder="
+                            dimensionTabs.find((tab) => tab.key === selectedDimension)?.label
+                          "
                           @keydown.enter="handleSaveNewEntry"
                         />
                       </TableCell>
@@ -515,10 +534,10 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                         :colspan="4"
                         class="h-24 text-center"
                       >
-                        <div class="flex justify-center items-center">
+                        <div class="flex items-center justify-center">
                           <Icon
                             name="lucide:loader"
-                            class="animate-spin h-6 w-6 mr-2"
+                            class="mr-2 h-6 w-6 animate-spin"
                           />
                           {{ $t('labels.datasets.loadingEntries') }}
                         </div>
@@ -542,7 +561,8 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                           <span
                             v-else
                             class="font-medium"
-                          >{{ entry.key }}</span>
+                            >{{ entry.key }}</span
+                          >
                         </TableCell>
 
                         <TableCell>
@@ -550,30 +570,42 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                             v-if="isEntryEditing(entry.id)"
                             :model-value="entry.value"
                             :disabled="!isDefaultSelected"
-                            @update:model-value="(value) => handleInputChange(entry, 'value', value)"
+                            @update:model-value="
+                              (value) => handleInputChange(entry, 'value', value)
+                            "
                             @keydown="(e) => handleKeyDown(e, entry.id, 'value')"
                           />
                           <span
                             v-else
-                            class="max-w-[200px] truncate block"
-                          >{{ entry.value || '-' }}</span>
+                            class="block max-w-[200px] truncate"
+                            >{{ entry.value || '-' }}</span
+                          >
                         </TableCell>
 
                         <TableCell v-if="!isDefaultSelected">
                           <Textarea
                             v-if="isEntryEditing(entry.id)"
                             :model-value="getDimensionValue(entry, selectedDimension)"
-                            @update:model-value="(value) => handleInputChange(entry, `dimension.${selectedDimension}`, value)"
-                            @keydown="(e) => handleKeyDown(e, entry.id, `dimension.${selectedDimension}`)"
+                            @update:model-value="
+                              (value) =>
+                                handleInputChange(entry, `dimension.${selectedDimension}`, value)
+                            "
+                            @keydown="
+                              (e) => handleKeyDown(e, entry.id, `dimension.${selectedDimension}`)
+                            "
                           />
-                          <span v-else>{{ getDimensionValue(entry, selectedDimension) || '-' }}</span>
+                          <span v-else>{{
+                            getDimensionValue(entry, selectedDimension) || '-'
+                          }}</span>
                         </TableCell>
 
                         <TableCell v-if="isDefaultSelected">
                           <Switch
                             :disabled="!isEntryEditing(entry.id)"
                             :model-value="entry.is_active"
-                            @update:model-value="(value) => handleInputChange(entry, 'is_active', value)"
+                            @update:model-value="
+                              (value) => handleInputChange(entry, 'is_active', value)
+                            "
                           />
                         </TableCell>
 
@@ -617,10 +649,14 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                                 variant="ghost"
                                 @click="handleEditEntry(entry)"
                               >
-                                <Icon name="lucide:pencil"/>
+                                <Icon name="lucide:pencil" />
                               </Button>
                               <Button
-                                v-if="settings.dataEntries.mode === 'grid' && !settings.dataEntries.autoSave && hasEntryPendingChanges(entry.id)"
+                                v-if="
+                                  settings.dataEntries.mode === 'grid' &&
+                                  !settings.dataEntries.autoSave &&
+                                  hasEntryPendingChanges(entry.id)
+                                "
                                 size="icon"
                                 variant="outline"
                                 class="h-8 w-8"
@@ -664,8 +700,8 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
                 :current-page="currentPage"
                 :per-page="perPage"
                 :page-size-options="pageSizeOptions"
-                @update:current-page="val => currentPage = val"
-                @update:per-page="val => perPage = val"
+                @update:current-page="(val) => (currentPage = val)"
+                @update:per-page="(val) => (perPage = val)"
               />
             </div>
           </div>

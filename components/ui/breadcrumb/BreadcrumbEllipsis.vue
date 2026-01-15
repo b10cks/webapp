@@ -14,7 +14,7 @@ const props = defineProps<{
     :class="cn('flex h-9 w-9 items-center justify-center', props.class)"
   >
     <slot>
-      <Icon name="lucide:more-horizontal"/>
+      <Icon name="lucide:more-horizontal" />
     </slot>
     <span class="sr-only">More</span>
   </span>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import IconGrid from '~/components/ui/IconGrid.vue'
 import ColorSelect from '~/components/ui/ColorSelect.vue'
 import { Input } from '~/components/ui/input'
@@ -17,17 +16,21 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  'update:modelValue': [unknown],
-  'update:name': [unknown],
-  'update:color': [unknown],
+  'update:modelValue': [unknown]
+  'update:name': [unknown]
+  'update:color': [unknown]
   'update:icon': [unknown]
 }>()
 
 const localValue = ref({ ...props.modelValue })
 
-watch(() => props.modelValue, (val) => {
-  localValue.value = { ...val }
-}, { deep: true })
+watch(
+  () => props.modelValue,
+  (val) => {
+    localValue.value = { ...val }
+  },
+  { deep: true }
+)
 
 const update = (key: keyof typeof localValue.value, value: unknown) => {
   localValue.value[key] = value
@@ -57,4 +60,3 @@ const update = (key: keyof typeof localValue.value, value: unknown) => {
     </div>
   </FormField>
 </template>
-

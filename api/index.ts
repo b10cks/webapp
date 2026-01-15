@@ -1,28 +1,31 @@
+import { BlockFolders } from '~/api/resources/block-folders'
+import { DataSources } from '~/api/resources/data-sources'
+import { Redirects } from '~/api/resources/redirects'
+import { Tokens } from '~/api/resources/tokens'
+
 import { ApiClient } from './client'
-import { Spaces } from './resources/spaces'
 import { AssetFolders } from './resources/asset-folders'
 import { AssetTags } from './resources/asset-tags'
 import { Assets } from './resources/assets'
-import { Blocks } from './resources/blocks'
 import { BlockTags } from './resources/block-tags'
-import { BlockFolders } from '~/api/resources/block-folders'
-import { Contents } from './resources/contents'
+import { Blocks } from './resources/blocks'
 import { ContentMenu } from './resources/content-menu'
 import { ContentVersions } from './resources/content-versions'
-import { DataSources } from '~/api/resources/data-sources'
-import { Tokens } from '~/api/resources/tokens'
+import { Contents } from './resources/contents'
+import { Spaces } from './resources/spaces'
 import { Teams } from './resources/teams'
-import { Redirects } from '~/api/resources/redirects'
 
 export class API {
   public client: ApiClient
   private readonly _spaces: Spaces
   private readonly _teams: Teams
 
-  constructor(options: {
-    baseURL?: string
-    authToken?: string
-  } = {}) {
+  constructor(
+    options: {
+      baseURL?: string
+      authToken?: string
+    } = {}
+  ) {
     this.client = new ApiClient(options)
     this._spaces = new Spaces(this.client)
     this._teams = new Teams(this.client)

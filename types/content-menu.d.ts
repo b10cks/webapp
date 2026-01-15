@@ -11,7 +11,7 @@ interface FlatContentMenuItem {
   uat: string
 }
 
-interface ContentMenuItem  extends FlatContentMenuItem{
+interface ContentMenuItem extends FlatContentMenuItem {
   children: ContentMenuItem[]
 }
 

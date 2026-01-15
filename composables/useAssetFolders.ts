@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { queryKeys } from './useQueryClient'
 import { toast } from 'vue-sonner'
 
 import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useAssetFolders(spaceId: string) {
   const queryClient = useQueryClient()
@@ -49,10 +50,7 @@ export function useAssetFolders(spaceId: string) {
 
   const useUpdateAssetFolderMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload, }: {
-        id: string
-        payload: UpsertAssetFolderPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpsertAssetFolderPayload }) => {
         const response = await spaceAPI.assetFolders.update(id, payload)
         return response.data
       },
@@ -89,26 +87,26 @@ export function useAssetFolders(spaceId: string) {
 
     const rootFolders = computed(() => {
       if (!folders.value) return []
-      return folders.value.filter(folder => !folder.parent_id)
+      return folders.value.filter((folder) => !folder.parent_id)
     })
 
     const getChildrenOfFolder = (parentId: string | null) => {
       if (!folders.value) return []
-      return folders.value.filter(folder => folder.parent_id === parentId)
+      return folders.value.filter((folder) => folder.parent_id === parentId)
     }
 
     const getBreadcrumbs = (folderId: string): AssetFolderResource[] => {
       if (!folders.value) return []
 
       const breadcrumbs: AssetFolderResource[] = []
-      let currentFolder = folders.value.find(f => f.id === folderId)
+      let currentFolder = folders.value.find((f) => f.id === folderId)
 
       if (!currentFolder) return []
 
       breadcrumbs.unshift(currentFolder)
 
       while (currentFolder?.parent_id) {
-        const parentFolder = folders.value.find(f => f.id === currentFolder?.parent_id)
+        const parentFolder = folders.value.find((f) => f.id === currentFolder?.parent_id)
         if (parentFolder) {
           breadcrumbs.unshift(parentFolder)
           currentFolder = parentFolder

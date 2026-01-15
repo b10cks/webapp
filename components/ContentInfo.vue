@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import type { ContentResource } from '~/types/contents'
 
 const { formatDateTime } = useFormat()
@@ -7,12 +6,11 @@ const { formatDateTime } = useFormat()
 defineProps<{
   content: ContentResource
 }>()
-
 </script>
 
 <template>
   <dl class="grid text-primary">
-    <h2 class="text-xl font-bold mb-2 text-primary">{{ content.name }}</h2>
+    <h2 class="mb-2 text-xl font-bold text-primary">{{ content.name }}</h2>
     <dt class="text-sm font-medium text-muted">
       {{ $t('labels.contents.fields.type') }}
     </dt>
@@ -29,7 +27,9 @@ defineProps<{
       {{ $t('labels.contents.fields.firstPublishedAt') }}
     </dt>
     <dd class="mt-1 mb-4">
-      {{ content.first_published_at ? formatDateTime(content.first_published_at) : 'Never published' }}
+      {{
+        content.first_published_at ? formatDateTime(content.first_published_at) : 'Never published'
+      }}
     </dd>
     <dt class="text-sm font-medium text-muted">
       {{ $t('labels.contents.fields.publishedAt') }}
@@ -52,6 +52,4 @@ defineProps<{
   </dl>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

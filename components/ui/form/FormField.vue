@@ -16,9 +16,10 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
 
-const uniqueId = computed(() => props.id || `${props.name}-${Math.random().toString(36).substring(2, 9)}`)
+const uniqueId = computed(
+  () => props.id || `${props.name}-${Math.random().toString(36).substring(2, 9)}`
+)
 const hasError = computed(() => !!props.error)
-
 </script>
 
 <template>
@@ -35,18 +36,18 @@ const hasError = computed(() => !!props.error)
       />
       <TooltipIcon v-if="tooltip">{{ tooltip }}</TooltipIcon>
     </div>
-    <div :class="{ 'ring-1 text-destructive focus-within:ring-2': hasError, 'rounded-md': true }">
+    <div :class="{ 'text-destructive ring-1 focus-within:ring-2': hasError, 'rounded-md': true }">
       <slot
         v-bind="{
           id: uniqueId,
-          name: props.name
+          name: props.name,
         }"
         :has-error="hasError"
       />
     </div>
     <p
       v-if="hasError"
-      class="mt-1 whitespace-pre-line text-sm leading-tight text-destructive"
+      class="mt-1 text-sm leading-tight whitespace-pre-line text-destructive"
     >
       {{ error }}
     </p>

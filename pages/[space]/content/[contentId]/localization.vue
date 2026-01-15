@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import type { ContentResource } from '~/types/contents'
 import HeaderActions from '~/components/content/HeaderActions.vue'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import FlattenedLocalization from '~/components/localization/FlattendeLocalization.vue'
 import { Input } from '~/components/ui/input'
 
@@ -16,14 +22,14 @@ const { data: currentSpace } = useSpaceQuery(spaceId.value)
 const availableLanguages = computed(() => currentSpace.value?.settings?.languages ?? [])
 
 const language = computed({
-  get: () => route.hash ? route.hash.substring(1) : availableLanguages.value[0]?.code,
+  get: () => (route.hash ? route.hash.substring(1) : availableLanguages.value[0]?.code),
   set: (l) => {
     if (l) {
       router.replace({ ...route, hash: `#${l}` })
     } else {
       router.replace({ ...route, hash: '' })
     }
-  }
+  },
 })
 
 const { useContentQuery } = useContent(spaceId)
@@ -39,22 +45,26 @@ const { data: translatableOriginalContent } = useContentQuery(translatableId)
 
 const translatableContent = ref<ContentResource>(null)
 
-watch([translatableOriginalContent, language, originalContent], () => {
-  if (translatableOriginalContent.value) {
-    translatableContent.value = JSON.parse(JSON.stringify(translatableOriginalContent.value))
-  } else if (originalContent.value) {
-    translatableContent.value = {
-      parent_id: originalContent.value.parent_id,
-      block_id: originalContent.value.block?.id,
-      language_iso: language.value,
-      i18n_parent_id: originalContent.value.id,
-      name: originalContent.value.name,
-      slug: originalContent.value.slug,
-      content: {},
-      settings: originalContent.value.settings || {}
-    } as ContentResource
-  }
-}, { immediate: true })
+watch(
+  [translatableOriginalContent, language, originalContent],
+  () => {
+    if (translatableOriginalContent.value) {
+      translatableContent.value = JSON.parse(JSON.stringify(translatableOriginalContent.value))
+    } else if (originalContent.value) {
+      translatableContent.value = {
+        parent_id: originalContent.value.parent_id,
+        block_id: originalContent.value.block?.id,
+        language_iso: language.value,
+        i18n_parent_id: originalContent.value.id,
+        name: originalContent.value.name,
+        slug: originalContent.value.slug,
+        content: {},
+        settings: originalContent.value.settings || {},
+      } as ContentResource
+    }
+  },
+  { immediate: true }
+)
 
 const { useBlocksQuery } = useBlocks(spaceId)
 const { data: blocks } = useBlocksQuery({ per_page: 1000 })
@@ -68,24 +78,29 @@ const block = computed(() => {
 
 const blockSchemaCache = ref(new Map())
 
-watch(blocks, (newBlocks) => {
-  if (!newBlocks) return
+watch(
+  blocks,
+  (newBlocks) => {
+    if (!newBlocks) return
 
-  blockSchemaCache.value.clear()
+    blockSchemaCache.value.clear()
 
-  newBlocks.data.forEach(blockItem => {
-    blockSchemaCache.value.set(blockItem.slug, {
-      id: blockItem.id,
-      name: blockItem.name,
-      schema: blockItem.schema
+    newBlocks.data.forEach((blockItem) => {
+      blockSchemaCache.value.set(blockItem.slug, {
+        id: blockItem.id,
+        name: blockItem.name,
+        schema: blockItem.schema,
+      })
     })
-  })
-}, { immediate: true })
+  },
+  { immediate: true }
+)
 
-const isLoading = computed(() =>
-  !originalContent.value ||
-  (!!translatableId.value && !translatableOriginalContent.value) ||
-  !block.value
+const isLoading = computed(
+  () =>
+    !originalContent.value ||
+    (!!translatableId.value && !translatableOriginalContent.value) ||
+    !block.value
 )
 
 const getBlockSchemaFn = (blockSlug: string) => {
@@ -94,29 +109,29 @@ const getBlockSchemaFn = (blockSlug: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col grow bg-background p-6">
+  <div class="flex grow flex-col bg-background p-6">
     <div class="content-grid">
       <div
         v-if="isLoading"
-        class="flex items-center justify-center h-full"
+        class="flex h-full items-center justify-center"
       >
         <div class="text-center">
           <Icon
             name="lucide:loader"
-            class="animate-spin h-8 w-8 text-text-muted mx-auto mb-4"
+            class="mx-auto mb-4 h-8 w-8 animate-spin text-text-muted"
           />
           <p class="text-muted">Loading content...</p>
         </div>
       </div>
       <div
         v-else
-        class="h-full flex flex-col"
+        class="flex h-full flex-col"
       >
         <div
           v-if="block && originalContent && translatableContent"
           class="grid gap-6"
         >
-          <div class="bg-surface p-3 rounded-lg">
+          <div class="rounded-lg bg-surface p-3">
             <div class="space-y-4">
               <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-2">
@@ -189,7 +204,6 @@ const getBlockSchemaFn = (blockSlug: string) => {
           />
         </div>
       </div>
-
     </div>
   </div>
 
@@ -200,7 +214,7 @@ const getBlockSchemaFn = (blockSlug: string) => {
         aria-label="Select language"
       >
         <SelectTrigger class="w-40">
-          <SelectValue placeholder="Select language"/>
+          <SelectValue placeholder="Select language" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem

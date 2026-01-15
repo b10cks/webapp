@@ -1,12 +1,10 @@
 <script setup lang="ts">
-
-import useSpaceSettings from '~/composables/useSpaceSettings'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable'
 import ContentTree from '~/components/ContentTree.vue'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable'
+import useSpaceSettings from '~/composables/useSpaceSettings'
 
 const route = useRoute()
 const { settings } = useSpaceSettings(route.params.space as string)
-
 </script>
 
 <template>
@@ -21,19 +19,19 @@ const { settings } = useSpaceSettings(route.params.space as string)
           id="content-panel-1"
           class="shrink-0"
           :default-size="settings.content.treeWidth"
-          @resize="size => settings.content.treeWidth = size"
+          @resize="(size) => (settings.content.treeWidth = size)"
         >
           <ContentTree
             title="Content Structure"
             :space-id="route.params.space as string"
           />
         </ResizablePanel>
-        <ResizableHandle id="content-handle-1"/>
+        <ResizableHandle id="content-handle-1" />
         <ResizablePanel
           id="content-panel-2"
-          class="grow flex"
+          class="flex grow"
         >
-          <NuxtPage/>
+          <NuxtPage />
         </ResizablePanel>
       </ResizablePanelGroup>
     </NuxtLayout>

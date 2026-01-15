@@ -1,10 +1,9 @@
 <script setup lang="ts">
-// Imports for child components will be handled by Vue's auto-import feature
+import AccssTokenSettings from '~/components/space-settings/AccssTokenSettings.vue'
+import AiSettings from '~/components/space-settings/AiSettings.vue'
+import AssetLibrarySettings from '~/components/space-settings/AssetLibrarySettings.vue'
 import EditorSettings from '~/components/space-settings/EditorSettings.vue'
 import I18nSettings from '~/components/space-settings/I18nSettings.vue'
-import AccssTokenSettings from '~/components/space-settings/AccssTokenSettings.vue'
-import AssetLibrarySettings from '~/components/space-settings/AssetLibrarySettings.vue'
-import AiSettings from '~/components/space-settings/AiSettings.vue'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 
 const route = useRoute()
@@ -12,7 +11,6 @@ const spaceId = route.params.space as string
 
 const { useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(spaceId)
-
 </script>
 
 <template>

@@ -24,7 +24,7 @@ const emit = defineEmits<{
 const updateValue = (key: keyof MetaValue, value: string | number) => {
   emit('update:modelValue', {
     ...props.modelValue,
-    [key]: value
+    [key]: value,
   })
 }
 </script>

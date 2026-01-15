@@ -1,7 +1,5 @@
 <script setup lang="ts">
-
 defineProps<{ value: NumberSchema }>()
-
 </script>
 
 <template>

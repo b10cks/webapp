@@ -1,7 +1,8 @@
+import { useStorage } from '@vueuse/core'
 import { useRouter } from 'vue-router'
+
 import type { ApiResponse } from '~/types'
 import type { User } from '~/types/users'
-import { useStorage } from '@vueuse/core'
 
 interface LoginPayload {
   email: string
@@ -56,7 +57,7 @@ class TokenManager {
     this.authStorage.value = {
       accessToken,
       refreshToken,
-      expiresAt
+      expiresAt,
     }
   }
 
@@ -143,11 +144,7 @@ export function useAuth() {
       const response = await api.client.post<AuthResponse>('/auth/v1/token', payload)
 
       if (response.access_token) {
-        TokenManager.setTokens(
-          response.access_token,
-          response.access_token,
-          response.expires_in
-        )
+        TokenManager.setTokens(response.access_token, response.access_token, response.expires_in)
 
         api.setAuthToken(response.access_token)
         setupTokenRefresh(response.expires_in)
@@ -159,9 +156,10 @@ export function useAuth() {
 
       throw new Error('Invalid response from server')
     } catch (err: any) {
-      error.value = err?.response?.status === 401
-        ? 'Invalid email or password'
-        : 'Login failed. Please try again.'
+      error.value =
+        err?.response?.status === 401
+          ? 'Invalid email or password'
+          : 'Login failed. Please try again.'
       return false
     } finally {
       isLoading.value = false
@@ -178,12 +176,13 @@ export function useAuth() {
 
       return await login({
         email: payload.email,
-        password: payload.password
+        password: payload.password,
       })
     } catch (err: any) {
-      error.value = err?.response?.status === 409
-        ? 'An account with this email already exists'
-        : 'Registration failed. Please try again.'
+      error.value =
+        err?.response?.status === 409
+          ? 'An account with this email already exists'
+          : 'Registration failed. Please try again.'
       return false
     } finally {
       isLoading.value = false
@@ -197,7 +196,7 @@ export function useAuth() {
           resolve: (result) => resolve(true),
           reject: (error) => resolve(false),
           endpoint: '',
-          options: {}
+          options: {},
         })
       })
     }
@@ -213,15 +212,11 @@ export function useAuth() {
     try {
       const { api } = await import('~/api')
       const response = await api.client.post<AuthResponse>('/auth/v1/token/refresh', {
-        refresh_token: refreshTokenValue
+        refresh_token: refreshTokenValue,
       })
 
       if (response.access_token) {
-        TokenManager.setTokens(
-          response.access_token,
-          response.access_token,
-          response.expires_in
-        )
+        TokenManager.setTokens(response.access_token, response.access_token, response.expires_in)
 
         api.setAuthToken(response.access_token)
         setupTokenRefresh(response.expires_in)
@@ -270,11 +265,17 @@ export function useAuth() {
       const refreshTokenValue = TokenManager.getRefreshToken()
       if (refreshTokenValue) {
         const { api } = await import('~/api')
-        await api.client.post('/auth/v1/logout', {
-          refresh_token: refreshTokenValue
-        }).catch(() => { /** ignore */ })
+        await api.client
+          .post('/auth/v1/logout', {
+            refresh_token: refreshTokenValue,
+          })
+          .catch(() => {
+            /** ignore */
+          })
       }
-    } catch (err) { /** ignore */ }
+    } catch (err) {
+      /** ignore */
+    }
 
     user.value = null
     error.value = null
@@ -290,7 +291,7 @@ export function useAuth() {
 
     navigateTo({
       name: 'login',
-      query: { return: returnPath || route.fullPath || '/' }
+      query: { return: returnPath || route.fullPath || '/' },
     })
   }
 
@@ -338,6 +339,6 @@ export function useAuth() {
     logout,
     refreshToken,
     handleUnauthorized,
-    loadUser
+    loadUser,
   }
 }

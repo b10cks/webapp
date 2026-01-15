@@ -8,7 +8,23 @@ interface FilterableItem {
 }
 
 interface FilterableOperator {
-  value: 'null' | '!null' | 'eq' | 'neq' | 'empty' | '!empty' | 'like' | '!like' | '^like' | 'like$' | 'lt' | 'gt' | 'lte' | 'gte' | 'in' | '!in'
+  value:
+    | 'null'
+    | '!null'
+    | 'eq'
+    | 'neq'
+    | 'empty'
+    | '!empty'
+    | 'like'
+    | '!like'
+    | '^like'
+    | 'like$'
+    | 'lt'
+    | 'gt'
+    | 'lte'
+    | 'gte'
+    | 'in'
+    | '!in'
   label: string | CleanTranslation
 }
 
@@ -65,14 +81,20 @@ const placeholder = computed(() => {
   if (stage.value === 'field') {
     return String($t('labels.search.searchOrSelectField'))
   } else if (stage.value === 'operator') {
-    return String($t('labels.search.selectOperatorFor', { field: String(selectedField.value?.label || '') }))
+    return String(
+      $t('labels.search.selectOperatorFor', { field: String(selectedField.value?.label || '') })
+    )
   } else if (stage.value === 'value') {
     if (selectedField.value?.items && selectedField.value.items.length > 0) {
-      return String($t('labels.search.selectValueFor', { field: String(selectedField.value.label) }))
+      return String(
+        $t('labels.search.selectValueFor', { field: String(selectedField.value.label) })
+      )
     } else if (selectedField.value?.datepicker) {
       return String($t('labels.search.enterDateFor', { field: String(selectedField.value.label) }))
     } else {
-      return String($t('labels.search.enterValueFor', { field: String(selectedField.value?.label || '') }))
+      return String(
+        $t('labels.search.enterValueFor', { field: String(selectedField.value?.label || '') })
+      )
     }
   }
   return String($t('labels.search.search'))
@@ -80,18 +102,25 @@ const placeholder = computed(() => {
 
 const dropdownItems = computed((): (FilterableField | FilterableOperator | FilterableItem)[] => {
   if (stage.value === 'field') {
-    const availableFields = editingFilterIndex.value === null ? props.filterableFields.filter(field =>
-      !activeFilters.value.some(filter => filter.field === field.id)
-    ) : props.filterableFields
+    const availableFields =
+      editingFilterIndex.value === null
+        ? props.filterableFields.filter(
+            (field) => !activeFilters.value.some((filter) => filter.field === field.id)
+          )
+        : props.filterableFields
 
-    return availableFields.filter(field =>
-      !inputValue.value || String(field.label).toLowerCase().includes(inputValue.value.toLowerCase())
+    return availableFields.filter(
+      (field) =>
+        !inputValue.value ||
+        String(field.label).toLowerCase().includes(inputValue.value.toLowerCase())
     )
   } else if (stage.value === 'operator' && selectedField.value?.operators) {
     return selectedField.value.operators
   } else if (stage.value === 'value' && selectedField.value?.items) {
-    return selectedField.value.items.filter(item =>
-      !inputValue.value || String(item.label).toLowerCase().includes(inputValue.value.toLowerCase())
+    return selectedField.value.items.filter(
+      (item) =>
+        !inputValue.value ||
+        String(item.label).toLowerCase().includes(inputValue.value.toLowerCase())
     )
   }
   return []
@@ -111,7 +140,7 @@ const allFilters = computed((): Record<string, string | number> => {
     result.q = inputValue.value
   }
 
-  activeFilters.value.forEach(filter => {
+  activeFilters.value.forEach((filter) => {
     const field = filter.field
     const value = filter.value
 
@@ -134,7 +163,7 @@ const pendingFilter = computed((): Partial<FilterValue> | null => {
     operator: selectedOperator.value?.value ? String(selectedOperator.value.value) : undefined,
     operatorLabel: selectedOperator.value?.label ? String(selectedOperator.value.label) : undefined,
     value: stage.value === 'value' ? inputValue.value : '',
-    valueLabel: stage.value === 'value' ? inputValue.value : ''
+    valueLabel: stage.value === 'value' ? inputValue.value : '',
   }
 })
 
@@ -168,7 +197,7 @@ const scrollToSelected = (): void => {
     if (dropdownRef.value && dropdownRef.value.children[selectedDropdownIndex.value]) {
       const selectedEl = dropdownRef.value.children[selectedDropdownIndex.value] as HTMLElement
       selectedEl.scrollIntoView({
-        block: 'nearest'
+        block: 'nearest',
       })
     }
   })
@@ -213,7 +242,9 @@ const handleOperatorSelect = (operator: FilterableOperator): void => {
   dropdownOpen.value = !!selectedField.value?.items
   selectedDropdownIndex.value = 0
 
-  announceToScreenReader(String($t('labels.search.operatorSelected', { operator: String(operator.label) })))
+  announceToScreenReader(
+    String($t('labels.search.operatorSelected', { operator: String(operator.label) }))
+  )
 }
 
 const handleValueSelect = (item?: FilterableItem): void => {
@@ -222,7 +253,7 @@ const handleValueSelect = (item?: FilterableItem): void => {
   const newFilter: FilterValue = {
     field: selectedField.value.id,
     fieldLabel: String(selectedField.value.label),
-    value: '' // Initialize with empty value, will be set below
+    value: '', // Initialize with empty value, will be set below
   }
 
   if (selectedOperator.value) {
@@ -241,21 +272,29 @@ const handleValueSelect = (item?: FilterableItem): void => {
     newFilter.valueLabel = inputValue.value
   }
 
-  if (newFilter.value !== undefined && newFilter.value !== null && String(newFilter.value).trim() !== '') {
+  if (
+    newFilter.value !== undefined &&
+    newFilter.value !== null &&
+    String(newFilter.value).trim() !== ''
+  ) {
     if (editingFilterIndex.value === null) {
       activeFilters.value.push(newFilter)
-      announceToScreenReader($t('labels.search.filterAdded', {
-        field: newFilter.fieldLabel,
-        operator: newFilter.operatorLabel || '',
-        value: newFilter.valueLabel || newFilter.value
-      }))
+      announceToScreenReader(
+        $t('labels.search.filterAdded', {
+          field: newFilter.fieldLabel,
+          operator: newFilter.operatorLabel || '',
+          value: newFilter.valueLabel || newFilter.value,
+        })
+      )
     } else {
       activeFilters.value[editingFilterIndex.value] = newFilter
-      announceToScreenReader($t('labels.search.filterUpdated', {
-        field: newFilter.fieldLabel,
-        operator: newFilter.operatorLabel || '',
-        value: newFilter.valueLabel || newFilter.value
-      }))
+      announceToScreenReader(
+        $t('labels.search.filterUpdated', {
+          field: newFilter.fieldLabel,
+          operator: newFilter.operatorLabel || '',
+          value: newFilter.valueLabel || newFilter.value,
+        })
+      )
     }
     emit('update:modelValue', allFilters.value)
   }
@@ -276,22 +315,24 @@ const removeFilter = (index: number): void => {
   activeFilters.value.splice(index, 1)
   emit('update:modelValue', allFilters.value)
 
-  announceToScreenReader($t('labels.search.filterRemoved', {
-    field: filter.fieldLabel
-  }))
+  announceToScreenReader(
+    $t('labels.search.filterRemoved', {
+      field: filter.fieldLabel,
+    })
+  )
 }
 
 const editFilter = (index: number): void => {
   const filter = activeFilters.value[index]
   editingFilterIndex.value = index
 
-  const field = props.filterableFields.find(f => f.id === filter.field)
+  const field = props.filterableFields.find((f) => f.id === filter.field)
   if (!field) return
 
   selectedField.value = field
 
   if (filter.operator && field.operators) {
-    const operator = field.operators.find(op => String(op.value) === filter.operator)
+    const operator = field.operators.find((op) => String(op.value) === filter.operator)
     if (operator) {
       selectedOperator.value = operator
       stage.value = 'value'
@@ -315,9 +356,11 @@ const editFilter = (index: number): void => {
 
   nextTick(() => {
     inputRef.value?.focus()
-    announceToScreenReader($t('labels.search.editingFilter', {
-      field: filter.fieldLabel
-    }))
+    announceToScreenReader(
+      $t('labels.search.editingFilter', {
+        field: filter.fieldLabel,
+      })
+    )
   })
 }
 
@@ -341,8 +384,10 @@ const handleInputChange = (e: Event): void => {
   const target = e.target as HTMLInputElement
   inputValue.value = target.value
 
-  if ((stage.value === 'field' || (stage.value === 'value' && selectedField.value?.items)) &&
-    !dropdownOpen.value) {
+  if (
+    (stage.value === 'field' || (stage.value === 'value' && selectedField.value?.items)) &&
+    !dropdownOpen.value
+  ) {
     dropdownOpen.value = true
   }
 }
@@ -374,9 +419,10 @@ const handleKeyDown = (e: KeyboardEvent): void => {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
       // Cycle to last item if at the beginning
-      selectedDropdownIndex.value = selectedDropdownIndex.value <= 0
-        ? dropdownItems.value.length - 1
-        : selectedDropdownIndex.value - 1
+      selectedDropdownIndex.value =
+        selectedDropdownIndex.value <= 0
+          ? dropdownItems.value.length - 1
+          : selectedDropdownIndex.value - 1
       scrollToSelected()
     }
   }
@@ -472,9 +518,13 @@ const handleClickOutside = (event: MouseEvent): void => {
   }
 }
 
-watch(activeFilters, () => {
-  emit('update:modelValue', allFilters.value)
-}, { deep: true })
+watch(
+  activeFilters,
+  () => {
+    emit('update:modelValue', allFilters.value)
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   document.addEventListener('mousedown', handleClickOutside)
@@ -495,7 +545,7 @@ onBeforeUnmount(() => {
     class="relative w-full"
   >
     <div
-      class="flex h-9 text-primary shadow-sm transition-colors flex-wrap items-center gap-2 pr-6 py-1 pl-2 bg-input rounded-md placeholder:text-muted focus-within:outline-none focus-within:ring-1 focus-within:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+      class="flex h-9 flex-wrap items-center gap-2 rounded-md bg-input py-1 pr-6 pl-2 text-primary shadow-sm transition-colors placeholder:text-muted focus-within:ring-1 focus-within:ring-ring focus-within:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       role="combobox"
       :aria-expanded="dropdownOpen"
       :aria-owns="dropdownOpen ? 'search-filter-dropdown' : undefined"
@@ -507,11 +557,13 @@ onBeforeUnmount(() => {
         :key="`filter-${index}`"
         :label="filter.fieldLabel"
         removable
-        :aria-label="$t('labels.search.removeFilter', {
-          field: filter.fieldLabel,
-          operator: filter.operatorLabel || '',
-          value: filter.valueLabel || filter.value
-        })"
+        :aria-label="
+          $t('labels.search.removeFilter', {
+            field: filter.fieldLabel,
+            operator: filter.operatorLabel || '',
+            value: filter.valueLabel || filter.value,
+          })
+        "
         @remove="removeFilter(index)"
         @click="editFilter(index)"
       >
@@ -527,28 +579,31 @@ onBeforeUnmount(() => {
         {{ pendingFilter.operatorLabel ? `${pendingFilter.operatorLabel} ` : '' }}
       </SplitBadge>
 
-      <div class="relative flex-1 min-w-20">
+      <div class="relative min-w-20 flex-1">
         <input
           ref="inputRef"
           v-model="inputValue"
           type="text"
-          class="w-full bg-transparent border-none text-primary p-1 focus:outline-none text-sm font-semibold"
+          class="w-full border-none bg-transparent p-1 text-sm font-semibold text-primary focus:outline-none"
           :placeholder="String(placeholder)"
           :aria-label="String(placeholder)"
           :aria-autocomplete="dropdownItems.length > 0 ? 'list' : 'none'"
           :aria-controls="dropdownOpen ? 'search-filter-dropdown' : undefined"
-          :aria-activedescendant="dropdownOpen && dropdownItems.length > 0 ?
-            `dropdown-item-${selectedDropdownIndex}` : undefined"
+          :aria-activedescendant="
+            dropdownOpen && dropdownItems.length > 0
+              ? `dropdown-item-${selectedDropdownIndex}`
+              : undefined
+          "
           @focus="handleInputFocus"
           @input="handleInputChange"
           @keydown="handleKeyDown"
-        >
+        />
       </div>
 
       <button
         v-if="activeFilters.length > 0 || inputValue"
         type="button"
-        class="absolute h-5 w-5 p-0.5 right-1 top-2 items-center rounded-full hover:bg-elevated focus:outline-none focus:ring-2 focus:ring-ring"
+        class="absolute top-2 right-1 h-5 w-5 items-center rounded-full p-0.5 hover:bg-elevated focus:ring-2 focus:ring-ring focus:outline-none"
         :aria-label="String($t('labels.search.clearAllFilters'))"
         @click="clearAllFilters"
       >
@@ -563,7 +618,7 @@ onBeforeUnmount(() => {
       v-if="dropdownOpen"
       id="search-filter-dropdown"
       ref="dropdownRef"
-      class="absolute z-50 w-full mt-1 p-1 bg-input rounded-md shadow-lg max-h-60 overflow-y-auto"
+      class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md bg-input p-1 shadow-lg"
       role="listbox"
       :aria-label="String($t(`labels.search.${stage}DropdownLabel`))"
     >
@@ -573,8 +628,8 @@ onBeforeUnmount(() => {
           :id="`dropdown-item-${index}`"
           :key="`dropdown-item-${index}`"
           :class="[
-            'relative flex select-none text-sm font-semibold items-center rounded-md gap-2 px-2 py-1.5 outline-none transition-colors hover:bg-blue-600 hover:text-primary focus:bg-blue-600 focus:text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0',
-            index === selectedDropdownIndex && 'bg-blue-600 text-primary'
+            'relative flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-semibold transition-colors outline-none select-none hover:bg-blue-600 hover:text-primary focus:bg-blue-600 focus:text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0',
+            index === selectedDropdownIndex && 'bg-blue-600 text-primary',
           ]"
           role="option"
           :aria-selected="index === selectedDropdownIndex"
@@ -597,22 +652,25 @@ onBeforeUnmount(() => {
         <label
           :for="'date-input'"
           class="sr-only"
-        >{{ $t('labels.search.dateInput') }}</label>
+          >{{ $t('labels.search.dateInput') }}</label
+        >
         <input
           id="date-input"
           v-model="dateValue"
           type="date"
-          class="w-full p-2 bg-elevated border border-gray-600 rounded text-primary"
+          class="w-full rounded border border-gray-600 bg-elevated p-2 text-primary"
           :max="selectedField.datepicker.max?.split('T')[0]"
           :min="selectedField.datepicker.min?.split('T')[0]"
-          :aria-label="String($t('labels.search.enterDateFor', { field: String(selectedField.label) }))"
+          :aria-label="
+            String($t('labels.search.enterDateFor', { field: String(selectedField.label) }))
+          "
           @change="handleDateSelect"
-        >
+        />
       </div>
 
       <div
         v-else-if="stage === 'value'"
-        class="px-4 py-2 select-none text-sm font-semibold text-muted"
+        class="px-4 py-2 text-sm font-semibold text-muted select-none"
         role="status"
       >
         {{ $t('labels.search.typeValueAndEnter') }}
@@ -620,7 +678,7 @@ onBeforeUnmount(() => {
 
       <div
         v-else
-        class="px-4 py-2 select-none text-sm font-semibold text-muted"
+        class="px-4 py-2 text-sm font-semibold text-muted select-none"
         role="status"
       >
         {{ $t('labels.search.noResultsFound') }}

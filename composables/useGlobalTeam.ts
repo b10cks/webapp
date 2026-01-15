@@ -1,4 +1,5 @@
 import { useStorage } from '@vueuse/core'
+
 import type { TeamResource } from '~/types/teams'
 
 interface GlobalTeamState {
@@ -29,8 +30,8 @@ export function useGlobalTeam() {
               return defaultState
             }
           },
-          write: (value: GlobalTeamState) => JSON.stringify(value)
-        }
+          write: (value: GlobalTeamState) => JSON.stringify(value),
+        },
       })
     : ref<GlobalTeamState>(defaultState)
 
@@ -45,7 +46,7 @@ export function useGlobalTeam() {
   const {
     data: selectedTeam,
     isLoading: isLoadingSelectedTeam,
-    error: selectedTeamError
+    error: selectedTeamError,
   } = selectedTeamQuery
 
   // Computed properties
@@ -54,9 +55,9 @@ export function useGlobalTeam() {
     set: (teamId: string | null) => {
       state.value = {
         selectedTeamId: teamId,
-        lastSelectedAt: teamId ? new Date().toISOString() : null
+        lastSelectedAt: teamId ? new Date().toISOString() : null,
       }
-    }
+    },
   })
 
   const isLoading = computed(() => isLoadingTeams.value || isLoadingSelectedTeam.value)
@@ -87,14 +88,14 @@ export function useGlobalTeam() {
 
   // Find team by ID in the teams list
   const findTeamById = (teamId: string): TeamResource | undefined => {
-    return teams.value?.find(team => team.id === teamId)
+    return teams.value?.find((team) => team.id === teamId)
   }
 
   // Get team options for select component
   const teamOptions = computed(() => {
     if (!teams.value) return []
 
-    return teams.value.map(team => ({
+    return teams.value.map((team) => ({
       label: team.name,
       value: team.id,
       icon: team.icon,
@@ -102,7 +103,7 @@ export function useGlobalTeam() {
       description: team.description,
       type: team.type,
       userCount: team.user_count,
-      spacesCount: team.spaces_count
+      spacesCount: team.spaces_count,
     }))
   })
 
@@ -113,19 +114,27 @@ export function useGlobalTeam() {
   })
 
   // Clean up invalid selection
-  watch([teams, selectedTeamId], ([newTeams, newSelectedId]) => {
-    if (newSelectedId && newTeams && !findTeamById(newSelectedId)) {
-      clearSelection()
-    }
-  }, { immediate: true })
+  watch(
+    [teams, selectedTeamId],
+    ([newTeams, newSelectedId]) => {
+      if (newSelectedId && newTeams && !findTeamById(newSelectedId)) {
+        clearSelection()
+      }
+    },
+    { immediate: true }
+  )
 
   // Auto-select logic when teams load
-  watch(teams, (newTeams) => {
-    if (newTeams && newTeams.length > 0 && !selectedTeamId.value) {
-      // Optionally auto-select first team
-      // autoSelectFirstTeam()
-    }
-  }, { immediate: true })
+  watch(
+    teams,
+    (newTeams) => {
+      if (newTeams && newTeams.length > 0 && !selectedTeamId.value) {
+        // Optionally auto-select first team
+        // autoSelectFirstTeam()
+      }
+    },
+    { immediate: true }
+  )
 
   return {
     // State

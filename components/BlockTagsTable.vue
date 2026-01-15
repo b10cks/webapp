@@ -1,6 +1,13 @@
 <script setup lang="ts">
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableSortableHead } from '~/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableSortableHead,
+} from '~/components/ui/table'
 import CreateBlockTagDialog from '~/components/blocks/CreateBlockTagDialog.vue'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import SortSelect from '~/components/ui/SortSelect.vue'
@@ -25,7 +32,7 @@ const currentPage = ref(1)
 const perPage = ref(25)
 const sortBy = ref<{ column: string; direction: 'asc' | 'desc' }>({
   column: 'name',
-  direction: 'asc'
+  direction: 'asc',
 })
 const filters = ref<Record<string, unknown>>({})
 const queryParams = computed(() => ({
@@ -61,7 +68,7 @@ const handleDelete = async (tag: BlockTagResource) => {
     {
       title: $t('labels.blockTags.deleteTitle'),
       confirmLabel: $t('actions.delete'),
-      cancelLabel: $t('actions.cancel')
+      cancelLabel: $t('actions.cancel'),
     }
   )
 
@@ -69,7 +76,6 @@ const handleDelete = async (tag: BlockTagResource) => {
     await deleteBlockTag(tag.name)
   }
 }
-
 </script>
 
 <template>
@@ -84,7 +90,7 @@ const handleDelete = async (tag: BlockTagResource) => {
             variant="primary"
             @click="showCreateTagDialog = true"
           >
-            <Icon name="lucide:plus"/>
+            <Icon name="lucide:plus" />
             {{ $t('actions.blockTags.add') }}
           </Button>
         </template>
@@ -105,7 +111,7 @@ const handleDelete = async (tag: BlockTagResource) => {
             :placeholder="$t('labels.sortBy')"
           />
         </div>
-        <div class="rounded-md border border-input overflow-hidden">
+        <div class="overflow-hidden rounded-md border border-input">
           <Table>
             <TableHeader>
               <TableRow>
@@ -118,7 +124,7 @@ const handleDelete = async (tag: BlockTagResource) => {
                 <TableHead class="text-right">
                   {{ $t('labels.blockTags.fields.blockCount') }}
                 </TableHead>
-                <TableHead class="w-12"/>
+                <TableHead class="w-12" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -148,14 +154,14 @@ const handleDelete = async (tag: BlockTagResource) => {
                         variant="ghost"
                         size="icon"
                       >
-                        <Icon name="lucide:pencil"/>
+                        <Icon name="lucide:pencil" />
                       </Button>
                       <Button
                         variant="destructive"
                         size="icon"
                         @click="handleDelete(tag)"
                       >
-                        <Icon name="lucide:trash-2"/>
+                        <Icon name="lucide:trash-2" />
                         <span class="sr-only">{{ $t('actions.datasources.delete') }}</span>
                       </Button>
                     </div>
@@ -172,8 +178,8 @@ const handleDelete = async (tag: BlockTagResource) => {
           :current-page="currentPage"
           :per-page="perPage"
           :page-size-options="pageSizeOptions"
-          @update:current-page="val => currentPage = val"
-          @update:per-page="val => perPage = val"
+          @update:current-page="(val) => (currentPage = val)"
+          @update:per-page="(val) => (perPage = val)"
         />
       </div>
     </div>

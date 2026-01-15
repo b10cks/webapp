@@ -3,7 +3,7 @@
     :open="open"
     @update:open="$emit('update:open', $event)"
   >
-    <DialogContent class="max-w-3xl max-h-[80vh]">
+    <DialogContent class="max-h-[80vh] max-w-3xl">
       <DialogHeader>
         <DialogTitle>{{ title }}</DialogTitle>
       </DialogHeader>
@@ -11,7 +11,7 @@
       <ScrollArea class="h-[500px] pr-4">
         <TreeRoot
           v-slot="{ flattenItems }"
-          class="list-none select-none w-full"
+          class="w-full list-none select-none"
           :items="rootItems"
           :get-key="(item) => item?.id"
           :get-children="(item) => getChildren(contentMenu, item.id)"
@@ -26,15 +26,15 @@
                 :style="{ 'padding-left': `${item.level * 0.5}rem` }"
                 v-bind="item.bind"
                 :class="[
-                  'group relative flex items-center pl-0 pr-2 my-0.5 rounded-md outline-none gap-2',
-                  'hover:bg-border transition-colors duration-200',
-                  'cursor-pointer font-semibold'
+                  'group relative my-0.5 flex items-center gap-2 rounded-md pr-2 pl-0 outline-none',
+                  'transition-colors duration-200 hover:bg-border',
+                  'cursor-pointer font-semibold',
                 ]"
               >
-                <div class="flex items-center gap-2 flex-1">
+                <div class="flex flex-1 items-center gap-2">
                   <span
                     v-if="item.value.children"
-                    class="w-3 h-4"
+                    class="h-4 w-3"
                   >
                     <Icon
                       name="lucide:chevron-right"
@@ -46,7 +46,7 @@
                     class="size-3"
                   />
                   <button
-                    class="cursor-pointer hover:text-primary flex items-center gap-2 grow"
+                    class="flex grow cursor-pointer items-center gap-2 hover:text-primary"
                     tabindex="-1"
                     @click="selectContent(item.value.id)"
                   >
@@ -62,12 +62,12 @@
                   v-if="showElements"
                   variant="ghost"
                   size="sm"
-                  class="opacity-0 group-hover:opacity-100 p-1 h-6 w-6"
+                  class="h-6 w-6 p-1 opacity-0 group-hover:opacity-100"
                   @click.stop="toggleElementsView(item.value.id)"
                 >
                   <Icon
                     name="lucide:arrow-right"
-                    class="w-3 h-3 text-accent-foreground"
+                    class="h-3 w-3 text-accent-foreground"
                   />
                 </Button>
               </TreeItem>
@@ -75,13 +75,13 @@
               <!-- Page Elements Section -->
               <div
                 v-if="showElements && showElementsForContent === item.value.id"
-                class="p-4 bg-surface rounded-md border space-y-2"
+                class="space-y-2 rounded-md border bg-surface p-4"
                 :style="{ 'margin-left': `${(item.level + 1) * 1.5}rem` }"
               >
-                <h4 class="font-semibold mb-3 text-sm text-primary flex items-center gap-2">
+                <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold text-primary">
                   <Icon
                     name="lucide:hash"
-                    class="w-4 h-4"
+                    class="h-4 w-4"
                   />
                   {{ $t('labels.content.pageElements') }}
                 </h4>
@@ -89,19 +89,19 @@
                   <div
                     v-for="element in getContentElements(item.value.id)"
                     :key="element.id"
-                    class="flex items-center justify-between p-3 hover:bg-input rounded cursor-pointer border"
+                    class="flex cursor-pointer items-center justify-between rounded border p-3 hover:bg-input"
                     @click="selectContentWithAnchor(item.value.id, element.id)"
                   >
                     <div class="flex items-center gap-2">
                       <Icon
                         name="lucide:bookmark"
-                        class="w-4 h-4 text-muted-foreground"
+                        class="text-muted-foreground h-4 w-4"
                       />
                       <span class="text-sm font-medium">{{ element.name }}</span>
                     </div>
                     <Icon
                       name="lucide:external-link"
-                      class="w-4 h-4 text-muted-foreground"
+                      class="text-muted-foreground h-4 w-4"
                     />
                   </div>
                 </div>
@@ -152,7 +152,7 @@ const getContentElements = (contentId: string): ContentElement[] => {
     { id: 'header', name: $t('labels.content.elements.header') },
     { id: 'main-content', name: $t('labels.content.elements.mainContent') },
     { id: 'sidebar', name: $t('labels.content.elements.sidebar') },
-    { id: 'footer', name: $t('labels.content.elements.footer') }
+    { id: 'footer', name: $t('labels.content.elements.footer') },
   ]
 }
 

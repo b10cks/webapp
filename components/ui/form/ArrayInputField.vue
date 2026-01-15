@@ -3,14 +3,27 @@ import { computed, reactive } from 'vue'
 import { FormField } from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
 import { Button } from '~/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '~/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import { Textarea } from '~/components/ui/textarea'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 import { Switch } from '~/components/ui/switch'
 
 type InputType =
-  'text'
+  | 'text'
   | 'number'
   | 'email'
   | 'password'
@@ -92,7 +105,7 @@ const emit = defineEmits<{
 const newItem = reactive<Record<string, unknown>>({})
 
 const initializeNewItem = (): void => {
-  props.columns.forEach(column => {
+  props.columns.forEach((column) => {
     if (column.creatable !== false) {
       newItem[column.key] = column.defaultValue ?? getDefaultValueForType(column.type)
     }
@@ -114,11 +127,11 @@ initializeNewItem()
 
 const items = computed({
   get: (): Record<string, unknown>[] => props.modelValue || [],
-  set: (value: Record<string, unknown>[]) => emit('update:modelValue', value)
+  set: (value: Record<string, unknown>[]) => emit('update:modelValue', value),
 })
 
 const creatableColumns = computed((): ColumnDefinition[] =>
-  props.columns.filter(col => col.creatable !== false)
+  props.columns.filter((col) => col.creatable !== false)
 )
 
 const validateField = (column: ColumnDefinition, value: unknown): boolean => {
@@ -160,7 +173,7 @@ const addItem = (): void => {
 
   const itemToAdd = { ...newItem }
 
-  props.columns.forEach(column => {
+  props.columns.forEach((column) => {
     if (column.transform && itemToAdd[column.key] !== undefined) {
       itemToAdd[column.key] = column.transform(itemToAdd[column.key])
     }
@@ -184,7 +197,7 @@ const removeItem = (index: number): void => {
 const updateItem = (index: number, key: string, value: unknown): void => {
   if (props.disabled) return
 
-  const column = props.columns.find(col => col.key === key)
+  const column = props.columns.find((col) => col.key === key)
   if (!column || column.readonly) return
 
   const updatedItems = [...items.value]
@@ -202,7 +215,6 @@ const handleKeyPress = (event: KeyboardEvent): void => {
     addItem()
   }
 }
-
 </script>
 
 <template>
@@ -213,7 +225,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
     :required="required"
   >
     <div class="space-y-4">
-      <Table class="bg-elevated rounded-md overflow-hidden">
+      <Table class="overflow-hidden rounded-md bg-elevated">
         <TableHeader>
           <TableRow>
             <TableHead
@@ -229,8 +241,9 @@ const handleKeyPress = (event: KeyboardEvent): void => {
               {{ String(column.label) }}
               <span
                 v-if="column.required"
-                class="text-destructive ml-1"
-              >*</span>
+                class="ml-1 text-destructive"
+                >*</span
+              >
             </TableHead>
 
             <TableHead
@@ -252,7 +265,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
                 :disabled="disabled"
                 class="cursor-grab"
               >
-                <Icon name="lucide:grip-vertical"/>
+                <Icon name="lucide:grip-vertical" />
               </Button>
             </TableCell>
 
@@ -261,11 +274,17 @@ const handleKeyPress = (event: KeyboardEvent): void => {
               :key="column.key"
             >
               <Input
-                v-if="column.type === 'text' || column.type === 'email' || column.type === 'password' || column.type === 'url' || column.type === 'tel'"
+                v-if="
+                  column.type === 'text' ||
+                  column.type === 'email' ||
+                  column.type === 'password' ||
+                  column.type === 'url' ||
+                  column.type === 'tel'
+                "
                 :model-value="String(item[column.key] || '')"
                 :type="column.type"
                 :placeholder="String(column.placeholder || '')"
-                :disabled="disabled || column.readonly || (column.editable === false)"
+                :disabled="disabled || column.readonly || column.editable === false"
                 :maxlength="column.maxLength"
                 @update:model-value="updateItem(index, column.key, $event)"
               />
@@ -275,7 +294,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
                 :model-value="String(item[column.key] || '')"
                 type="number"
                 :placeholder="String(column.placeholder || '')"
-                :disabled="disabled || column.readonly || (column.editable === false)"
+                :disabled="disabled || column.readonly || column.editable === false"
                 :min="column.min"
                 :max="column.max"
                 :step="column.step"
@@ -286,7 +305,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
                 v-else-if="['date', 'time', 'datetime-local'].includes(column.type)"
                 :model-value="String(item[column.key] || '')"
                 :type="column.type"
-                :disabled="disabled || column.readonly || (column.editable === false)"
+                :disabled="disabled || column.readonly || column.editable === false"
                 @update:model-value="updateItem(index, column.key, $event)"
               />
 
@@ -294,7 +313,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
                 v-else-if="column.type === 'textarea'"
                 :model-value="String(item[column.key] || '')"
                 :placeholder="String(column.placeholder || '')"
-                :disabled="disabled || column.readonly || (column.editable === false)"
+                :disabled="disabled || column.readonly || column.editable === false"
                 :rows="column.rows || 3"
                 :maxlength="column.maxLength"
                 @update:model-value="updateItem(index, column.key, $event)"
@@ -303,11 +322,11 @@ const handleKeyPress = (event: KeyboardEvent): void => {
               <Select
                 v-else-if="column.type === 'select'"
                 :model-value="String(item[column.key] || '')"
-                :disabled="disabled || column.readonly || (column.editable === false)"
+                :disabled="disabled || column.readonly || column.editable === false"
                 @update:model-value="updateItem(index, column.key, $event)"
               >
                 <SelectTrigger>
-                  <SelectValue :placeholder="String(column.placeholder || '')"/>
+                  <SelectValue :placeholder="String(column.placeholder || '')" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
@@ -324,13 +343,13 @@ const handleKeyPress = (event: KeyboardEvent): void => {
               <Switch
                 v-else-if="column.type === 'checkbox'"
                 :checked="Boolean(item[column.key])"
-                :disabled="disabled || column.readonly || (column.editable === false)"
+                :disabled="disabled || column.readonly || column.editable === false"
                 @update:checked="updateItem(index, column.key, $event)"
               />
 
               <span
                 v-else-if="column.readonly || column.editable === false"
-                class="text-sm text-muted-foreground"
+                class="text-muted-foreground text-sm"
               >
                 {{ item[column.key] }}
               </span>
@@ -348,7 +367,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
                 :disabled="disabled || (minItems && items.length <= minItems)"
                 @click="removeItem(index)"
               >
-                <Icon name="lucide:trash-2"/>
+                <Icon name="lucide:trash-2" />
                 <span class="sr-only">{{ $t('actions.remove') }}</span>
               </Button>
             </TableCell>
@@ -357,14 +376,14 @@ const handleKeyPress = (event: KeyboardEvent): void => {
           <TableRow v-if="showEmptyPlaceholder && items.length === 0">
             <TableCell
               :colspan="columns.length + (sortable ? 1 : 0) + (showRemoveButton ? 1 : 0)"
-              class="text-center py-6 text-muted-foreground"
+              class="text-muted-foreground py-6 text-center"
             >
               {{ String(emptyMessage) }}
             </TableCell>
           </TableRow>
 
           <TableRow v-if="showAddButton && (!maxItems || items.length < maxItems)">
-            <TableCell v-if="sortable"/>
+            <TableCell v-if="sortable" />
 
             <TableCell
               v-for="column in columns"
@@ -372,7 +391,13 @@ const handleKeyPress = (event: KeyboardEvent): void => {
             >
               <template v-if="column.creatable !== false">
                 <Input
-                  v-if="column.type === 'text' || column.type === 'email' || column.type === 'password' || column.type === 'url' || column.type === 'tel'"
+                  v-if="
+                    column.type === 'text' ||
+                    column.type === 'email' ||
+                    column.type === 'password' ||
+                    column.type === 'url' ||
+                    column.type === 'tel'
+                  "
                   v-model="newItem[column.key]"
                   :type="column.type"
                   :placeholder="String(column.placeholder || '')"
@@ -416,7 +441,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
                   :disabled="disabled"
                 >
                   <SelectTrigger>
-                    <SelectValue :placeholder="String(column.placeholder || '')"/>
+                    <SelectValue :placeholder="String(column.placeholder || '')" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem
@@ -445,7 +470,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
                 size="sm"
                 @click="addItem"
               >
-                <Icon name="lucide:plus"/>
+                <Icon name="lucide:plus" />
                 <span>{{ String(addButtonText) }}</span>
               </Button>
             </TableCell>
@@ -462,7 +487,7 @@ const handleKeyPress = (event: KeyboardEvent): void => {
 
       <div
         v-if="maxItems && items.length >= maxItems"
-        class="text-sm text-muted-foreground"
+        class="text-muted-foreground text-sm"
       >
         {{ $t('validation.maxItems', { max: maxItems }) }}
       </div>

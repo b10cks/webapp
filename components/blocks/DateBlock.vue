@@ -1,8 +1,14 @@
 // File: components/blocks/DateBlock.vue
 <script setup lang="ts">
 import { computed } from 'vue'
-import { CheckboxField, FormField, InputField  } from '~/components/ui/form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import { CheckboxField, FormField, InputField } from '~/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 
 defineProps<{ value: DateSchema }>()
 
@@ -15,9 +21,8 @@ const { $t } = useI18n()
 const formatOptions = computed(() => [
   { value: 'date', label: $t('labels.blocks.fields.date.formats.date') },
   { value: 'time', label: $t('labels.blocks.fields.date.formats.time') },
-  { value: 'datetime-local', label: $t('labels.blocks.fields.date.formats.datetime') }
+  { value: 'datetime-local', label: $t('labels.blocks.fields.date.formats.datetime') },
 ])
-
 </script>
 
 <template>

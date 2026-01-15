@@ -1,5 +1,6 @@
-import { api } from '@/api'
 import type { ApiClient } from '~/api/client'
+
+import { api } from '@/api'
 
 export function useApiClient() {
   const apiClient = useState<ApiClient>('apiClient', () => {
@@ -7,6 +8,6 @@ export function useApiClient() {
   })
 
   return {
-    client: apiClient.value
+    client: apiClient.value,
   }
 }

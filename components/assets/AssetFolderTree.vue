@@ -3,7 +3,12 @@ import { TreeItem, type TreeItemToggleEvent, TreeRoot } from 'reka-ui'
 import RenamableTitle from '~/components/ui/RenamableTitle.vue'
 import { Button } from '~/components/ui/button'
 import CreateFolderDialog from '~/components/assets/CreateFolderDialog.vue'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
 import type { ContentResource } from '~/types/contents'
 
 const props = defineProps<{
@@ -13,11 +18,8 @@ const props = defineProps<{
 const { $t } = useI18n()
 const { alert } = useAlertDialog()
 
-const {
-  useFolderStructure,
-  useUpdateAssetFolderMutation,
-  useDeleteAssetFolderMutation
-} = useAssetFolders(props.spaceId)
+const { useFolderStructure, useUpdateAssetFolderMutation, useDeleteAssetFolderMutation } =
+  useAssetFolders(props.spaceId)
 const { useUpdateAssetMutation } = useAssets(props.spaceId)
 const { settings } = useSpaceSettings(props.spaceId)
 
@@ -95,7 +97,6 @@ async function handleDrop(event: DragEvent, targetFolderId: string) {
         }
       }
     }
-
   } catch (error) {
     console.error('Error handling drop event:', error)
   }
@@ -141,7 +142,7 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
     {
       title: $t('labels.assetFolders.deleteTitle'),
       confirmLabel: $t('actions.delete'),
-      variant: 'destructive'
+      variant: 'destructive',
     }
   )
 
@@ -153,31 +154,32 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
     }
   }
 }
-
 </script>
 
 <template>
   <TreeRoot
     v-slot="{ flattenItems, expanded }"
     v-model:expanded="settings.assets.expanded"
-    class="list-none select-none w-full"
+    class="w-full list-none select-none"
     :items="rootFolders"
     :get-key="(item) => item?.id"
-    :get-children="({id}) => getChildrenOfFolder(id)"
+    :get-children="({ id }) => getChildrenOfFolder(id)"
   >
     <button
       type="button"
-      :class="['w-full group relative flex items-center py-1 pl-2 pr-2 my-0.5 rounded-md outline-none gap-2',
-              'hover:bg-input transition-colors duration-200',
-              'cursor-pointer font-semibold',
-              !selectedFolderId ? 'bg-input text-primary' : '']"
+      :class="[
+        'group relative my-0.5 flex w-full items-center gap-2 rounded-md py-1 pr-2 pl-2 outline-none',
+        'transition-colors duration-200 hover:bg-input',
+        'cursor-pointer font-semibold',
+        !selectedFolderId ? 'bg-input text-primary' : '',
+      ]"
       @click="selectedFolderId = undefined"
     >
-      <Icon name="lucide:home"/>
+      <Icon name="lucide:home" />
       <span>{{ $t('labels.assets.allAssets') }}</span>
     </button>
-    <div class="flex px-2 my-2 items-center">
-      <h2 class="font-semibold text-sm text-primary">
+    <div class="my-2 flex items-center px-2">
+      <h2 class="text-sm font-semibold text-primary">
         {{ $t('labels.assetFolders.title') }}
       </h2>
       <Button
@@ -185,7 +187,7 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
         size="xs"
         @click="triggerCreateFolderDialog(null)"
       >
-        <Icon name="lucide:plus"/>
+        <Icon name="lucide:plus" />
       </Button>
     </div>
     <TreeItem
@@ -195,22 +197,26 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
       v-bind="item.bind"
       :style="{ 'padding-left': `${item.level - 0.5}rem` }"
       :class="[
-          'group flex items-center py-1 px-2 my-0.5 rounded-md outline-none',
-          'hover:bg-input transition-colors duration-200',
-          'cursor-pointer font-semibold',
-          item.value.id === selectedFolderId ? 'bg-input text-primary' : '',
-          isDraggingOver === item.value.id ? 'bg-blue-800 bg-opacity-20 border border-dashed border-accent' : ''
-        ]"
+        'group my-0.5 flex items-center rounded-md px-2 py-1 outline-none',
+        'transition-colors duration-200 hover:bg-input',
+        'cursor-pointer font-semibold',
+        item.value.id === selectedFolderId ? 'bg-input text-primary' : '',
+        isDraggingOver === item.value.id
+          ? 'bg-opacity-20 border border-dashed border-accent bg-blue-800'
+          : '',
+      ]"
       tabindex="0"
       :aria-selected="item.value.id === selectedFolderId"
-      :aria-expanded="item.value.children_count ? (expanded.includes(item.value.id)).toString() : undefined"
+      :aria-expanded="
+        item.value.children_count ? expanded.includes(item.value.id).toString() : undefined
+      "
       @select="selectedFolderId = item.value.id"
       @toggle="(e) => handleToggle(e)"
       @drop="handleDrop($event, item.value.id)"
       @dragover="handleDragOver($event, item.value.id)"
       @dragleave="handleDragLeave"
     >
-      <div class="flex items-center w-5">
+      <div class="flex w-5 items-center">
         <button
           v-if="item.value.children_count"
           @click.stop.prevent="toggleExpanded(item.value.id)"
@@ -222,7 +228,7 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
           />
         </button>
       </div>
-      <div class="flex gap-2 items-center flex-1">
+      <div class="flex flex-1 items-center gap-2">
         <Icon
           v-if="item.value.icon"
           :name="`lucide:${item.value.icon}`"
@@ -237,31 +243,33 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
         />
       </div>
       <DropdownMenu>
-        <DropdownMenuTrigger class="hover:text-primary transition-all opacity-0 data-[state=open]:opacity-100 group-hover:opacity-100 duration-200">
-          <Icon name="lucide:ellipsis-vertical"/>
+        <DropdownMenuTrigger
+          class="opacity-0 transition-all duration-200 group-hover:opacity-100 hover:text-primary data-[state=open]:opacity-100"
+        >
+          <Icon name="lucide:ellipsis-vertical" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem @select="$emit('view', item.value)">
-            <Icon name="lucide:eye"/>
+            <Icon name="lucide:eye" />
             <span>{{ $t('actions.view') }}</span>
           </DropdownMenuItem>
           <DropdownMenuItem @select="$emit('edit', item.value)">
-            <Icon name="lucide:edit"/>
+            <Icon name="lucide:edit" />
             <span>{{ $t('actions.edit') }}</span>
           </DropdownMenuItem>
           <DropdownMenuItem @select="triggerCreateFolderDialog(item.value.id)">
-            <Icon name="lucide:folder-plus"/>
+            <Icon name="lucide:folder-plus" />
             <span>{{ $t('actions.createFolder') }}</span>
           </DropdownMenuItem>
           <DropdownMenuItem @select="$emit('move', item.value)">
-            <Icon name="lucide:folder-input"/>
+            <Icon name="lucide:folder-input" />
             <span>{{ $t('actions.move') }}</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             class="text-destructive"
             @select="handleFolderDelete(item.value)"
           >
-            <Icon name="lucide:trash-2"/>
+            <Icon name="lucide:trash-2" />
             <span>{{ $t('actions.delete') }}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>

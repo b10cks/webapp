@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
-import {  PreviewBridge } from '~/utils/preview-bridge'
-import type {FieldUpdateEvent} from '~/utils/preview-bridge';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { PulseDot } from '~/components/ui/pulse-dot'
 import { SimpleTooltip } from '~/components/ui/tooltip'
+import type { FieldUpdateEvent } from '~/utils/preview-bridge'
+import { PreviewBridge } from '~/utils/preview-bridge'
 
 const { t } = useI18n()
 const props = defineProps<{
@@ -51,7 +51,6 @@ const src = computed(() => {
 
   return baseSrc?.value ? `${baseSrc.value}?b10cks_vid=draft&b10cks_rv=${timestamp}` : null
 })
-
 
 // Initialize connection with the iframe
 const setupConnection = async () => {
@@ -119,7 +118,8 @@ const updateHover = (itemId: string | null) => {
 }
 
 const copyLink = () => {
-  navigator.clipboard.writeText(src.value)
+  navigator.clipboard
+    .writeText(src.value)
     .then(() => toast.message(t('notifications.preview.copied') as string))
 }
 
@@ -135,18 +135,20 @@ onBeforeUnmount(() => previewBridge && previewBridge.destroy())
 const handleLoad = () => {
   loading.value = false
 }
-
 </script>
 
 <template>
-  <div class="flex flex-col grow w-full bg-elevated">
+  <div class="flex w-full grow flex-col bg-elevated">
     <div
-      :class="['flex flex-col grow bg-elevated', mode === 'mobile' ? 'rounded-xl overflow-hidden mx-auto w-sm my-4 shadow-2xl' : 'w-full']"
+      :class="[
+        'flex grow flex-col bg-elevated',
+        mode === 'mobile' ? 'mx-auto my-4 w-sm overflow-hidden rounded-xl shadow-2xl' : 'w-full',
+      ]"
     >
-      <div class="flex h-12 border-b bg-background border-b-input w-full p-3 gap-3 items-center">
+      <div class="flex h-12 w-full items-center gap-3 border-b border-b-input bg-background p-3">
         <Icon
           name="lucide:refresh-cw"
-          :class="['cursor-pointer shrink-0', src || 'invisible', loading && 'animate-spin']"
+          :class="['shrink-0 cursor-pointer', src || 'invisible', loading && 'animate-spin']"
           @click="refresh"
         />
         <SimpleTooltip :tooltip="$t('labels.preview.liveEdit')">
@@ -156,23 +158,23 @@ const handleLoad = () => {
             size="sm"
           />
         </SimpleTooltip>
-        <p class="text-sm truncate">{{ baseSrc || 'about:blank' }}</p>
-        <div class="ml-auto flex gap-3 items-center">
+        <p class="truncate text-sm">{{ baseSrc || 'about:blank' }}</p>
+        <div class="ml-auto flex items-center gap-3">
           <icon
             name="lucide:external-link"
-            :class="['cursor-pointer shrink-0', src || 'invisible']"
+            :class="['shrink-0 cursor-pointer', src || 'invisible']"
             @click="openExternal"
           />
           <icon
             name="lucide:link"
-            :class="['cursor-pointer shrink-0', src || 'invisible']"
+            :class="['shrink-0 cursor-pointer', src || 'invisible']"
             @click="copyLink"
           />
-          <div class="h-6 w-px bg-elevated"/>
+          <div class="h-6 w-px bg-elevated" />
           <Icon
             name="lucide:monitor-smartphone"
-            class="cursor-pointer shrink-0"
-            @click="mode === 'desktop' ? mode = 'mobile' : mode = 'desktop'"
+            class="shrink-0 cursor-pointer"
+            @click="mode === 'desktop' ? (mode = 'mobile') : (mode = 'desktop')"
           />
           <DropdownMenu>
             <DropdownMenuTrigger class="flex">
@@ -190,7 +192,7 @@ const handleLoad = () => {
                   class="grid"
                   @select="switchEnvironment(env)"
                 >
-                  <span class="text-primary font-semibold">{{ env.name }}</span>
+                  <span class="font-semibold text-primary">{{ env.name }}</span>
                   <span class="text-xs text-primary/60">{{ env.url }}</span>
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
@@ -209,7 +211,7 @@ const handleLoad = () => {
       />
       <div
         v-else
-        class="flex items-center justify-center grow"
+        class="flex grow items-center justify-center"
       >
         <p class="text-sm text-muted">
           {{ $t('messages.preview.noContent') }}

@@ -9,7 +9,7 @@ const route = useRoute()
 const { useAssetTagsQuery } = useAssetTags(route.params.spaceId as string)
 const { data: tags } = useAssetTagsQuery({
   per_page: 500,
-  sort: '+name'
+  sort: '+name',
 })
 
 const selectedTagId = defineModel<string>()
@@ -18,7 +18,7 @@ const showNewTag = ref(false)
 const newTag = ref<UpsertAssetTagPayload>({
   name: '',
   color: null,
-  icon: 'tag'
+  icon: 'tag',
 })
 
 const { useCreateAssetTagMutation } = useAssetTags(route.params.spaceId as string)
@@ -31,19 +31,18 @@ function create() {
     showNewTag.value = false
   }
 }
-
 </script>
 
 <template>
   <TreeRoot
     v-slot="{ flattenItems }"
-    class="list-none select-none w-full"
+    class="w-full list-none select-none"
     :items="tags"
     :get-key="(item) => item?.id"
     :get-children="() => undefined"
   >
     <div class="flex">
-      <h2 class="font-semibold text-sm text-primary px-2 pt-1 pb-3">
+      <h2 class="px-2 pt-1 pb-3 text-sm font-semibold text-primary">
         {{ $t('labels.assetTags.title') }}
       </h2>
       <Button
@@ -52,17 +51,17 @@ function create() {
         size="xs"
         @click="showNewTag = !showNewTag"
       >
-        <Icon name="lucide:plus"/>
+        <Icon name="lucide:plus" />
       </Button>
     </div>
     <div
       v-if="showNewTag"
       class="flex gap-2"
     >
-      <IconGrid v-model="newTag.icon"/>
-      <Input v-model="newTag.name"/>
+      <IconGrid v-model="newTag.icon" />
+      <Input v-model="newTag.name" />
       <Button @click="create">
-        <Icon name="lucide:plus"/>
+        <Icon name="lucide:plus" />
       </Button>
     </div>
     <TreeItem
@@ -71,11 +70,11 @@ function create() {
       :style="{ 'padding-left': `${item.level - 0.5}rem` }"
       v-bind="item.bind"
       :class="[
-          'flex items-center py-2 px-2 my-0.5 rounded-md outline-none gap-2',
-          'hover:bg-input transition-colors duration-200',
-          'cursor-pointer font-semibold',
-          item.value.id === selectedTagId ? 'bg-input text-primary' : ''
-        ]"
+        'my-0.5 flex items-center gap-2 rounded-md px-2 py-2 outline-none',
+        'transition-colors duration-200 hover:bg-input',
+        'cursor-pointer font-semibold',
+        item.value.id === selectedTagId ? 'bg-input text-primary' : '',
+      ]"
       @select="selectedTagId = item.value.id"
     >
       <Icon

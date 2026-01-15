@@ -3,8 +3,8 @@ import { DialogDescription, DialogHeader, DialogTitle } from '~/components/ui/di
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
 defineProps<{
-  title?: string | CleanTranslation,
-  description?: string | CleanTranslation,
+  title?: string | CleanTranslation
+  description?: string | CleanTranslation
 }>()
 </script>
 

@@ -1,17 +1,15 @@
 <script setup lang="ts">
-
 import { Select, SelectContent, SelectGroup } from '~/components/ui/select'
 import { SelectItem, SelectTrigger } from 'reka-ui'
 import colors from './colors.json'
 
 const selectedColor = defineModel<string | null>()
-
 </script>
 
 <template>
   <Select v-model="selectedColor">
     <SelectTrigger
-      class="cursor-pointer flex items-center justify-between rounded-md border border-input px-3 py-2 text-sm font-semibold shadow-sm ring-offset-background data-[placeholder]:text-muted focus:outline-none focus:ring-1 focus:ring-ring hover:bg-input disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start gap-2"
+      class="flex cursor-pointer items-center justify-between gap-2 rounded-md border border-input px-3 py-2 text-start text-sm font-semibold shadow-sm ring-offset-background hover:bg-input focus:ring-1 focus:ring-ring focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted [&>span]:truncate"
     >
       <span
         class="h-4 w-4 rounded"
@@ -37,5 +35,4 @@ const selectedColor = defineModel<string | null>()
       </SelectGroup>
     </SelectContent>
   </Select>
-
 </template>

@@ -1,22 +1,24 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @font-face {
   font-family: Inter;
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url(~/assets/fonts/InterVariable.woff2) format("woff2");
+  src: url(~/assets/fonts/InterVariable.woff2) format('woff2');
 }
 @font-face {
   font-family: Inter;
   font-style: italic;
   font-weight: 100 900;
   font-display: swap;
-  src: url(~/assets/fonts/InterVariable-Italic.woff2) format("woff2");
+  src: url(~/assets/fonts/InterVariable-Italic.woff2) format('woff2');
 }
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 
   --radius: 8px;
 
@@ -211,9 +213,17 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --shadow-soft-sm: 0px 2px 4px rgba(3, 7, 18, 0.02),  0px 7px 15px rgba(3, 7, 18, 0.04), 0px 16px 33px rgba(3, 7, 18, 0.06);
-  --shadow-soft: 0px 1px 1px rgba(3, 7, 18, 0.01), 0px 3px 5px rgba(3, 7, 18, 0.02), 0px 6px 12px rgba(3, 7, 18, 0.04), 0px 10px 21px rgba(3, 7, 18, 0.05), 0px 16px 33px rgba(3, 7, 18, 0.06);
-  --shadow-soft-lg: 0px 1px 1px rgba(3, 7, 18, 0.01),  0px 3px 4px rgba(3, 7, 18, 0.02), 0px 6px 8px rgba(3, 7, 18, 0.03), 0px 11px 15px rgba(3, 7, 18, 0.04), 0px 17px 23px rgba(3, 7, 18, 0.05), 0px 24px 33px rgba(3, 7, 18, 0.06);
+  --shadow-soft-sm:
+    0px 2px 4px rgba(3, 7, 18, 0.02), 0px 7px 15px rgba(3, 7, 18, 0.04),
+    0px 16px 33px rgba(3, 7, 18, 0.06);
+  --shadow-soft:
+    0px 1px 1px rgba(3, 7, 18, 0.01), 0px 3px 5px rgba(3, 7, 18, 0.02),
+    0px 6px 12px rgba(3, 7, 18, 0.04), 0px 10px 21px rgba(3, 7, 18, 0.05),
+    0px 16px 33px rgba(3, 7, 18, 0.06);
+  --shadow-soft-lg:
+    0px 1px 1px rgba(3, 7, 18, 0.01), 0px 3px 4px rgba(3, 7, 18, 0.02),
+    0px 6px 8px rgba(3, 7, 18, 0.03), 0px 11px 15px rgba(3, 7, 18, 0.04),
+    0px 17px 23px rgba(3, 7, 18, 0.05), 0px 24px 33px rgba(3, 7, 18, 0.06);
 }
 
 @layer base {
@@ -224,7 +234,7 @@
   }
 
   body {
-    @apply antialiased h-full bg-surface text-foreground text-base ;
+    @apply h-full bg-surface text-base text-foreground antialiased;
   }
 
   .grid-area-stack {
@@ -238,16 +248,16 @@
     grid-template-columns:
       [full-width-start] minmax(var(--grid-margin), 1fr)
       [content-start]
-        minmax(0, calc((var(--content-max-width) - 2 * var(--grid-margin)) / 12 * 2))
-        [narrow-start]
-          repeat(8, minmax(0, calc((var(--content-max-width) - 2 * var(--grid-margin)) / 12)))
-        [narrow-end]
-        minmax(0, calc((var(--content-max-width) - 2 * var(--grid-margin)) / 12 * 2))
+      minmax(0, calc((var(--content-max-width) - 2 * var(--grid-margin)) / 12 * 2))
+      [narrow-start]
+      repeat(8, minmax(0, calc((var(--content-max-width) - 2 * var(--grid-margin)) / 12)))
+      [narrow-end]
+      minmax(0, calc((var(--content-max-width) - 2 * var(--grid-margin)) / 12 * 2))
       [content-end]
       minmax(var(--grid-margin), 1fr)
-    [full-width-end];
+      [full-width-end];
   }
-  .content-grid > :not(.content-full-width):not([class*="col-"]) {
+  .content-grid > :not(.content-full-width):not([class*='col-']) {
     grid-column: content;
   }
 
@@ -263,7 +273,7 @@
 }
 
 @layer components {
-  @import "./vue-sonner.css";
+  @import './vue-sonner.css';
 
   .checkerboard {
     background-image:
@@ -295,7 +305,8 @@
         @apply text-accent-hover underline;
       }
     }
-    p { }
+    p {
+    }
     ul {
       padding-inline-start: 1.5rem;
       list-style-type: disc;
@@ -308,12 +319,12 @@
       padding-inline-start: 0;
     }
     li {
-      @apply my-4 ml-8 relative;
+      @apply relative my-4 ml-8;
     }
     li:before {
-      content: "✓";
+      content: '✓';
       color: var(--color-accent);
-      @apply rounded-md bg-accent/10 w-4 text-center absolute -left-8 text-sm font-semibold;
+      @apply absolute -left-8 w-4 rounded-md bg-accent/10 text-center text-sm font-semibold;
     }
   }
 }

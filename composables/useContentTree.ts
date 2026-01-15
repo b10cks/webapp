@@ -1,4 +1,5 @@
 import type { MaybeRef } from 'vue'
+
 import type { ContentBlock } from '~/types/contents'
 
 export interface ContentTreeItem {
@@ -15,7 +16,10 @@ export interface FindResult {
   index: number | null
 }
 
-export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: MaybeRef<ContentBlock>) {
+export function useContentTree(
+  contentRef: MaybeRef<ContentTreeItem>,
+  root: MaybeRef<ContentBlock>
+) {
   const findItemById = (itemId: string): FindResult => {
     const content = unref(contentRef)
     if (!content) {
@@ -28,7 +32,7 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: Mayb
         path: [unref(root), content],
         parent: null,
         parentKey: null,
-        index: null
+        index: null,
       }
     }
 
@@ -37,7 +41,7 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: Mayb
       path: [],
       parent: null,
       parentKey: null,
-      index: null
+      index: null,
     }
 
     const findInObject = (obj: ContentTreeItem, currentPath: ContentTreeItem[] = []): boolean => {
@@ -91,15 +95,17 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: Mayb
 
   const buildBreadcrumbs = (itemId: string) => {
     const { path } = findItemById(itemId)
-    const result = path.map(item => ({
-      id: item.id,
-      label: item.block
-    })).slice(0, -1)
+    const result = path
+      .map((item) => ({
+        id: item.id,
+        label: item.block,
+      }))
+      .slice(0, -1)
 
     const rootValue = unref(root)
     result.unshift({
       id: null,
-      label: rootValue?.name || rootValue?.slug || ''
+      label: rootValue?.name || rootValue?.slug || '',
     })
 
     return result
@@ -119,12 +125,12 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: Mayb
     }
 
     let current: ContentTreeItem = content
-    const pathItemIds = path.map(p => p.id).filter(Boolean)
+    const pathItemIds = path.map((p) => p.id).filter(Boolean)
     for (let i = 0; i < pathItemIds.length - 1; i++) {
       const pathItemId = pathItemIds[i]
       const foundInArray = Object.entries(current).find(([_, value]) => {
         if (Array.isArray(value)) {
-          return value.some(item => item.id === pathItemId)
+          return value.some((item) => item.id === pathItemId)
         }
         return false
       })
@@ -137,7 +143,12 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: Mayb
       } else {
         // Check for nested objects
         const foundInObject = Object.entries(current).find(([_, value]) => {
-          return typeof value === 'object' && value !== null && !Array.isArray(value) && (value as any).id === pathItemId
+          return (
+            typeof value === 'object' &&
+            value !== null &&
+            !Array.isArray(value) &&
+            (value as any).id === pathItemId
+          )
         })
 
         if (foundInObject) {
@@ -173,6 +184,6 @@ export function useContentTree(contentRef: MaybeRef<ContentTreeItem>, root: Mayb
   return {
     findItemById,
     buildBreadcrumbs,
-    updateItem
+    updateItem,
   }
 }

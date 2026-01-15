@@ -1,9 +1,7 @@
 <script setup lang="ts">
-
 import { CheckboxField, InputField } from '~/components/ui/form'
 
 const content = defineModel<ContentResource>()
-
 </script>
 
 <template>
@@ -29,6 +27,4 @@ const content = defineModel<ContentResource>()
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

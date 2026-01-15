@@ -1,20 +1,21 @@
 <script setup lang="ts">
-
 import TooltipProvider from '~/components/ui/tooltip/TooltipProvider.vue'
 import Tooltip from '~/components/ui/tooltip/Tooltip.vue'
 import TooltipTrigger from '~/components/ui/tooltip/TooltipTrigger.vue'
 import TooltipContent from '~/components/ui/tooltip/TooltipContent.vue'
 
-withDefaults(defineProps<{
-  icon?: string,
-  size?: string,
-  delayDuration?: number
-}>(), {
-  icon: 'lucide:info',
-  size: '1rem',
-  delayDuration: 300
-})
-
+withDefaults(
+  defineProps<{
+    icon?: string
+    size?: string
+    delayDuration?: number
+  }>(),
+  {
+    icon: 'lucide:info',
+    size: '1rem',
+    delayDuration: 300,
+  }
+)
 </script>
 
 <template>
@@ -30,7 +31,7 @@ withDefaults(defineProps<{
         />
       </TooltipTrigger>
       <TooltipContent>
-        <slot/>
+        <slot />
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>

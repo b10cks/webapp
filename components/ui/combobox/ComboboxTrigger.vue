@@ -21,6 +21,6 @@ const forwarded = useForwardProps(delegatedProps)
     :class="cn('', props.class)"
     tabindex="0"
   >
-    <slot/>
+    <slot />
   </ComboboxTrigger>
 </template>

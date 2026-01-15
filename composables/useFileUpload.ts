@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+
 import { useApiClient } from '~/composables/useApiClient'
 
 interface UploadOptions {
@@ -13,10 +14,7 @@ export function useFileUpload() {
   const error = ref<string | null>(null)
   const { client: apiClient } = useApiClient()
 
-  const upload = async (
-    file: File,
-    options: UploadOptions
-  ): Promise<any> => {
+  const upload = async (file: File, options: UploadOptions): Promise<any> => {
     isUploading.value = true
     error.value = null
     const formData = new FormData()
@@ -77,4 +75,3 @@ export function useFileUpload() {
     upload,
   }
 }
-

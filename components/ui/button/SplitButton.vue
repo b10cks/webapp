@@ -19,21 +19,21 @@ const props = withDefaults(defineProps<Props>(), {
   as: 'div',
   variant: 'default',
   size: 'default',
-  disabled: false
+  disabled: false,
 })
 
 const primaryButtonClasses = computed(() => {
   return [
     buttonVariants({ variant: props.variant, size: props.size }),
     'rounded-r-none',
-    props.class
+    props.class,
   ].filter(Boolean)
 })
 
 const triggerButtonClasses = computed(() => {
   return [
     buttonVariants({ variant: props.variant, size: props.size }),
-    'rounded-l-none border-l border-l-surface !px-2'
+    'rounded-l-none border-l border-l-surface !px-2',
   ].filter(Boolean)
 })
 </script>
@@ -50,16 +50,16 @@ const triggerButtonClasses = computed(() => {
         :disabled="disabled"
         @click="primaryAction && primaryAction()"
       >
-        <slot/>
+        <slot />
       </button>
       <DropdownMenuTrigger
         :disabled="disabled"
         :class="triggerButtonClasses"
       >
-        <Icon name="lucide:chevron-down"/>
+        <Icon name="lucide:chevron-down" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <slot name="menu"/>
+        <slot name="menu" />
       </DropdownMenuContent>
     </DropdownMenu>
   </Primitive>

@@ -1,9 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
+
 import type { DataSourcesQueryParams } from '~/api/resources/data-sources'
-import { api } from '~/api'
-import { queryKeys } from './useQueryClient'
 import type { CreateDataSourcePayload, UpdateDataSourcePayload } from '~/types/data-sources'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useDataSources(spaceIdRef: MaybeRefOrComputed<string>) {
   const queryClient = useQueryClient()
@@ -72,16 +75,15 @@ export function useDataSources(spaceIdRef: MaybeRefOrComputed<string>) {
    */
   const useUpdateDataSourceMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload }: {
-        id: string;
-        payload: UpdateDataSourcePayload;
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateDataSourcePayload }) => {
         const response = await spaceAPI.value.dataSources.update(id, payload)
         return response.data
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId.value).detail(data.id) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.dataSources(spaceId.value).detail(data.id),
+        })
         toast.success(`Data source "${data.name}" updated successfully`)
       },
       onError: (error: Error) => {

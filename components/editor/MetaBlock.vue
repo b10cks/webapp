@@ -45,15 +45,19 @@ const isGenerating = ref(false)
 const updateValue = (key: keyof MetaValue, value: unknown): void => {
   const newValue = {
     ...localValue.value,
-    [key]: value
+    [key]: value,
   }
   localValue.value = newValue
   emit('update:model-value', newValue)
 }
 
-watch(() => props.modelValue, (newValue: unknown) => {
-  localValue.value = newValue ? { ...(newValue as MetaValue) } : {}
-}, { immediate: true, deep: true })
+watch(
+  () => props.modelValue,
+  (newValue: unknown) => {
+    localValue.value = newValue ? { ...(newValue as MetaValue) } : {}
+  },
+  { immediate: true, deep: true }
+)
 
 const serpTitle = computed((): string => {
   return localValue.value?.title || content.value?.name || ''
@@ -75,9 +79,7 @@ const truncatedDescription = computed((): string => {
   const truncated = desc.substring(0, 155)
   const lastSpace = truncated.lastIndexOf(' ')
 
-  return lastSpace > 0
-    ? truncated.substring(0, lastSpace) + '...'
-    : truncated + '...'
+  return lastSpace > 0 ? truncated.substring(0, lastSpace) + '...' : truncated + '...'
 })
 
 const truncatedTitle = computed((): string => {
@@ -87,9 +89,7 @@ const truncatedTitle = computed((): string => {
   const truncated = title.substring(0, 60)
   const lastSpace = truncated.lastIndexOf(' ')
 
-  return lastSpace > 0
-    ? truncated.substring(0, lastSpace) + '...'
-    : truncated + '...'
+  return lastSpace > 0 ? truncated.substring(0, lastSpace) + '...' : truncated + '...'
 })
 
 const generateMetaWithAI = async (): Promise<void> => {
@@ -98,21 +98,26 @@ const generateMetaWithAI = async (): Promise<void> => {
     const requestData = {
       name: content.value?.name || '',
       slug: content.value?.full_slug || '',
-      body: typeof content.value?.content === 'string' ? content.value.content : JSON.stringify(content.value?.content || {}),
+      body:
+        typeof content.value?.content === 'string'
+          ? content.value.content
+          : JSON.stringify(content.value?.content || {}),
       current_meta: {
         title: localValue.value?.title || '',
         description: localValue.value?.description || '',
         ogTitle: localValue.value?.ogTitle || '',
-        ogDescription: localValue.value?.ogDescription || ''
-      }
+        ogDescription: localValue.value?.ogDescription || '',
+      },
     }
 
-    const response = await apiClient.post<ApiResponse<{
-      title: string
-      description: string
-      ogTitle: string
-      ogDescription: string
-    }>>('/mgmt/v1/ai/meta-tags', { context: requestData }, { query: { spaceId: props.spaceId } })
+    const response = await apiClient.post<
+      ApiResponse<{
+        title: string
+        description: string
+        ogTitle: string
+        ogDescription: string
+      }>
+    >('/mgmt/v1/ai/meta-tags', { context: requestData }, { query: { spaceId: props.spaceId } })
 
     // Update local values and emit changes
     const generatedMeta = response.data
@@ -122,8 +127,8 @@ const generateMetaWithAI = async (): Promise<void> => {
       description: generatedMeta.description,
       ...(props.item.has_og_tags && {
         ogTitle: generatedMeta.ogTitle,
-        ogDescription: generatedMeta.ogDescription
-      })
+        ogDescription: generatedMeta.ogDescription,
+      }),
     }
 
     localValue.value = newValue
@@ -200,23 +205,23 @@ const hasContent = computed((): boolean => {
       :disabled="isGenerating"
       @update:model-value="updateValue('robots', $event)"
     />
-    <div class="p-3 rounded-lg border-input border bg-background">
-      <div class="text-sm text-muted mb-1">
+    <div class="rounded-lg border border-input bg-background p-3">
+      <div class="mb-1 text-sm text-muted">
         {{ serpUrl }}
       </div>
-      <h3 class="text-lg text-info font-semibold cursor-pointer mb-1 leading-tight">
+      <h3 class="mb-1 cursor-pointer text-lg leading-tight font-semibold text-info">
         {{ truncatedTitle }}
       </h3>
-      <p class="text-sm text-muted leading-relaxed">
+      <p class="text-sm leading-relaxed text-muted">
         {{ truncatedDescription }}
       </p>
-      <div class="mt-3 pt-3 border-t border-border text-xs text-muted flex gap-4">
-          <span :class="{ 'text-destructive': serpTitle.length > 60 }">
-            Title: {{ serpTitle.length }}/60 chars
-          </span>
+      <div class="mt-3 flex gap-4 border-t border-border pt-3 text-xs text-muted">
+        <span :class="{ 'text-destructive': serpTitle.length > 60 }">
+          Title: {{ serpTitle.length }}/60 chars
+        </span>
         <span :class="{ 'text-destructive': serpDescription.length > 155 }">
-            Description: {{ serpDescription.length }}/155 chars
-          </span>
+          Description: {{ serpDescription.length }}/155 chars
+        </span>
       </div>
     </div>
     <template v-if="item.has_og_tags">

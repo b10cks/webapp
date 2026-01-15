@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import type { BlockFolderResource } from '~/api/resources/block-folders'
@@ -18,7 +17,6 @@ const handleCreate = async (folder: BlockFolderResource) => {
   await createBlockFolder(folder)
   open.value = false
 }
-
 </script>
 
 <template>
@@ -27,18 +25,14 @@ const handleCreate = async (folder: BlockFolderResource) => {
     @update:open="open = $event"
   >
     <DialogContent>
-      <DialogHeaderCombined
-        :title="$t('labels.blocks.createBlock')"
-      />
+      <DialogHeaderCombined :title="$t('labels.blocks.createBlock')" />
       <BlockFolderEdit
         v-slot="{ folder }"
         :folder="{}"
         is-create
       >
         <DialogFooter>
-          <Button
-            @click="open = false"
-          >
+          <Button @click="open = false">
             {{ $t('actions.cancel') }}
           </Button>
           <Button

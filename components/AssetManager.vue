@@ -1,9 +1,8 @@
 <script setup lang="ts">
-
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import AssetFolderTree from '~/components/assets/AssetFolderTree.vue'
-import AssetTagTree from '~/components/assets/AssetTagTree.vue'
 import AssetGrid from '~/components/assets/AssetGrid.vue'
+import AssetTagTree from '~/components/assets/AssetTagTree.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
 
 const tabs = {
@@ -35,7 +34,6 @@ watch(mode, (newMode) => {
     selectedFolder.value = null
   }
 })
-
 </script>
 
 <template>

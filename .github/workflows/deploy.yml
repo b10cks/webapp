@@ -35,13 +35,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read    # Required to checkout code
+      contents: read # Required to checkout code
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for better caching
+          fetch-depth: 0 # Full history for better caching
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -160,7 +160,7 @@ jobs:
             --exclude "*.xml" \
             --exclude "*.json" \
             --exclude "*.txt"
-          
+
           # Sync HTML files with shorter cache (for better SEO/updates)
           aws s3 sync .output/public/ "s3://${{ steps.stack-outputs.outputs.bucket-name }}" \
             --cache-control "max-age=0,s-maxage=604800,public,must-revalidate" \
@@ -232,7 +232,7 @@ jobs:
           curl -H "Content-Type: application/json" \
             -d "$PAYLOAD" \
             $DISCORD_WEBHOOK
-          
+
           echo "## 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY

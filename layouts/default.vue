@@ -6,26 +6,20 @@ const { useCurrentSpaceQuery } = useSpaces()
 const { data: currentSpace } = useCurrentSpaceQuery()
 
 const route = useRoute()
-const spaceId = computed(() => route.params?.space as string || null)
+const spaceId = computed(() => (route.params?.space as string) || null)
 const { isAuthenticated } = useAuth()
 
 useSeoMeta({
   titleTemplate: (title) => {
-    return [
-      title,
-      currentSpace.value?.name,
-      'b10cks',
-    ].filter(e => e)
-      .join(' – ')
+    return [title, currentSpace.value?.name, 'b10cks'].filter((e) => e).join(' – ')
   },
 })
-
 
 if (import.meta.client) {
   if (!isAuthenticated.value) {
     navigateTo({
       name: 'login',
-      query: { return: route.fullPath }
+      query: { return: route.fullPath },
     })
   }
 }
@@ -34,19 +28,19 @@ provide('spaceId', spaceId)
 </script>
 
 <template>
-  <div class="min-h-svh flex w-full flex-col pt-14">
+  <div class="flex min-h-svh w-full flex-col pt-14">
     <AppHeader>
       <template #default>
-        <div id="appHeader"/>
+        <div id="appHeader" />
       </template>
       <template #actions>
-        <div id="appActions"/>
+        <div id="appActions" />
       </template>
     </AppHeader>
-    <div class="flex grow w-full">
-      <AppSidebar/>
-      <main class="flex grow w-full">
-        <slot/>
+    <div class="flex w-full grow">
+      <AppSidebar />
+      <main class="flex w-full grow">
+        <slot />
       </main>
     </div>
   </div>

@@ -90,12 +90,25 @@ interface OptionItem {
 
 interface OptionSchema extends Schema {
   type: 'option'
-  options: OptionItem[],
+  options: OptionItem[]
   exclude_empty: boolean
 }
 
 type TranslatableSchema = TextSchema | TextareaSchema | MarkdownSchema | LinkSchema | MetaSchema
-type SchemaType = BlocksSchema | LinkSchema | TextSchema | TextareaSchema | MarkdownSchema | NumberSchema | BooleanSchema | OptionSchema | AssetSchema | MultiAssetsSchema | ReferencesSchema | DateSchema | MetaSchema
+type SchemaType =
+  | BlocksSchema
+  | LinkSchema
+  | TextSchema
+  | TextareaSchema
+  | MarkdownSchema
+  | NumberSchema
+  | BooleanSchema
+  | OptionSchema
+  | AssetSchema
+  | MultiAssetsSchema
+  | ReferencesSchema
+  | DateSchema
+  | MetaSchema
 
 interface EditorPage {
   header: string

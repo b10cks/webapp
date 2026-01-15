@@ -1,6 +1,8 @@
-import { BaseResource } from './base-resource'
-import type { ApiClient } from '../client'
 import type { ApiResponse, BaseQueryParams } from '~/types'
+
+import type { ApiClient } from '../client'
+
+import { BaseResource } from './base-resource'
 
 export interface AssetsQueryParams extends BaseQueryParams {
   q?: string
@@ -87,15 +89,11 @@ export class Assets extends BaseResource<
       })
     }
 
-    return this.client.post<ApiResponse<AssetResource>>(
-      this.basePath,
-      formData,
-      {
-        headers: {
-          // Remove Content-Type header so browser can set it with boundary
-          'Content-Type': undefined
-        }
-      }
-    )
+    return this.client.post<ApiResponse<AssetResource>>(this.basePath, formData, {
+      headers: {
+        // Remove Content-Type header so browser can set it with boundary
+        'Content-Type': undefined,
+      },
+    })
   }
 }

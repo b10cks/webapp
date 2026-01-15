@@ -1,8 +1,10 @@
-// src/api/resources/contents.ts
-import { BaseResource } from './base-resource'
-import type { ApiClient } from '../client'
 import type { ApiResponse, BaseQueryParams } from '~/types'
 import type { ContentResource, CreateContentPayload, UpdateContentPayload } from '~/types/contents'
+
+import type { ApiClient } from '../client'
+
+// src/api/resources/contents.ts
+import { BaseResource } from './base-resource'
 
 export interface ContentsQueryParams extends BaseQueryParams {
   filter?: {
@@ -28,7 +30,10 @@ export class Contents extends BaseResource<
   /**
    * Publish a content item
    */
-  public async publish(contentId: string, payload: UpdateContentPayload): Promise<ApiResponse<ContentResource>> {
+  public async publish(
+    contentId: string,
+    payload: UpdateContentPayload
+  ): Promise<ApiResponse<ContentResource>> {
     return this.client.post<ApiResponse<ContentResource>>(
       `${this.basePath}/${contentId}/publish`,
       payload
@@ -38,7 +43,10 @@ export class Contents extends BaseResource<
   /**
    * Unpublish a content item
    */
-  public async unpublish(contentId: string, payload: UpdateContentPayload): Promise<ApiResponse<ContentResource>> {
+  public async unpublish(
+    contentId: string,
+    payload: UpdateContentPayload
+  ): Promise<ApiResponse<ContentResource>> {
     return this.client.post<ApiResponse<ContentResource>>(
       `${this.basePath}/${contentId}/unpublish`,
       payload
@@ -48,10 +56,13 @@ export class Contents extends BaseResource<
   /**
    * Duplicate a content item
    */
-  public async duplicate(contentId: string, payload?: {
-    name?: string
-    parent_id?: string | null
-  }): Promise<ApiResponse<ContentResource>> {
+  public async duplicate(
+    contentId: string,
+    payload?: {
+      name?: string
+      parent_id?: string | null
+    }
+  ): Promise<ApiResponse<ContentResource>> {
     return this.client.post<ApiResponse<ContentResource>>(
       `${this.basePath}/${contentId}/duplicate`,
       payload
@@ -61,10 +72,13 @@ export class Contents extends BaseResource<
   /**
    * Get the preview URL for a content item
    */
-  public getPreviewUrl(contentId: string, options?: {
-    lang?: string
-    env?: string
-  }): string {
+  public getPreviewUrl(
+    contentId: string,
+    options?: {
+      lang?: string
+      env?: string
+    }
+  ): string {
     const queryParams = new URLSearchParams()
 
     if (options?.lang) {

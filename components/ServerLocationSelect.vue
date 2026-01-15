@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import { FormField } from '~/components/ui/form'
 
 const serverLocations = [
   { id: 'eu', name: 'Europe (EU)', icon: 'flag:eu-4x3' },
-  { id: 'us', name: 'United States (US)', icon: 'flag:us-4x3', disabled: false }
+  { id: 'us', name: 'United States (US)', icon: 'flag:us-4x3', disabled: false },
 ]
 
 const selectedLocationId = defineModel<string>()
 
-const selectedLocation = computed(() => serverLocations.find(location => location.id === selectedLocationId.value))
-
+const selectedLocation = computed(() =>
+  serverLocations.find((location) => location.id === selectedLocationId.value)
+)
 </script>
 
 <template>
@@ -29,7 +36,7 @@ const selectedLocation = computed(() => serverLocations.find(location => locatio
       >
         <SelectValue placeholder="Select a location">
           <div class="flex items-center gap-2">
-            <Icon :name="selectedLocation?.icon"/>
+            <Icon :name="selectedLocation?.icon" />
             <span>{{ selectedLocation?.name }}</span>
           </div>
         </SelectValue>

@@ -5,9 +5,9 @@ import type { AvatarVariants } from '.'
 import { avatarVariants } from '.'
 
 const props = defineProps<{
-  name: string,
-  avatar?: string,
-  size?: AvatarVariants['size'],
+  name: string
+  avatar?: string
+  size?: AvatarVariants['size']
   class?: HTMLAttributes['class']
 }>()
 
@@ -29,7 +29,6 @@ const width = computed(() => {
       return 32
   }
 })
-
 </script>
 
 <template>
@@ -40,11 +39,12 @@ const width = computed(() => {
       :alt="initials"
       :width="width"
       :height="width"
-      class="w-full h-full object-cover"
+      class="h-full w-full object-cover"
     />
     <span
       v-else
       class="text-xs font-bold"
-    >{{ initials }}</span>
+      >{{ initials }}</span
+    >
   </div>
 </template>

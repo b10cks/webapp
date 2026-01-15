@@ -1,4 +1,3 @@
-import { BaseResource } from './base-resource'
 import type { ApiCollectionResponse, ApiResponse, BaseQueryParams } from '~/types'
 import type {
   TeamResource,
@@ -8,8 +7,10 @@ import type {
   TeamUserResource,
   AddTeamUserPayload,
   UpdateTeamUserPayload,
-  TeamUserQueryParams
+  TeamUserQueryParams,
 } from '~/types/teams'
+
+import { BaseResource } from './base-resource'
 
 export interface TeamsQueryParams extends BaseQueryParams {
   name?: string
@@ -31,7 +32,10 @@ export class Teams extends BaseResource<
     return this.client.get<ApiCollectionResponse<TeamHierarchyItem>>('/mgmt/v1/teams/hierarchy')
   }
 
-  public async addUser(teamId: string, payload: AddTeamUserPayload): Promise<ApiResponse<TeamUserResource>> {
+  public async addUser(
+    teamId: string,
+    payload: AddTeamUserPayload
+  ): Promise<ApiResponse<TeamUserResource>> {
     return this.client.post<ApiResponse<TeamUserResource>>(
       `/mgmt/v1/teams/${teamId}/users`,
       payload

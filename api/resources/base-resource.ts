@@ -1,11 +1,12 @@
-import type { ApiClient } from '../client'
 import type { ApiResponse, ApiCollectionResponse, BaseQueryParams } from '~/types'
+
+import type { ApiClient } from '../client'
 
 export abstract class BaseResource<
   T,
   CreatePayload = unknown,
   UpdatePayload = unknown,
-  QueryParams extends BaseQueryParams = BaseQueryParams
+  QueryParams extends BaseQueryParams = BaseQueryParams,
 > {
   protected client: ApiClient
   protected abstract basePath: string
@@ -22,11 +23,17 @@ export abstract class BaseResource<
   }
 
   public async index(query: QueryParams = {} as QueryParams): Promise<ApiCollectionResponse<T>> {
-    return this.client.get<ApiCollectionResponse<T>>(this.basePath, query as Record<string, unknown>)
+    return this.client.get<ApiCollectionResponse<T>>(
+      this.basePath,
+      query as Record<string, unknown>
+    )
   }
 
   public async get(id: string, query: QueryParams = {} as QueryParams): Promise<ApiResponse<T>> {
-    return this.client.get<ApiResponse<T>>(`${this.basePath}/${id}`, query as Record<string, unknown>)
+    return this.client.get<ApiResponse<T>>(
+      `${this.basePath}/${id}`,
+      query as Record<string, unknown>
+    )
   }
 
   public async create(payload: CreatePayload): Promise<ApiResponse<T>> {

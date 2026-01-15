@@ -4,17 +4,17 @@ import GradientText from '~/components/ui/GradientText.vue'
 </script>
 
 <template>
-  <div class="min-h-screen grid lg:grid-cols-2">
-    <div class="relative hidden lg:flex flex-col items-center justify-between bg-surface p-4">
+  <div class="grid min-h-screen lg:grid-cols-2">
+    <div class="relative hidden flex-col items-center justify-between bg-surface p-4 lg:flex">
       <div class="w-full text-foreground">
         <Markdown
           class="text-sm"
           :content="$t('labels.login.marketing.demo')"
         />
       </div>
-      <div class="grid gap-6 max-w-md">
+      <div class="grid max-w-md gap-6">
         <GradientText
-          class="text-primary text-3xl font-bold"
+          class="text-3xl font-bold text-primary"
           :content="$t('labels.login.marketing.header')"
           :colors="['var(--color-green-500)', 'var(--color-blue-500)', 'var(--color-purple-500)']"
         />
@@ -27,14 +27,14 @@ import GradientText from '~/components/ui/GradientText.vue'
           :content="$t('labels.login.marketing.asFeatured')"
         />
       </div>
-      <div/>
+      <div />
     </div>
-    <div class="flex flex-col items-center justify-between p-8 bg-background">
-      <div/>
-      <slot/>
+    <div class="flex flex-col items-center justify-between bg-background p-8">
+      <div />
+      <slot />
       <div>
         <Markdown
-          class="text-sm max-w-sm text-center text-balance text-foreground"
+          class="max-w-sm text-center text-sm text-balance text-foreground"
           :content="$t('labels.login.marketing.footer')"
         />
       </div>

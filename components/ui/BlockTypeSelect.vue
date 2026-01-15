@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SelectGroup, SelectTrigger, } from 'reka-ui'
+import { SelectGroup, SelectTrigger } from 'reka-ui'
 import BlockType from '~/components/ui/BlockType.vue'
 import { Select, SelectContent, SelectItem } from '~/components/ui/select'
 
@@ -8,14 +8,13 @@ defineProps<{
 }>()
 
 const value = defineModel<string>()
-
 </script>
 
 <template>
   <Select v-model="value">
-    <SelectTrigger class="flex items-center gap-2 bg-input rounded-md px-2">
-      <BlockType :type="value"/>
-      <Icon name="lucide:chevron-down"/>
+    <SelectTrigger class="flex items-center gap-2 rounded-md bg-input px-2">
+      <BlockType :type="value" />
+      <Icon name="lucide:chevron-down" />
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
@@ -23,10 +22,10 @@ const value = defineModel<string>()
           v-for="type in types"
           :key="type"
           :value="type"
-          class="py-1 px-1"
+          class="px-1 py-1"
         >
           <div class="flex items-center gap-2">
-            <BlockType :type="type"/>
+            <BlockType :type="type" />
             <p>{{ $t(`labels.blocks.fieldTypes.${type}.label`) }}</p>
           </div>
         </SelectItem>

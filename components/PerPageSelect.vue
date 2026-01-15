@@ -1,20 +1,27 @@
 <script setup lang="ts">
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 
-withDefaults(defineProps<{
-  modelValue: number
-  options?: number[]
-  label?: string
-}>(), {
-  options: () => [12, 24, 36, 48],
-  label: undefined
-})
+withDefaults(
+  defineProps<{
+    modelValue: number
+    options?: number[]
+    label?: string
+  }>(),
+  {
+    options: () => [12, 24, 36, 48],
+    label: undefined,
+  }
+)
 
 const emit = defineEmits<{
   'update:modelValue': [number]
 }>()
-
-
 </script>
 
 <template>

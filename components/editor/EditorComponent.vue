@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import FieldEditor from '~/components/editor/FieldEditor.vue'
 import ContentBreadcrumbs from '~/components/editor/ContentBreadcrumbs.vue'
@@ -40,20 +39,23 @@ const content = defineModel<Record<string, unknown>>()
 const containerRef = useTemplateRef<HTMLElement>('containerRef')
 const isHovered = useElementHover(containerRef)
 
-const props = withDefaults(defineProps<{
-  blockId?: string | null
-  blockSlug?: string | null
-  spaceId: string
-  isChild?: boolean
-  rootId?: string
-  itemId?: string | null
-}>(), {
-  blockId: null,
-  blockSlug: null,
-  rootId: undefined,
-  isChild: false,
-  itemId: null
-})
+const props = withDefaults(
+  defineProps<{
+    blockId?: string | null
+    blockSlug?: string | null
+    spaceId: string
+    isChild?: boolean
+    rootId?: string
+    itemId?: string | null
+  }>(),
+  {
+    blockId: null,
+    blockSlug: null,
+    rootId: undefined,
+    isChild: false,
+    itemId: null,
+  }
+)
 
 const emit = defineEmits<{
   (e: 'navigate', itemId: string | null): void
@@ -79,9 +81,13 @@ const updateRegistry = (isComponentHovered: boolean): void => {
   }
 }
 
-watch(isHovered, (hovered: boolean) => {
-  updateRegistry(hovered)
-}, { immediate: true })
+watch(
+  isHovered,
+  (hovered: boolean) => {
+    updateRegistry(hovered)
+  },
+  { immediate: true }
+)
 
 onBeforeUnmount(() => {
   hoverRegistry.delete(componentId.value)
@@ -99,8 +105,12 @@ const rootBlock = inject<ContentBlock>('rootBlock')
 const updatePreviewItem = inject<PreviewUpdateFunction>('updatePreviewItem')
 
 const contentTree = useContentTree(content, rootBlock)
-const currentItem = computed((): ContentItem | null => props.itemId ? contentTree.findItemById(props.itemId) : null)
-const breadcrumbs = computed((): Breadcrumb[] => props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : [])
+const currentItem = computed((): ContentItem | null =>
+  props.itemId ? contentTree.findItemById(props.itemId) : null
+)
+const breadcrumbs = computed((): Breadcrumb[] =>
+  props.itemId ? contentTree.buildBreadcrumbs(props.itemId) : []
+)
 const id = computed((): string => props.itemId || rootBlock?.slug || '')
 
 const currentBlock = computed((): BlockResource | null => {
@@ -131,10 +141,10 @@ const updateSubItem = (updatedValue: unknown): void => {
 
 const updateItem = (updatedValue: unknown): void => {
   if (!updatePreviewItem) return
-  
-  updatePreviewItem({ 
-    id: props.rootId, 
-    ...(updatedValue as Record<string, unknown>) 
+
+  updatePreviewItem({
+    id: props.rootId,
+    ...(updatedValue as Record<string, unknown>),
   })
 }
 </script>
@@ -142,7 +152,7 @@ const updateItem = (updatedValue: unknown): void => {
 <template>
   <div
     ref="containerRef"
-    class="flex flex-col w-full"
+    class="flex w-full flex-col"
   >
     <ContentBreadcrumbs
       v-if="breadcrumbs.length > 0"
@@ -151,7 +161,7 @@ const updateItem = (updatedValue: unknown): void => {
     />
     <h2
       v-if="!isChild"
-      class="text-xl font-bold mb-2 text-primary"
+      class="mb-2 text-xl font-bold text-primary"
     >
       {{ currentBlock?.name || currentBlock?.slug }}
     </h2>
@@ -161,13 +171,13 @@ const updateItem = (updatedValue: unknown): void => {
     >
       <TabsList
         v-if="currentBlock?.editor?.length > 1"
-        class="bg-input flex items-center gap-1 rounded-xl p-1 mb-4 w-full"
+        class="mb-4 flex w-full items-center gap-1 rounded-xl bg-input p-1"
       >
         <TabsTrigger
           v-for="(page, i) in currentBlock.editor"
           :key="i"
           :value="`${id}-page-${i}`"
-          class="transition-colors text-sm font-semibold hover:text-primary data-[state=active]:text-primary data-[state=active]:bg-background rounded-lg px-2 py-1"
+          class="rounded-lg px-2 py-1 text-sm font-semibold transition-colors hover:text-primary data-[state=active]:bg-background data-[state=active]:text-primary"
         >
           {{ page.header }}
         </TabsTrigger>
@@ -177,7 +187,7 @@ const updateItem = (updatedValue: unknown): void => {
         :key="i"
         :value="`${id}-page-${i}`"
       >
-        <div class="grid gap-4 items-start">
+        <div class="grid items-start gap-4">
           <template v-if="currentItem">
             <FieldEditor
               v-for="item in page?.items"

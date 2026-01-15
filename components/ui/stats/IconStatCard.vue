@@ -1,17 +1,15 @@
 <script setup lang="ts">
-
 defineProps<{
   title: string
   icon: string
   description?: string
 }>()
-
 </script>
 
 <template>
-  <div class="bg-input rounded-xl">
-    <div class="gap-y-1.5 p-3 flex flex-row items-center justify-between space-y-0 pb-2">
-      <h3 class="tracking-tight text-sm font-medium">{{ title }}</h3>
+  <div class="rounded-xl bg-input">
+    <div class="flex flex-row items-center justify-between space-y-0 gap-y-1.5 p-3 pb-2">
+      <h3 class="text-sm font-medium tracking-tight">{{ title }}</h3>
       <Icon
         :name="icon"
         size="1.25rem"
@@ -20,12 +18,15 @@ defineProps<{
     </div>
     <div class="p-3 pt-0">
       <div class="text-2xl font-bold text-primary">
-        <slot/>
+        <slot />
       </div>
       <p
         v-if="description"
         class="text-xs"
-      >{{ description }}</p>
+      >
+        {{ description }}
+      </p>
     </div>
   </div>
-</template>e
+</template>
+e

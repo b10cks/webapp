@@ -1,4 +1,5 @@
 import type { ProviderGetImage } from '@nuxt/image'
+
 import { createOperationsGenerator } from '#image'
 
 interface IlumTransformations {
@@ -29,7 +30,7 @@ const operationsGenerator = createOperationsGenerator({
     x: 'x',
     y: 'y',
     targetWidth: 'tw',
-    targetHeight: 'th'
+    targetHeight: 'th',
   },
   joinWith: ',',
   formatter: (key: string, value: string | number) => {
@@ -38,18 +39,14 @@ const operationsGenerator = createOperationsGenerator({
       return `${key}_${value}`
     }
     return `${key}_${value}`
-  }
+  },
 })
 
 export const getImage: ProviderGetImage = (
   src: string,
   { modifiers = {}, baseURL = '' }: { modifiers?: IlumModifiers; baseURL?: string } = {}
 ) => {
-  const {
-    format,
-    quality,
-    ...transformations
-  } = modifiers
+  const { format, quality, ...transformations } = modifiers
   const operations = operationsGenerator(transformations as Record<string, never>)
   let finalPath = src
 
@@ -67,7 +64,7 @@ export const getImage: ProviderGetImage = (
   }
 
   return {
-    url: baseURL + finalPath
+    url: baseURL + finalPath,
   }
 }
 

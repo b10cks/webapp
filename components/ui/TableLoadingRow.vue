@@ -3,29 +3,31 @@ import { TableCell, TableRow } from '~/components/ui/table'
 
 const { $t } = useI18n()
 
-const props = withDefaults(defineProps<{
-  colspan?: number
-  icon?: string
-  label?: string
-}>(), {
-  colspan: 3,
-  icon: 'lucide:loader',
-  label: undefined
-})
+const props = withDefaults(
+  defineProps<{
+    colspan?: number
+    icon?: string
+    label?: string
+  }>(),
+  {
+    colspan: 3,
+    icon: 'lucide:loader',
+    label: undefined,
+  }
+)
 
 const labelText = computed(() => {
   return props.label || $t('labels.loading')
 })
-
 </script>
 
 <template>
   <TableRow>
     <TableCell
       :colspan="colspan"
-      class="py-6 text-center bg-surface"
+      class="bg-surface py-6 text-center"
     >
-      <div class="flex flex-row justify-center items-center gap-2">
+      <div class="flex flex-row items-center justify-center gap-2">
         <Icon
           :name="icon"
           class="animate-spin"
@@ -35,4 +37,3 @@ const labelText = computed(() => {
     </TableCell>
   </TableRow>
 </template>
-

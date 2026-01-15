@@ -1,6 +1,8 @@
-import { BaseResource } from './base-resource'
-import type { ApiClient } from '../client'
 import type { ApiResponse, BaseQueryParams } from '~/types'
+
+import type { ApiClient } from '../client'
+
+import { BaseResource } from './base-resource'
 
 export interface RedirectsQueryParams extends BaseQueryParams {
   source?: string

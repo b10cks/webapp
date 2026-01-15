@@ -1,20 +1,29 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 import { deepClone } from '@vue/devtools-shared'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
 const { formatFileSize, formatDateTime } = useFormat()
 const { getFileIcon } = useFileUtils()
-const props = withDefaults(defineProps<{
-  asset: AssetResource
-  mode?: 'normal' | 'reduced'
-  folderId: string | null
-  spaceId: string
-}>(), {
-  mode: 'normal'
-})
+const props = withDefaults(
+  defineProps<{
+    asset: AssetResource
+    mode?: 'normal' | 'reduced'
+    folderId: string | null
+    spaceId: string
+  }>(),
+  {
+    mode: 'normal',
+  }
+)
 
 const { useFolderStructure } = useAssetFolders(props.spaceId)
 const { getBreadcrumbs } = useFolderStructure()
@@ -30,22 +39,25 @@ const imageContainer = ref<HTMLElement | null>(null)
 const imageRef = useTemplateRef('imageRef')
 const isDraggingFocus = ref(false)
 
-watch(() => props.asset, (newAsset) => {
-  if (newAsset) {
-    assetCopy.value = deepClone(newAsset)
-  } else {
-    assetCopy.value = null
-  }
-}, { immediate: true })
+watch(
+  () => props.asset,
+  (newAsset) => {
+    if (newAsset) {
+      assetCopy.value = deepClone(newAsset)
+    } else {
+      assetCopy.value = null
+    }
+  },
+  { immediate: true }
+)
 const emit = defineEmits(['close', 'update:asset'])
 
 const formatKey = (key: string): string => {
-  return key
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, char => char.toUpperCase())
+  return key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 }
 const copyAssetUrl = () => {
-  navigator.clipboard.writeText(assetCopy.value.url)
+  navigator.clipboard
+    .writeText(assetCopy.value.url)
     .then(() => {
       toast.success('URL copied to clipboard')
     })
@@ -90,7 +102,7 @@ const updateFocusPointPosition = (event: MouseEvent) => {
 
   assetCopy.value.data.focus = {
     x: parseFloat(x.toFixed(2)),
-    y: parseFloat(y.toFixed(2))
+    y: parseFloat(y.toFixed(2)),
   }
 }
 
@@ -139,42 +151,47 @@ const onOpenChange = (open: boolean) => {
         <p
           v-if="mode === 'normal'"
           class="text-sm"
-        >/<span
-          v-for="crumb in getBreadcrumbs(asset.folder_id)"
-          :key="crumb.id"
-        >{{ crumb.name }}/</span></p>
+        >
+          /<span
+            v-for="crumb in getBreadcrumbs(asset.folder_id)"
+            :key="crumb.id"
+            >{{ crumb.name }}/</span
+          >
+        </p>
         <DialogTitle>{{ asset.filename }}</DialogTitle>
         <p>.{{ asset.extension }}</p>
       </DialogHeader>
       <div class="grid gap-6 py-4 md:grid-cols-12">
-        <div class="flex flex-col items-center justify-center rounded-xl checkerboard p-4 md:col-span-8">
+        <div
+          class="checkerboard flex flex-col items-center justify-center rounded-xl p-4 md:col-span-8"
+        >
           <div
             v-if="getFileType(asset.mime_type) === 'image'"
             ref="imageContainer"
-            class="relative w-full flex items-center justify-center"
+            class="relative flex w-full items-center justify-center"
           >
             <div class="relative inline-block">
-               <NuxtImg
-                 ref="imageRef"
-                 :src="asset.full_path"
-                 :alt="String(assetCopy?.data?.altText || asset.filename)"
-                 height="600"
-                 width="600"
-                 class="object-contain max-h-[calc(60svh)] max-w-full"
-               />
-               <div
-                 v-if="assetCopy.data?.focus"
-                 class="absolute w-5 h-5 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-difference"
-                 :style="{
-                   left: `${assetCopy.data?.focus?.x}%`,
-                   top: `${assetCopy.data?.focus?.y}%`
-                 }"
-                 aria-hidden="true"
-               >
+              <NuxtImg
+                ref="imageRef"
+                :src="asset.full_path"
+                :alt="String(assetCopy?.data?.altText || asset.filename)"
+                height="600"
+                width="600"
+                class="max-h-[calc(60svh)] max-w-full object-contain"
+              />
+              <div
+                v-if="assetCopy.data?.focus"
+                class="pointer-events-none absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 transform mix-blend-difference"
+                :style="{
+                  left: `${assetCopy.data?.focus?.x}%`,
+                  top: `${assetCopy.data?.focus?.y}%`,
+                }"
+                aria-hidden="true"
+              >
                 <Icon
                   name="lucide:crosshair"
                   size="1.25rem"
-                  class=" text-primary"
+                  class="text-primary"
                 />
               </div>
               <div
@@ -198,7 +215,7 @@ const onOpenChange = (open: boolean) => {
             </div>
           </div>
           <div
-            class="flex gap-2 mt-4 w-full"
+            class="mt-4 flex w-full gap-2"
             aria-label="Asset actions"
           >
             <Button
@@ -207,9 +224,7 @@ const onOpenChange = (open: boolean) => {
               class="flex items-center gap-2"
               @click="openAssetInNewWindow"
             >
-              <Icon
-                name="lucide:external-link"
-              />
+              <Icon name="lucide:external-link" />
             </Button>
             <Button
               variant="outline"
@@ -217,9 +232,7 @@ const onOpenChange = (open: boolean) => {
               class="flex items-center gap-2"
               @click="copyAssetUrl"
             >
-              <Icon
-                name="lucide:link"
-              />
+              <Icon name="lucide:link" />
             </Button>
             <Button
               v-if="getFileType(asset.mime_type) === 'image'"
@@ -227,19 +240,19 @@ const onOpenChange = (open: boolean) => {
               class="flex items-center gap-2"
               @click="toggleFocusPoint"
             >
-              <Icon
-                :name="assetCopy.data.focus ? 'lucide:x' : 'lucide:crosshair'"
-              />
+              <Icon :name="assetCopy.data.focus ? 'lucide:x' : 'lucide:crosshair'" />
               <span>{{
-                  assetCopy.data.focus ? $t('labels.assets.removeFocusPoint') : $t('labels.assets.setFocusPoint')
-                }}</span>
+                assetCopy.data.focus
+                  ? $t('labels.assets.removeFocusPoint')
+                  : $t('labels.assets.setFocusPoint')
+              }}</span>
             </Button>
           </div>
         </div>
         <div class="space-y-4 md:col-span-4">
           <div
             v-if="mode === 'normal'"
-            class="text-sm rounded-lg bg-surface p-3"
+            class="rounded-lg bg-surface p-3 text-sm"
           >
             <dl class="grid grid-cols-2 gap-2">
               <dt class="font-semibold">{{ $t('labels.assets.fields.type') }}:</dt>
@@ -254,14 +267,16 @@ const onOpenChange = (open: boolean) => {
 
             <div
               v-if="asset.metadata && Object.keys(asset.metadata).length"
-              class="mt-4 pt-4 border-t-2 border-background"
+              class="mt-4 border-t-2 border-background pt-4"
             >
               <dl class="grid grid-cols-2 gap-2">
                 <template
                   v-for="(value, key) in asset.metadata"
                   :key="key"
                 >
-                   <dt class="font-semibold">{{ String($t(`labels.assets.metadata.${key}`) || formatKey(key)) }}:</dt>
+                  <dt class="font-semibold">
+                    {{ String($t(`labels.assets.metadata.${key}`) || formatKey(key)) }}:
+                  </dt>
                   <dd class="break-words">{{ value }}</dd>
                 </template>
               </dl>
@@ -275,13 +290,13 @@ const onOpenChange = (open: boolean) => {
               required
             />
             <InputField
-               v-for="field in assetFields"
-               :key="field.key"
-               v-model="assetCopy.data[field.key] as string"
-               :label="String(field.label)"
-               :name="field.key"
-               :required="field.required"
-             />
+              v-for="field in assetFields"
+              :key="field.key"
+              v-model="assetCopy.data[field.key] as string"
+              :label="String(field.label)"
+              :name="field.key"
+              :required="field.required"
+            />
           </div>
         </div>
       </div>

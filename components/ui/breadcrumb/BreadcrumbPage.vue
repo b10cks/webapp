@@ -14,6 +14,6 @@ const props = defineProps<{
     aria-current="page"
     :class="cn('font-normal text-foreground', props.class)"
   >
-    <slot/>
+    <slot />
   </span>
 </template>

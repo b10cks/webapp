@@ -11,6 +11,6 @@ const props = defineProps<{
     aria-label="breadcrumb"
     :class="props.class"
   >
-    <slot/>
+    <slot />
   </nav>
 </template>

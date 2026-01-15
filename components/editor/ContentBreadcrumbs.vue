@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from '~/components/ui/breadcrumb'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from '~/components/ui/breadcrumb'
 
 defineProps<{
   breadcrumbs: Array<{
@@ -29,11 +34,12 @@ const navigateTo = (id: string | null) => {
         <BreadcrumbItem>
           <button
             type="button"
-            class="flex items-center gap-2 hover:text-gray-200 focus:text-gray-200 focus:outline-none cursor-pointer"
+            class="flex cursor-pointer items-center gap-2 hover:text-gray-200 focus:text-gray-200 focus:outline-none"
             @click="navigateTo(crumb.id)"
-          >{{ crumb.label }}
+          >
+            {{ crumb.label }}
           </button>
-          <BreadcrumbSeparator/>
+          <BreadcrumbSeparator />
         </BreadcrumbItem>
       </template>
     </BreadcrumbList>

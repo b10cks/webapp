@@ -19,9 +19,9 @@ const props = defineProps<{
 const emit = defineEmits(['update:open'])
 
 interface UploadFileWithProgress extends UploadFile {
-  progress: number;
-  status: 'pending' | 'uploading' | 'error' | 'complete';
-  errorMessage?: string;
+  progress: number
+  status: 'pending' | 'uploading' | 'error' | 'complete'
+  errorMessage?: string
 }
 
 const { uploadAsset } = useAssets(props.spaceId)
@@ -32,15 +32,19 @@ const fileInputRef = ref<HTMLInputElement | null>(null)
 const isUploading = ref(false)
 
 // Process initial files if provided
-watch(() => props.initialFiles, (newFiles) => {
-  if (newFiles && newFiles.length > 0) {
-    handleFilesAdded(newFiles)
-  }
-}, { immediate: true })
+watch(
+  () => props.initialFiles,
+  (newFiles) => {
+    if (newFiles && newFiles.length > 0) {
+      handleFilesAdded(newFiles)
+    }
+  },
+  { immediate: true }
+)
 
 // Track if any upload is still in progress
 const hasUploadInProgress = computed(() => {
-  return files.value.some(file => file.status === 'uploading')
+  return files.value.some((file) => file.status === 'uploading')
 })
 
 // Common function to process files whether from input or dropped
@@ -64,7 +68,7 @@ const handleFilesAdded = (newFilesArray: File[]) => {
       tags: [],
       type: fileType,
       progress: 0,
-      status: 'pending' as const
+      status: 'pending' as const,
     }
   })
 
@@ -97,14 +101,18 @@ const openFileDetails = (file: UploadFileWithProgress) => {
 }
 
 const updateFileProgress = (id: string, progress: number) => {
-  const fileIndex = files.value.findIndex(file => file.id === id)
+  const fileIndex = files.value.findIndex((file) => file.id === id)
   if (fileIndex !== -1) {
     files.value[fileIndex].progress = progress
   }
 }
 
-const updateFileStatus = (id: string, status: 'pending' | 'uploading' | 'error' | 'complete', errorMessage?: string) => {
-  const fileIndex = files.value.findIndex(file => file.id === id)
+const updateFileStatus = (
+  id: string,
+  status: 'pending' | 'uploading' | 'error' | 'complete',
+  errorMessage?: string
+) => {
+  const fileIndex = files.value.findIndex((file) => file.id === id)
   if (fileIndex !== -1) {
     files.value[fileIndex].status = status
     if (errorMessage) {
@@ -147,7 +155,7 @@ const handleUpload = async () => {
   isUploading.value = false
 
   // Check if all files are completed successfully
-  const allCompleted = files.value.every(file => file.status === 'complete')
+  const allCompleted = files.value.every((file) => file.status === 'complete')
   if (allCompleted) {
     // Reset state and close dialog
     if (props.onUploadComplete) {
@@ -196,14 +204,14 @@ const handleReplaceFile = () => {
       files.value = files.value.map((f) =>
         f.id === selectedFile.value?.id
           ? {
-            ...f,
-            file: newFile,
-            preview,
-            type: fileType,
-            progress: 0,
-            status: 'pending',
-            errorMessage: undefined
-          }
+              ...f,
+              file: newFile,
+              preview,
+              type: fileType,
+              progress: 0,
+              status: 'pending',
+              errorMessage: undefined,
+            }
           : f
       )
 
@@ -211,9 +219,9 @@ const handleReplaceFile = () => {
         ...selectedFile.value,
         file: newFile,
         preview,
-        type: fileType
+        type: fileType,
       } as UploadFileWithProgress
-      
+
       // Add progress tracking properties
       ;(selectedFile.value as UploadFileWithProgress).progress = 0
       ;(selectedFile.value as UploadFileWithProgress).status = 'pending'
@@ -301,7 +309,7 @@ const retryUpload = async (file: UploadFileWithProgress) => {
           multiple
           accept="image/*,video/*,audio/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.*"
           @change="handleFileChange"
-        >
+        />
         <div
           v-if="files.length === 0"
           class="flex h-64 flex-col items-center justify-center rounded-lg border-2 border-dashed border-elevated/50 p-12 text-center"
@@ -321,7 +329,7 @@ const retryUpload = async (file: UploadFileWithProgress) => {
               <Button
                 variant="primary"
                 @click="handleBrowseClick"
-              >{{ $t('labels.assets.browseFiles') }}
+                >{{ $t('labels.assets.browseFiles') }}
               </Button>
             </div>
           </div>
@@ -338,24 +346,24 @@ const retryUpload = async (file: UploadFileWithProgress) => {
               v-for="file in files"
               :key="file.id"
               role="button"
-              class="group relative cursor-pointer rounded-lg bg-background transition-all shadow-lg hover:-translate-y-2 hover:bg-input focus:bg-input focus:-translate-y-2"
+              class="group relative cursor-pointer rounded-lg bg-background shadow-lg transition-all hover:-translate-y-2 hover:bg-input focus:-translate-y-2 focus:bg-input"
               @click="openFileDetails(file)"
             >
               <button
                 v-if="file.status !== 'uploading'"
-                class="cursor-pointer absolute right-1 top-1 z-10 flex h-6 w-6 items-center justify-center text-primary/50 hover:text-red-500"
+                class="absolute top-1 right-1 z-10 flex h-6 w-6 cursor-pointer items-center justify-center text-primary/50 hover:text-red-500"
                 @click.stop="removeFile(file.id)"
               >
-                <Icon name="lucide:trash-2"/>
+                <Icon name="lucide:trash-2" />
               </button>
 
-              <div class="relative aspect-square overflow-hidden rounded-t-lg checkerboard">
+              <div class="checkerboard relative aspect-square overflow-hidden rounded-t-lg">
                 <img
                   v-if="file.type === 'image' && file.preview"
                   :src="file.preview || '/placeholder.svg'"
                   :alt="file.file.name"
                   class="h-full w-full object-cover"
-                >
+                />
                 <div
                   v-else
                   class="flex h-full items-center justify-center"
@@ -369,13 +377,13 @@ const retryUpload = async (file: UploadFileWithProgress) => {
                 <!-- Upload status overlay -->
                 <div
                   v-if="file.status === 'uploading'"
-                  class="absolute inset-0 bg-surface/50 flex items-center justify-center"
+                  class="absolute inset-0 flex items-center justify-center bg-surface/50"
                 >
-                  <div class="text-primary text-center p-2">
-                    <div class="flex justify-center items-center mb-2">
+                  <div class="p-2 text-center text-primary">
+                    <div class="mb-2 flex items-center justify-center">
                       <Icon
                         name="lucide:loader"
-                        class="animate-spin h-6 w-6"
+                        class="h-6 w-6 animate-spin"
                       />
                     </div>
                     <div class="text-sm">{{ file.progress }}%</div>
@@ -385,21 +393,19 @@ const retryUpload = async (file: UploadFileWithProgress) => {
                   v-else-if="file.status === 'complete'"
                   class="absolute top-2 left-2"
                 >
-                  <div class="bg-green-600 text-primary rounded-full p-1 w-6 h-6">
-                    <Icon
-                      name="lucide:check"
-                    />
+                  <div class="h-6 w-6 rounded-full bg-green-600 p-1 text-primary">
+                    <Icon name="lucide:check" />
                   </div>
                 </div>
                 <div
                   v-else-if="file.status === 'error'"
-                  class="absolute inset-0 bg-red-700 bg-opacity-70 flex items-center justify-center"
+                  class="bg-opacity-70 absolute inset-0 flex items-center justify-center bg-red-700"
                 >
-                  <div class="text-primary text-center p-2">
+                  <div class="p-2 text-center text-primary">
                     <Icon
                       name="lucide:alert-triangle"
                       size="2rem"
-                      class="h-6 w-6 mb-1"
+                      class="mb-1 h-6 w-6"
                     />
                     <div class="text-xs">{{ file.errorMessage || 'Error' }}</div>
                     <Button
@@ -411,7 +417,9 @@ const retryUpload = async (file: UploadFileWithProgress) => {
                     </Button>
                   </div>
                 </div>
-                <div class="bg-elevated rounded-full h-1.5 overflow-hidden absolute bottom-2 inset-x-2">
+                <div
+                  class="absolute inset-x-2 bottom-2 h-1.5 overflow-hidden rounded-full bg-elevated"
+                >
                   <div
                     class="h-full transition-all duration-300 ease-in-out"
                     :class="getProgressColor(file.status)"
@@ -424,7 +432,8 @@ const retryUpload = async (file: UploadFileWithProgress) => {
                   {{ file.file.name.split('.').slice(0, -1).join('.') }}
                 </div>
                 <div class="text-sm text-muted">
-                  {{ file.file.name.split('.').pop()?.toUpperCase() }} • {{ formatFileSize(file.file.size) }}
+                  {{ file.file.name.split('.').pop()?.toUpperCase() }} •
+                  {{ formatFileSize(file.file.size) }}
                 </div>
               </div>
             </div>
@@ -456,7 +465,9 @@ const retryUpload = async (file: UploadFileWithProgress) => {
               name="lucide:loader"
               class="mr-2 h-4 w-4 animate-spin"
             />
-            {{ isUploading ? 'Uploading...' : `Upload ${files.length > 0 ? `(${files.length})` : ''}` }}
+            {{
+              isUploading ? 'Uploading...' : `Upload ${files.length > 0 ? `(${files.length})` : ''}`
+            }}
           </Button>
         </div>
       </DialogFooter>

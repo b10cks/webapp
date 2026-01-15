@@ -7,7 +7,7 @@ import CreateBlockFolderDialog from '~/components/blocks/CreateBlockFolderDialog
 import type { BlockFolderResource } from '~/api/resources/block-folders'
 
 const mode = defineModel<'list' | 'tags'>('mode', {
-  default: 'list'
+  default: 'list',
 })
 
 const selectedFolder = defineModel<string>('selectedFolder')
@@ -42,7 +42,7 @@ const initDeleteFolder = async (folder: BlockFolderResource) => {
     {
       title: 'Delete Block',
       confirmLabel: 'Delete',
-      cancelLabel: 'Cancel'
+      cancelLabel: 'Cancel',
     }
   )
 
@@ -58,50 +58,49 @@ const tabs = computed(() => ({
   list: {
     icon: 'lucide:blocks',
     label: $t('labels.blocks.title'),
-    count: blocks.value?.data.length || 0
+    count: blocks.value?.data.length || 0,
   },
   tags: {
     icon: 'lucide:tag',
     label: $t('labels.blockTags.title'),
-    count: blockTags.value?.data.length || 0
+    count: blockTags.value?.data.length || 0,
   },
 }))
-
 </script>
 
 <template>
-  <div class="min-w-2xs p-2 h-[calc(100vh-3.5rem)] flex flex-col overflow-hidden sticky top-14">
+  <div class="sticky top-14 flex h-[calc(100vh-3.5rem)] min-w-2xs flex-col overflow-hidden p-2">
     <TabsRoot
       v-model="mode"
       default-value="list"
     >
-      <TabsList class="bg-input flex flex-col rounded-md p-1 mb-6 w-full">
+      <TabsList class="mb-6 flex w-full flex-col rounded-md bg-input p-1">
         <TabsTrigger
           v-for="({ icon, label, count }, key) in tabs"
           :key="key"
           :value="key"
-          class="w-full flex items-center gap-2 cursor-pointer transition-colors text-sm font-semibold hover:text-primary data-[state=active]:text-primary data-[state=active]:bg-gray-900 rounded-md p-2"
+          class="flex w-full cursor-pointer items-center gap-2 rounded-md p-2 text-sm font-semibold transition-colors hover:text-primary data-[state=active]:bg-gray-900 data-[state=active]:text-primary"
         >
-          <Icon :name="icon"/>
+          <Icon :name="icon" />
           <span>{{ label }}</span>
           <Badge
             class="ml-auto"
             size="xs"
             variant="outline"
-          >{{ count }}
+            >{{ count }}
           </Badge>
         </TabsTrigger>
       </TabsList>
-       <ScrollArea class="flex-1 overflow-y-auto">
+      <ScrollArea class="flex-1 overflow-y-auto">
         <TreeRoot
           v-slot="{ flattenItems }"
-          class="list-none select-none w-full"
+          class="w-full list-none select-none"
           :items="rootFolders"
           :get-key="(item) => item?.id"
           :get-children="(folder) => getChildrenOfFolder(folder?.id)"
         >
-          <div class="flex px-1 mb-2 items-center">
-            <h2 class="font-semibold text-sm text-primary">
+          <div class="mb-2 flex items-center px-1">
+            <h2 class="text-sm font-semibold text-primary">
               {{ $t('labels.blockFolders.title') }}
             </h2>
             <Button
@@ -109,19 +108,20 @@ const tabs = computed(() => ({
               size="xs"
               @click="showCreateFolderDialog = true"
             >
-              <Icon name="lucide:plus"/>
+              <Icon name="lucide:plus" />
             </Button>
           </div>
           <div
             :class="[
-              'group relative flex items-center py-1 pl-2 pr-2 my-0.5 rounded-md outline-none gap-2',
-              'hover:bg-input transition-colors duration-200',
+              'group relative my-0.5 flex items-center gap-2 rounded-md py-1 pr-2 pl-2 outline-none',
+              'transition-colors duration-200 hover:bg-input',
               'cursor-pointer font-semibold',
-             !selectedFolder && mode === 'list' ? 'bg-input text-primary' : '']"
+              !selectedFolder && mode === 'list' ? 'bg-input text-primary' : '',
+            ]"
             @click="handleSelectFolder()"
             @keydown.enter="handleSelectFolder()"
           >
-            <Icon name="lucide:folder"/>
+            <Icon name="lucide:folder" />
             <span>{{ $t('labels.blockFolders.allBlocks') }}</span>
           </div>
           <TreeItem
@@ -131,10 +131,10 @@ const tabs = computed(() => ({
             :level="item.level"
             :style="{ 'padding-left': `${item.level - 0.5}rem` }"
             :class="[
-              'group relative flex items-center py-1 pl-0 pr-2 my-0.5 rounded-md outline-none gap-2',
-              'hover:bg-input transition-colors duration-200',
+              'group relative my-0.5 flex items-center gap-2 rounded-md py-1 pr-2 pl-0 outline-none',
+              'transition-colors duration-200 hover:bg-input',
               'cursor-pointer font-semibold',
-              item.value.id === selectedFolder ? 'bg-input text-primary' : ''
+              item.value.id === selectedFolder ? 'bg-input text-primary' : '',
             ]"
             @select="handleSelectFolder(item.value)"
           >
@@ -147,12 +147,12 @@ const tabs = computed(() => ({
               {{ item.value.name }}
             </div>
             <div
-              class="bg-border absolute right-2 overflow-clip group-hover:w-auto flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 gap-1"
+              class="absolute right-2 flex items-center gap-1 overflow-clip bg-border opacity-0 transition-opacity duration-200 group-hover:w-auto group-hover:opacity-100"
             >
               <button
                 type="button"
                 title="Delete block"
-                class="transform cursor-pointer hover:text-red-500 flex items-center p-1"
+                class="flex transform cursor-pointer items-center p-1 hover:text-red-500"
                 @click.stop="initDeleteFolder(item.value)"
               >
                 <Icon

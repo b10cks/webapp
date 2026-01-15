@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
 import { deepClone } from '@vue/devtools-shared'
 import { Label } from '~/components/ui/form'
 import { Button } from '~/components/ui/button'
@@ -14,9 +21,7 @@ const props = defineProps<{ space: SpaceResource }>()
 
 const environments = ref(
   deepClone(
-    Array.isArray(props.space.settings?.environments)
-      ? props.space.settings!.environments
-      : []
+    Array.isArray(props.space.settings?.environments) ? props.space.settings!.environments : []
   )
 )
 const visualEditorEnabled = ref(props.space.settings.visual_editor)
@@ -27,20 +32,20 @@ const columns: ColumnDefinition[] = [
     label: $t('labels.settings.editor.name'),
     type: 'text',
     placeholder: $t('labels.settings.editor.namePlaceholder'),
-    required: true
+    required: true,
   },
   {
     key: 'url',
     label: $t('labels.settings.editor.url'),
     type: 'text',
     placeholder: $t('labels.settings.editor.urlPlaceholder'),
-    required: true
-  }
+    required: true,
+  },
 ]
 
 const newItemTemplate = {
   name: '',
-  url: ''
+  url: '',
 }
 
 const removeEnvironment = (index: number) => {
@@ -58,9 +63,9 @@ const saveSettings = async () => {
       settings: {
         ...props.space.settings,
         environments: environments.value,
-        visual_editor: visualEditorEnabled.value
-      }
-    }
+        visual_editor: visualEditorEnabled.value,
+      },
+    },
   })
 }
 </script>
@@ -76,7 +81,9 @@ const saveSettings = async () => {
         <div class="flex items-center justify-between">
           <div>
             <h4 class="text-sm font-medium">{{ $t('labels.settings.editor.environments') }}</h4>
-            <p class="text-xs text-muted">{{ $t('labels.settings.editor.environmentsDescription') }}</p>
+            <p class="text-xs text-muted">
+              {{ $t('labels.settings.editor.environmentsDescription') }}
+            </p>
           </div>
         </div>
         <SettingsTable
@@ -86,7 +93,7 @@ const saveSettings = async () => {
           :allow-sort="true"
           @add="(item) => environments.push(item)"
           @remove="removeEnvironment"
-          @update:items="(items) => environments = items"
+          @update:items="(items) => (environments = items)"
         >
           <template #actions="{ item }">
             <Button
@@ -94,7 +101,7 @@ const saveSettings = async () => {
               size="icon"
               @click="openInTab(item.url)"
             >
-              <Icon name="lucide:external-link"/>
+              <Icon name="lucide:external-link" />
               <span class="sr-only">{{ $t('actions.open') }}</span>
             </Button>
           </template>
@@ -104,7 +111,9 @@ const saveSettings = async () => {
       <div class="space-y-4">
         <div>
           <h4 class="text-sm font-medium">{{ $t('labels.settings.editor.visualEditor') }}</h4>
-          <p class="text-xs text-muted">{{ $t('labels.settings.editor.visualEditorDescription') }}</p>
+          <p class="text-xs text-muted">
+            {{ $t('labels.settings.editor.visualEditorDescription') }}
+          </p>
         </div>
 
         <div class="flex items-center space-x-2">
@@ -128,7 +137,7 @@ const saveSettings = async () => {
       <Button
         variant="primary"
         @click="saveSettings"
-      >{{ $t('actions.saveChanges') }}
+        >{{ $t('actions.saveChanges') }}
       </Button>
     </CardFooter>
   </Card>

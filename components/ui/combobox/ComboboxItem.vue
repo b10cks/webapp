@@ -19,8 +19,13 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
   <ComboboxItem
     v-bind="forwarded"
-    :class="cn('relative font-semibold flex cursor-default gap-2 select-none justify-between items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0', props.class)"
+    :class="
+      cn(
+        'relative flex cursor-default items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm font-semibold outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground [&_svg]:size-4 [&_svg]:shrink-0',
+        props.class
+      )
+    "
   >
-    <slot/>
+    <slot />
   </ComboboxItem>
 </template>

@@ -1,6 +1,12 @@
-import { toast } from 'vue-sonner'
-import { useClipboard, useLocalStorage, useWindowFocus, useIntervalFn, usePermission } from '@vueuse/core'
+import {
+  useClipboard,
+  useLocalStorage,
+  useWindowFocus,
+  useIntervalFn,
+  usePermission,
+} from '@vueuse/core'
 import { ref, watch, onMounted, readonly } from 'vue'
+import { toast } from 'vue-sonner'
 
 export interface ClipboardItem {
   type: 'blocks-editor-clipboard-item'
@@ -136,7 +142,7 @@ export const useGlobalClipboard = () => {
       data: { ...item },
       timestamp: Date.now(),
       spaceId,
-      blockType
+      blockType,
     }
 
     const serializedItem = JSON.stringify(clipboardItem)
@@ -159,7 +165,7 @@ export const useGlobalClipboard = () => {
       data: { ...item, _isCut: true },
       timestamp: Date.now(),
       spaceId,
-      blockType
+      blockType,
     }
 
     const serializedItem = JSON.stringify(clipboardItem)
@@ -227,6 +233,6 @@ export const useGlobalClipboard = () => {
     pasteItem,
     hasClipboardItem: readonly(hasClipboardItem),
     clearClipboard,
-    getClipboardItem
+    getClipboardItem,
   }
 }

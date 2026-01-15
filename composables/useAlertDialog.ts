@@ -1,6 +1,9 @@
-
+import type { PluginsInjections } from 'nuxt-i18n-micro'
+import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 import type { Component } from 'vue'
+
 import { createSharedComposable } from '@vueuse/core'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,8 +15,6 @@ import {
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog'
 import { buttonVariants } from '~/components/ui/button'
-import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
-import type { PluginsInjections } from 'nuxt-i18n-micro'
 type ActionType = 'primary' | 'secondary' | 'destructive' | 'cancel'
 export interface DialogAction {
   type: ActionType
@@ -54,7 +55,7 @@ interface DefaultLabels {
 const defaultLabels = reactive<DefaultLabels>({
   ok: 'OK',
   cancel: 'Cancel',
-  confirm: 'Confirm'
+  confirm: 'Confirm',
 })
 
 export function setAlertDialogDefaultLabels(labels: Partial<DefaultLabels>): void {
@@ -64,7 +65,9 @@ const useAlertDialogBase = () => {
   let i18n: PluginsInjections = null
   try {
     i18n = useI18n()
-  } catch (_) { /* empty */ }
+  } catch (_) {
+    /* empty */
+  }
 
   const getLabel = (key: keyof DefaultLabels, fallback?: string): string => {
     if (fallback) return fallback
@@ -84,7 +87,7 @@ const useAlertDialogBase = () => {
     isOpen: false,
     component: null,
     resolve: null,
-    reject: null
+    reject: null,
   })
   const openDialog = (component: Component) => {
     state.value.component = markRaw(component)
@@ -109,64 +112,73 @@ const useAlertDialogBase = () => {
       }
       const component = defineComponent({
         setup() {
-          return () => h(
-            AlertDialog,
-            { open: state.value.isOpen, 'onUpdate:open': (val: boolean) => {
-              if (!val) {
-                closeDialog()
-                resolve('closed')
-              }
-            }},
-            {
-              default: () => h(
-                AlertDialogContent,
-                {},
-                {
-                  default: () => [
-                    h(
-                      AlertDialogHeader,
-                      {},
-                      {
-                        default: () => [
-                          options.title ? h(AlertDialogTitle, {}, () => options.title) : null,
-                          h(AlertDialogDescription, {}, () => options.message)
-                        ]
-                      }
-                    ),
-                    h(
-                      AlertDialogFooter,
-                      {},
-                      {
-                        default: () => options.actions.map(action => {
-                          if (action.type === 'cancel') {
-                            return h(
-                              AlertDialogCancel,
-                              { onClick: () => handleAction(action) },
-                              () => action.label
-                            )
-                          } else {
-                            return h(
-                              AlertDialogAction,
-                              {
-                                onClick: () => handleAction(action),
-                                class: [
-                                  action.type === 'destructive' && buttonVariants({ variant: 'destructive' }),
-                                  action.type === 'secondary' && buttonVariants({ variant: 'primary' }),
-                                  action.type === 'primary' && buttonVariants({ variant: 'primary' })
-                                ]
-                              },
-                              () => action.label
-                            )
+          return () =>
+            h(
+              AlertDialog,
+              {
+                open: state.value.isOpen,
+                'onUpdate:open': (val: boolean) => {
+                  if (!val) {
+                    closeDialog()
+                    resolve('closed')
+                  }
+                },
+              },
+              {
+                default: () =>
+                  h(
+                    AlertDialogContent,
+                    {},
+                    {
+                      default: () => [
+                        h(
+                          AlertDialogHeader,
+                          {},
+                          {
+                            default: () => [
+                              options.title ? h(AlertDialogTitle, {}, () => options.title) : null,
+                              h(AlertDialogDescription, {}, () => options.message),
+                            ],
                           }
-                        })
-                      }
-                    )
-                  ]
-                }
-              )
-            }
-          )
-        }
+                        ),
+                        h(
+                          AlertDialogFooter,
+                          {},
+                          {
+                            default: () =>
+                              options.actions.map((action) => {
+                                if (action.type === 'cancel') {
+                                  return h(
+                                    AlertDialogCancel,
+                                    { onClick: () => handleAction(action) },
+                                    () => action.label
+                                  )
+                                } else {
+                                  return h(
+                                    AlertDialogAction,
+                                    {
+                                      onClick: () => handleAction(action),
+                                      class: [
+                                        action.type === 'destructive' &&
+                                          buttonVariants({ variant: 'destructive' }),
+                                        action.type === 'secondary' &&
+                                          buttonVariants({ variant: 'primary' }),
+                                        action.type === 'primary' &&
+                                          buttonVariants({ variant: 'primary' }),
+                                      ],
+                                    },
+                                    () => action.label
+                                  )
+                                }
+                              }),
+                          }
+                        ),
+                      ],
+                    }
+                  ),
+              }
+            )
+        },
       })
       openDialog(component)
     })
@@ -176,19 +188,23 @@ const useAlertDialogBase = () => {
       title: options.title,
       message,
       actions: [
-        ...(options.cancelButton ? [{
-          type: 'cancel' as ActionType,
-          label: options.cancelLabel || getLabel('cancel'),
-          click: options.onClose,
-          autoClose: true
-        }] : []),
+        ...(options.cancelButton
+          ? [
+              {
+                type: 'cancel' as ActionType,
+                label: options.cancelLabel || getLabel('cancel'),
+                click: options.onClose,
+                autoClose: true,
+              },
+            ]
+          : []),
         {
           type: 'primary' as ActionType,
           label: options.okLabel || getLabel('ok'),
           click: options.onClose,
-          autoClose: true
-        }
-      ]
+          autoClose: true,
+        },
+      ],
     })
   }
   const confirm = (message: string | CleanTranslation, options: ConfirmOptions = {}) => {
@@ -204,18 +220,18 @@ const useAlertDialogBase = () => {
               if (options.onCancel) options.onCancel()
               resolve(false)
             },
-            autoClose: true
+            autoClose: true,
           },
           {
-            type: options.variant || 'primary' as ActionType,
+            type: options.variant || ('primary' as ActionType),
             label: options.confirmLabel || getLabel('confirm'),
             click: () => {
               if (options.onConfirm) options.onConfirm()
               resolve(true)
             },
-            autoClose: true
-          }
-        ]
+            autoClose: true,
+          },
+        ],
       })
     })
   }
@@ -229,7 +245,7 @@ const useAlertDialogBase = () => {
 
     setLabels: (labels: Partial<DefaultLabels>) => {
       Object.assign(defaultLabels, labels)
-    }
+    },
   }
 }
 
@@ -239,12 +255,13 @@ export const AlertDialogProvider = defineComponent({
   setup(_, { slots }) {
     const { state } = useAlertDialog()
 
-    return () => h('div', { class: 'alert-dialog-provider' }, [
-      slots.default?.(),
+    return () =>
+      h('div', { class: 'alert-dialog-provider' }, [
+        slots.default?.(),
 
-      h('div', { style: { display: 'none' } }, [
-        state.value.component ? h(state.value.component) : null
+        h('div', { style: { display: 'none' } }, [
+          state.value.component ? h(state.value.component) : null,
+        ]),
       ])
-    ])
-  }
+  },
 })

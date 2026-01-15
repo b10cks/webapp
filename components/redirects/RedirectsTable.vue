@@ -7,11 +7,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableSortableHead
+  TableSortableHead,
 } from '~/components/ui/table'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import { Checkbox } from '~/components/ui/checkbox'
 import { Badge } from '~/components/ui/badge'
 import {
@@ -19,7 +25,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import SearchFilter from '~/components/SearchFilter.vue'
 import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
@@ -34,14 +40,13 @@ const { $t } = useI18n()
 const { alert } = useAlertDialog()
 
 const statusCodes = computed(() =>
-  [301, 302, 303, 307, 308].map(code => {
+  [301, 302, 303, 307, 308].map((code) => {
     return {
       value: code,
-      label: `${code} - ${getStatusCodeDescription(code)}`
+      label: `${code} - ${getStatusCodeDescription(code)}`,
     }
   })
 )
-
 
 const redirectFilters = computed(() => [
   {
@@ -51,8 +56,8 @@ const redirectFilters = computed(() => [
       { value: 'like', label: 'Contains' },
       { value: '^like', label: 'Starts with' },
       { value: 'like$', label: 'Ends with' },
-      { value: 'eq', label: 'Equals' }
-    ]
+      { value: 'eq', label: 'Equals' },
+    ],
   },
   {
     id: 'target',
@@ -61,17 +66,15 @@ const redirectFilters = computed(() => [
       { value: 'like', label: 'Contains' },
       { value: '^like', label: 'Starts with' },
       { value: 'like$', label: 'Ends with' },
-      { value: 'eq', label: 'Equals' }
-    ]
+      { value: 'eq', label: 'Equals' },
+    ],
   },
   {
     id: 'status_code',
     label: 'Status Code',
-    operators: [
-      { value: 'eq', label: 'Equals' }
-    ],
-    items: statusCodes.value
-  }
+    operators: [{ value: 'eq', label: 'Equals' }],
+    items: statusCodes.value,
+  },
 ])
 
 const sortOptions = [
@@ -88,7 +91,10 @@ const filters = ref<Record<string, unknown>>({})
 const searchQuery = ref('')
 const currentPage = ref(1)
 const perPage = ref(24)
-const sortBy = ref<{ column: string, direction: 'asc' | 'desc' }>({ column: 'created_at', direction: 'desc' })
+const sortBy = ref<{ column: string; direction: 'asc' | 'desc' }>({
+  column: 'created_at',
+  direction: 'desc',
+})
 
 const selectedRedirects = ref<Map<string, RedirectResource>>(new Map())
 
@@ -97,7 +103,7 @@ const queryParams = computed<RedirectsQueryParams>(() => {
     ...filters.value,
     sort: `${sortBy.value.direction === 'asc' ? '+' : '-'}${sortBy.value.column}`,
     page: currentPage.value,
-    per_page: perPage.value
+    per_page: perPage.value,
   }
 })
 
@@ -109,7 +115,7 @@ const {
   useRedirectsQuery,
   useDeleteRedirectMutation,
   useUpdateRedirectMutation,
-  useResetRedirectStatsMutation
+  useResetRedirectStatsMutation,
 } = useRedirects(props.spaceId)
 const { data: redirects, isLoading } = useRedirectsQuery(queryParams)
 const { mutate: updateRedirect } = useUpdateRedirectMutation()
@@ -118,12 +124,17 @@ const { mutate: deleteRedirect } = useDeleteRedirectMutation()
 
 const { formatDateTime } = useFormat()
 
-const editingState = reactive<Record<string, {
-  isEditing: boolean,
-  source: string,
-  target: string,
-  status_code: number
-}>>({})
+const editingState = reactive<
+  Record<
+    string,
+    {
+      isEditing: boolean
+      source: string
+      target: string
+      status_code: number
+    }
+  >
+>({})
 
 const handleDelete = async (redirect: RedirectResource) => {
   const confirmed = await alert.confirm(
@@ -132,7 +143,7 @@ const handleDelete = async (redirect: RedirectResource) => {
       title: $t('labels.redirects.deleteConfirmTitle'),
       confirmLabel: $t('actions.redirects.delete'),
       cancelLabel: $t('alertDialog.cancel'),
-      variant: 'destructive'
+      variant: 'destructive',
     }
   )
   if (confirmed) {
@@ -146,7 +157,7 @@ const handleReset = async (redirect: RedirectResource) => {
     {
       title: $t('labels.redirects.resetConfirmTitle'),
       confirmLabel: $t('actions.redirects.reset'),
-      cancelLabel: $t('alertDialog.cancel')
+      cancelLabel: $t('alertDialog.cancel'),
     }
   )
   if (confirmed) {
@@ -161,7 +172,7 @@ const handleBulkDelete = async () => {
       title: $t('labels.redirects.bulkDeleteConfirmTitle'),
       confirmLabel: `${$t('actions.redirects.delete')} (${selectionCount.value})`,
       cancelLabel: $t('alertDialog.cancel'),
-      variant: 'destructive'
+      variant: 'destructive',
     }
   )
   if (confirmed) {
@@ -179,7 +190,7 @@ const handleBulkReset = async () => {
     {
       title: $t('labels.redirects.bulkResetConfirmTitle'),
       confirmLabel: `${$t('actions.redirects.reset')} (${selectionCount.value})`,
-      cancelLabel: $t('alertDialog.cancel')
+      cancelLabel: $t('alertDialog.cancel'),
     }
   )
   if (confirmed) {
@@ -201,7 +212,7 @@ const isAllSelected = computed(() => {
 })
 const handleSelectAll = (checked: boolean) => {
   if (checked) {
-    sortedRedirects.value.forEach(redirect => {
+    sortedRedirects.value.forEach((redirect) => {
       selectedRedirects.value.set(redirect.id, redirect)
     })
   } else {
@@ -225,13 +236,16 @@ const isRedirectSelected = (redirect: RedirectResource) => {
   return selectedRedirects.value.has(redirect.id)
 }
 
-const startEditing = (redirect: RedirectResource, field: 'source' | 'target' | 'status_code' = 'source') => {
+const startEditing = (
+  redirect: RedirectResource,
+  field: 'source' | 'target' | 'status_code' = 'source'
+) => {
   if (!editingState[redirect.id]) {
     editingState[redirect.id] = {
       isEditing: false,
       source: redirect.source,
       target: redirect.target,
-      status_code: redirect.status_code
+      status_code: redirect.status_code,
     }
   }
   editingState[redirect.id].isEditing = true
@@ -244,12 +258,12 @@ const saveEdits = async (redirect: RedirectResource) => {
   const payload: UpdateRedirectPayload = {
     source: editingState[redirect.id].source,
     target: editingState[redirect.id].target,
-    status_code: editingState[redirect.id].status_code
+    status_code: editingState[redirect.id].status_code,
   }
 
   await updateRedirect({
     id: redirect.id,
-    payload
+    payload,
   })
 
   currentState.isEditing = false
@@ -264,10 +278,14 @@ const cancelEditing = (redirect: RedirectResource) => {
   }
 }
 
-const navigateToRow = (direction: 'up' | 'down', currentRedirect: RedirectResource, field: 'source' | 'target' | 'status_code') => {
+const navigateToRow = (
+  direction: 'up' | 'down',
+  currentRedirect: RedirectResource,
+  field: 'source' | 'target' | 'status_code'
+) => {
   saveEdits(currentRedirect)
 
-  const currentIndex = sortedRedirects.value.findIndex(r => r.id === currentRedirect.id)
+  const currentIndex = sortedRedirects.value.findIndex((r) => r.id === currentRedirect.id)
   if (currentIndex === -1) return
 
   let nextIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
@@ -303,25 +321,34 @@ const handleKeyDown = (event: KeyboardEvent, redirect: RedirectResource) => {
   }
 }
 
-watch(() => redirects.value, (newRedirects) => {
-  if (!newRedirects?.data) return
+watch(
+  () => redirects.value,
+  (newRedirects) => {
+    if (!newRedirects?.data) return
 
-  newRedirects.data.forEach(redirect => {
-    if (editingState[redirect.id] && !editingState[redirect.id].isEditing) {
-      editingState[redirect.id].source = redirect.source
-      editingState[redirect.id].target = redirect.target
-      editingState[redirect.id].status_code = redirect.status_code
-    }
-  })
-}, { deep: true })
+    newRedirects.data.forEach((redirect) => {
+      if (editingState[redirect.id] && !editingState[redirect.id].isEditing) {
+        editingState[redirect.id].source = redirect.source
+        editingState[redirect.id].target = redirect.target
+        editingState[redirect.id].status_code = redirect.status_code
+      }
+    })
+  },
+  { deep: true }
+)
 
 const getStatusCodeDescription = (code: number): string => {
-  return $t(`labels.redirects.statusCodes.${[301, 302, 303, 307, 308].includes(code) ? code : 'unknown'}`) as string
+  return $t(
+    `labels.redirects.statusCodes.${[301, 302, 303, 307, 308].includes(code) ? code : 'unknown'}`
+  ) as string
 }
 
-watch(() => currentPage.value, () => {
-  clearSelection()
-})
+watch(
+  () => currentPage.value,
+  () => {
+    clearSelection()
+  }
+)
 </script>
 
 <template>
@@ -345,10 +372,12 @@ watch(() => currentPage.value, () => {
     </div>
     <div
       v-if="selectionCount > 0"
-      class="flex items-center justify-between gap-4 bg-surface p-4 rounded-lg border border-border"
+      class="flex items-center justify-between gap-4 rounded-lg border border-border bg-surface p-4"
     >
       <div class="flex items-center gap-2">
-        <Badge variant="secondary">{{ $t('labels.selectionCount', { count: selectionCount }) }}</Badge>
+        <Badge variant="secondary">{{
+          $t('labels.selectionCount', { count: selectionCount })
+        }}</Badge>
       </div>
       <div class="flex items-center gap-2">
         <Button
@@ -356,7 +385,7 @@ watch(() => currentPage.value, () => {
           size="sm"
           @click="handleBulkReset"
         >
-          <Icon name="lucide:rotate-ccw"/>
+          <Icon name="lucide:rotate-ccw" />
           {{ $t('actions.redirects.reset') }}
         </Button>
         <Button
@@ -364,7 +393,7 @@ watch(() => currentPage.value, () => {
           size="sm"
           @click="handleBulkDelete"
         >
-          <Icon name="lucide:trash-2"/>
+          <Icon name="lucide:trash-2" />
           {{ $t('actions.deleteSelected') }}
         </Button>
         <Button
@@ -372,13 +401,13 @@ watch(() => currentPage.value, () => {
           size="sm"
           @click="clearSelection"
         >
-          <Icon name="lucide:x"/>
+          <Icon name="lucide:x" />
           {{ $t('actions.clear') }}
         </Button>
       </div>
     </div>
 
-    <div class="rounded-md border border-input overflow-hidden">
+    <div class="overflow-hidden rounded-md border border-input">
       <Table>
         <TableHeader>
           <TableRow>
@@ -426,7 +455,7 @@ watch(() => currentPage.value, () => {
             >
               {{ $t('labels.redirects.columns.createdAt') }}
             </TableSortableHead>
-            <TableHead class="w-24"/>
+            <TableHead class="w-24" />
           </TableRow>
         </TableHeader>
 
@@ -449,9 +478,7 @@ watch(() => currentPage.value, () => {
                   @update:model-value="(checked) => handleRedirectSelect(redirect, checked)"
                 />
               </TableCell>
-              <TableCell
-                @dblclick="startEditing(redirect, 'source')"
-              >
+              <TableCell @dblclick="startEditing(redirect, 'source')">
                 <template v-if="editingState[redirect.id]?.isEditing">
                   <Input
                     v-model="editingState[redirect.id].source"
@@ -465,9 +492,7 @@ watch(() => currentPage.value, () => {
                 </template>
               </TableCell>
 
-              <TableCell
-                @dblclick="startEditing(redirect, 'target')"
-              >
+              <TableCell @dblclick="startEditing(redirect, 'target')">
                 <template v-if="editingState[redirect.id]?.isEditing">
                   <Input
                     v-model="editingState[redirect.id].target"
@@ -481,18 +506,14 @@ watch(() => currentPage.value, () => {
                 </template>
               </TableCell>
 
-              <TableCell
-                @dblclick="startEditing(redirect, 'status_code')"
-              >
+              <TableCell @dblclick="startEditing(redirect, 'status_code')">
                 <template v-if="editingState[redirect.id]?.isEditing">
                   <Select
                     v-model="editingState[redirect.id].status_code"
                     @keydown="handleKeyDown($event, redirect)"
                   >
-                    <SelectTrigger
-                      class="w-full"
-                    >
-                      <SelectValue :placeholder="$t('labels.redirects.selectStatusCode')"/>
+                    <SelectTrigger class="w-full">
+                      <SelectValue :placeholder="$t('labels.redirects.selectStatusCode')" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem
@@ -508,13 +529,19 @@ watch(() => currentPage.value, () => {
                 <template v-else>
                   <div class="flex flex-col">
                     <span>{{ redirect.status_code }}</span>
-                    <span class="text-xs text-muted">{{ getStatusCodeDescription(redirect.status_code) }}</span>
+                    <span class="text-xs text-muted">{{
+                      getStatusCodeDescription(redirect.status_code)
+                    }}</span>
                   </div>
                 </template>
               </TableCell>
               <TableCell class="text-right">{{ redirect.hits }}</TableCell>
-              <TableCell>{{ redirect.last_used_at ? formatDateTime(redirect.last_used_at) : 'Never' }}</TableCell>
-              <TableCell>{{ redirect.created_at ? formatDateTime(redirect.created_at) : '' }}</TableCell>
+              <TableCell>{{
+                redirect.last_used_at ? formatDateTime(redirect.last_used_at) : 'Never'
+              }}</TableCell>
+              <TableCell>{{
+                redirect.created_at ? formatDateTime(redirect.created_at) : ''
+              }}</TableCell>
               <TableCell>
                 <div
                   v-if="editingState[redirect.id]?.isEditing"
@@ -567,7 +594,7 @@ watch(() => currentPage.value, () => {
                         size="icon"
                       >
                         <span class="sr-only">{{ $t('labels.redirects.openMenu') }}</span>
-                        <Icon name="lucide:more-horizontal"/>
+                        <Icon name="lucide:more-horizontal" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -578,7 +605,7 @@ watch(() => currentPage.value, () => {
                         />
                         {{ $t('actions.redirects.reset') }}
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator/>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         class="text-destructive focus:text-destructive"
                         @click="handleDelete(redirect)"
@@ -610,8 +637,8 @@ watch(() => currentPage.value, () => {
       :meta="redirects.meta"
       :current-page="currentPage"
       :per-page="perPage"
-      @update:current-page="val => currentPage = val"
-      @update:per-page="val => perPage = val"
+      @update:current-page="(val) => (currentPage = val)"
+      @update:per-page="(val) => (perPage = val)"
     />
   </div>
 </template>

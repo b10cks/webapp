@@ -37,8 +37,7 @@ const isRender = computed(() => {
 const itemRef = ref()
 const currentElement = useCurrentElement(itemRef)
 onMounted(() => {
-  if (!(currentElement.value instanceof HTMLElement))
-    return
+  if (!(currentElement.value instanceof HTMLElement)) return
 
   allItems.value.set(id, currentElement.value.textContent ?? props.value.toString())
 
@@ -62,11 +61,18 @@ onUnmounted(() => {
     v-bind="forwarded"
     :id="id"
     ref="itemRef"
-    :class="cn('relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0', props.class)"
-    @select="() => {
-      filterState.search = ''
-    }"
+    :class="
+      cn(
+        'relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground [&_svg]:size-4 [&_svg]:shrink-0',
+        props.class
+      )
+    "
+    @select="
+      () => {
+        filterState.search = ''
+      }
+    "
   >
-    <slot/>
+    <slot />
   </ListboxItem>
 </template>

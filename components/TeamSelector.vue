@@ -1,27 +1,30 @@
 <script setup lang="ts">
 import { Badge } from '~/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import { cn } from '~/lib/utils'
 import type { TeamResource } from '~/types/teams'
 
-const {
-  selectedTeam,
-  selectedTeamId,
-  isLoading,
-  selectTeam,
-  teams,
-} = useGlobalTeam()
+const { selectedTeam, selectedTeamId, isLoading, selectTeam, teams } = useGlobalTeam()
 
-withDefaults(defineProps<{
-  size?: 'sm' | 'md' | 'lg'
-}>(), {
-  size: 'md'
-})
+withDefaults(
+  defineProps<{
+    size?: 'sm' | 'md' | 'lg'
+  }>(),
+  {
+    size: 'md',
+  }
+)
 
 const sizeClasses = {
   sm: 'h-8 text-sm',
   md: 'h-10',
-  lg: 'h-12 text-lg'
+  lg: 'h-12 text-lg',
 }
 
 const handleSelect = (value: string) => {
@@ -37,7 +40,10 @@ const getTeamIcon = (team: Pick<TeamResource, 'icon' | 'type'>) => {
   return team.type === 'department' ? 'lucide:building-2' : 'lucide:users'
 }
 
-interface TreeNode { team: Readonly<TeamResource>; children: TreeNode[] }
+interface TreeNode {
+  team: Readonly<TeamResource>
+  children: TreeNode[]
+}
 
 const hierarchicalTeams = computed(() => {
   const list = teams?.value ?? []
@@ -83,12 +89,7 @@ const hierarchicalTeams = computed(() => {
     :disabled="isLoading"
     @update:model-value="handleSelect"
   >
-    <SelectTrigger
-      :class="cn(
-        'justify-between',
-        sizeClasses[size]
-      )"
-    >
+    <SelectTrigger :class="cn('justify-between', sizeClasses[size])">
       <SelectValue>
         <div
           v-if="isLoading"
@@ -102,7 +103,7 @@ const hierarchicalTeams = computed(() => {
         </div>
         <div
           v-else-if="selectedTeam"
-          class="flex items-center gap-2 min-w-0 pr-2"
+          class="flex min-w-0 items-center gap-2 pr-2"
         >
           <Icon
             :name="getTeamIcon(selectedTeam)"
@@ -137,9 +138,9 @@ const hierarchicalTeams = computed(() => {
         :value="item.team.id"
         class="cursor-pointer"
       >
-        <div class="flex items-center justify-between gap-2 w-full">
+        <div class="flex w-full items-center justify-between gap-2">
           <div
-            class="flex items-center gap-2 min-w-0"
+            class="flex min-w-0 items-center gap-2"
             :style="{ paddingLeft: `${item.depth * 16}px` }"
           >
             <Icon
@@ -150,7 +151,7 @@ const hierarchicalTeams = computed(() => {
             <span
               class="truncate"
               :style="{ color: item.team.color }"
-            >{{ item.team.name }}
+              >{{ item.team.name }}
             </span>
           </div>
           <Badge
@@ -166,7 +167,7 @@ const hierarchicalTeams = computed(() => {
         v-if="!(teams && teams.length) && !isLoading"
         value=""
         disabled
-        class="text-center text-muted-foreground"
+        class="text-muted-foreground text-center"
       >
         {{ $t('labels.teams.empty') }}
       </SelectItem>

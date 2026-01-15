@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { CheckboxField } from '~/components/ui/form'
 
 defineProps<{ value: LinkSchema }>()
@@ -7,7 +6,6 @@ defineProps<{ value: LinkSchema }>()
 const emit = defineEmits<{
   (e: 'update:item-value', key: string, value: unknown): void
 }>()
-
 </script>
 
 <template>

@@ -1,16 +1,20 @@
 <script setup lang="ts">
-
 import { Checkbox } from '~/components/ui/checkbox'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
 
 const props = defineProps<{
-  folder: AssetFolderResource,
-  selected?: boolean,
+  folder: AssetFolderResource
+  selected?: boolean
   draggable?: boolean
 }>()
 
 const emit = defineEmits<{
-  select: [folder: AssetFolderResource, selected: boolean],
+  select: [folder: AssetFolderResource, selected: boolean]
   click: [folder: AssetFolderResource]
   create: [folder: AssetFolderResource]
   edit: [folder: AssetFolderResource]
@@ -44,20 +48,22 @@ function handleKeyDown(event: KeyboardEvent) {
 function onDragStart(event: DragEvent) {
   if (!event.dataTransfer) return
 
-  event.dataTransfer.setData('application/json', JSON.stringify({
-    type: 'folder',
-    id: props.folder.id,
-    selected: props.selected
-  }))
+  event.dataTransfer.setData(
+    'application/json',
+    JSON.stringify({
+      type: 'folder',
+      id: props.folder.id,
+      selected: props.selected,
+    })
+  )
 
   event.dataTransfer.effectAllowed = 'move'
 }
-
 </script>
 
 <template>
   <div
-    class="group gap-2 bg-background rounded-md p-3 flex items-center cursor-pointer focus:bg-input transition-all duration-200 relative focus:outline-2 focus:outline-offset-2 focus:outline-blue-300"
+    class="group relative flex cursor-pointer items-center gap-2 rounded-md bg-background p-3 transition-all duration-200 focus:bg-input focus:outline-2 focus:outline-offset-2 focus:outline-blue-300"
     :class="{ 'outline-2 outline-accent': selected }"
     :aria-label="folder.name"
     :aria-selected="selected"
@@ -74,10 +80,10 @@ function onDragStart(event: DragEvent) {
     />
 
     <div
-      class="flex flex-1 gap-3 items-center"
+      class="flex flex-1 items-center gap-3"
       @click="handleClick"
     >
-      <div class="bg-surface rounded-md p-2 h-12 w-12 flex items-center justify-center shadow">
+      <div class="flex h-12 w-12 items-center justify-center rounded-md bg-surface p-2 shadow">
         <Icon
           :name="`lucide:${folder.icon}`"
           :style="{ color: folder.color || 'inherit' }"
@@ -85,37 +91,37 @@ function onDragStart(event: DragEvent) {
       </div>
       <div class="flex-1 group-hover:text-primary">
         <h4 class="font-semibold text-primary">{{ folder.name }}</h4>
-        <div class="text-sm">{{ folder.children_count }} Folder, {{ folder.assets_count }} Asset</div>
+        <div class="text-sm">
+          {{ folder.children_count }} Folder, {{ folder.assets_count }} Asset
+        </div>
       </div>
     </div>
     <DropdownMenu class="ml-auto">
-      <DropdownMenuTrigger class="hover:text-primary transition-colors">
-        <Icon
-          name="lucide:ellipsis-vertical"
-        />
+      <DropdownMenuTrigger class="transition-colors hover:text-primary">
+        <Icon name="lucide:ellipsis-vertical" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem @select="handleClick">
-          <Icon name="lucide:eye"/>
+          <Icon name="lucide:eye" />
           <span>View</span>
         </DropdownMenuItem>
         <DropdownMenuItem @select="$emit('edit', folder)">
-          <Icon name="lucide:edit"/>
+          <Icon name="lucide:edit" />
           <span>Edit</span>
         </DropdownMenuItem>
         <DropdownMenuItem @select="$emit('create', folder)">
-          <Icon name="lucide:folder-plus"/>
+          <Icon name="lucide:folder-plus" />
           <span>{{ $t('labels.assets.createFolder') }}</span>
         </DropdownMenuItem>
         <DropdownMenuItem @select="$emit('move', folder)">
-          <Icon name="lucide:folder-input"/>
+          <Icon name="lucide:folder-input" />
           <span>Move</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           class="text-destructive"
           @select="$emit('delete', folder)"
         >
-          <Icon name="lucide:trash-2"/>
+          <Icon name="lucide:trash-2" />
           <span>Delete</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

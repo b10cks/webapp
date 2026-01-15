@@ -32,12 +32,12 @@ const props = withDefaults(defineProps<AssetGridProps>(), {
   showFolders: true,
   multiSelect: true,
   initialFolderId: null,
-  initialTagId: null
+  initialTagId: null,
 })
 
 const emit = defineEmits<{
   // For manage mode
-  selectionChange: [{ folders: AssetFolderResource[], assets: AssetResource[] }]
+  selectionChange: [{ folders: AssetFolderResource[]; assets: AssetResource[] }]
   // For select mode
   'asset-select': [asset: AssetResource]
   // Common events
@@ -49,7 +49,8 @@ const { $t } = useI18n()
 const { alert } = useAlertDialog()
 const { settings } = useSpaceSettings(props.spaceId)
 
-const { useFolderStructure, useDeleteAssetFolderMutation, useUpdateAssetFolderMutation } = useAssetFolders(props.spaceId)
+const { useFolderStructure, useDeleteAssetFolderMutation, useUpdateAssetFolderMutation } =
+  useAssetFolders(props.spaceId)
 const { mutate: deleteFolder } = useDeleteAssetFolderMutation()
 const { mutate: updateFolder } = useUpdateAssetFolderMutation()
 const { getBreadcrumbs, getChildrenOfFolder } = useFolderStructure()
@@ -67,18 +68,27 @@ onMounted(() => {
 
       if (dragData.selected) {
         if (dragData.type === 'asset') {
-          const selectedAssetIds = Array.from(selectedAssets.value.keys())
-            .filter(id => id !== dragData.id)
+          const selectedAssetIds = Array.from(selectedAssets.value.keys()).filter(
+            (id) => id !== dragData.id
+          )
 
-          event.dataTransfer.setData('application/json+selected-assets', JSON.stringify(selectedAssetIds))
+          event.dataTransfer.setData(
+            'application/json+selected-assets',
+            JSON.stringify(selectedAssetIds)
+          )
         } else if (dragData.type === 'folder') {
-          const selectedFolderIds = Array.from(selectedFolders.value.keys())
-            .filter(id => id !== dragData.id)
+          const selectedFolderIds = Array.from(selectedFolders.value.keys()).filter(
+            (id) => id !== dragData.id
+          )
 
-          event.dataTransfer.setData('application/json+selected-folders', JSON.stringify(selectedFolderIds))
+          event.dataTransfer.setData(
+            'application/json+selected-folders',
+            JSON.stringify(selectedFolderIds)
+          )
         }
       }
-    } catch (_) { /* empty */
+    } catch (_) {
+      /* empty */
     }
   })
 
@@ -125,7 +135,7 @@ const currentPage = ref(1)
 const perPage = ref(12)
 const sortBy = ref<{ column: string; direction: 'asc' | 'desc' }>({
   column: 'created_at',
-  direction: 'desc'
+  direction: 'desc',
 })
 const droppedFiles = ref<File[]>([])
 
@@ -170,7 +180,6 @@ const selectionCount = computed(() => {
   return selectedAssets.value.size + selectedFolders.value.size
 })
 
-
 const handleAssetView = (asset: AssetResource) => {
   if (props.mode === 'manage') {
     detailAsset.value = asset
@@ -199,7 +208,7 @@ const handleAssetDelete = async (asset: AssetResource) => {
     {
       title: $t('labels.assets.deleteTitle'),
       confirmLabel: $t('actions.delete'),
-      variant: 'destructive'
+      variant: 'destructive',
     }
   )
 
@@ -231,7 +240,7 @@ const handleFolderDelete = async (folder: AssetFolderResource) => {
     {
       title: $t('labels.assetFolders.deleteTitle'),
       confirmLabel: $t('actions.delete'),
-      variant: 'destructive'
+      variant: 'destructive',
     }
   )
 
@@ -279,13 +288,18 @@ const emitSelectionChange = () => {
   if (props.mode === 'manage') {
     emit('selectionChange', {
       folders: Array.from(selectedFolders.value.values()),
-      assets: Array.from(selectedAssets.value.values())
+      assets: Array.from(selectedAssets.value.values()),
     })
   }
 }
 
 // Keyboard navigation
-const handleKeyNavigation = (event: KeyboardEvent, items: unknown[], currentIndex: number, selector: string) => {
+const handleKeyNavigation = (
+  event: KeyboardEvent,
+  items: unknown[],
+  currentIndex: number,
+  selector: string
+) => {
   if (props.mode !== 'manage') return
 
   const containerEl = event.currentTarget as HTMLElement
@@ -333,7 +347,10 @@ async function saveAsset(asset: AssetResource) {
 }
 
 // Drag and drop operation handler
-async function handleItemsMove(targetFolderId: string, itemsToMove: { type: string, ids: string[] }[]) {
+async function handleItemsMove(
+  targetFolderId: string,
+  itemsToMove: { type: string; ids: string[] }[]
+) {
   try {
     const movePromises = []
 
@@ -345,7 +362,9 @@ async function handleItemsMove(targetFolderId: string, itemsToMove: { type: stri
       } else if (items.type === 'folder') {
         for (const folderId of items.ids) {
           if (folderId !== targetFolderId) {
-            movePromises.push(updateFolder({ id: folderId, payload: { parent_id: targetFolderId } }))
+            movePromises.push(
+              updateFolder({ id: folderId, payload: { parent_id: targetFolderId } })
+            )
           }
         }
       }
@@ -369,7 +388,7 @@ const assetQueryParams = computed<AssetsQueryParams>(() => {
     q: q.value ?? undefined,
     sort: `${sortBy.value.direction === 'asc' ? '+' : '-'}${sortBy.value.column}`,
     page: currentPage.value,
-    per_page: perPage.value || 12
+    per_page: perPage.value || 12,
   }
 })
 
@@ -392,11 +411,13 @@ const assetFilters = computed(() => [
   { id: 'extension', label: 'Extension' },
   { id: 'filename', label: 'Filename' },
   {
-    id: 'size', label: 'Size', operators: [
+    id: 'size',
+    label: 'Size',
+    operators: [
       { value: 'gt' as const, label: '>' },
       { value: 'lt' as const, label: '<' },
       { value: 'eq' as const, label: '=' },
-    ]
+    ],
   },
 ])
 
@@ -412,14 +433,14 @@ const assetItemProps = computed(() => {
 
 <template>
   <main class="flex flex-col gap-6">
-    <header class="flex justify-between items-center h-5">
+    <header class="flex h-5 items-center justify-between">
       <Breadcrumb class="flex gap-2">
         <BreadcrumbItem @click="folderId = null">
           <button
-            class="flex items-center gap-2 hover:text-primary cursor-pointer"
+            class="flex cursor-pointer items-center gap-2 hover:text-primary"
             @click="folderId = null"
           >
-            <Icon name="lucide:home"/>
+            <Icon name="lucide:home" />
             <span>{{ $t('labels.assets.allAssets') }}</span>
           </button>
         </BreadcrumbItem>
@@ -437,7 +458,7 @@ const assetItemProps = computed(() => {
           </li>
           <BreadcrumbItem>
             <button
-              class="flex items-center gap-2 hover:text-primary cursor-pointer"
+              class="flex cursor-pointer items-center gap-2 hover:text-primary"
               @click="folderId = id"
             >
               <Icon
@@ -455,14 +476,14 @@ const assetItemProps = computed(() => {
           variant="primary"
           @click="showUploadDialog = true"
         >
-          <Icon name="lucide:upload"/>
+          <Icon name="lucide:upload" />
           {{ $t('actions.assets.upload') }}
         </Button>
         <Button
           v-if="allowFolderCreation"
           @click="handleFolderCreate(null)"
         >
-          <Icon name="lucide:folder-plus"/>
+          <Icon name="lucide:folder-plus" />
           {{ $t('actions.assetFolders.create') }}
         </Button>
       </div>
@@ -470,16 +491,16 @@ const assetItemProps = computed(() => {
 
     <div
       v-if="hasSelection"
-      class="flex items-center justify-between gap-4 bg-surface p-4 rounded-lg border border-border"
+      class="flex items-center justify-between gap-4 rounded-lg border border-border bg-surface p-4"
     >
       <div class="flex items-center gap-2">
-        <Badge variant="secondary">{{ $t('labels.selectionCount', { count: selectionCount }) }}</Badge>
+        <Badge variant="secondary">{{
+          $t('labels.selectionCount', { count: selectionCount })
+        }}</Badge>
       </div>
       <div class="flex items-center gap-2">
-        <Button
-          size="sm"
-        >
-          <Icon name="lucide:folder-input"/>
+        <Button size="sm">
+          <Icon name="lucide:folder-input" />
           {{ $t('actions.move') }}
         </Button>
         <Button
@@ -487,7 +508,7 @@ const assetItemProps = computed(() => {
           size="sm"
           @click="deleteSelection"
         >
-          <Icon name="lucide:trash-2"/>
+          <Icon name="lucide:trash-2" />
           {{ $t('actions.deleteSelected') }}
         </Button>
         <Button
@@ -495,7 +516,7 @@ const assetItemProps = computed(() => {
           size="sm"
           @click="clearSelection"
         >
-          <Icon name="lucide:x"/>
+          <Icon name="lucide:x" />
           {{ $t('actions.clear') }}
         </Button>
       </div>
@@ -503,24 +524,36 @@ const assetItemProps = computed(() => {
 
     <section
       v-if="showFolders && folders.length > 0"
-      class="grid gap-6 grow"
+      class="grid grow gap-6"
     >
       <div>
-        <h2 class="text-2xl flex items-center gap-2">
+        <h2 class="flex items-center gap-2 text-2xl">
           <Icon
             name="lucide:folder"
             size="1.25rem"
           />
-          <span class="text-primary font-semibold">Folders</span>
+          <span class="font-semibold text-primary">Folders</span>
           <Badge>{{ folders.length }}</Badge>
         </h2>
       </div>
       <div
-        class="grid grid-cols-3 gap-3 bg-surface p-3 rounded-lg xl:grid-cols-2 2xl:grid-cols-3"
+        class="grid grid-cols-3 gap-3 rounded-lg bg-surface p-3 xl:grid-cols-2 2xl:grid-cols-3"
         role="listbox"
         aria-label="Folders"
         aria-multiselectable="true"
-        @keydown="(e) => handleKeyNavigation(e, folders, Array.from(folders).findIndex(f => (e.target as HTMLElement).closest('[role=option]')?.getAttribute('data-id') === f.id), '[role=option]')"
+        @keydown="
+          (e) =>
+            handleKeyNavigation(
+              e,
+              folders,
+              Array.from(folders).findIndex(
+                (f) =>
+                  (e.target as HTMLElement).closest('[role=option]')?.getAttribute('data-id') ===
+                  f.id
+              ),
+              '[role=option]'
+            )
+        "
       >
         <AssetFolder
           v-for="folder in folders"
@@ -539,12 +572,12 @@ const assetItemProps = computed(() => {
 
     <section class="flex flex-col gap-6">
       <div class="flex items-center">
-        <h2 class="text-2xl flex items-center gap-2">
+        <h2 class="flex items-center gap-2 text-2xl">
           <Icon
             name="lucide:image"
             size="1.25rem"
           />
-          <span class="text-primary font-semibold">{{ $t('labels.assets.assets') }}</span>
+          <span class="font-semibold text-primary">{{ $t('labels.assets.assets') }}</span>
           <Badge>{{ assetResponse?.meta?.total || 0 }}</Badge>
         </h2>
         <div class="ml-auto flex gap-2">
@@ -563,7 +596,7 @@ const assetItemProps = computed(() => {
           />
           <Select v-model="settings.assets.gridSize">
             <SelectTrigger>
-              <Icon :name="selectedGridSize.icon"/>
+              <Icon :name="selectedGridSize.icon" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem
@@ -571,7 +604,7 @@ const assetItemProps = computed(() => {
                 :key="key"
                 :value="key"
               >
-                <Icon :name="option.icon"/>
+                <Icon :name="option.icon" />
               </SelectItem>
             </SelectContent>
           </Select>
@@ -580,21 +613,23 @@ const assetItemProps = computed(() => {
 
       <div
         v-if="assetResponse"
-        class="grid gap-1 flex-1"
+        class="grid flex-1 gap-1"
       >
         <div
           v-if="assetResponse.data.length === 0"
-          class="bg-surface p-8 rounded-lg flex flex-col items-center justify-center min-h-[200px]"
+          class="flex min-h-[200px] flex-col items-center justify-center rounded-lg bg-surface p-8"
         >
-          <AssetsIcon
-            class="mb-4 text-muted w-32"
-          />
-          <h3 class="text-xl font-semibold mb-2 text-center">
+          <AssetsIcon class="mb-4 w-32 text-muted" />
+          <h3 class="mb-2 text-center text-xl font-semibold">
             {{ $t('labels.assets.noAssetsFound') }}
           </h3>
-          <p class="text-muted text-center mb-4">
+          <p class="mb-4 text-center text-muted">
             {{
-              tagId ? $t('labels.assets.noAssetsWithTag') : (folderId ? $t('labels.assets.folderEmpty') : $t('labels.assets.noAssetsFoundDescription'))
+              tagId
+                ? $t('labels.assets.noAssetsWithTag')
+                : folderId
+                  ? $t('labels.assets.folderEmpty')
+                  : $t('labels.assets.noAssetsFoundDescription')
             }}
           </p>
           <Button
@@ -612,11 +647,23 @@ const assetItemProps = computed(() => {
 
         <div
           v-else
-          :class="['grid gap-3 bg-surface p-3 rounded-lg', selectedGridSize.cls]"
+          :class="['grid gap-3 rounded-lg bg-surface p-3', selectedGridSize.cls]"
           role="listbox"
           aria-label="Assets"
           aria-multiselectable="true"
-          @keydown="(e) => handleKeyNavigation(e, assetResponse.data, Array.from(assetResponse.data).findIndex(a => (e.target as HTMLElement).closest('[role=option]')?.getAttribute('data-id') === a.id), '[role=option]')"
+          @keydown="
+            (e) =>
+              handleKeyNavigation(
+                e,
+                assetResponse.data,
+                Array.from(assetResponse.data).findIndex(
+                  (a) =>
+                    (e.target as HTMLElement).closest('[role=option]')?.getAttribute('data-id') ===
+                    a.id
+                ),
+                '[role=option]'
+              )
+          "
         >
           <AssetItem
             v-for="asset in assetResponse?.data"
@@ -638,8 +685,8 @@ const assetItemProps = computed(() => {
           :current-page="currentPage"
           :per-page="perPage"
           :page-size-options="[12, 24, 48, 96, 120]"
-          @update:current-page="val => currentPage = val"
-          @update:per-page="val => perPage = val"
+          @update:current-page="(val) => (currentPage = val)"
+          @update:per-page="(val) => (perPage = val)"
         />
       </div>
     </section>
@@ -650,7 +697,11 @@ const assetItemProps = computed(() => {
       :folder-id="folderId"
       :space-id="spaceId"
       :initial-files="droppedFiles"
-      @update:open="(open) => { if (!open) droppedFiles = [] }"
+      @update:open="
+        (open) => {
+          if (!open) droppedFiles = []
+        }
+      "
     />
 
     <CreateFolderDialog

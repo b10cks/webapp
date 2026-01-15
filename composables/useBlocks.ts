@@ -1,9 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
+
 import type { BlocksQueryParams } from '~/api/resources/blocks'
-import { api } from '~/api'
-import { queryKeys } from './useQueryClient'
 import type { ApiResponse, MaybeRefOrComputed } from '~/types'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
   const queryClient = useQueryClient()
@@ -44,7 +47,7 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
     // Find block by slug
     const block = computed(() => {
       if (!blocks.value?.data) return null
-      return blocks.value.data.find(b => b.slug === slug.value) || null
+      return blocks.value.data.find((b) => b.slug === slug.value) || null
     })
 
     return {
@@ -71,10 +74,7 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const useUpdateBlockMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload, }: {
-        id: string
-        payload: UpdateBlockPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateBlockPayload }) => {
         const response = await spaceAPI.value.blocks.update(id, payload)
         return response.data
       },
@@ -107,20 +107,26 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
     })
   }
 
-  const getBlockBySlug = (blocksRef: ApiResponse<BlockResource[] | undefined>, slugRef: MaybeRefOrComputed<string>) => {
+  const getBlockBySlug = (
+    blocksRef: ApiResponse<BlockResource[] | undefined>,
+    slugRef: MaybeRefOrComputed<string>
+  ) => {
     const blocks = unref(blocksRef)
     const slug = slugRef
 
     if (!blocks) return null
-    return blocks.data.find(block => block.slug == slug)
+    return blocks.data.find((block) => block.slug == slug)
   }
 
-  const getBlockById = (blocksRef: ApiResponse<BlockResource[] | undefined>, idRef: MaybeRefOrComputed<string>) => {
+  const getBlockById = (
+    blocksRef: ApiResponse<BlockResource[] | undefined>,
+    idRef: MaybeRefOrComputed<string>
+  ) => {
     const blocks = unref(blocksRef)
     const id = idRef
 
     if (!blocks) return null
-    return blocks.data.find(block => block.id == id)
+    return blocks.data.find((block) => block.id == id)
   }
 
   return {

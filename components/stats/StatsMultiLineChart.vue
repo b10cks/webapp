@@ -10,12 +10,21 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip
+  Tooltip,
 } from 'chart.js'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 interface Dataset {
   label: string
@@ -33,12 +42,12 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
-  fill: true
+  fill: true,
 })
 
 const chartData = computed(() => ({
   labels: props.labels,
-  datasets: props.datasets.map(dataset => ({
+  datasets: props.datasets.map((dataset) => ({
     label: dataset.label,
     data: dataset.data,
     borderColor: dataset.color,
@@ -46,8 +55,8 @@ const chartData = computed(() => ({
     fill: props.fill,
     tension: 0.4,
     pointRadius: 2,
-    pointHoverRadius: 5
-  }))
+    pointHoverRadius: 5,
+  })),
 }))
 
 const chartOptions: ChartOptions<'line'> = {
@@ -55,7 +64,7 @@ const chartOptions: ChartOptions<'line'> = {
   maintainAspectRatio: false,
   interaction: {
     mode: 'index',
-    intersect: false
+    intersect: false,
   },
   plugins: {
     legend: {
@@ -65,11 +74,11 @@ const chartOptions: ChartOptions<'line'> = {
         color: '#6D7292',
         font: {
           family: '"Inter", ui-sans-serif',
-          size: 14
+          size: 14,
         },
         usePointStyle: true,
-        pointStyle: 'circle'
-      }
+        pointStyle: 'circle',
+      },
     },
     tooltip: {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -77,42 +86,42 @@ const chartOptions: ChartOptions<'line'> = {
       titleFont: {
         family: '"Inter", ui-sans-serif',
         size: 14,
-        weight: 'bold'
+        weight: 'bold',
       },
       bodyFont: {
         family: '"Inter", ui-sans-serif',
-        size: 14
-      }
-    }
+        size: 14,
+      },
+    },
   },
   scales: {
     x: {
       grid: {
-        display: false
+        display: false,
       },
       ticks: {
         color: '#6D7292',
         maxTicksLimit: 5,
         font: {
           family: '"Inter", ui-sans-serif',
-          size: 14
-        }
-      }
+          size: 14,
+        },
+      },
     },
     y: {
       beginAtZero: true,
       grid: {
-        color: 'rgba(0, 0, 0, 0.05)'
+        color: 'rgba(0, 0, 0, 0.05)',
       },
       ticks: {
         color: '#6D7292',
         font: {
           family: '"Inter", ui-sans-serif',
-          size: 14
-        }
-      }
-    }
-  }
+          size: 14,
+        },
+      },
+    },
+  },
 }
 </script>
 

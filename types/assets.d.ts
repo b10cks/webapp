@@ -39,7 +39,6 @@ interface AssetValue {
   data: Record<string, unknown> & { focus?: { x: number; y: number } }
 }
 
-
 interface AssetTagResource {
   id: string
   name: string
@@ -82,7 +81,6 @@ interface UpdateAssetPayload {
   metadata?: Record<string, unknown>
   data?: Record<string, unknown>
 }
-
 
 type AssetTypes = 'image' | 'document' | 'video' | 'audio' | 'other'
 

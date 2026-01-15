@@ -1,14 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { queryKeys } from './useQueryClient'
-import { toast } from 'vue-sonner'
-import { api } from '~/api'
-import type { SpaceQueryParams } from '~/api/resources/spaces'
 import type { MaybeRefOrGetter } from '@vue/reactivity'
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { toast } from 'vue-sonner'
+
+import type { SpaceQueryParams } from '~/api/resources/spaces'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useSpaces() {
   const queryClient = useQueryClient()
 
-  const useSpacesQuery =  (params: MaybeRefOrGetter<SpaceQueryParams>) => {
+  const useSpacesQuery = (params: MaybeRefOrGetter<SpaceQueryParams>) => {
     return useQuery({
       queryKey: queryKeys.spaces.list(params),
       queryFn: async () => {
@@ -50,10 +54,7 @@ export function useSpaces() {
 
   const useUpdateSpaceMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload, }: {
-        id: string
-        payload: UpdateSpacePayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateSpacePayload }) => {
         const response = await api.spaces.update(id, payload)
         return response.data
       },
@@ -108,7 +109,7 @@ export function useSpaces() {
     useSpaceQuery: useSpaceQuery,
     useCurrentSpaceQuery() {
       const route = useRoute()
-      const spaceId = route.params?.space as string || null
+      const spaceId = (route.params?.space as string) || null
       if (!spaceId) {
         return { data: null }
       }

@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { queryKeys } from './useQueryClient'
 import { toast } from 'vue-sonner'
 
-import { api } from '~/api'
 import type { BlockFolderResource, UpsertBlockFolderPayload } from '~/api/resources/block-folders'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useBlockFolders(spaceId: string) {
   const queryClient = useQueryClient()
@@ -53,9 +55,9 @@ export function useBlockFolders(spaceId: string) {
   const useUpdateBlockFolderMutation = () => {
     return useMutation({
       mutationFn: async ({
-                           folderId,
-                           payload
-                         }: {
+        folderId,
+        payload,
+      }: {
         folderId: string
         payload: UpsertBlockFolderPayload
       }) => {
@@ -97,26 +99,26 @@ export function useBlockFolders(spaceId: string) {
 
     const rootFolders = computed(() => {
       if (!folders.value) return []
-      return folders.value.filter(folder => !folder.parent_id)
+      return folders.value.filter((folder) => !folder.parent_id)
     })
 
     const getChildrenOfFolder = (parentId: string | null) => {
       if (!folders.value) return []
-      return folders.value.filter(folder => folder.parent_id === parentId)
+      return folders.value.filter((folder) => folder.parent_id === parentId)
     }
 
     const getBreadcrumbs = (folderId: string): BlockFolderResource[] => {
       if (!folders.value) return []
 
       const breadcrumbs: BlockFolderResource[] = []
-      let currentFolder = folders.value.find(f => f.id === folderId)
+      let currentFolder = folders.value.find((f) => f.id === folderId)
 
       if (!currentFolder) return []
 
       breadcrumbs.unshift(currentFolder)
 
       while (currentFolder?.parent_id) {
-        const parentFolder = folders.value.find(f => f.id === currentFolder?.parent_id)
+        const parentFolder = folders.value.find((f) => f.id === currentFolder?.parent_id)
         if (parentFolder) {
           breadcrumbs.unshift(parentFolder)
           currentFolder = parentFolder
@@ -146,6 +148,6 @@ export function useBlockFolders(spaceId: string) {
 
     useCreateBlockFolderMutation,
     useUpdateBlockFolderMutation,
-    useDeleteBlockFolderMutation
+    useDeleteBlockFolderMutation,
   }
 }

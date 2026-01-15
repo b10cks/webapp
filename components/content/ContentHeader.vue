@@ -1,8 +1,12 @@
 <script setup lang="ts">
-
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '~/components/ui/breadcrumb'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from '~/components/ui/breadcrumb'
 import type { ContentResource } from '~/types/contents'
 import { NuxtLink } from '#components'
 
@@ -15,24 +19,26 @@ const spaceId = inject('spaceId')
 const { useContentMenuQuery, buildBreadcrumbs } = useContentMenu(spaceId.value)
 const { data: contentMenu } = useContentMenuQuery()
 const { settings } = useSpaceSettings(spaceId.value)
-const breadcrumbs = computed(() => props.content && buildBreadcrumbs(contentMenu.value, props.content.id))
+const breadcrumbs = computed(
+  () => props.content && buildBreadcrumbs(contentMenu.value, props.content.id)
+)
 
 watch(breadcrumbs, (crumbs) => {
   const path = crumbs.map(({ id }) => id)
   settings.value.content.expanded = [...settings.value.content.expanded, ...path]
 })
 
-const status = computed<{ color: string, label: string }>(() => {
+const status = computed<{ color: string; label: string }>(() => {
   if (props.content?.published_at) {
     return {
       color: 'success',
-      label: 'published'
+      label: 'published',
     }
   }
 
   return {
     color: 'default',
-    label: 'draft'
+    label: 'draft',
   }
 })
 </script>
@@ -40,7 +46,7 @@ const status = computed<{ color: string, label: string }>(() => {
 <template>
   <div class="flex items-center gap-3">
     <div v-if="content">
-      <h1 class="flex items-center gap-2 -mb-1">
+      <h1 class="-mb-1 flex items-center gap-2">
         <span class="text-lg font-semibold text-primary">{{ content?.name }}</span>
         <Badge
           size="sm"
@@ -53,7 +59,7 @@ const status = computed<{ color: string, label: string }>(() => {
         <Breadcrumb>
           <BreadcrumbList>
             <template
-              v-for="{id, name} in breadcrumbs"
+              v-for="{ id, name } in breadcrumbs"
               :key="id"
             >
               <li
@@ -65,7 +71,10 @@ const status = computed<{ color: string, label: string }>(() => {
               <BreadcrumbItem>
                 <BreadcrumbLink
                   :as="NuxtLink"
-                  :to="{ name: 'space-content-contentId', params: { space: spaceId, contentId: id }}"
+                  :to="{
+                    name: 'space-content-contentId',
+                    params: { space: spaceId, contentId: id },
+                  }"
                 >
                   {{ name }}
                 </BreadcrumbLink>

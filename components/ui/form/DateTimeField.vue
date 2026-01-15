@@ -42,18 +42,23 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 const inputProps = computed(() => {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    id, label, tooltip, description, error, class: _class,
-    modelValue: _modelValue, defaultValue: _defaultValue,
+    id,
+    label,
+    tooltip,
+    description,
+    error,
+    class: _class,
+    modelValue: _modelValue,
+    defaultValue: _defaultValue,
     ...rest
   } = props
 
   return {
     ...rest,
     class: props.inputClass,
-    type: props.type || 'date'
+    type: props.type || 'date',
   }
 })
-
 </script>
 
 <template>

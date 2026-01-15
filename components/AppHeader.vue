@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +10,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 
 import Logo from '~/assets/logo.svg'
@@ -28,24 +27,25 @@ const selectedSpaceId = computed({
     useRouter().push({
       name: 'space',
       params: {
-        space
-      }
+        space,
+      },
     })
-  }
+  },
 })
 
 const selectedSpace = computed(() => {
-  return spaces.value?.find(space => space.id === selectedSpaceId.value) || null
+  return spaces.value?.find((space) => space.id === selectedSpaceId.value) || null
 })
-
 </script>
 
 <template>
-  <div class="z-20 flex h-14 border-b border-border w-full p-3 gap-3 items-center fixed top-0 bg-surface">
+  <div
+    class="fixed top-0 z-20 flex h-14 w-full items-center gap-3 border-b border-border bg-surface p-3"
+  >
     <div class="flex items-center gap-3">
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="cursor-pointer bg-secondary rounded-lg p-2 flex gap-2 hover:bg-elevated data-[state=open]:bg-elevated transition-colors duration-200"
+          class="flex cursor-pointer gap-2 rounded-lg bg-secondary p-2 transition-colors duration-200 hover:bg-elevated data-[state=open]:bg-elevated"
         >
           <Logo
             alt="b10cks"
@@ -61,23 +61,24 @@ const selectedSpace = computed(() => {
           align="start"
         >
           <DropdownMenuGroup>
-            <DropdownMenuItem @select="router.push('/')">{{ $t('actions.toDashboard') }}</DropdownMenuItem>
+            <DropdownMenuItem @select="router.push('/')">{{
+              $t('actions.toDashboard')
+            }}</DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator/>
+          <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuLabel v-if="selectedSpace">{{ selectedSpace.name }}
-            </DropdownMenuLabel>
+            <DropdownMenuLabel v-if="selectedSpace">{{ selectedSpace.name }} </DropdownMenuLabel>
             <DropdownMenuItem
               v-if="selectedSpace"
               @select="router.push(`/${selectedSpaceId}`)"
-            >Space Dashboard
+              >Space Dashboard
             </DropdownMenuItem>
             <DropdownMenuItem @select="commandOpen = true">
               {{ $t('actions.quickActions') }}
               <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator/>
+          <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>{{ $t('actions.spaces.switch') }}</DropdownMenuSubTrigger>
@@ -86,19 +87,22 @@ const selectedSpace = computed(() => {
                   v-for="{ id, name } in spaces"
                   :key="id"
                   :value="id"
-                  :class="['w-full cursor-pointer', id === selectedSpaceId ? 'bg-blue-600 text-primary' : '']"
+                  :class="[
+                    'w-full cursor-pointer',
+                    id === selectedSpaceId ? 'bg-blue-600 text-primary' : '',
+                  ]"
                   @select="selectedSpaceId = id"
                 >
                   {{ name }}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator/>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem @select="router.push('/spaces/new')">
                   {{ $t('actions.spaces.add') }}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator/>
+          <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
               {{ $t('actions.user.account') }}
@@ -111,13 +115,13 @@ const selectedSpace = computed(() => {
       </DropdownMenu>
     </div>
     <slot>
-      <div id="appHeader"/>
+      <div id="appHeader" />
     </slot>
     <div
       id="appHeaderActions"
       class="ml-auto"
     >
-      <slot name="headerActions"/>
+      <slot name="headerActions" />
     </div>
   </div>
 </template>

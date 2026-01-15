@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogHeaderCombined } from '~/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogHeaderCombined,
+} from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
@@ -47,12 +53,10 @@ const onOpenChange = (open: boolean) => {
     @update:open="onOpenChange"
   >
     <DialogContent class="sm:max-w-[900px]">
-      <DialogHeaderCombined
-        :title="$t('labels.assets.uploadDetails')"
-      />
-      <DialogHeader/>
+      <DialogHeaderCombined :title="$t('labels.assets.uploadDetails')" />
+      <DialogHeader />
       <div class="grid gap-6 py-4 md:grid-cols-2">
-        <div class="flex flex-col items-center justify-center rounded-xl checkerboard p-4">
+        <div class="checkerboard flex flex-col items-center justify-center rounded-xl p-4">
           <div
             v-if="file.type === 'image' && file.preview"
             class="relative h-[300px] w-full"
@@ -60,8 +64,8 @@ const onOpenChange = (open: boolean) => {
             <img
               :src="file.preview"
               :alt="file.file.name"
-              class="object-contain h-full w-full"
-            >
+              class="h-full w-full object-contain"
+            />
           </div>
           <div
             v-else
@@ -78,7 +82,7 @@ const onOpenChange = (open: boolean) => {
           </div>
         </div>
         <div class="space-y-4">
-          <dl class="grid grid-cols-2 gap-2 text-sm rounded-lg bg-surface p-3">
+          <dl class="grid grid-cols-2 gap-2 rounded-lg bg-surface p-3 text-sm">
             <dt class="font-semibold">{{ $t('labels.content.name') }}:</dt>
             <dd>{{ localFile.file.name }}</dd>
             <dt class="font-semibold">{{ $t('labels.content.type') }}:</dt>
@@ -118,7 +122,6 @@ const onOpenChange = (open: boolean) => {
           @click="onOpenChange(false)"
         >
           {{ $t('alertDialog.cancel') }}
-
         </Button>
         <Button
           variant="outline"

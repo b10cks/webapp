@@ -1,4 +1,5 @@
 import type { BaseQueryParams } from '~/types'
+
 import { BaseResource } from './base-resource'
 
 export interface SpaceQueryParams extends BaseQueryParams {
@@ -10,7 +11,12 @@ export interface SpaceQueryParams extends BaseQueryParams {
   updated_at?: string
 }
 
-export class Spaces extends BaseResource<SpaceResource, CreateSpacePayload, UpdateSpacePayload, SpaceQueryParams> {
+export class Spaces extends BaseResource<
+  SpaceResource,
+  CreateSpacePayload,
+  UpdateSpacePayload,
+  SpaceQueryParams
+> {
   protected basePath = '/mgmt/v1/spaces'
 
   public async archive(id: string): Promise<void> {

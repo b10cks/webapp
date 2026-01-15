@@ -8,7 +8,6 @@ useDark()
 const commandOpen = ref(false)
 
 provide('commandOpen', commandOpen)
-
 </script>
 
 <template>
@@ -19,8 +18,8 @@ provide('commandOpen', commandOpen)
       <NuxtPage />
     </AlertDialogProvider>
     <ClientOnly>
-      <Toaster rich-colors/>
-      <Command/>
+      <Toaster rich-colors />
+      <Command />
     </ClientOnly>
   </div>
 </template>

@@ -9,6 +9,6 @@ const props = defineProps<{
 
 <template>
   <caption :class="cn('mt-4 text-sm text-muted', props.class)">
-    <slot/>
+    <slot />
   </caption>
 </template>

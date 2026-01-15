@@ -37,9 +37,13 @@ const showAssetDetails = ref(false)
 const editingAsset = ref<AssetValue | null>(null)
 const draggedIndex = ref<number | null>(null)
 
-watch(() => props.modelValue, (newValue) => {
-  localValue.value = newValue ? [...newValue] : []
-}, { immediate: true, deep: true })
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    localValue.value = newValue ? [...newValue] : []
+  },
+  { immediate: true, deep: true }
+)
 
 const hasAssets = computed(() => localValue.value.length > 0)
 const canAddMore = computed(() => {
@@ -70,7 +74,7 @@ const handleAssetSelect = (asset: AssetResource) => {
     mime_type: asset.mime_type,
     size: asset.size,
     filename: asset.filename,
-    data: {}
+    data: {},
   }
 
   localValue.value.push(newAsset)
@@ -87,14 +91,11 @@ const handleAssetDelete = async (index: number) => {
   const asset = localValue.value[index]
   if (!asset) return
 
-  const confirmed = await alert.confirm(
-    $t('messages.assets.confirmDeleteFromCollection'),
-    {
-      title: $t('labels.assets.removeAsset'),
-      confirmLabel: $t('actions.remove'),
-      cancelLabel: $t('actions.cancel')
-    }
-  )
+  const confirmed = await alert.confirm($t('messages.assets.confirmDeleteFromCollection'), {
+    title: $t('labels.assets.removeAsset'),
+    confirmLabel: $t('actions.remove'),
+    cancelLabel: $t('actions.cancel'),
+  })
 
   if (confirmed) {
     localValue.value.splice(index, 1)
@@ -121,7 +122,7 @@ const handleAssetSelectForReplace = (asset: AssetResource) => {
       mime_type: asset.mime_type,
       size: asset.size,
       filename: asset.filename,
-      data: {}
+      data: {},
     }
     updateValue()
     replaceIndex.value = null
@@ -154,7 +155,7 @@ const isImage = (asset: AssetValue) => {
 }
 
 const handleAssetDetailsUpdate = (updatedAsset: AssetValue) => {
-  const index = localValue.value.findIndex(a => a.id === updatedAsset.id)
+  const index = localValue.value.findIndex((a) => a.id === updatedAsset.id)
   if (index !== -1) {
     localValue.value[index] = { ...updatedAsset }
     updateValue()
@@ -169,10 +170,10 @@ const closeAssetDetails = () => {
 
 <template>
   <div class="space-y-3">
-    <Label :label="item.name || item.key"/>
+    <Label :label="item.name || item.key" />
     <div
       v-if="!hasAssets"
-      class="border border-dashed border-input rounded-lg gap-2 flex items-center p-4 bg-surface/50 hover:bg-surface transition-colors cursor-pointer"
+      class="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-input bg-surface/50 p-4 transition-colors hover:bg-surface"
       @click="showAssetPicker = true"
     >
       <Icon
@@ -185,7 +186,9 @@ const closeAssetDetails = () => {
         </p>
         <p class="text-sm text-muted">
           {{
-            item.max ? $t('labels.assets.addAssetDescriptionWithLimit', { max: item.max }) : $t('labels.assets.addAssetDescription')
+            item.max
+              ? $t('labels.assets.addAssetDescriptionWithLimit', { max: item.max })
+              : $t('labels.assets.addAssetDescription')
           }}
         </p>
       </div>
@@ -198,15 +201,15 @@ const closeAssetDetails = () => {
         <div
           v-for="(asset, index) in localValue"
           :key="asset.id"
-          class="group relative border border-input rounded-lg overflow-hidden bg-surface"
+          class="group relative overflow-hidden rounded-lg border border-input bg-surface"
           draggable
           @dragstart="handleDragStart(index)"
           @dragover="handleDragOver"
           @drop="handleDrop($event, index)"
         >
-          <div class="p-2 flex items-center gap-3">
+          <div class="flex items-center gap-3 p-2">
             <div
-              class="opacity-0 group-hover:opacity-100 cursor-ns-resize"
+              class="cursor-ns-resize opacity-0 group-hover:opacity-100"
               :title="$t('actions.assets.reorder')"
             >
               <Icon
@@ -217,7 +220,7 @@ const closeAssetDetails = () => {
             <div class="flex-shrink-0">
               <div
                 v-if="isImage(asset)"
-                class="w-14 h-14 rounded border border-input overflow-hidden bg-background"
+                class="h-14 w-14 overflow-hidden rounded border border-input bg-background"
               >
                 <NuxtImg
                   :src="asset.full_path"
@@ -225,12 +228,12 @@ const closeAssetDetails = () => {
                   width="56"
                   height="56"
                   :modifiers="{ crop: 'fill' }"
-                  class="w-full h-full object-cover"
+                  class="h-full w-full object-cover"
                 />
               </div>
               <div
                 v-else
-                class="w-12 h-12 rounded border border-input bg-background flex items-center justify-center"
+                class="flex h-12 w-12 items-center justify-center rounded border border-input bg-background"
               >
                 <Icon
                   :name="getFileIcon(getFileType(asset.mime_type))"
@@ -239,7 +242,7 @@ const closeAssetDetails = () => {
               </div>
             </div>
             <div class="min-w-0 flex-1">
-              <p class="font-semibold text-primary truncate">
+              <p class="truncate font-semibold text-primary">
                 {{ asset.filename }}
               </p>
               <p class="text-sm text-muted">
@@ -247,27 +250,27 @@ const closeAssetDetails = () => {
               </p>
             </div>
 
-            <div class="flex opacity-0 group-hover:opacity-100 gap-2 items-center">
+            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100">
               <button
-                class="transform cursor-pointer hover:text-primary flex items-center"
+                class="flex transform cursor-pointer items-center hover:text-primary"
                 :title="$t('actions.assets.replace') as string"
                 @click.stop="handleAssetReplace(index)"
               >
-                <Icon name="lucide:replace"/>
+                <Icon name="lucide:replace" />
               </button>
               <button
-                class="transform cursor-pointer hover:text-primary flex items-center"
+                class="flex transform cursor-pointer items-center hover:text-primary"
                 :title="$t('actions.assets.edit') as string"
                 @click.stop="handleAssetEdit(asset)"
               >
-                <Icon name="lucide:pencil"/>
+                <Icon name="lucide:pencil" />
               </button>
               <button
-                class="transform cursor-pointer hover:text-red-500 flex items-center"
+                class="flex transform cursor-pointer items-center hover:text-red-500"
                 :title="$t('actions.assets.remove') as string"
                 @click.stop="handleAssetDelete(index)"
               >
-                <Icon name="lucide:trash-2"/>
+                <Icon name="lucide:trash-2" />
               </button>
             </div>
           </div>
@@ -278,16 +281,18 @@ const closeAssetDetails = () => {
         v-if="canAddMore"
         @click="showAssetPicker = true"
       >
-        <Icon name="lucide:plus"/>
+        <Icon name="lucide:plus" />
         <span>
           {{
-            remainingSlots ? $t('actions.addMoreAmount', { remaining: remainingSlots }) : $t('actions.addMore')
+            remainingSlots
+              ? $t('actions.addMoreAmount', { remaining: remainingSlots })
+              : $t('actions.addMore')
           }}
         </span>
       </Button>
       <div
         v-if="item.max"
-        class="text-xs text-muted text-center"
+        class="text-center text-xs text-muted"
       >
         {{ $t('labels.assets.assetsCount', { current: localValue.length, max: item.max }) }}
       </div>
@@ -296,12 +301,20 @@ const closeAssetDetails = () => {
     <Dialog
       v-model:open="showAssetPicker"
       :modal="true"
-      @update:open="() => { replaceIndex = null }"
+      @update:open="
+        () => {
+          replaceIndex = null
+        }
+      "
     >
-      <DialogContent class="!max-w-[90dvw] h-[90dvh] p-0">
+      <DialogContent class="h-[90dvh] !max-w-[90dvw] p-0">
         <DialogHeader>
           <DialogTitle>
-            {{ replaceIndex === null ? $t('labels.assets.selectAssets') : $t('labels.assets.replaceAsset') }}
+            {{
+              replaceIndex === null
+                ? $t('labels.assets.selectAssets')
+                : $t('labels.assets.replaceAsset')
+            }}
           </DialogTitle>
         </DialogHeader>
 

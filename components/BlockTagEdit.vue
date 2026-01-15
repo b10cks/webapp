@@ -1,17 +1,18 @@
 <script setup lang="ts">
-
 import type { BlockTagResource } from '~/api/resources/block-tags'
 import IconNameField from '~/components/ui/IconNameField.vue'
 
-const props = withDefaults(defineProps<{
-  tag: BlockTagResource
-  isCreate?: boolean
-}>(), {
-  isCreate: false,
-})
+const props = withDefaults(
+  defineProps<{
+    tag: BlockTagResource
+    isCreate?: boolean
+  }>(),
+  {
+    isCreate: false,
+  }
+)
 
 const editableTag = ref<BlockTagResource>({ ...props.tag })
-
 </script>
 
 <template>
@@ -21,6 +22,6 @@ const editableTag = ref<BlockTagResource>({ ...props.tag })
       :label="$t('labels.blocks.fields.name')"
       name="name"
     />
-    <slot :tag="editableTag"/>
+    <slot :tag="editableTag" />
   </div>
 </template>

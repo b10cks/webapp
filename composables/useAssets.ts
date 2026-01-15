@@ -1,10 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useDebounceFn } from '@vueuse/core'
-import type { AssetsQueryParams } from '~/api/resources/assets'
 import { toast } from 'vue-sonner'
-import { api } from '~/api'
-import { queryKeys } from './useQueryClient'
+
+import type { AssetsQueryParams } from '~/api/resources/assets'
 import type { MaybeRefOrComputed } from '~/types'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
   const queryClient = useQueryClient()
@@ -130,13 +133,9 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
     }
   }
 
-
   const useUpdateAssetMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, payload, }: {
-        id: string
-        payload: UpdateAssetPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateAssetPayload }) => {
         const response = await spaceAPI.value.assets.update(id, payload)
         return response.data
       },

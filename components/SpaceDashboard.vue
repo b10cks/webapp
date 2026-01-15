@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
 import StatsCard from '~/components/stats/StatsCard.vue'
 import StatsPieChart from '~/components/stats/StatsPieChart.vue'
 import StatsLineChart from '~/components/stats/StatsLineChart.vue'
@@ -51,7 +57,7 @@ const dateRangeValues = computed(() => {
 
   return {
     startDate: formatDateToISO(startDate),
-    endDate: formatDateToISO(endDate)
+    endDate: formatDateToISO(endDate),
   }
 })
 
@@ -65,7 +71,7 @@ const fetchDashboardStats = async () => {
     stats.value = await client.get(`/mgmt/v1/spaces/${props.spaceId}/stats`, {
       period: period.value,
       start_date: startDate,
-      end_date: endDate
+      end_date: endDate,
     })
   } catch (err: any) {
     error.value = err.message
@@ -89,7 +95,7 @@ const assetsByTypeChartData = computed(() => {
   if (!stats.value?.assets?.count?.by_type) return []
   return stats.value.assets.count.by_type.map((item: any) => ({
     name: item.category,
-    count: item.count
+    count: item.count,
   }))
 })
 
@@ -98,7 +104,7 @@ const contentByTypeChartData = computed(() => {
   return stats.value.content.by_type.map((item: any) => ({
     name: item.name,
     color: item.color,
-    count: item.count
+    count: item.count,
   }))
 })
 
@@ -106,7 +112,7 @@ const trafficUsageChartData = computed(() => {
   if (!stats.value?.trends?.traffic_usage) return []
   return Object.entries(stats.value.trends.traffic_usage).map(([date, data]: [string, any]) => ({
     name: date,
-    value: data.total_bytes / (1024 * 1024)
+    value: data.total_bytes / (1024 * 1024),
   }))
 })
 
@@ -114,7 +120,7 @@ const apiUsageChartData = computed(() => {
   if (!stats.value?.trends?.api_usage) return []
   return Object.entries(stats.value.trends.api_usage).map(([date, count]) => ({
     name: date,
-    value: count as number
+    value: count as number,
   }))
 })
 
@@ -130,9 +136,9 @@ const assetUploadTrendData = computed(() => {
       {
         label: t('dashboard.charts.upload_size_mb'),
         data: entries.map(([, data]: [string, any]) => data.total_size / (1024 * 1024)),
-        color: 'rgba(236, 72, 153, 0.8)'
-      }
-    ]
+        color: 'rgba(236, 72, 153, 0.8)',
+      },
+    ],
   }
 })
 
@@ -142,7 +148,9 @@ const contentActivityData = computed(() => {
   const labels = stats.value.trends.periods || []
   const creation = labels.map((period: string) => stats.value.trends.content_creation[period] || 0)
   const editing = labels.map((period: string) => stats.value.trends.content_editing[period] || 0)
-  const publishing = labels.map((period: string) => stats.value.trends.content_publishing[period] || 0)
+  const publishing = labels.map(
+    (period: string) => stats.value.trends.content_publishing[period] || 0
+  )
 
   return {
     labels,
@@ -150,19 +158,19 @@ const contentActivityData = computed(() => {
       {
         label: t('dashboard.charts.content_created'),
         data: creation,
-        color: 'rgba(139, 92, 246, 0.8)'
+        color: 'rgba(139, 92, 246, 0.8)',
       },
       {
         label: t('dashboard.charts.content_edited'),
         data: editing,
-        color: 'rgba(251, 146, 60, 0.8)'
+        color: 'rgba(251, 146, 60, 0.8)',
       },
       {
         label: t('dashboard.charts.content_published'),
         data: publishing,
-        color: 'rgba(34, 197, 94, 0.8)'
-      }
-    ]
+        color: 'rgba(34, 197, 94, 0.8)',
+      },
+    ],
   }
 })
 
@@ -177,8 +185,8 @@ onMounted(() => {
 
 <template>
   <div class="space-y-6">
-    <div class="flex justify-between items-center">
-      <div class="flex space-x-4 ml-auto">
+    <div class="flex items-center justify-between">
+      <div class="ml-auto flex space-x-4">
         <Select v-model="dateRange">
           <SelectTrigger class="w-36">
             <SelectValue :placeholder="t('dashboard.filters.date_range') as string" />
@@ -207,11 +215,11 @@ onMounted(() => {
 
     <div
       v-if="loading"
-      class="flex items-center justify-center h-64"
+      class="flex h-64 items-center justify-center"
     >
       <div class="text-center">
         <div
-          class="spinner w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto"
+          class="spinner mx-auto h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent"
         />
         <p class="mt-2 text-muted">{{ t('dashboard.loading') }}</p>
       </div>
@@ -219,26 +227,28 @@ onMounted(() => {
 
     <div
       v-else-if="error"
-      class="text-center p-8"
+      class="p-8 text-center"
     >
       <p class="text-destructive">{{ error }}</p>
     </div>
 
     <div
       v-else-if="!stats"
-      class="text-center p-8"
+      class="p-8 text-center"
     >
       <p class="text-muted">{{ t('dashboard.no_data') }}</p>
     </div>
 
     <template v-else>
-      <h2 class="text-primary font-semibold">{{ t('dashboard.sections.content_stats') }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.content_stats') }}</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           icon="lucide:book-open"
           :title="t('dashboard.cards.total_content')"
         >
-          <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.content.count.total) }}</div>
+          <div class="text-2xl font-bold text-primary">
+            {{ formatNumber(stats.content.count.total) }}
+          </div>
           <p class="text-sm text-muted">
             {{ formatNumber(stats.content.count.published) }} {{ t('dashboard.cards.published') }},
             {{ formatNumber(stats.content.count.draft) }} {{ t('dashboard.cards.draft') }}
@@ -261,7 +271,9 @@ onMounted(() => {
           icon="lucide:blocks"
           :title="t('dashboard.cards.blocks')"
         >
-          <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.content.count.blocks) }}</div>
+          <div class="text-2xl font-bold text-primary">
+            {{ formatNumber(stats.content.count.blocks) }}
+          </div>
         </StatsCard>
 
         <StatsCard
@@ -283,8 +295,8 @@ onMounted(() => {
         </StatsCard>
       </div>
 
-      <h2 class="text-primary font-semibold">{{ t('dashboard.sections.content_distribution') }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.content_distribution') }}</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatsPieChart
           :title="t('dashboard.charts.content_by_type')"
           :data="contentByTypeChartData"
@@ -297,8 +309,8 @@ onMounted(() => {
         />
       </div>
 
-      <h2 class="text-primary font-semibold">{{ t('dashboard.sections.usage_stats') }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.usage_stats') }}</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           icon="lucide:cloud-download"
           :title="t('dashboard.cards.traffic_usage')"
@@ -307,7 +319,8 @@ onMounted(() => {
             {{ formatTrafficSize(stats.system.traffic.total_bytes, 'MB') }}
           </div>
           <p class="text-sm text-muted">
-            {{ formatNumber(stats.system.traffic.cache_hit_rate, 2) }}% {{ t('dashboard.cards.cache_hit_rate') }}
+            {{ formatNumber(stats.system.traffic.cache_hit_rate, 2) }}%
+            {{ t('dashboard.cards.cache_hit_rate') }}
           </p>
         </StatsCard>
 
@@ -315,9 +328,12 @@ onMounted(() => {
           icon="lucide:server"
           :title="t('dashboard.cards.api_requests')"
         >
-          <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.system.api.total_requests) }}</div>
+          <div class="text-2xl font-bold text-primary">
+            {{ formatNumber(stats.system.api.total_requests) }}
+          </div>
           <p class="text-sm text-muted">
-            {{ formatNumber(stats.system.api.success_rate, 2) }}% {{ t('dashboard.cards.success_rate') }}
+            {{ formatNumber(stats.system.api.success_rate, 2) }}%
+            {{ t('dashboard.cards.success_rate') }}
           </p>
         </StatsCard>
 
@@ -332,8 +348,8 @@ onMounted(() => {
         </StatsCard>
       </div>
 
-      <h2 class="text-primary font-semibold">{{ t('dashboard.sections.trends') }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.trends') }}</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatsLineChart
           :title="t('dashboard.charts.traffic_usage')"
           :data="trafficUsageChartData"
@@ -350,7 +366,7 @@ onMounted(() => {
         />
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatsMultiLineChart
           :title="t('dashboard.charts.asset_upload_trend')"
           :labels="assetUploadTrendData.labels"
@@ -365,14 +381,16 @@ onMounted(() => {
         />
       </div>
 
-      <h2 class="text-primary font-semibold">{{ t('dashboard.sections.space_stats') }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.space_stats') }}</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           icon="lucide:users"
           :title="t('dashboard.cards.total_users')"
           :description="formatRoleDistribution(stats.user_activity.role_distribution)"
         >
-          <div class="text-2xl font-bold text-primary">{{ formatNumber(stats.user_activity.total_users) }}</div>
+          <div class="text-2xl font-bold text-primary">
+            {{ formatNumber(stats.user_activity.total_users) }}
+          </div>
         </StatsCard>
 
         <StatsCard

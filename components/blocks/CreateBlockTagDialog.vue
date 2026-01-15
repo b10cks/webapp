@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import type { BlockTagResource } from '~/api/resources/block-tags'
@@ -18,7 +17,6 @@ const handleCreate = async (tag: BlockTagResource) => {
   await createBlockTag(tag)
   open.value = false
 }
-
 </script>
 
 <template>
@@ -27,18 +25,14 @@ const handleCreate = async (tag: BlockTagResource) => {
     @update:open="open = $event"
   >
     <DialogContent>
-      <DialogHeaderCombined
-        :title="$t('labels.blocks.createBlock')"
-      />
+      <DialogHeaderCombined :title="$t('labels.blocks.createBlock')" />
       <BlockTagEdit
         v-slot="{ tag }"
         :tag="{}"
         is-create
       >
         <DialogFooter>
-          <Button
-            @click="open = false"
-          >
+          <Button @click="open = false">
             {{ $t('actions.cancel') }}
           </Button>
           <Button

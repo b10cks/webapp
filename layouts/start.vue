@@ -6,15 +6,14 @@ if (import.meta.client) {
   if (!isAuthenticated.value) {
     navigateTo({
       name: 'login',
-      query: { return: route.fullPath }
+      query: { return: route.fullPath },
     })
   }
 }
-
 </script>
 
 <template>
-  <div class="min-h-svh flex w-full flex-col">
-    <slot/>
+  <div class="flex min-h-svh w-full flex-col">
+    <slot />
   </div>
 </template>

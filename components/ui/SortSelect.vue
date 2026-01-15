@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+} from '~/components/ui/select'
 import { Button } from '~/components/ui/button'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
@@ -31,30 +37,30 @@ const sortField = computed(() => {
 const handleFieldChange = (field: string) => {
   emit('update:modelValue', {
     column: field,
-    direction: sortDirection.value
+    direction: sortDirection.value,
   })
 }
 
 const toggleDirection = () => {
   emit('update:modelValue', {
     column: sortField.value,
-    direction: sortDirection.value === 'asc' ? 'desc' : 'asc'
+    direction: sortDirection.value === 'asc' ? 'desc' : 'asc',
   })
 }
 
 const selectedOptionLabel = computed(() => {
-  const option = props.options.find(opt => opt.value === sortField.value)
+  const option = props.options.find((opt) => opt.value === sortField.value)
   return option ? option.label : props.placeholder || 'Sort by'
 })
 
 const directionIcon = computed(() => {
-  return sortDirection.value === 'asc' ? 'lucide:arrow-up-narrow-wide' : 'lucide:arrow-down-wide-narrow'
+  return sortDirection.value === 'asc'
+    ? 'lucide:arrow-up-narrow-wide'
+    : 'lucide:arrow-down-wide-narrow'
 })
 
 const toggleButtonLabel = computed(() => {
-  return sortDirection.value === 'asc'
-    ? 'Switch to descending order'
-    : 'Switch to ascending order'
+  return sortDirection.value === 'asc' ? 'Switch to descending order' : 'Switch to ascending order'
 })
 </script>
 
@@ -81,7 +87,7 @@ const toggleButtonLabel = computed(() => {
       <Button
         size="icon"
         :aria-label="toggleButtonLabel"
-        class="rounded-l-none -mx-px rounded-r-md border-l border-l-surface"
+        class="-mx-px rounded-l-none rounded-r-md border-l border-l-surface"
         @click="toggleDirection"
       >
         <Icon

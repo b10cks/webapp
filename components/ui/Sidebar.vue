@@ -1,12 +1,11 @@
 <script setup lang="ts">
-
 import { useDark, useToggle } from '@vueuse/core'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { Switch } from '~/components/ui/switch'
 import { Avatar } from '~/components/ui/avatar'
@@ -36,11 +35,10 @@ const buildLink = (name: string) => ({
     space: spaceId.value,
   },
 })
-
 </script>
 
 <template>
-  <div class="flex h-full w-14 flex-col border-r border-r-border p-3 overflow-hidden">
+  <div class="flex h-full w-14 flex-col overflow-hidden border-r border-r-border p-3">
     <div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <div class="relative flex w-full min-w-0 flex-col gap-2">
         <SimpleTooltip
@@ -51,7 +49,7 @@ const buildLink = (name: string) => ({
         >
           <NuxtLink
             :to="buildLink(m.route)"
-            class="flex items-center justify-center size-8 rounded-lg hover:bg-border transition-colors duration-200 ease-butter"
+            class="flex size-8 items-center justify-center rounded-lg transition-colors duration-200 ease-butter hover:bg-border"
             active-class="text-primary bg-border"
           >
             <Icon
@@ -63,8 +61,8 @@ const buildLink = (name: string) => ({
         </SimpleTooltip>
       </div>
     </div>
-    <div class="flex flex-col gap-2 items-center">
-      <div class="flex flex-col pt-3 items-center border-t-2 border-t-border">
+    <div class="flex flex-col items-center gap-2">
+      <div class="flex flex-col items-center border-t-2 border-t-border pt-3">
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar
@@ -78,7 +76,7 @@ const buildLink = (name: string) => ({
             align="start"
           >
             <DropdownMenuItem disabled>{{ user.email }}</DropdownMenuItem>
-            <DropdownMenuSeparator/>
+            <DropdownMenuSeparator />
             <DropdownMenuItem @select="toggleDark()">
               <span>{{ 'Dark mode' }}</span>
               <Switch
@@ -106,7 +104,7 @@ const buildLink = (name: string) => ({
                 name="lucide:cog"
               />
             </DropdownMenuItem>
-            <DropdownMenuSeparator/>
+            <DropdownMenuSeparator />
             <DropdownMenuItem @select="logout">
               <span>Logout</span>
               <Icon

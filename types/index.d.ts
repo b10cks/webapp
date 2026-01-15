@@ -41,8 +41,6 @@ export interface SortParams {
   sort?: string
 }
 
-export interface BaseQueryParams extends PaginationParams, SortParams {
-
-}
+export interface BaseQueryParams extends PaginationParams, SortParams {}
 
 export type MaybeRefOrComputed<T> = MaybeRef<T> | ComputedRef<T>

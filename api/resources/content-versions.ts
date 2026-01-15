@@ -1,7 +1,9 @@
 import type { BaseQueryParams } from '~/types'
-import { BaseResource } from './base-resource'
-import type { ApiClient } from '../client'
 import type { ContentVersionListResource } from '~/types/contents'
+
+import type { ApiClient } from '../client'
+
+import { BaseResource } from './base-resource'
 
 export interface ContentVersionsQueryParams extends BaseQueryParams {
   created_by?: string

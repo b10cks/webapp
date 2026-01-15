@@ -1,4 +1,3 @@
-
 declare interface SimpleReleaseResource {
   id: string
   name: string
@@ -50,9 +49,9 @@ export interface ContentResource {
   block_id: string
   block?: ContentBlock
   i18n_parent_id: string | null
-  i18n_parent?: ContentMenuTranslation,
-  i18n_translations?: ContentMenuTranslation[],
-  i18n_siblings?: ContentMenuTranslation[],
+  i18n_parent?: ContentMenuTranslation
+  i18n_translations?: ContentMenuTranslation[]
+  i18n_siblings?: ContentMenuTranslation[]
   name: string
   content: object
   settings: ContentSettings

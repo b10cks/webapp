@@ -7,72 +7,72 @@ Description: NB SAM Template v2
 Parameters:
   AppDomainName:
     Type: String
-    Description: "The domain name of website"
-    Default: "app.b10cks.com"
+    Description: 'The domain name of website'
+    Default: 'app.b10cks.com'
   ApiDomainName:
     Type: String
-    Description: "The domain name of website"
-    Default: "api.b10cks.com"
+    Description: 'The domain name of website'
+    Default: 'api.b10cks.com'
   EcsOriginHeader:
     Type: String
-    Description: "The X-ECS-Origin header to to allow ELB to route traffic"
-    Default: ""
+    Description: 'The X-ECS-Origin header to to allow ELB to route traffic'
+    Default: ''
   AcmCertificateArn:
     Type: String
-    Description: "The certificate ARN for the domain name provided, must be in us-east-1 region"
-    Default: ""
+    Description: 'The certificate ARN for the domain name provided, must be in us-east-1 region'
+    Default: ''
   ElbDomainName:
     Type: String
-    Description: "The domain name of the ELB for the Cloudfront ELB origin"
-    Default: "nb-clients-406653055.eu-west-1.elb.amazonaws.com"
+    Description: 'The domain name of the ELB for the Cloudfront ELB origin'
+    Default: 'nb-clients-406653055.eu-west-1.elb.amazonaws.com'
   Client:
     Type: String
-    Default: "b10cks"
+    Default: 'b10cks'
   NuxtPublicFrontendUrl:
     Type: String
-    Default: "https://app.b10cks.com/"
+    Default: 'https://app.b10cks.com/'
   NuxtPublicBackendUrl:
     Type: String
-    Default: "https://api.b10cks.com/"
+    Default: 'https://api.b10cks.com/'
 
   NuxtApiProxyUrl:
     Type: String
-    Default: "https://api.b10cks.com/"
+    Default: 'https://api.b10cks.com/'
   NuxtPublicVersion:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicReverbAppId:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicReverbAppKey:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicReverbAppSecret:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicReverbHost:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicReverbPort:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicReverbScheme:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicPosthogKey:
     Type: String
-    Default: ""
+    Default: ''
   NuxtPublicPosthogHost:
     Type: String
-    Default: "https://eu.i.posthog.com"
+    Default: 'https://eu.i.posthog.com'
   NuxtIlumBaseUrl:
     Type: String
-    Default: "https://api.b10cks.com/ilum"
+    Default: 'https://api.b10cks.com/ilum'
 
 Conditions:
-  IsDomainProvided: !Not [!Equals [!Ref AppDomainName, ""]]
-  HasEcsOriginHeader: !Not [!Equals [!Ref AppDomainName, ""]]
-  HasClient: !Not [!Equals [!Ref Client, ""]]
+  IsDomainProvided: !Not [!Equals [!Ref AppDomainName, '']]
+  HasEcsOriginHeader: !Not [!Equals [!Ref AppDomainName, '']]
+  HasClient: !Not [!Equals [!Ref Client, '']]
 
 Globals:
   Function:
@@ -82,7 +82,7 @@ Globals:
     Environment:
       Variables:
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-        NODE_OPTIONS: "--max-old-space-size=512"
+        NODE_OPTIONS: '--max-old-space-size=512'
 
 Resources:
   NuxtFunction:
@@ -131,13 +131,13 @@ Resources:
               DaysAfterInitiation: 1
       CorsConfiguration:
         CorsRules:
-          - AllowedHeaders: [ ]
+          - AllowedHeaders: []
             AllowedMethods:
-              - "GET"
-              - "HEAD"
+              - 'GET'
+              - 'HEAD'
             AllowedOrigins:
-              - "*"
-            ExposedHeaders: [ ]
+              - '*'
+            ExposedHeaders: []
       Tags:
         - Key: client
           Value: !If [HasClient, !Ref Client, !Ref AWS::StackName]
@@ -210,7 +210,6 @@ Resources:
           QueryStringsConfig:
             QueryStringBehavior: all
 
-
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -228,12 +227,10 @@ Resources:
         ViewerCertificate:
           Fn::If:
             - IsDomainProvided
-            -
-              AcmCertificateArn: !If [IsDomainProvided, !Ref AcmCertificateArn, !Ref AWS::NoValue]
+            - AcmCertificateArn: !If [IsDomainProvided, !Ref AcmCertificateArn, !Ref AWS::NoValue]
               MinimumProtocolVersion: TLSv1.2_2021
               SslSupportMethod: sni-only
-            -
-              CloudFrontDefaultCertificate: true
+            - CloudFrontDefaultCertificate: true
         OriginGroups:
           Quantity: 1
           Items:
@@ -251,7 +248,7 @@ Resources:
                   - OriginId: nuxt
         Origins:
           - Id: nuxt
-            DomainName: !Select [ 2, !Split [ "/", !GetAtt NuxtFunctionUrl.FunctionUrl ] ]
+            DomainName: !Select [2, !Split ['/', !GetAtt NuxtFunctionUrl.FunctionUrl]]
             CustomOriginConfig:
               HTTPSPort: 443
               OriginProtocolPolicy: https-only
@@ -281,12 +278,14 @@ Resources:
                     - Fn::Select:
                         - 0
                         - Fn::Split:
-                          - '='
-                          - Fn::Join:
-                              - '-'
-                              -
-                                - Ref: AWS::StackName
-                                - !Select [ 0, !Split [ "-", !Select [ 2, !Split [ "/", !Ref AWS::StackId ] ] ] ]
+                            - '='
+                            - Fn::Join:
+                                - '-'
+                                - - Ref: AWS::StackName
+                                  - !Select [
+                                      0,
+                                      !Split ['-', !Select [2, !Split ['/', !Ref AWS::StackId]]],
+                                    ]
         DefaultCacheBehavior:
           Compress: true
           AllowedMethods:
@@ -393,14 +392,19 @@ Resources:
 
 Outputs:
   S3Bucket:
-    Description: "The S3 bucket that contains static files"
+    Description: 'The S3 bucket that contains static files'
     Value: !Ref S3Bucket
   CloudFrontDistribution:
-    Description: "The CloudFront distribution in front of the S3 bucket"
+    Description: 'The CloudFront distribution in front of the S3 bucket'
     Value: !Ref CloudFrontDistribution
   WebsiteUrl:
-    Description: "The website URL"
-    Value: !If [IsDomainProvided, !Sub "https://${AppDomainName}/", !Sub "https://${CloudFrontDistribution.DomainName}/"]
+    Description: 'The website URL'
+    Value:
+      !If [
+        IsDomainProvided,
+        !Sub 'https://${AppDomainName}/',
+        !Sub 'https://${CloudFrontDistribution.DomainName}/',
+      ]
   ApplicationLog:
-    Description: "The CloudWatch log group where application log are saved"
-    Value: !Sub "/aws/lambda/${NuxtFunction}"
+    Description: 'The CloudWatch log group where application log are saved'
+    Value: !Sub '/aws/lambda/${NuxtFunction}'

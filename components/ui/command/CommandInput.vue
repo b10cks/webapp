@@ -8,9 +8,11 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<ListboxFilterProps & {
-  class?: HTMLAttributes['class']
-}>()
+const props = defineProps<
+  ListboxFilterProps & {
+    class?: HTMLAttributes['class']
+  }
+>()
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props
@@ -25,7 +27,7 @@ const { filterState } = useCommand()
 
 <template>
   <div
-    class="flex items-center border-b border-border px-3 gap-2"
+    class="flex items-center gap-2 border-b border-border px-3"
     cmdk-input-wrapper
   >
     <Icon
@@ -36,7 +38,12 @@ const { filterState } = useCommand()
       v-bind="{ ...forwardedProps, ...$attrs }"
       v-model="filterState.search"
       auto-focus
-      :class="cn('flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50', props.class)"
+      :class="
+        cn(
+          'flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50',
+          props.class
+        )
+      "
     />
   </div>
 </template>

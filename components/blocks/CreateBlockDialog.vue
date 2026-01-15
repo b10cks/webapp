@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
 import BlockEdit from '~/components/BlockEdit.vue'
@@ -18,7 +17,6 @@ const handleCreate = async (editBlock: BlockResource) => {
   await createBlock(editBlock)
   open.value = false
 }
-
 </script>
 
 <template>
@@ -27,9 +25,7 @@ const handleCreate = async (editBlock: BlockResource) => {
     @update:open="open = $event"
   >
     <DialogContent>
-      <DialogHeaderCombined
-        :title="$t('labels.blocks.createBlock')"
-      />
+      <DialogHeaderCombined :title="$t('labels.blocks.createBlock')" />
       <BlockEdit
         v-slot="{ editBlock }"
         :block="{ folder_id: folderId }"
@@ -38,9 +34,7 @@ const handleCreate = async (editBlock: BlockResource) => {
         is-create
       >
         <DialogFooter>
-          <Button
-            @click="open = false"
-          >
+          <Button @click="open = false">
             {{ $t('actions.cancel') }}
           </Button>
           <Button

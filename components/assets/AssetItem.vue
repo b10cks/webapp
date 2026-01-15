@@ -1,7 +1,11 @@
 <script setup lang="ts">
-
 import { Checkbox } from '~/components/ui/checkbox'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
 
 const { formatFileSize } = useFormat()
 const { getFileIcon, getFileType } = useFileUtils()
@@ -78,22 +82,24 @@ function onDragStart(event: DragEvent) {
   if (!event.dataTransfer || !enableDragAndDrop.value) return
 
   // Set the drag data with the asset ID and type
-  event.dataTransfer.setData('application/json', JSON.stringify({
-    type: 'asset',
-    id: props.asset.id,
-    selected: props.selected
-  }))
+  event.dataTransfer.setData(
+    'application/json',
+    JSON.stringify({
+      type: 'asset',
+      id: props.asset.id,
+      selected: props.selected,
+    })
+  )
 
   // Set a drag image/effect
   event.dataTransfer.effectAllowed = 'move'
 }
-
 </script>
 
 <template>
   <div
-    class="p-1 group relative rounded-lg bg-background transition-all shadow-lg hover:bg-input focus:bg-input focus:outline-2  focus:outline-blue-300"
-    :class="{ 'outline-2 outline-accent rotate-1': selected }"
+    class="group relative rounded-lg bg-background p-1 shadow-lg transition-all hover:bg-input focus:bg-input focus:outline-2 focus:outline-blue-300"
+    :class="{ 'rotate-1 outline-2 outline-accent': selected }"
     :aria-selected="selected"
     role="option"
     tabindex="0"
@@ -102,7 +108,7 @@ function onDragStart(event: DragEvent) {
     @dragstart="onDragStart"
   >
     <div
-      class="relative cursor-pointer aspect-square overflow-hidden rounded-t-[0.325rem] checkerboard"
+      class="checkerboard relative aspect-square cursor-pointer overflow-hidden rounded-t-[0.325rem]"
       @click="handleView"
     >
       <NuxtImg
@@ -112,7 +118,7 @@ function onDragStart(event: DragEvent) {
         :width="size"
         :height="size"
         :modifiers="{ crop: 'fill' }"
-        class="h-full w-full object-cover pointer-events-none"
+        class="pointer-events-none h-full w-full object-cover"
       />
       <div
         v-else
@@ -126,17 +132,17 @@ function onDragStart(event: DragEvent) {
 
       <div
         v-if="isSelectMode"
-        class="absolute inset-0 bg-accent/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-md flex items-center justify-center"
+        class="absolute inset-0 flex items-center justify-center rounded-md bg-accent/50 opacity-0 transition-opacity group-hover:opacity-100"
       >
         <Icon
           name="lucide:check"
           size="2rem"
-          class="text-accent bg-background rounded-full p-1 border-2 border-accent"
+          class="rounded-full border-2 border-accent bg-background p-1 text-accent"
         />
       </div>
     </div>
-    <div class="flex p-2 items-center gap-2">
-      <div class="flex-1 min-w-0">
+    <div class="flex items-center gap-2 p-2">
+      <div class="min-w-0 flex-1">
         <div class="truncate font-semibold">
           {{ asset.filename }}
         </div>
@@ -145,25 +151,23 @@ function onDragStart(event: DragEvent) {
         </div>
       </div>
       <DropdownMenu class="ml-auto">
-        <DropdownMenuTrigger class="hover:text-primary transition-colors">
-          <Icon
-            name="lucide:ellipsis-vertical"
-          />
+        <DropdownMenuTrigger class="transition-colors hover:text-primary">
+          <Icon name="lucide:ellipsis-vertical" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem @select="handleView">
-            <Icon name="lucide:pencil"/>
+            <Icon name="lucide:pencil" />
             <span>Edit</span>
           </DropdownMenuItem>
           <DropdownMenuItem @select="$emit('move', asset)">
-            <Icon name="lucide:folder-input"/>
+            <Icon name="lucide:folder-input" />
             <span>Move</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             class="text-destructive"
             @select="$emit('delete', asset)"
           >
-            <Icon name="lucide:trash-2"/>
+            <Icon name="lucide:trash-2" />
             <span>Delete</span>
           </DropdownMenuItem>
         </DropdownMenuContent>

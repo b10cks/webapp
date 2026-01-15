@@ -43,7 +43,7 @@ const localizers = {
   text: TextLocalization,
   textarea: TextareaLocalization,
   markdown: MarkdownLocalization,
-  meta: MetaLocalization
+  meta: MetaLocalization,
 }
 
 const props = defineProps<{
@@ -52,12 +52,13 @@ const props = defineProps<{
   blockSchema: Record<string, SchemaType>
   spaceId: string
   targetLanguage: string
-  getBlockSchema?: (blockSlug: string) => { schema: Record<string, SchemaType>, name: string } | undefined
+  getBlockSchema?: (
+    blockSlug: string
+  ) => { schema: Record<string, SchemaType>; name: string } | undefined
 }>()
 
 const { useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(props.spaceId) as { data: Ref<Space> }
-
 
 const showUntranslatedOnly = ref(false)
 const searchQuery = ref('')
@@ -110,9 +111,8 @@ const traverseContent = (
       })
     } else if ('translatable' in schemaItem && schemaItem.translatable) {
       const translatedValue = translation?.[key]
-      const isTranslated = translatedValue !== undefined &&
-        translatedValue !== null &&
-        translatedValue !== ''
+      const isTranslated =
+        translatedValue !== undefined && translatedValue !== null && translatedValue !== ''
 
       result.push({
         key,
@@ -121,7 +121,7 @@ const traverseContent = (
         schemaItem,
         originalValue: value,
         translatedValue: translatedValue || '',
-        isTranslated
+        isTranslated,
       })
     }
   })
@@ -147,7 +147,7 @@ watch(
 )
 
 const filteredFields = computed(() => {
-  return translatableFields.value.filter(field => {
+  return translatableFields.value.filter((field) => {
     if (field.schemaItem.type === 'block_header') {
       return true
     }
@@ -168,19 +168,17 @@ const filteredFields = computed(() => {
   })
 })
 
-
 const getFieldIdentifier = (field: TranslatableField): string => {
   return `${field.path.join('-')}-${field.key}`
 }
-
 
 const isMachineTranslated = (field: TranslatableField): boolean => {
   return machineTranslatedFields.value.has(getFieldIdentifier(field))
 }
 
 const updateTranslatedValue = (field: TranslatableField, newValue: unknown): void => {
-  const fieldToUpdate = translatableFields.value.find(f =>
-    f.key === field.key && JSON.stringify(f.path) === JSON.stringify(field.path)
+  const fieldToUpdate = translatableFields.value.find(
+    (f) => f.key === field.key && JSON.stringify(f.path) === JSON.stringify(field.path)
   )
 
   if (fieldToUpdate) {
@@ -218,14 +216,13 @@ const updateTranslatedValue = (field: TranslatableField, newValue: unknown): voi
   }
 }
 
-
 const updateTranslatedValues = (translatedTexts: Record<string, string>): void => {
   Object.entries(translatedTexts).forEach(([fieldPath, translation]) => {
     const pathParts = fieldPath.split('-')
     const key = pathParts.pop() as string
 
-    const field = translatableFields.value.find(f =>
-      f.key === key && JSON.stringify(f.path.slice(0, -1)) === JSON.stringify(pathParts)
+    const field = translatableFields.value.find(
+      (f) => f.key === key && JSON.stringify(f.path.slice(0, -1)) === JSON.stringify(pathParts)
     )
 
     if (field) {
@@ -235,21 +232,23 @@ const updateTranslatedValues = (translatedTexts: Record<string, string>): void =
   })
 }
 
-
 const getUntranslatedFields = (): Record<string, string> => {
   const untranslatedFields: Record<string, string> = {}
 
   translatableFields.value
-    .filter(field => !field.isTranslated && typeof field.originalValue === 'string' && field.originalValue.trim() !== '')
-    .forEach(field => {
-
+    .filter(
+      (field) =>
+        !field.isTranslated &&
+        typeof field.originalValue === 'string' &&
+        field.originalValue.trim() !== ''
+    )
+    .forEach((field) => {
       const fieldPath = [...field.path.slice(0, -1), field.key].join('-')
       untranslatedFields[fieldPath] = field.originalValue as string
     })
 
   return untranslatedFields
 }
-
 
 const translateWithAI = async (): Promise<void> => {
   const fieldsToTranslate = getUntranslatedFields()
@@ -262,15 +261,21 @@ const translateWithAI = async (): Promise<void> => {
 
   try {
     isTranslating.value = true
-    toast.info(`Translating ${fieldCount} fields from ${sourceLanguage.value} to ${props.targetLanguage}...`)
+    toast.info(
+      `Translating ${fieldCount} fields from ${sourceLanguage.value} to ${props.targetLanguage}...`
+    )
     const requestData = {
       source: sourceLanguage.value,
       target: props.targetLanguage,
       space_id: props.spaceId,
-      fields: fieldsToTranslate
+      fields: fieldsToTranslate,
     }
 
-    const response = await apiClient.post<ApiResponse<Record<string, string>>>('/mgmt/v1/ai/translate', requestData, { query: { spaceId: props.spaceId } })
+    const response = await apiClient.post<ApiResponse<Record<string, string>>>(
+      '/mgmt/v1/ai/translate',
+      requestData,
+      { query: { spaceId: props.spaceId } }
+    )
     updateTranslatedValues(response.data)
 
     toast.success(`Successfully translated ${Object.keys(response.data).length} fields`)
@@ -284,11 +289,11 @@ const translateWithAI = async (): Promise<void> => {
 
 const translationStats = computed(() => {
   const fieldItems = translatableFields.value.filter(
-    field => field.schemaItem.type !== 'block_header'
+    (field) => field.schemaItem.type !== 'block_header'
   )
 
   const total = fieldItems.length
-  const translated = fieldItems.filter(f => f.isTranslated).length
+  const translated = fieldItems.filter((f) => f.isTranslated).length
   const percentage = total > 0 ? Math.round((translated / total) * 100) : 0
   const machineTranslated = machineTranslatedFields.value.size
 
@@ -296,7 +301,7 @@ const translationStats = computed(() => {
     total,
     translated,
     percentage,
-    machineTranslated
+    machineTranslated,
   }
 })
 </script>
@@ -308,15 +313,16 @@ const translationStats = computed(() => {
         <div class="space-y-1">
           <h3 class="text-sm font-semibold">Translation Progress</h3>
           <div class="flex items-center gap-2">
-            <div class="w-24 h-2 bg-elevated rounded-full overflow-hidden">
+            <div class="h-2 w-24 overflow-hidden rounded-full bg-elevated">
               <div
                 class="h-full bg-green-600"
                 :style="`width: ${translationStats.percentage}%`"
               />
             </div>
             <span class="text-xs font-semibold text-muted">
-              {{ translationStats.translated }}/{{ translationStats.total }} fields
-              ({{ translationStats.percentage }}%)
+              {{ translationStats.translated }}/{{ translationStats.total }} fields ({{
+                translationStats.percentage
+              }}%)
             </span>
           </div>
         </div>
@@ -355,10 +361,10 @@ const translationStats = computed(() => {
     </div>
     <div class="grid gap-3">
       <div
-        v-for="(field) in filteredFields"
+        v-for="field in filteredFields"
         :key="`${field.path.join('-')}-${field.key}`"
       >
-        <div class="pt-2 -mb-2">
+        <div class="-mb-2 pt-2">
           <h4 class="font-semibold text-primary">{{ field.fieldName }}</h4>
           <p class="text-sm text-muted">
             {{ field.path.join(' > ') }}
@@ -373,19 +379,21 @@ const translationStats = computed(() => {
             :model-value="field.translatedValue"
             :disabled="isTranslating"
             :is-machine-translated="isMachineTranslated(field)"
-            @update:model-value="newValue => updateTranslatedValue(field, newValue)"
+            @update:model-value="(newValue) => updateTranslatedValue(field, newValue)"
           />
           <div
             v-else
-            class="grid grid-cols-2 gap-4 py-2 px-4 text-muted italic"
+            class="grid grid-cols-2 gap-4 px-4 py-2 text-muted italic"
           >
-            <div class="p-2 border border-elevated rounded bg-gray-850">
+            <div class="bg-gray-850 rounded border border-elevated p-2">
               {{ field.originalValue }}
             </div>
-            <div class="p-2 border border-elevated rounded bg-gray-850">
+            <div class="bg-gray-850 rounded border border-elevated p-2">
               <Input
                 :value="field.translatedValue"
-                @input="(e: Event) => updateTranslatedValue(field, (e.target as HTMLInputElement).value)"
+                @input="
+                  (e: Event) => updateTranslatedValue(field, (e.target as HTMLInputElement).value)
+                "
               />
               <div class="mt-2 text-xs text-muted">
                 No specialized editor for type: {{ field.schemaItem.type }}
@@ -406,9 +414,7 @@ const translationStats = computed(() => {
         <div v-else-if="showUntranslatedOnly">
           No untranslated fields found. All fields have been translated!
         </div>
-        <div v-else-if="searchQuery">
-          No fields match your search query.
-        </div>
+        <div v-else-if="searchQuery">No fields match your search query.</div>
       </div>
     </div>
   </div>

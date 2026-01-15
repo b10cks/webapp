@@ -1,18 +1,26 @@
 <script setup lang="ts">
-
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import type { CreateContentPayload } from '~/types/contents'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '~/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+} from '~/components/ui/select'
 import { FormField, InputField } from '~/components/ui/form'
 import { Button } from '~/components/ui/button'
 
 const open = defineModel<boolean>('open')
-const props = withDefaults(defineProps<{
-  spaceId: string
-  parentId?: string
-}>(), {
-  parentId: undefined,
-})
+const props = withDefaults(
+  defineProps<{
+    spaceId: string
+    parentId?: string
+  }>(),
+  {
+    parentId: undefined,
+  }
+)
 
 const { useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(props.spaceId)
@@ -26,14 +34,18 @@ const { mutate: createContent } = useCreateContentMutation()
 const content = ref<CreateContentPayload>({
   block_id: null,
   slug: '',
-  name: ''
+  name: '',
 })
 
-watch(space, () => {
-  if (!content.value.block_id) {
-    content.value.block_id = space.value?.settings.default_block
-  }
-}, { immediate: true })
+watch(
+  space,
+  () => {
+    if (!content.value.block_id) {
+      content.value.block_id = space.value?.settings.default_block
+    }
+  },
+  { immediate: true }
+)
 
 const handleCreate = async (editContent: CreateContentPayload) => {
   await createContent({ ...editContent, parent_id: props.parentId })
@@ -41,14 +53,16 @@ const handleCreate = async (editContent: CreateContentPayload) => {
   content.value = {
     block_id: content.value.block_id,
     slug: '',
-    name: ''
+    name: '',
   }
 }
 
 const possibleBlocks = computed(() => {
-  return blocks.value?.data.filter((b: BlockResource) => {
-    return b.type === 'root' || b.type === 'universal' || (!props.parentId && b.type === 'single')
-  }) || []
+  return (
+    blocks.value?.data.filter((b: BlockResource) => {
+      return b.type === 'root' || b.type === 'universal' || (!props.parentId && b.type === 'single')
+    }) || []
+  )
 })
 
 const currentBlock = computed(() => {
@@ -62,7 +76,6 @@ const createSlug = () => {
     .toLocaleLowerCase()
     .replace(/--/g, '-')
 }
-
 </script>
 
 <template>
@@ -75,9 +88,7 @@ const createSlug = () => {
         class="grid gap-4"
         @submit.prevent="handleCreate(content)"
       >
-        <DialogHeaderCombined
-          :title="$t('labels.contents.createContent')"
-        />
+        <DialogHeaderCombined :title="$t('labels.contents.createContent')" />
         <div class="grid gap-6">
           <InputField
             v-model="content.name"
@@ -122,7 +133,7 @@ const createSlug = () => {
                       :key="block.id"
                       :value="block.id"
                     >
-                      <div class="flex gap-2 items-center">
+                      <div class="flex items-center gap-2">
                         <Icon
                           v-if="block.icon"
                           :name="`lucide:${block.icon}`"

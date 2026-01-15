@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
+import Calendar from 'dayjs/plugin/calendar'
 import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
-import Calendar from 'dayjs/plugin/calendar'
 import UpdateLocale from 'dayjs/plugin/updateLocale'
 
 export default function useFormat() {
@@ -18,8 +18,8 @@ export default function useFormat() {
       nextDay: '[Tomorrow at] LT',
       lastWeek: '[Last] dddd [at] LT',
       nextWeek: 'dddd [at] LT',
-      sameElse: 'LL'
-    }
+      sameElse: 'LL',
+    },
   })
 
   const { getLocale } = useI18n()
@@ -37,7 +37,10 @@ export default function useFormat() {
     return dayjs(date).locale(locale.value).calendar()
   }
 
-  function formatVersionTime(date: string | Date | number, group: 'today' | 'yesterday' | 'thisWeek' | 'lastWeek' | 'older') {
+  function formatVersionTime(
+    date: string | Date | number,
+    group: 'today' | 'yesterday' | 'thisWeek' | 'lastWeek' | 'older'
+  ) {
     switch (group) {
       case 'today':
       case 'yesterday':
@@ -60,19 +63,29 @@ export default function useFormat() {
     }).format(value)
   }
 
-  function formatDuration(milliseconds: number, decimals: number = 0, unit: 'ms' | 's' = 'ms'): string {
+  function formatDuration(
+    milliseconds: number,
+    decimals: number = 0,
+    unit: 'ms' | 's' = 'ms'
+  ): string {
     if (milliseconds === 0) return `0 ${unit}`
 
     // If unit is seconds, convert milliseconds to seconds
     const value = unit === 's' ? milliseconds / 1000 : milliseconds
 
-    return new Intl.NumberFormat(locale.value, {
-      maximumFractionDigits: decimals,
-      minimumFractionDigits: decimals,
-    }).format(value) + ` ${unit}`
+    return (
+      new Intl.NumberFormat(locale.value, {
+        maximumFractionDigits: decimals,
+        minimumFractionDigits: decimals,
+      }).format(value) + ` ${unit}`
+    )
   }
 
-  function formatNumber(value: number, decimals: number = 0, options: Intl.NumberFormatOptions = {}): string {
+  function formatNumber(
+    value: number,
+    decimals: number = 0,
+    options: Intl.NumberFormatOptions = {}
+  ): string {
     return new Intl.NumberFormat(locale.value, {
       maximumFractionDigits: decimals,
       minimumFractionDigits: decimals,
@@ -89,22 +102,24 @@ export default function useFormat() {
         value = bytes
         break
       case 'MB':
-        value = bytes / (1024 ** 2)
+        value = bytes / 1024 ** 2
         break
       case 'GB':
-        value = bytes / (1024 ** 3)
+        value = bytes / 1024 ** 3
         break
       case 'TB':
-        value = bytes / (1024 ** 4)
+        value = bytes / 1024 ** 4
         break
       default:
         value = bytes / 1024
     }
 
-    return new Intl.NumberFormat(locale.value, {
-      maximumFractionDigits: unit === 'B' ? 0 : 2,
-      minimumFractionDigits: unit === 'B' ? 0 : 2,
-    }).format(value) + ` ${unit}`
+    return (
+      new Intl.NumberFormat(locale.value, {
+        maximumFractionDigits: unit === 'B' ? 0 : 2,
+        minimumFractionDigits: unit === 'B' ? 0 : 2,
+      }).format(value) + ` ${unit}`
+    )
   }
 
   function formatFileSize(bytes: number): string {
@@ -113,10 +128,14 @@ export default function useFormat() {
     const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
 
-    return new Intl.NumberFormat(locale.value, {
-      maximumFractionDigits: i === 0 ? 0 : 1,
-      minimumFractionDigits: i === 0 ? 0 : 1,
-    }).format(bytes / Math.pow(1024, i)) + ' ' + units[i]
+    return (
+      new Intl.NumberFormat(locale.value, {
+        maximumFractionDigits: i === 0 ? 0 : 1,
+        minimumFractionDigits: i === 0 ? 0 : 1,
+      }).format(bytes / Math.pow(1024, i)) +
+      ' ' +
+      units[i]
+    )
   }
 
   return {

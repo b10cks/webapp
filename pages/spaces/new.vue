@@ -1,8 +1,14 @@
 <script setup lang="ts">
-
 import { Badge, type BadgeVariants } from '~/components/ui/badge'
 import { Label } from 'reka-ui'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import {
   Stepper,
@@ -11,7 +17,7 @@ import {
   StepperItem,
   StepperSeparator,
   StepperTitle,
-  StepperTrigger
+  StepperTrigger,
 } from '~/components/ui/stepper'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Button } from '~/components/ui/button'
@@ -31,7 +37,7 @@ type Plan = {
   features: string[]
   aiFeatures?: string[]
   badge?: {
-    text: string;
+    text: string
     variant: BadgeVariants['variant']
   }
   disabled?: boolean
@@ -50,13 +56,11 @@ const plans: Plan[] = [
       '5,000 API requests',
       '5 GB traffic (fair use)',
       '500 MB assets storage',
-      'Unlimited blocks, content, users, languages'
+      'Unlimited blocks, content, users, languages',
     ],
-    aiFeatures: [
-      '5,000 AI tokens',
-    ],
+    aiFeatures: ['5,000 AI tokens'],
     badge: null,
-    disabled: false
+    disabled: false,
   },
   {
     id: 'essential',
@@ -68,11 +72,9 @@ const plans: Plan[] = [
       '100,000 API requests',
       '50 GB traffic (fair use)',
       '5 GB assets storage',
-      'Unlimited blocks, content, users, languages'
+      'Unlimited blocks, content, users, languages',
     ],
-    aiFeatures: [
-      '100,000 AI tokens',
-    ],
+    aiFeatures: ['100,000 AI tokens'],
   },
   {
     id: 'growth',
@@ -85,11 +87,9 @@ const plans: Plan[] = [
       '250 GB traffic (fair use)',
       '25 GB assets storage',
       'Unlimited blocks, content, users, languages',
-      'Email support'
+      'Email support',
     ],
-    aiFeatures: [
-      '500,000 AI tokens',
-    ],
+    aiFeatures: ['500,000 AI tokens'],
     badge: { text: 'Coming soon', variant: 'default' },
     disabled: true,
   },
@@ -104,11 +104,9 @@ const plans: Plan[] = [
       '500 GB traffic (fair use)',
       '50 GB assets storage',
       'Unlimited blocks, content, users, languages',
-      '24-hour technical support'
+      '24-hour technical support',
     ],
-    aiFeatures: [
-      '1,500,000 AI tokens',
-    ],
+    aiFeatures: ['1,500,000 AI tokens'],
     badge: { text: 'Coming soon', variant: 'default' },
     disabled: true,
   },
@@ -123,11 +121,9 @@ const plans: Plan[] = [
       '1,000 GB traffic (fair use)',
       '100 GB assets storage',
       'Unlimited blocks, content, users, languages',
-      'Dedicated account manager'
+      'Dedicated account manager',
     ],
-    aiFeatures: [
-      '10,000,000 AI tokens',
-    ],
+    aiFeatures: ['10,000,000 AI tokens'],
     badge: { text: 'Coming soon', variant: 'default' },
     disabled: true,
   },
@@ -141,12 +137,12 @@ const plans: Plan[] = [
       'Custom API requests',
       'Custom traffic limits',
       'Custom storage allocation',
-      'SLA guarantees'
+      'SLA guarantees',
     ],
     badge: { text: 'Coming soon', variant: 'default' },
     disabled: true,
-    buttonText: 'Contact Sales'
-  }
+    buttonText: 'Contact Sales',
+  },
 ]
 
 // Step wizard state
@@ -163,8 +159,8 @@ const steps = computed(() => [
     title: 'Details',
     icon: 'lucide:settings-2',
     description: 'Enter details of your space',
-    disabled: !selectedPlan.value
-  }
+    disabled: !selectedPlan.value,
+  },
 ])
 
 // Watch name changes to auto-generate slug
@@ -193,7 +189,7 @@ const handleNext = async () => {
       team_id: selectedTeam.value?.id,
       settings: {
         region: serverLocation.value || 'eu',
-      }
+      },
     } as CreateSpacePayload
 
     await createSpace(payload, {
@@ -214,8 +210,8 @@ const handleBack = () => {
 <template>
   <div>
     <NuxtLayout name="start">
-      <AppHeader/>
-      <div class="grow w-full bg-background pt-10">
+      <AppHeader />
+      <div class="w-full grow bg-background pt-10">
         <main class="content-grid py-6">
           <div class="content-narrow grid gap-6">
             <ContentHeader
@@ -224,7 +220,7 @@ const handleBack = () => {
             />
             <Stepper
               v-model="step"
-              class="flex justify-center items-start w-full"
+              class="flex w-full items-start justify-center"
             >
               <StepperItem
                 v-for="item in steps"
@@ -234,7 +230,7 @@ const handleBack = () => {
               >
                 <StepperTrigger>
                   <StepperIndicator>
-                    <Icon :name="item.icon"/>
+                    <Icon :name="item.icon" />
                   </StepperIndicator>
                   <div class="flex flex-col">
                     <StepperTitle>{{ item.title }}</StepperTitle>
@@ -243,7 +239,7 @@ const handleBack = () => {
                 </StepperTrigger>
                 <StepperSeparator
                   v-if="item.step !== steps[steps.length - 1].step"
-                  class="w-[10rem] h-px"
+                  class="h-px w-[10rem]"
                 />
               </StepperItem>
             </Stepper>
@@ -258,17 +254,17 @@ const handleBack = () => {
                     v-for="plan in plans"
                     :key="plan.id"
                     :class="[
-                    'bg-surface flex flex-col',
-                    plan.disabled ? 'opacity-30' : '',
-                    selectedPlan === plan.id ? 'ring ring-ring' : ''
-                  ]"
+                      'flex flex-col bg-surface',
+                      plan.disabled ? 'opacity-30' : '',
+                      selectedPlan === plan.id ? 'ring ring-ring' : '',
+                    ]"
                     @click="plan.id === selectedPlan ? handleNext() : () => {}"
                   >
-                    <CardHeader class="pb-2 relative">
+                    <CardHeader class="relative pb-2">
                       <Badge
                         v-if="plan.badge"
                         :variant="plan.badge.variant"
-                        class="absolute -right-2 -top-2 rounded-full"
+                        class="absolute -top-2 -right-2 rounded-full"
                       >
                         {{ plan.badge.text }}
                       </Badge>
@@ -277,14 +273,14 @@ const handleBack = () => {
                     </CardHeader>
                     <CardContent class="grow">
                       <div class="flex items-baseline gap-2">
-                        <div class="text-3xl text-primary font-bold">{{ plan.price }}</div>
+                        <div class="text-3xl font-bold text-primary">{{ plan.price }}</div>
                         <div class="text-sm text-text-muted">{{ plan.period }}</div>
                       </div>
                       <ul class="mt-6 grid gap-3">
                         <li
                           v-for="(feature, featureIndex) in plan.features"
                           :key="featureIndex"
-                          class="flex item-start gap-2"
+                          class="item-start flex gap-2"
                         >
                           <Icon
                             name="lucide:check"
@@ -295,7 +291,7 @@ const handleBack = () => {
                         <li
                           v-for="(feature, featureIndex) in plan?.aiFeatures"
                           :key="featureIndex"
-                          class="flex item-start gap-2"
+                          class="item-start flex gap-2"
                         >
                           <Icon
                             name="lucide:sparkles"
@@ -316,13 +312,17 @@ const handleBack = () => {
                       <Label
                         :for="plan.id"
                         :class="[
-                        'flex w-full cursor-pointer items-center justify-center rounded-md border py-2 text-sm font-semibold',
-                        selectedPlan === plan.id ? 'border-accent bg-accent text-accent-foreground' : 'border-elevated',
-                        plan.disabled ? 'cursor-not-allowed opacity-50' : ''
-                      ]"
+                          'flex w-full cursor-pointer items-center justify-center rounded-md border py-2 text-sm font-semibold',
+                          selectedPlan === plan.id
+                            ? 'border-accent bg-accent text-accent-foreground'
+                            : 'border-elevated',
+                          plan.disabled ? 'cursor-not-allowed opacity-50' : '',
+                        ]"
                       >
                         {{
-                          selectedPlan === plan.id ? `Continue with ${plan.name}` : (plan.buttonText || `Select ${plan.name}`)
+                          selectedPlan === plan.id
+                            ? `Continue with ${plan.name}`
+                            : plan.buttonText || `Select ${plan.name}`
                         }}
                       </Label>
                     </CardFooter>
@@ -352,7 +352,7 @@ const handleBack = () => {
                   label="Space Slug"
                   placeholder="my-awesome-space"
                   required
-                  :description="`Used in URLs and API calls (e.g., api.cms.com/${spaceSlug || 'my-awesome-space' })`"
+                  :description="`Used in URLs and API calls (e.g., api.cms.com/${spaceSlug || 'my-awesome-space'})`"
                 />
                 <ServerLocationSelect
                   v-model="serverLocation"
@@ -370,7 +370,10 @@ const handleBack = () => {
               </Button>
               <Button
                 variant="primary"
-                :disabled="(step === 1 && !selectedPlan) || (step === 2 && (!spaceName || !spaceSlug || !serverLocation))"
+                :disabled="
+                  (step === 1 && !selectedPlan) ||
+                  (step === 2 && (!spaceName || !spaceSlug || !serverLocation))
+                "
                 @click="handleNext"
               >
                 <template v-if="step < 2">

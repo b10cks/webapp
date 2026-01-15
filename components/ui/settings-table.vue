@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '~/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '~/components/ui/table'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Switch } from '~/components/ui/switch'
@@ -19,37 +27,44 @@ export interface TableItem {
   [key: string]: string | number | boolean | undefined
 }
 
-const props = withDefaults(defineProps<{
-  items: TableItem[]
-  columns: ColumnDefinition[]
-  allowSort?: boolean
-  showAddRow?: boolean
-  newItemTemplate?: TableItem
-  addButtonLabel?: string
-  removeButtonLabel?: string
-}>(), {
-  allowSort: false,
-  showAddRow: true,
-  newItemTemplate: () => ({}),
-  addButtonLabel: 'actions.add',
-  removeButtonLabel: 'actions.remove'
-})
+const props = withDefaults(
+  defineProps<{
+    items: TableItem[]
+    columns: ColumnDefinition[]
+    allowSort?: boolean
+    showAddRow?: boolean
+    newItemTemplate?: TableItem
+    addButtonLabel?: string
+    removeButtonLabel?: string
+  }>(),
+  {
+    allowSort: false,
+    showAddRow: true,
+    newItemTemplate: () => ({}),
+    addButtonLabel: 'actions.add',
+    removeButtonLabel: 'actions.remove',
+  }
+)
 
 const id = `settings-table-${Math.random().toString(36).substring(2, 15)}`
 
 const emit = defineEmits<{
   'update:items': [items: TableItem[]]
-  'add': [item: TableItem]
-  'remove': [index: number, item: TableItem]
+  add: [item: TableItem]
+  remove: [index: number, item: TableItem]
 }>()
 
 const tableBodyRef = useTemplateRef<HTMLElement>('tableBodyRef')
-const localItems = ref<TableItem[]>([...props.items || []])
+const localItems = ref<TableItem[]>([...(props.items || [])])
 const newItem = ref<TableItem>({ ...props.newItemTemplate })
 
-watch(() => props.items, (newItems) => {
-  localItems.value = [...newItems]
-}, { deep: true })
+watch(
+  () => props.items,
+  (newItems) => {
+    localItems.value = [...newItems]
+  },
+  { deep: true }
+)
 
 if (props.allowSort) {
   useSortable(tableBodyRef, localItems, {
@@ -57,14 +72,14 @@ if (props.allowSort) {
     animation: 150,
     onEnd: () => {
       nextTick(() => emit('update:items', [...localItems.value]))
-    }
+    },
   })
 }
 
 const canAddItem = computed(() => {
   return props.columns
-    .filter(col => col.required)
-    .every(col => {
+    .filter((col) => col.required)
+    .every((col) => {
       const value = newItem.value[col.key]
       return value !== undefined && value !== null && value !== ''
     })
@@ -76,7 +91,7 @@ const addItem = () => {
     emit('add', itemToAdd)
     newItem.value = { ...props.newItemTemplate }
     nextTick(() => {
-      (document.querySelector(`#${id}-new-row input`) as HTMLInputElement)?.focus()
+      ;(document.querySelector(`#${id}-new-row input`) as HTMLInputElement)?.focus()
     })
   }
 }
@@ -103,7 +118,7 @@ const removeItem = (index: number) => {
         >
           {{ column.label }}
         </TableHead>
-        <TableHead class="w-12"/>
+        <TableHead class="w-12" />
       </TableRow>
     </TableHeader>
     <TableBody ref="tableBodyRef">
@@ -113,9 +128,9 @@ const removeItem = (index: number) => {
       >
         <TableCell
           v-if="allowSort"
-          class="sort-handle cursor-ns-resize w-4"
+          class="sort-handle w-4 cursor-ns-resize"
         >
-          <Icon name="lucide:grip-vertical"/>
+          <Icon name="lucide:grip-vertical" />
         </TableCell>
         <TableCell
           v-for="column in columns"
@@ -152,7 +167,7 @@ const removeItem = (index: number) => {
             size="icon"
             @click="removeItem(index)"
           >
-            <Icon name="lucide:trash"/>
+            <Icon name="lucide:trash" />
             <span class="sr-only">{{ $t(removeButtonLabel) }}</span>
           </Button>
         </TableCell>
@@ -164,7 +179,7 @@ const removeItem = (index: number) => {
         :id="`${id}-new-row`"
         class="hover:bg-transparent"
       >
-        <TableCell v-if="allowSort"/>
+        <TableCell v-if="allowSort" />
         <TableCell
           v-for="column in columns"
           :key="column.key"
@@ -194,7 +209,7 @@ const removeItem = (index: number) => {
             :disabled="!canAddItem"
             @click="addItem"
           >
-            <Icon name="lucide:plus"/>
+            <Icon name="lucide:plus" />
             <span class="sr-only">{{ $t(addButtonLabel) }}</span>
           </Button>
         </TableCell>

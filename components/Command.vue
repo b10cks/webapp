@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { useMagicKeys } from '@vueuse/core'
 import {
   CommandDialog,
@@ -7,7 +6,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
+  CommandList,
 } from '~/components/ui/command'
 
 const route = useRoute()
@@ -40,7 +39,6 @@ const jumpTo = (url: string) => {
   router.push(url)
   open.value = false
 }
-
 </script>
 
 <template>
@@ -48,7 +46,7 @@ const jumpTo = (url: string) => {
     :open="open"
     @update:open="handleOpenChange"
   >
-    <CommandInput :placeholder="$t('labels.command.input.placeholder')"/>
+    <CommandInput :placeholder="$t('labels.command.input.placeholder')" />
     <CommandList>
       <CommandEmpty>{{ $t('labels.command.empty') }}</CommandEmpty>
       <CommandGroup
@@ -59,7 +57,7 @@ const jumpTo = (url: string) => {
           v-for="block in blocks.data"
           :key="block.id"
           :value="block.id"
-          class="flex gap-2 items-center"
+          class="flex items-center gap-2"
           @select="jumpTo(`/${spaceId}/blocks/${block.id}`)"
         >
           <Icon
@@ -77,7 +75,7 @@ const jumpTo = (url: string) => {
           v-for="content in contents"
           :key="content.id"
           :value="content.id"
-          class="flex gap-2 items-center"
+          class="flex items-center gap-2"
           @select="jumpTo(`/${spaceId}/content/${content.id}`)"
         >
           <Icon
@@ -92,7 +90,7 @@ const jumpTo = (url: string) => {
           v-for="space in spaces"
           :key="space.id"
           :value="space.id"
-          class="flex gap-2 items-center"
+          class="flex items-center gap-2"
           @select="jumpTo(`/${space.id}`)"
         >
           <Icon

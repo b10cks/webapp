@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { AccordionContent, AccordionHeader, AccordionItem, AccordionRoot, AccordionTrigger } from 'reka-ui'
+import {
+  AccordionContent,
+  AccordionHeader,
+  AccordionItem,
+  AccordionRoot,
+  AccordionTrigger,
+} from 'reka-ui'
 import EditorComponent from './EditorComponent.vue'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import AddDropdown from '~/components/editor/AddDropdown.vue'
@@ -23,7 +29,7 @@ const {
   copyItem: globalCopyItem,
   cutItem: globalCutItem,
   pasteItem: globalPasteItem,
-  hasClipboardItem
+  hasClipboardItem,
 } = useGlobalClipboard()
 
 const emit = defineEmits<{
@@ -36,7 +42,7 @@ const blockItems = computed({
     if (newValue === props.modelValue) return
 
     emit('update:modelValue', [...newValue])
-  }
+  },
 })
 
 const accordionContainer = ref<HTMLElement | null>(null)
@@ -63,13 +69,13 @@ const deleteItem = (index: number) => {
 const copyItem = async (index: number) => {
   const itemToCopy = { ...blockItems.value[index] }
   const block = getBlockBySlug(blocks, itemToCopy.block as string)
-  await globalCopyItem(itemToCopy, props.spaceId, block?.name || itemToCopy.block as string)
+  await globalCopyItem(itemToCopy, props.spaceId, block?.name || (itemToCopy.block as string))
 }
 
 const cutItem = async (index: number) => {
   const itemToCut = { ...blockItems.value[index] }
   const block = getBlockBySlug(blocks, itemToCut.block as string)
-  await globalCutItem(itemToCut, props.spaceId, block?.name || itemToCut.block as string)
+  await globalCutItem(itemToCut, props.spaceId, block?.name || (itemToCut.block as string))
   deleteItem(index)
 }
 
@@ -98,14 +104,18 @@ const setupSortable = () => {
       animation: 150,
       onEnd: () => {
         emit('update:modelValue', blockItems.value)
-      }
+      },
     })
   })
 }
 
-watch(() => blockItems.value.length, () => {
-  setupSortable()
-}, { immediate: true })
+watch(
+  () => blockItems.value.length,
+  () => {
+    setupSortable()
+  },
+  { immediate: true }
+)
 
 const updateContent = (index: number, newContent: Record<string, unknown>) => {
   if (newContent === blockItems.value[index]) return
@@ -115,11 +125,10 @@ const updateContent = (index: number, newContent: Record<string, unknown>) => {
   blockItems.value = updatedItems
 }
 
-
 const navigateToItem = (itemId: string) => {
   router.push({
     ...route,
-    hash: `#${itemId}`
+    hash: `#${itemId}`,
   })
 }
 </script>
@@ -127,7 +136,7 @@ const navigateToItem = (itemId: string) => {
 <template>
   <div class="grid gap-2">
     <div class="text-sm font-semibold text-primary">{{ item.name || item.key || 'Untitled' }}</div>
-    <div class="bg-surface border border-border rounded-2xl px-2">
+    <div class="rounded-2xl border border-border bg-surface px-2">
       <AccordionRoot
         ref="accordionContainer"
         type="multiple"
@@ -137,7 +146,7 @@ const navigateToItem = (itemId: string) => {
           v-for="(content, i) in blockItems"
           :key="i"
           :value="`content-${i}`"
-          class="relative p-2 rounded-lg bg-background mb-2 border border-border"
+          class="relative mb-2 rounded-lg border border-border bg-background p-2"
         >
           <AccordionHeader class="group">
             <AddDropdown
@@ -147,52 +156,50 @@ const navigateToItem = (itemId: string) => {
               @paste="() => pasteItem(null, i)"
               @select="(slug: string) => addItem(slug, i)"
             />
-            <AccordionTrigger
-              class="flex items-center gap-2 w-full"
-            >
+            <AccordionTrigger class="flex w-full items-center gap-2">
               <BlockHeader
                 :content="content"
                 :block="getBlockBySlug(blocks, content.block as string)"
               />
-              <div class="ml-auto flex opacity-0 group-hover:opacity-100 gap-2 items-center">
+              <div class="ml-auto flex items-center gap-2 opacity-0 group-hover:opacity-100">
                 <button
                   v-if="content.id"
                   type="button"
                   title="Edit nested content"
-                  class="transform cursor-pointer hover:text-primary flex items-center"
+                  class="flex transform cursor-pointer items-center hover:text-primary"
                   @click.stop="navigateToItem(content.id as string)"
                 >
-                  <Icon name="lucide:edit-3"/>
+                  <Icon name="lucide:edit-3" />
                 </button>
                 <button
                   type="button"
                   title="Copy item"
-                  class="transform cursor-pointer hover:text-primary flex items-center"
+                  class="flex transform cursor-pointer items-center hover:text-primary"
                   @click.stop="copyItem(i)"
                 >
-                  <Icon name="lucide:copy"/>
+                  <Icon name="lucide:copy" />
                 </button>
                 <button
                   type="button"
                   title="Cut item"
-                  class="transform cursor-pointer hover:text-primary flex items-center"
+                  class="flex transform cursor-pointer items-center hover:text-primary"
                   @click.stop="cutItem(i)"
                 >
-                  <Icon name="lucide:scissors"/>
+                  <Icon name="lucide:scissors" />
                 </button>
                 <button
                   type="button"
                   title="Delete item"
-                  class="transform cursor-pointer hover:text-red-500 flex items-center"
+                  class="flex transform cursor-pointer items-center hover:text-red-500"
                   @click.stop="deleteItem(i)"
                 >
-                  <Icon name="lucide:trash-2"/>
+                  <Icon name="lucide:trash-2" />
                 </button>
               </div>
             </AccordionTrigger>
           </AccordionHeader>
           <AccordionContent>
-            <div class="grid gap-4 items-start p-1 pt-2 mt-2 border-t-2 border-surface">
+            <div class="mt-2 grid items-start gap-4 border-t-2 border-surface p-1 pt-2">
               <EditorComponent
                 :model-value="content"
                 :block-slug="content.block as string"
@@ -212,7 +219,7 @@ const navigateToItem = (itemId: string) => {
         />
         <div
           v-if="hasClipboardItem"
-          class="flex justify-center mt-2 pb-2"
+          class="mt-2 flex justify-center pb-2"
         >
           <Button
             type="button"

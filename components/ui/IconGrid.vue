@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '~/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
 import { ListboxContent, ListboxGroup, ListboxGroupLabel, ListboxItem, ListboxRoot } from 'reka-ui'
 
 import { Button } from '~/components/ui/button'
@@ -12,7 +16,6 @@ function selectIcon(icon: string) {
   selectedIcon.value = icon
   isDialogOpen.value = false
 }
-
 </script>
 
 <template>
@@ -32,7 +35,7 @@ function selectIcon(icon: string) {
         />
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent class="sm:max-w-[700px] max-h-80 overflow-y-auto">
+    <DropdownMenuContent class="max-h-80 overflow-y-auto sm:max-w-[700px]">
       <ListboxRoot
         :model-value="selectedIcon"
         @update:model-value="selectIcon"
@@ -43,8 +46,8 @@ function selectIcon(icon: string) {
             :key="i"
           >
             <ListboxGroupLabel
-              class="py-1.5 text-xs tracking-widest text-muted uppercase select-none font-semibold"
-            >{{ group.title }}
+              class="py-1.5 text-xs font-semibold tracking-widest text-muted uppercase select-none"
+              >{{ group.title }}
             </ListboxGroupLabel>
             <div class="grid grid-cols-8">
               <ListboxItem
@@ -54,9 +57,7 @@ function selectIcon(icon: string) {
                 class="p-1.5"
                 :title="option"
               >
-                <Icon
-                  :name="`lucide:${option}`"
-                />
+                <Icon :name="`lucide:${option}`" />
               </ListboxItem>
             </div>
           </ListboxGroup>

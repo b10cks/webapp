@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
 import { FormField } from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
 import { deepClone } from '@vue/devtools-shared'
@@ -21,20 +28,20 @@ const columns: ColumnDefinition[] = [
     type: 'text',
     placeholder: $t('labels.settings.i18n.codePlaceholder'),
     required: true,
-    readonly: true
+    readonly: true,
   },
   {
     key: 'name',
     label: $t('labels.settings.i18n.label'),
     type: 'text',
     placeholder: $t('labels.settings.i18n.labelPlaceholder'),
-    required: true
-  }
+    required: true,
+  },
 ]
 
 const newItemTemplate = {
   code: '',
-  name: ''
+  name: '',
 }
 
 const removeLanguage = (index: number) => {
@@ -42,7 +49,7 @@ const removeLanguage = (index: number) => {
 }
 
 const addLanguage = (newLanguage: { code: string; name: string }) => {
-  if (languages.value.find(lang => lang.code === newLanguage.code)) {
+  if (languages.value.find((lang) => lang.code === newLanguage.code)) {
     return
   }
   languages.value.push(newLanguage)
@@ -55,9 +62,9 @@ const saveSettings = async () => {
       settings: {
         ...props.space.settings,
         languages: languages.value,
-        default_language: defaultLanguage.value
-      }
-    }
+        default_language: defaultLanguage.value,
+      },
+    },
   })
 }
 </script>
@@ -80,8 +87,8 @@ const saveSettings = async () => {
         />
       </FormField>
       <div>
-        <h4 class="text-sm font-medium mb-2">{{ $t('labels.settings.i18n.languages') }}</h4>
-        <p class="text-xs text-muted mb-4">
+        <h4 class="mb-2 text-sm font-medium">{{ $t('labels.settings.i18n.languages') }}</h4>
+        <p class="mb-4 text-xs text-muted">
           {{ $t('labels.settings.i18n.languagesDescription') }}
         </p>
         <SettingsTable
@@ -101,7 +108,7 @@ const saveSettings = async () => {
       <Button
         variant="primary"
         @click="saveSettings"
-      >{{ $t('actions.saveChanges') }}
+        >{{ $t('actions.saveChanges') }}
       </Button>
     </CardFooter>
   </Card>

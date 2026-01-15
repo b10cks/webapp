@@ -18,29 +18,38 @@ const { useBlockTagsQuery } = useBlockTags(route.params.space as string)
 const { data: blocks } = useBlocksQuery({ per_page: 1000 })
 const { data: blockTags } = useBlockTagsQuery({ per_page: 1000 })
 
-const blockOptions = computed((): ComboboxOption<string>[] =>
-  blocks.value?.data.map(({ slug, name }) => ({
-    value: slug,
-    label: name,
-  })) || []
+const blockOptions = computed(
+  (): ComboboxOption<string>[] =>
+    blocks.value?.data.map(({ slug, name }) => ({
+      value: slug,
+      label: name,
+    })) || []
 )
 
-const blockTagOptions = computed((): ComboboxOption<string>[] =>
-  blockTags.value?.data.map(({ name }) => ({
-    value: name,
-    label: name,
-  })) || []
+const blockTagOptions = computed(
+  (): ComboboxOption<string>[] =>
+    blockTags.value?.data.map(({ name }) => ({
+      value: name,
+      label: name,
+    })) || []
 )
 
-const filterBlocks = (option: ComboboxOption<string>, search: string, selectedValues: string[]): boolean => {
+const filterBlocks = (
+  option: ComboboxOption<string>,
+  search: string,
+  selectedValues: string[]
+): boolean => {
   const searchLower = search.toLowerCase()
   if (selectedValues.includes(option.value)) {
     return false
   }
 
-  return !(search && !option.value.toLowerCase().includes(searchLower) && !String(option.label).toLowerCase().includes(searchLower))
+  return !(
+    search &&
+    !option.value.toLowerCase().includes(searchLower) &&
+    !String(option.label).toLowerCase().includes(searchLower)
+  )
 }
-
 </script>
 
 <template>

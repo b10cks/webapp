@@ -52,8 +52,14 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 const inputProps = computed(() => {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    id, label, tooltip, description, error, class: _class,
-    modelValue: _modelValue, defaultValue: _defaultValue,
+    id,
+    label,
+    tooltip,
+    description,
+    error,
+    class: _class,
+    modelValue: _modelValue,
+    defaultValue: _defaultValue,
     ...rest
   } = props
 
@@ -68,7 +74,6 @@ const trigger = (action: InputActionType) => {
     toast.info($t('notifications.inputField.copied'))
   }
 }
-
 </script>
 
 <template>
@@ -92,7 +97,7 @@ const trigger = (action: InputActionType) => {
         />
         <div
           v-if="actions?.length"
-          class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5"
+          class="absolute top-1/2 right-1 flex -translate-y-1/2 items-center gap-0.5"
         >
           <Button
             v-for="action in actions"

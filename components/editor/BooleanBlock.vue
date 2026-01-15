@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { CheckboxField } from '~/components/ui/form'
 
 const value = defineModel<boolean>()
@@ -7,7 +6,6 @@ const value = defineModel<boolean>()
 defineProps<{
   item: BooleanSchema & { key: string }
 }>()
-
 </script>
 
 <template>

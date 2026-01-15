@@ -13,6 +13,6 @@ const props = defineProps<{
 
 <template>
   <div :class="cn(badgeVariants({ variant, size }), props.class)">
-    <slot/>
+    <slot />
   </div>
 </template>

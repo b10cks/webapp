@@ -31,7 +31,7 @@ const localEditor = ref(deepClone(props.editor ?? []))
 if (localEditor.value.length === 0) {
   localEditor.value.push({
     header: 'General',
-    items: Object.keys(localSchema.value)
+    items: Object.keys(localSchema.value),
   })
 }
 
@@ -40,7 +40,7 @@ const activeTab = ref(0)
 const addPage = () => {
   localEditor.value.push({
     header: `Page ${localEditor.value.length + 1}`,
-    items: []
+    items: [],
   })
 
   activeTab.value = localEditor.value.length - 1
@@ -48,19 +48,24 @@ const addPage = () => {
 }
 
 const deletePage = async (pageIndex: number) => {
-  const confirmed = await alert.confirm(`Are you sure you want to delete the "${localEditor.value[pageIndex].header}" page?`, {
-    title: 'Delete Page',
-  })
+  const confirmed = await alert.confirm(
+    `Are you sure you want to delete the "${localEditor.value[pageIndex].header}" page?`,
+    {
+      title: 'Delete Page',
+    }
+  )
 
   if (confirmed) {
     const itemsToMove = [...localEditor.value[pageIndex].items]
     if (itemsToMove.length > 0) {
-      const moveConfirmed = await alert.confirm(`Would you like to move the ${itemsToMove.length} field(s) to another page?`, {
-        title: 'Move Fields',
-      })
+      const moveConfirmed = await alert.confirm(
+        `Would you like to move the ${itemsToMove.length} field(s) to another page?`,
+        {
+          title: 'Move Fields',
+        }
+      )
 
       if (moveConfirmed) {
-
         const targetPageIndex = pageIndex === 0 ? 1 : 0
         localEditor.value[targetPageIndex].items.push(...itemsToMove)
       }
@@ -78,15 +83,18 @@ const deletePage = async (pageIndex: number) => {
 
 const deleteField = async (key: string) => {
   const fieldName = localSchema.value[key]?.name || key
-  const confirmed = await alert.confirm(`Are you sure you want to delete the "${fieldName}" field?`, {
-    title: 'Delete Field',
-  })
+  const confirmed = await alert.confirm(
+    `Are you sure you want to delete the "${fieldName}" field?`,
+    {
+      title: 'Delete Field',
+    }
+  )
 
   if (confirmed) {
     const updatedSchema = { ...localSchema.value }
     delete updatedSchema[key]
 
-    localEditor.value.forEach(page => {
+    localEditor.value.forEach((page) => {
       const keyIndex = page.items.indexOf(key)
       if (keyIndex !== -1) {
         page.items.splice(keyIndex, 1)
@@ -118,7 +126,7 @@ const addField = async (payload: AddFieldPayload): Promise<boolean> => {
 }
 
 const moveFieldToPage = (key: string, pageIndex: number) => {
-  localEditor.value.forEach(page => {
+  localEditor.value.forEach((page) => {
     const keyIndex = page.items.indexOf(key)
     if (keyIndex !== -1) {
       page.items.splice(keyIndex, 1)
@@ -133,41 +141,41 @@ const createDefaultSchemaForType = (type: string, key: string) => {
   const name = key
     .replace(/_/g, ' ')
     .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .replace(/\b\w/g, l => l.toUpperCase())
+    .replace(/\b\w/g, (l) => l.toUpperCase())
 
   const baseSchema = {
     name,
     required: false,
     translatable: false,
-    type
+    type,
   }
 
   switch (type) {
     case 'text':
       return {
         ...baseSchema,
-        default: ''
+        default: '',
       }
     case 'textarea':
       return {
         ...baseSchema,
-        default: ''
+        default: '',
       }
     case 'markdown':
       return {
         ...baseSchema,
-        default: ''
+        default: '',
       }
     case 'boolean':
       return {
         ...baseSchema,
         default: false,
-        show_inline: true
+        show_inline: true,
       }
     case 'number':
       return {
         ...baseSchema,
-        default: 0
+        default: 0,
       }
     case 'link':
       return {
@@ -175,14 +183,14 @@ const createDefaultSchemaForType = (type: string, key: string) => {
         asset_link_type: true,
         email_link_type: false,
         allow_target_blank: true,
-        default: ''
+        default: '',
       }
     case 'option':
       return {
         ...baseSchema,
         options: [],
         exclude_empty: false,
-        default: ''
+        default: '',
       }
     case 'blocks':
       return {
@@ -191,14 +199,14 @@ const createDefaultSchemaForType = (type: string, key: string) => {
         block_whitelist: [],
         restrict_tags: false,
         tag_whitelist: [],
-        default: []
+        default: [],
       }
     case 'meta':
       return {
         ...baseSchema,
         type: 'meta',
         translatable: true,
-        has_og_tags: false
+        has_og_tags: false,
       }
     case 'date':
       return {
@@ -208,7 +216,7 @@ const createDefaultSchemaForType = (type: string, key: string) => {
         format: 'date',
         min: undefined,
         max: undefined,
-        use_current_as_default: false
+        use_current_as_default: false,
       }
     default:
       return baseSchema
@@ -225,11 +233,15 @@ const emitEditorUpdate = () => {
 
 const tabsContainer = useTemplateRef('tabsContainer')
 
-watch(() => localEditor.value.length, (length) => {
-  if (length > 1 && tabsContainer.value) {
-    setupTabsSortable()
-  }
-}, { immediate: true })
+watch(
+  () => localEditor.value.length,
+  (length) => {
+    if (length > 1 && tabsContainer.value) {
+      setupTabsSortable()
+    }
+  },
+  { immediate: true }
+)
 
 const setupTabsSortable = () => {
   nextTick(() => {
@@ -249,7 +261,7 @@ const setupTabsSortable = () => {
         }
 
         emitEditorUpdate()
-      }
+      },
     })
   })
 }
@@ -261,7 +273,7 @@ const setupFieldSortable = (pageIndex: number, element: HTMLElement) => {
     animation: 150,
     onEnd: () => {
       emitEditorUpdate()
-    }
+    },
   })
 }
 
@@ -275,31 +287,39 @@ const updateSchemaItem = (key: string, value: unknown) => {
   emitSchemaUpdate({ ...localSchema.value, [key]: value })
 }
 
-watch(() => props.schema, (newSchema) => {
-  localSchema.value = deepClone(newSchema)
-}, { deep: true })
+watch(
+  () => props.schema,
+  (newSchema) => {
+    localSchema.value = deepClone(newSchema)
+  },
+  { deep: true }
+)
 
-watch(() => props.editor, (newEditor) => {
-  if (JSON.stringify(newEditor) !== JSON.stringify(localEditor.value)) {
-    localEditor.value = [...newEditor]
-  }
-}, { deep: true })
+watch(
+  () => props.editor,
+  (newEditor) => {
+    if (JSON.stringify(newEditor) !== JSON.stringify(localEditor.value)) {
+      localEditor.value = [...newEditor]
+    }
+  },
+  { deep: true }
+)
 </script>
 
 <template>
   <div class="schema-editor">
-    <div class="mb-2 ">
+    <div class="mb-2">
       <div
         ref="tabsContainer"
-        class="flex items-center gap-1 bg-surface py-1 pl-1 pr-2 rounded-xl"
+        class="flex items-center gap-1 rounded-xl bg-surface py-1 pr-2 pl-1"
       >
         <button
           v-for="(page, index) in localEditor"
           :key="index"
           type="button"
           :class="[
-            'group grab-handle relative cursor-pointer py-1 pl-2 pr-1 rounded-lg inline-flex items-center gap-2 font-semibold',
-            activeTab === index ? 'bg-input' : ''
+            'group grab-handle relative inline-flex cursor-pointer items-center gap-2 rounded-lg py-1 pr-1 pl-2 font-semibold',
+            activeTab === index ? 'bg-input' : '',
           ]"
           @click="activeTab = index"
         >
@@ -318,7 +338,7 @@ watch(() => props.editor, (newEditor) => {
             v-if="localEditor.length > 1"
             type="button"
             title="Delete page"
-            class="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+            class="absolute top-1/2 right-4 z-10 -translate-y-1/2 transform cursor-pointer opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive"
             @click.stop="deletePage(index)"
           >
             <Icon
@@ -335,14 +355,12 @@ watch(() => props.editor, (newEditor) => {
           class="ml-auto"
           @click="addPage"
         >
-          <Icon
-            name="lucide:plus"
-          />
+          <Icon name="lucide:plus" />
         </Button>
       </div>
     </div>
 
-    <div class="tab-content border border-input rounded-lg p-2">
+    <div class="tab-content rounded-lg border border-input p-2">
       <div
         v-for="(page, pageIndex) in localEditor"
         v-show="activeTab === pageIndex"
@@ -351,7 +369,7 @@ watch(() => props.editor, (newEditor) => {
       >
         <AccordionRoot
           v-slot="{ modelValue }"
-          :ref="el => el && setupFieldSortable(pageIndex, el)"
+          :ref="(el) => el && setupFieldSortable(pageIndex, el)"
           type="multiple"
           class="grid gap-2"
         >
@@ -363,14 +381,14 @@ watch(() => props.editor, (newEditor) => {
             :pages="localEditor"
             :current-page="pageIndex"
             :is-open="modelValue.includes(key)"
-            class="border border-border p-2 rounded-md bg-surface"
-            @update:item="v => updateSchemaItem(key, v)"
+            class="rounded-md border border-border bg-surface p-2"
+            @update:item="(v) => updateSchemaItem(key, v)"
             @to-page="moveFieldToPage(key, $event)"
             @delete="deleteField(key)"
           />
         </AccordionRoot>
 
-        <Add @add="addField"/>
+        <Add @add="addField" />
       </div>
     </div>
   </div>

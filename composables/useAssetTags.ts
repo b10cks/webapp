@@ -1,8 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import type { AssetTagsQueryParams } from '~/api/resources/asset-tags'
-import { api } from '~/api'
-import { queryKeys } from './useQueryClient'
 import { toast } from 'vue-sonner'
+
+import type { AssetTagsQueryParams } from '~/api/resources/asset-tags'
+
+import { api } from '~/api'
+
+import { queryKeys } from './useQueryClient'
 
 export function useAssetTags(spaceIdRef: MaybeRefOrComputed<string>) {
   const queryClient = useQueryClient()
@@ -61,20 +64,16 @@ export function useAssetTags(spaceIdRef: MaybeRefOrComputed<string>) {
   // Mutation to update an asset tag
   const useUpdateAssetTagMutation = () => {
     return useMutation({
-      mutationFn: async ({
-                           id,
-                           payload,
-                         }: {
-        id: string
-        payload: UpsertAssetTagPayload
-      }) => {
+      mutationFn: async ({ id, payload }: { id: string; payload: UpsertAssetTagPayload }) => {
         const response = await spaceAPI.value.assetTags.update(id, payload)
         return response.data
       },
       onSuccess: (data) => {
         // Invalidate the asset tags list and the specific tag detail
         queryClient.invalidateQueries({ queryKey: queryKeys.assetTags(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.assetTags(spaceId.value).detail(data.id) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.assetTags(spaceId.value).detail(data.id),
+        })
         toast.success(`Tag "${data.name}" updated successfully`)
       },
       onError: (error: Error) => {
@@ -111,7 +110,7 @@ export function useAssetTags(spaceIdRef: MaybeRefOrComputed<string>) {
 
     const tag = computed(() => {
       if (!tags.value) return null
-      return tags.value.find(t => t.slug === slug.value) || null
+      return tags.value.find((t) => t.slug === slug.value) || null
     })
 
     return {
@@ -128,7 +127,7 @@ export function useAssetTags(spaceIdRef: MaybeRefOrComputed<string>) {
       queryKey: computed(() => [...queryKeys.assets(spaceId.value).lists(), { tag: tagId.value }]),
       queryFn: async () => {
         const response = await spaceAPI.value.assets.index({
-          tags: [tagId.value]
+          tags: [tagId.value],
         })
         return response.data
       },

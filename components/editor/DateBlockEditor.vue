@@ -7,7 +7,6 @@ const value = defineModel<string>()
 defineProps<{
   item: DateSchema & { key: string }
 }>()
-
 </script>
 
 <template>

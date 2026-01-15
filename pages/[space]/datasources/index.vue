@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { DataSourceResource } from '~/types/data-sources'
-import DataSourcesTable from '~/components/datasources/DataSourcesTable.vue'
 import DataSourceDialog from '~/components/datasources/DataSourceDialog.vue'
-import { useAlertDialog } from '~/composables/useAlertDialog'
+import DataSourcesTable from '~/components/datasources/DataSourcesTable.vue'
 import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
+import { useAlertDialog } from '~/composables/useAlertDialog'
+import type { DataSourceResource } from '~/types/data-sources'
 
 const route = useRoute()
 const spaceId = computed(() => route.params.space as string)
@@ -39,7 +39,7 @@ const handleDelete = async (dataSource: DataSourceResource) => {
       title: $t('labels.datasets.deleteConfirmTitle'),
       confirmLabel: $t('actions.datasources.delete'),
       cancelLabel: $t('alertDialog.cancel'),
-      variant: 'destructive'
+      variant: 'destructive',
     }
   )
   if (confirmed) {
@@ -51,7 +51,7 @@ const handleDelete = async (dataSource: DataSourceResource) => {
 <template>
   <div>
     <NuxtLayout>
-      <div class="bg-background w-full">
+      <div class="w-full bg-background">
         <div class="content-grid">
           <ContentHeader
             :header="$t('labels.datasets.title')"
@@ -62,7 +62,7 @@ const handleDelete = async (dataSource: DataSourceResource) => {
                 variant="primary"
                 @click="handleAddDataSource"
               >
-                <Icon name="lucide:plus"/>
+                <Icon name="lucide:plus" />
                 <span>{{ $t('actions.datasources.add') }}</span>
               </Button>
             </template>

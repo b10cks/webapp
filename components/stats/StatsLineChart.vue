@@ -10,13 +10,22 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip
+  Tooltip,
 } from 'chart.js'
 
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 interface LineDataPoint {
   name: string
@@ -35,23 +44,23 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   height: 300,
   color: 'rgba(99, 102, 241, 1)',
-  fill: true
+  fill: true,
 })
 
 const chartData = computed(() => ({
-  labels: props.data.map(item => item.name),
+  labels: props.data.map((item) => item.name),
   datasets: [
     {
       label: props.yAxisLabel || props.title,
-      data: props.data.map(item => item.value),
+      data: props.data.map((item) => item.value),
       borderColor: props.color,
       backgroundColor: props.fill ? props.color.replace('1)', '0.1)') : 'transparent',
       fill: props.fill,
       tension: 0.4,
       pointRadius: 2,
-      pointHoverRadius: 5
-    }
-  ]
+      pointHoverRadius: 5,
+    },
+  ],
 }))
 
 const chartOptions: ChartOptions<'line'> = {
@@ -59,53 +68,53 @@ const chartOptions: ChartOptions<'line'> = {
   maintainAspectRatio: false,
   interaction: {
     mode: 'index',
-    intersect: false
+    intersect: false,
   },
   plugins: {
     legend: {
-      display: false
+      display: false,
     },
     tooltip: {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       padding: 12,
       titleFont: {
         family: '"Inter", ui-sans-serif',
-        size: 14
+        size: 14,
       },
       bodyFont: {
         family: '"Inter", ui-sans-serif',
-        size: 14
-      }
-    }
+        size: 14,
+      },
+    },
   },
   scales: {
     x: {
       grid: {
-        display: false
+        display: false,
       },
       ticks: {
         maxTicksLimit: 5,
         color: '#6D7292',
         font: {
           family: '"Inter", ui-sans-serif',
-          size: 14
-        }
-      }
+          size: 14,
+        },
+      },
     },
     y: {
       beginAtZero: true,
       grid: {
-        color: 'rgba(0, 0, 0, 0.05)'
+        color: 'rgba(0, 0, 0, 0.05)',
       },
       ticks: {
         color: '#6D7292',
         font: {
           family: '"Inter", ui-sans-serif',
-          size: 14
-        }
-      }
-    }
-  }
+          size: 14,
+        },
+      },
+    },
+  },
 }
 </script>
 

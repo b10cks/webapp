@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { marked } from 'marked'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
@@ -28,7 +27,6 @@ function onClick(e: MouseEvent) {
 
   navigateTo(url.pathname)
 }
-
 </script>
 
 <template>

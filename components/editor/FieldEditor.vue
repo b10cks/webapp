@@ -26,7 +26,7 @@ const editors = {
   multiAsset: MultiAssetsBlock,
   reference: ReferenceBlock,
   meta: MetaBlock,
-  date: DateBlock
+  date: DateBlock,
 } as const
 
 const props = defineProps<{
@@ -58,9 +58,8 @@ const fieldValue = computed({
 
     // Emit the update with the new object
     emit('update:modelValue', updatedModel)
-  }
+  },
 })
-
 </script>
 
 <template>
@@ -72,8 +71,6 @@ const fieldValue = computed({
       :item="item"
       :space-id="spaceId"
     />
-    <div v-else>
-      Unknown editor type: {{ item.type }}
-    </div>
+    <div v-else>Unknown editor type: {{ item.type }}</div>
   </div>
 </template>

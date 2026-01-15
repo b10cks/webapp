@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import type { CreateDataSourcePayload, DataSourceResource, UpdateDataSourcePayload } from '~/types/data-sources'
+import type {
+  CreateDataSourcePayload,
+  DataSourceResource,
+  UpdateDataSourcePayload,
+} from '~/types/data-sources'
 import { useDataSources } from '~/composables/useDataSources'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { CheckboxField, InputField, TextField } from '~/components/ui/form'
@@ -29,7 +33,9 @@ const { useCreateDataSourceMutation, useUpdateDataSourceMutation } = useDataSour
 const { mutate: createDataSource, isPending: isCreating } = useCreateDataSourceMutation()
 const { mutate: updateDataSource, isPending: isUpdating } = useUpdateDataSourceMutation()
 
-const formData = ref<(CreateDataSourcePayload | UpdateDataSourcePayload) & { dimensions: DimensionItem[] }>({
+const formData = ref<
+  (CreateDataSourcePayload | UpdateDataSourcePayload) & { dimensions: DimensionItem[] }
+>({
   name: '',
   slug: '',
   description: '',
@@ -67,40 +73,45 @@ const dimensionColumns = [
     key: 'required',
     label: 'Required',
     type: 'checkbox' as const,
-  }
+  },
 ]
 
 const isEditing = computed(() => !!props.dataSource)
 const isProcessing = computed(() => isCreating.value || isUpdating.value)
 
-watch(() => props.dataSource, (newDataSource) => {
-  if (newDataSource) {
-    formData.value = {
-      name: newDataSource.name,
-      slug: newDataSource.slug,
-      description: newDataSource.description,
-      dimensions: newDataSource.dimensions,
-      settings: {
-        cache_ttl: newDataSource.settings?.cache_ttl || 3600,
-        dimensions_translatable: (newDataSource.settings as any)?.dimensions_translatable || false,
-        default_dimension_locale: (newDataSource.settings as any)?.default_dimension_locale,
-      },
-      is_active: newDataSource.is_active,
+watch(
+  () => props.dataSource,
+  (newDataSource) => {
+    if (newDataSource) {
+      formData.value = {
+        name: newDataSource.name,
+        slug: newDataSource.slug,
+        description: newDataSource.description,
+        dimensions: newDataSource.dimensions,
+        settings: {
+          cache_ttl: newDataSource.settings?.cache_ttl || 3600,
+          dimensions_translatable:
+            (newDataSource.settings as any)?.dimensions_translatable || false,
+          default_dimension_locale: (newDataSource.settings as any)?.default_dimension_locale,
+        },
+        is_active: newDataSource.is_active,
+      }
+    } else {
+      formData.value = {
+        name: '',
+        slug: '',
+        description: '',
+        dimensions: [],
+        settings: {
+          cache_ttl: 3600,
+          dimensions_translatable: false,
+        },
+        is_active: true,
+      }
     }
-  } else {
-    formData.value = {
-      name: '',
-      slug: '',
-      description: '',
-      dimensions: [],
-      settings: {
-        cache_ttl: 3600,
-        dimensions_translatable: false,
-      },
-      is_active: true,
-    }
-  }
-}, { immediate: true })
+  },
+  { immediate: true }
+)
 
 const handleOpenChange = (value: boolean) => {
   emit('update:open', value)
@@ -112,7 +123,7 @@ const handleOpenChange = (value: boolean) => {
 const validateDimensions = (dimensions: DimensionItem[]): boolean => {
   if (!dimensions || dimensions.length === 0) return true
 
-  const keys = dimensions.map(d => d.key)
+  const keys = dimensions.map((d) => d.key)
   const uniqueKeys = new Set(keys)
 
   return uniqueKeys.size === keys.length
@@ -123,7 +134,7 @@ const handleSubmit = async () => {
     if (isEditing.value && props.dataSource) {
       await updateDataSource({
         id: props.dataSource.id,
-        payload: formData.value as UpdateDataSourcePayload
+        payload: formData.value as UpdateDataSourcePayload,
       })
     } else {
       await createDataSource(formData.value as CreateDataSourcePayload)
@@ -135,7 +146,6 @@ const handleSubmit = async () => {
     console.error('Failed to save data source:', error)
   }
 }
-
 
 const handleNameChange = (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -164,8 +174,16 @@ const handleDimensionAdd = (item: Record<string, unknown>) => {
   >
     <DialogContent class="sm:max-w-[600px]">
       <DialogHeaderCombined
-        :title="$t(isEditing ? 'labels.datasets.editDataSources' : 'labels.datasets.createDataSource')"
-        :description="$t(isEditing ? 'labels.datasets.editDataSourceDescription' : 'labels.datasets.createDataSourceDescription')"
+        :title="
+          $t(isEditing ? 'labels.datasets.editDataSources' : 'labels.datasets.createDataSource')
+        "
+        :description="
+          $t(
+            isEditing
+              ? 'labels.datasets.editDataSourceDescription'
+              : 'labels.datasets.createDataSourceDescription'
+          )
+        "
       />
 
       <form @submit.prevent="handleSubmit">
@@ -223,7 +241,9 @@ const handleDimensionAdd = (item: Record<string, unknown>) => {
             name="slug"
             required
             :label="$t('labels.datasets.fields.defaultDimensionLocale')"
-            :description="$t('labels.datasets.defaultDimensionLocaleDescription', { slug: formData.slug })"
+            :description="
+              $t('labels.datasets.defaultDimensionLocaleDescription', { slug: formData.slug })
+            "
             pattern="^[a-z0-9]+(-[a-z0-9]+)*$"
             :disabled="isProcessing"
           />
@@ -266,9 +286,7 @@ const handleDimensionAdd = (item: Record<string, unknown>) => {
               class="mr-2 h-4 w-4 animate-spin"
             />
             {{
-              isEditing
-                ? $t('labels.datasets.saveChanges')
-                : $t('labels.datasets.createDataSource')
+              isEditing ? $t('labels.datasets.saveChanges') : $t('labels.datasets.createDataSource')
             }}
           </Button>
         </DialogFooter>

@@ -4,7 +4,14 @@ import { toast } from 'vue-sonner'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { useClipboard } from '@vueuse/core'
 import { Button } from '~/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '~/components/ui/table'
 import { InputField } from '~/components/ui/form'
 
 const props = defineProps<{ space: SpaceResource }>()
@@ -25,7 +32,7 @@ const { copy } = useClipboard({ source: currentToken })
 const generateToken = async () => {
   if (newTokenName.value) {
     await createToken({
-      name: newTokenName.value
+      name: newTokenName.value,
     })
     newTokenName.value = ''
   }
@@ -68,7 +75,9 @@ const copyToken = (token: string) => {
             class="mr-2 h-4 w-4 animate-spin"
           />
           {{
-            isGenerating ? $t('labels.settings.accessTokens.generating') : $t('labels.settings.accessTokens.generateToken')
+            isGenerating
+              ? $t('labels.settings.accessTokens.generating')
+              : $t('labels.settings.accessTokens.generateToken')
           }}
         </Button>
       </div>
@@ -80,10 +89,14 @@ const copyToken = (token: string) => {
             <TableRow>
               <TableHead>{{ $t('labels.settings.accessTokens.name') }}</TableHead>
               <TableHead>{{ $t('labels.settings.accessTokens.token') }}</TableHead>
-              <TableHead class="text-right">{{ $t('labels.settings.accessTokens.executionCount') }}</TableHead>
+              <TableHead class="text-right">{{
+                $t('labels.settings.accessTokens.executionCount')
+              }}</TableHead>
               <TableHead>{{ $t('labels.settings.accessTokens.lastUsedAt') }}</TableHead>
               <TableHead>{{ $t('labels.settings.accessTokens.createdAt') }}</TableHead>
-              <TableHead class="w-[100px]">{{ $t('labels.settings.accessTokens.actions') }}</TableHead>
+              <TableHead class="w-[100px]">{{
+                $t('labels.settings.accessTokens.actions')
+              }}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -93,10 +106,14 @@ const copyToken = (token: string) => {
             >
               <TableCell>{{ token.name }}</TableCell>
               <TableCell class="font-mono text-xs">
-                {{ token.token.substring(0, 8) }}...{{ token.token.substring(token.token.length - 4) }}
+                {{ token.token.substring(0, 8) }}...{{
+                  token.token.substring(token.token.length - 4)
+                }}
               </TableCell>
               <TableCell class="text-right">{{ formatNumber(token.execution_count) }}</TableCell>
-              <TableCell>{{ token.last_used_at ? formatDateTime(token.last_used_at) : '–' }}</TableCell>
+              <TableCell>{{
+                token.last_used_at ? formatDateTime(token.last_used_at) : '–'
+              }}</TableCell>
               <TableCell>{{ formatDateTime(token.created_at) }}</TableCell>
               <TableCell>
                 <div class="flex space-x-1">

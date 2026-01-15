@@ -6,13 +6,12 @@ import { Button } from '~/components/ui/button'
 
 const route = useRoute()
 const spaceId = computed(() => route.params.space as string)
-
 </script>
 
 <template>
   <div>
     <NuxtLayout>
-      <div class="bg-background w-full">
+      <div class="w-full bg-background">
         <div class="content-grid">
           <ContentHeader
             :header="$t('labels.redirects.title')"
@@ -23,12 +22,12 @@ const spaceId = computed(() => route.params.space as string)
                 variant="primary"
                 @click="handleAddRedirect"
               >
-                <Icon name="lucide:plus"/>
+                <Icon name="lucide:plus" />
                 {{ $t('actions.redirects.add') }}
               </Button>
             </template>
           </ContentHeader>
-          <RedirectsTable :space-id="spaceId"/>
+          <RedirectsTable :space-id="spaceId" />
         </div>
       </div>
     </NuxtLayout>

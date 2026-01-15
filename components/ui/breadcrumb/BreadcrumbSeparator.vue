@@ -2,15 +2,17 @@
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
-const props = withDefaults(defineProps<{
-  class?: HTMLAttributes['class']
-  name?: string,
-  size?: string,
-}>(), {
-  name: 'lucide:chevron-right',
-  size: '1rem'
-})
-
+const props = withDefaults(
+  defineProps<{
+    class?: HTMLAttributes['class']
+    name?: string
+    size?: string
+  }>(),
+  {
+    name: 'lucide:chevron-right',
+    size: '1rem',
+  }
+)
 </script>
 
 <template>

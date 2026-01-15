@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import BlockTypeSelect from '~/components/ui/BlockTypeSelect.vue'
@@ -56,7 +55,7 @@ function handleKeydown(event: KeyboardEvent) {
   } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
     event.preventDefault()
 
-    const currentIndex = types.findIndex(type => type === value.value.type)
+    const currentIndex = types.findIndex((type) => type === value.value.type)
     let newIndex: number
 
     if (event.key === 'ArrowUp') {
@@ -102,7 +101,6 @@ onUnmounted(() => {
     announcer.remove()
   }
 })
-
 </script>
 
 <template>
@@ -114,7 +112,8 @@ onUnmounted(() => {
     <span
       id="add-block-label"
       class="sr-only"
-    >Add new Field</span>
+      >Add new Field</span
+    >
     <BlockTypeSelect
       v-model="value.type"
       :types="types"
@@ -122,7 +121,13 @@ onUnmounted(() => {
     />
     <Input
       v-model="value.key"
-      :placeholder="String($t(`labels.blocks.fields.slugOf`, { name: String($t(`labels.blocks.fieldTypes.${value.type}.label`)) }))"
+      :placeholder="
+        String(
+          $t(`labels.blocks.fields.slugOf`, {
+            name: String($t(`labels.blocks.fieldTypes.${value.type}.label`)),
+          })
+        )
+      "
       aria-label="Block slug"
       aria-required="true"
       @keydown="handleKeydown"
@@ -134,7 +139,7 @@ onUnmounted(() => {
       :aria-disabled="value.key.trim() === ''"
       @click="add"
     >
-      <Icon name="lucide:plus"/>
+      <Icon name="lucide:plus" />
       <span class="sr-only">Add block</span>
     </Button>
   </div>

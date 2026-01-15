@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import type { HTMLAttributes } from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { Translation } from 'nuxt-i18n-micro-types/src'
@@ -35,21 +34,22 @@ const modelValue = useVModel(props, 'modelValue', emits, {
   defaultValue: props.defaultValue,
 })
 
-const uniqueId = computed(() => props.id || `${props.name}-${Math.random().toString(36).substring(2, 9)}`)
+const uniqueId = computed(
+  () => props.id || `${props.name}-${Math.random().toString(36).substring(2, 9)}`
+)
 const hasError = computed(() => !!props.error)
-
 </script>
 
 <template>
   <div class="grid w-full gap-2">
-    <div class="flex gap-3 items-center">
+    <div class="flex items-center gap-3">
       <Checkbox
         :id="uniqueId"
         v-model="modelValue"
         :class="['cursor-pointer', hasError && 'border border-destructive']"
         name="translatable"
       />
-      <div class="flex gap-2 items-center">
+      <div class="flex items-center gap-2">
         <label
           :for="uniqueId"
           class="font-semibold text-primary"
@@ -59,13 +59,13 @@ const hasError = computed(() => !!props.error)
         <TooltipIcon
           v-if="tooltip"
           size="1.2em"
-        >{{ tooltip }}
+          >{{ tooltip }}
         </TooltipIcon>
       </div>
     </div>
     <p
       v-if="hasError"
-      class="mt-1 whitespace-pre-line text-sm leading-tight text-destructive"
+      class="mt-1 text-sm leading-tight whitespace-pre-line text-destructive"
     >
       {{ error }}
     </p>

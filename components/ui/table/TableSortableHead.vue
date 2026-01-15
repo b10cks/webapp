@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import TableHead from './TableHead.vue'
 
 const sortBy = defineModel<{
@@ -7,14 +6,17 @@ const sortBy = defineModel<{
   direction: 'asc' | 'desc'
 }>()
 
-const props = withDefaults(defineProps<{
-  column: string,
-  wrapClass?: string,
-  sortable?: boolean
-}>(), {
-  wrapClass: 'flex items-center gap-1',
-  sortable: true,
-})
+const props = withDefaults(
+  defineProps<{
+    column: string
+    wrapClass?: string
+    sortable?: boolean
+  }>(),
+  {
+    wrapClass: 'flex items-center gap-1',
+    sortable: true,
+  }
+)
 
 const handleSort = () => {
   if (!props.sortable) return
@@ -25,7 +27,6 @@ const handleSort = () => {
     sortBy.value = { column: props.column, direction: 'asc' }
   }
 }
-
 </script>
 
 <template>
@@ -35,7 +36,7 @@ const handleSort = () => {
   >
     <div :class="wrapClass">
       <div>
-        <slot/>
+        <slot />
       </div>
       <Icon
         v-if="sortable && sortBy?.column === props.column"

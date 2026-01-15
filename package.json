@@ -1,9 +1,9 @@
 {
   "name": "b10cks-app",
   "version": "2025.03.24",
+  "private": true,
   "description": "A nuxt-based frontend for b10cks – the opinionated headless cms",
   "license": "AGPL-3.0-or-later",
-  "private": true,
   "type": "module",
   "scripts": {
     "build": "nuxt build",
@@ -12,11 +12,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts --fix",
+    "lint": "oxlint --fix",
     "typecheck": "nuxi typecheck"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,vue}": "eslint --fix"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
@@ -55,10 +52,15 @@
     "eslint-plugin-vue": "^10.6.2",
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
     "nuxt": "^4.2.2",
+    "oxfmt": "^0.24.0",
+    "oxlint": "^1.39.0",
     "tailwindcss": "^4.1.18",
     "vite-svg-loader": "^5.1.0",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4",
     "vue-tsc": "^3.2.2"
+  },
+  "lint-staged": {
+    "*.{js,json,md,jsx,ts,tsx,vue,yaml}": "oxlint --fix"
   }
 }

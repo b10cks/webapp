@@ -16,13 +16,7 @@ export default defineNuxtConfig({
     enabled: false,
   },
 
-  modules: [
-    ...(process.env.NODE_ENV === 'development' ? ['@nuxt/eslint'] : []),
-    '@vite-pwa/nuxt',
-    '@nuxt/icon',
-    '@nuxt/image',
-    'nuxt-i18n-micro',
-  ],
+  modules: ['@vite-pwa/nuxt', '@nuxt/icon', '@nuxt/image', 'nuxt-i18n-micro'],
 
   pwa: {
     registerType: 'autoUpdate',

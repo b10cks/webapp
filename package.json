@@ -38,7 +38,6 @@
     "vue-sonner": "^2.0.9"
   },
   "devDependencies": {
-    "@nuxt/eslint": "1.9.0",
     "@nuxt/icon": "2.1.0",
     "@nuxt/image": "1.11.0",
     "@tailwindcss/postcss": "^4.1.18",
@@ -46,11 +45,6 @@
     "@types/postmate": "^1.5.4",
     "@vueuse/core": "^14.1.0",
     "@vueuse/router": "^14.1.0",
-    "eslint": "^9.39.2",
-    "eslint-plugin-better-tailwindcss": "^3.8.0",
-    "eslint-plugin-tailwindcss": "^3.18.2",
-    "eslint-plugin-vue": "^10.6.2",
-    "eslint-plugin-vuejs-accessibility": "^2.4.1",
     "nuxt": "^4.2.2",
     "oxfmt": "^0.24.0",
     "oxlint": "^1.39.0",

@@ -18,8 +18,8 @@
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
     "@iconify-json/flag": "^1.2.10",
-    "@iconify-json/lucide": "^1.2.85",
-    "@tanstack/vue-query": "^5.92.6",
+    "@iconify-json/lucide": "^1.2.86",
+    "@tanstack/vue-query": "^5.92.9",
     "@tanstack/vue-table": "^8.21.3",
     "@vite-pwa/nuxt": "^1.1.0",
     "@vueuse/integrations": "^14.1.0",
@@ -29,8 +29,8 @@
     "laravel-echo": "^2.3.0",
     "marked": "^16.4.2",
     "mini-handlebars": "^0.1.1",
-    "nuxt-i18n-micro": "^2.16.3",
-    "posthog-js": "^1.321.2",
+    "nuxt-i18n-micro": "^2.17.1",
+    "posthog-js": "^1.335.0",
     "pusher-js": "^8.4.0",
     "reka-ui": "^2.7.0",
     "sortablejs": "^1.15.6",
@@ -45,14 +45,14 @@
     "@types/postmate": "^1.5.4",
     "@vueuse/core": "^14.1.0",
     "@vueuse/router": "^14.1.0",
-    "nuxt": "^4.2.2",
+    "nuxt": "^4.3.0",
     "oxfmt": "^0.24.0",
-    "oxlint": "^1.39.0",
+    "oxlint": "^1.41.0",
     "tailwindcss": "^4.1.18",
     "vite-svg-loader": "^5.1.0",
-    "vue": "^3.5.26",
+    "vue": "^3.5.27",
     "vue-router": "^4.6.4",
-    "vue-tsc": "^3.2.2"
+    "vue-tsc": "^3.2.3"
   },
   "lint-staged": {
     "*.{js,json,md,jsx,ts,tsx,vue,yaml}": "oxlint --fix"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { ContentResource } from '~/types/contents'
 import { Button } from '~/components/ui/button'
 import SplitButton from '~/components/ui/button/SplitButton.vue'
 import {
@@ -8,6 +7,7 @@ import {
   DropdownMenuSeparator,
 } from '~/components/ui/dropdown-menu'
 import { SimpleTooltip } from '~/components/ui/tooltip'
+import type { ContentResource } from '~/types/contents'
 
 const route = useRoute()
 const router = useRouter()
@@ -81,6 +81,10 @@ const switchVersions = () => {
   })
 }
 
+const canPublish = computed(() => {
+  return !!props.content.id
+})
+
 const hasLocalization = computed(() => {
   return space.value?.settings?.languages?.length > 0
 })
@@ -119,7 +123,7 @@ const hasLocalization = computed(() => {
     <SplitButton
       :primary-action="publish"
       variant="accent"
-      :disabled="disabled"
+      :disabled="disabled && !canPublish"
     >
       <span>Publish</span>
       <template #menu>

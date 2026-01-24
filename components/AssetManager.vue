@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
+import { useRouteQuery } from '@vueuse/router'
+import { TabsContent, TabsRoot } from 'reka-ui'
 import AssetFolderTree from '~/components/assets/AssetFolderTree.vue'
 import AssetGrid from '~/components/assets/AssetGrid.vue'
+import AssetListView from '~/components/assets/AssetListView.vue'
 import AssetTagTree from '~/components/assets/AssetTagTree.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
+import { TabsList, TabsTrigger } from '~/components/ui/tabs'
 
 const tabs = {
   folders: {
@@ -16,18 +19,32 @@ const tabs = {
   },
 }
 
-const selectedFolder = defineModel<string | null>('folderId', {
-  default: null,
-})
+const modes = {
+  grid: {
+    icon: 'lucide:grid-3x3',
+    label: 'Grid',
+  },
+  list: {
+    icon: 'lucide:list',
+    label: 'Table',
+  },
+}
 
 defineProps<{
   spaceId: string
 }>()
 
-const selectedTag = ref<string | null>(null)
-const mode = ref<'folders' | 'tags'>('folders')
+const selectedFolder = defineModel<string | null>('folderId', {
+  default: null,
+})
+const selectedTag = defineModel<string | null>('tagId', {
+  default: null,
+})
 
-watch(mode, (newMode) => {
+const viewMode = useRouteQuery('view', 'grid') as Ref<'grid' | 'list'>
+const sidebarMode = ref<'folders' | 'tags'>('folders')
+
+watch(sidebarMode, (newMode) => {
   if (newMode === 'folders') {
     selectedTag.value = null
   } else {
@@ -37,45 +54,74 @@ watch(mode, (newMode) => {
 </script>
 
 <template>
-  <div class="flex w-full">
-    <div class="w-xs overflow-hidden shrink-0 p-2 h-[calc(100vh-3.5rem)] flex flex-col sticky top-14">
+  <div class="flex h-full w-full flex-col">
+    <div class="flex flex-1 overflow-hidden">
+      <div class="sticky top-0 flex h-full w-xs shrink-0 flex-col overflow-hidden bg-surface p-2">
+        <TabsRoot
+          v-model="sidebarMode"
+          default-value="folders"
+        >
+          <TabsList class="mb-4 w-full">
+            <TabsTrigger
+              v-for="({ icon, label }, key) in tabs"
+              :key="key"
+              :value="key"
+              class="grow"
+            >
+              <Icon :name="icon" />
+              <span class="hidden sm:inline">{{ label }}</span>
+            </TabsTrigger>
+          </TabsList>
+          <ScrollArea class="flex-1 overflow-y-auto">
+            <TabsContent value="folders">
+              <AssetFolderTree
+                v-model="selectedFolder"
+                :space-id="spaceId"
+              />
+            </TabsContent>
+            <TabsContent value="tags">
+              <AssetTagTree
+                v-model="selectedTag"
+                :space-id="spaceId"
+              />
+            </TabsContent>
+          </ScrollArea>
+        </TabsRoot>
+      </div>
       <TabsRoot
-        v-model="mode"
-        default-value="folders"
+        v-model="viewMode"
+        class="flex flex-1 flex-col bg-background p-6"
       >
-        <TabsList class="bg-input flex items-center gap-1 rounded-xl p-1 mb-4 w-full">
-          <TabsTrigger
-            v-for="({ icon, label }, key) in tabs"
-            :key="key"
-            :value="key"
-            class="grow justify-center flex items-center gap-2 transition-colors text-sm font-semibold  hover:text-primary data-[state=active]:text-primary data-[state=active]:bg-gray-900 rounded-lg px-2 py-1"
-          >
-            <Icon :name="icon"/>
-            <span>{{ label }}</span>
-          </TabsTrigger>
-        </TabsList>
-        <ScrollArea class="flex-1 overflow-y-auto">
-          <TabsContent value="folders">
-            <AssetFolderTree
-              v-model="selectedFolder"
+        <div class="flex-1">
+          <TabsContent value="grid">
+            <AssetGrid
+              v-model:folder-id="selectedFolder"
+              v-model:tag-id="selectedTag"
               :space-id="spaceId"
             />
           </TabsContent>
-          <TabsContent value="tags">
-            <AssetTagTree
-              v-model="selectedTag"
+          <TabsContent value="list">
+            <AssetListView
               :space-id="spaceId"
+              :folder-id="selectedFolder"
+              :tag-id="selectedTag"
             />
           </TabsContent>
-        </ScrollArea>
+        </div>
+        <div class="flex">
+          <TabsList class="mx-auto">
+            <TabsTrigger
+              v-for="({ icon, label }, key) in modes"
+              :key="key"
+              :value="key"
+              class="grow"
+            >
+              <Icon :name="icon" />
+              <span class="hidden sm:inline">{{ label }}</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
       </TabsRoot>
-    </div>
-    <div class="bg-background grow p-6">
-      <AssetGrid
-        v-model:folder-id="selectedFolder"
-        v-model:tag-id="selectedTag"
-        :space-id="spaceId"
-      />
     </div>
   </div>
 </template>

@@ -14,6 +14,9 @@ export default function useSpaceSettings(spaceId: string) {
     assets: {
       gridSize: 'md',
       expanded: [],
+      visibleFields: [],
+      visibleLanguages: [],
+      autoSave: true,
     },
     dataEntries: {
       mode: 'single',

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
 import { deepClone } from '@vue/devtools-shared'
+import { toast } from 'vue-sonner'
+import { Button } from '~/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -8,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '~/components/ui/dialog'
-import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
+import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 
 const { formatFileSize, formatDateTime } = useFormat()
 const { getFileIcon } = useFileUtils()
@@ -33,31 +34,83 @@ const { useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(props.spaceId)
 
 const assetFields = computed(() => space.value?.settings?.asset_fields || [])
+const languages = computed(() => space.value?.settings?.languages || [])
+const defaultLanguage = computed(() => space.value?.settings?.default_language || '_default')
 
 const assetCopy = ref<AssetResource | null>(null)
 const imageContainer = ref<HTMLElement | null>(null)
 const imageRef = useTemplateRef('imageRef')
 const isDraggingFocus = ref(false)
+const selectedLanguage = ref<string>('_default')
 
 watch(
   () => props.asset,
   (newAsset) => {
     if (newAsset) {
       assetCopy.value = deepClone(newAsset)
+      selectedLanguage.value = '_default'
     } else {
       assetCopy.value = null
     }
   },
   { immediate: true }
 )
+
 const emit = defineEmits(['close', 'update:asset'])
+
+// Computed properties for language tabs
+const languageTabs = computed(() => {
+  const tabs = [{ code: '_default', name: 'Default' }]
+  if (languages.value && languages.value.length > 0) {
+    tabs.push(...languages.value)
+  }
+  return tabs
+})
+
+// Get fields for current language
+const currentLanguageFields = computed(() => {
+  if (!assetCopy.value?.data?.fields) {
+    return []
+  }
+  const languageData = assetCopy.value.data.fields[selectedLanguage.value]
+  return assetFields.value.filter((field) => {
+    return languageData && field.key in languageData
+  })
+})
+
+// Get or create fields object for a language
+const getLanguageFieldsData = (languageCode: string) => {
+  if (!assetCopy.value?.data) {
+    assetCopy.value!.data = {}
+  }
+  if (!assetCopy.value.data.fields) {
+    assetCopy.value.data.fields = {}
+  }
+  if (!assetCopy.value.data.fields[languageCode]) {
+    assetCopy.value.data.fields[languageCode] = {}
+  }
+  return assetCopy.value.data.fields[languageCode] as Record<string, unknown>
+}
+
+// Get field value for current language
+const getFieldValue = (fieldKey: string): unknown => {
+  const languageData = getLanguageFieldsData(selectedLanguage.value)
+  return languageData[fieldKey] || ''
+}
+
+// Set field value for current language
+const setFieldValue = (fieldKey: string, value: unknown) => {
+  const languageData = getLanguageFieldsData(selectedLanguage.value)
+  languageData[fieldKey] = value
+}
 
 const formatKey = (key: string): string => {
   return key.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 }
+
 const copyAssetUrl = () => {
   navigator.clipboard
-    .writeText(assetCopy.value.url)
+    .writeText(assetCopy.value!.url)
     .then(() => {
       toast.success('URL copied to clipboard')
     })
@@ -65,11 +118,14 @@ const copyAssetUrl = () => {
       toast.error('Failed to copy URL')
     })
 }
+
 const openAssetInNewWindow = () => {
-  window.open(assetCopy.value.url, '_blank', 'noopener,noreferrer')
+  window.open(assetCopy.value!.url, '_blank', 'noopener,noreferrer')
 }
+
 const toggleFocusPoint = () => {
-  if (assetCopy.value?.data.focus) {
+  if (!assetCopy.value) return
+  if (assetCopy.value.data?.focus) {
     assetCopy.value.data.focus = undefined
   } else {
     if (!assetCopy.value.data) {
@@ -86,6 +142,7 @@ const startDragging = (event: MouseEvent) => {
 
   updateFocusPointPosition(event)
 }
+
 const stopDragging = () => {
   isDraggingFocus.value = false
 }
@@ -112,6 +169,7 @@ onMounted(() => {
     window.addEventListener('mouseup', stopDragging)
   }
 })
+
 onUnmounted(() => {
   if (import.meta.client) {
     window.removeEventListener('mousemove', handleMouseMove)
@@ -128,6 +186,7 @@ const handleMouseMove = (event: MouseEvent) => {
     lastUpdateTime = now
   }
 }
+
 const handleFinish = async () => {
   emit('update:asset', assetCopy.value)
 }
@@ -138,6 +197,7 @@ const onOpenChange = (open: boolean) => {
   }
 }
 </script>
+
 <template>
   <Dialog
     :open="!!asset"
@@ -250,6 +310,13 @@ const onOpenChange = (open: boolean) => {
           </div>
         </div>
         <div class="space-y-4 md:col-span-4">
+          <InputField
+            v-model="assetCopy.filename"
+            name="filename"
+            :label="$t('labels.assets.fields.name')"
+            required
+          />
+
           <div
             v-if="mode === 'normal'"
             class="rounded-lg bg-surface p-3 text-sm"
@@ -282,20 +349,50 @@ const onOpenChange = (open: boolean) => {
               </dl>
             </div>
           </div>
-          <div class="grid gap-4">
-            <InputField
-              v-model="assetCopy.filename"
-              name="filename"
-              :label="$t('labels.assets.fields.name')"
-              required
-            />
+
+          <div
+            v-if="assetFields.length > 0 && languageTabs.length > 1"
+            class="space-y-3"
+          >
+            <Tabs
+              :model-value="String(selectedLanguage)"
+              @update:model-value="selectedLanguage = String($event)"
+              class="w-full"
+            >
+              <TabsList class="w-full">
+                <TabsTrigger
+                  v-for="lang in languageTabs"
+                  :key="lang.code"
+                  :value="lang.code || ''"
+                >
+                  {{ lang.name }}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <div class="space-y-3">
+              <InputField
+                v-for="field in assetFields"
+                :key="`${selectedLanguage}-${field.key}`"
+                :model-value="getFieldValue(field.key) as string"
+                :label="String(field.label)"
+                :name="field.key"
+                :required="field.required"
+                @update:model-value="setFieldValue(field.key, $event)"
+              />
+            </div>
+          </div>
+          <div
+            v-else-if="assetFields.length > 0"
+            class="space-y-3"
+          >
             <InputField
               v-for="field in assetFields"
               :key="field.key"
-              v-model="assetCopy.data[field.key] as string"
+              :model-value="getFieldValue(field.key) as string"
               :label="String(field.label)"
               :name="field.key"
               :required="field.required"
+              @update:model-value="setFieldValue(field.key, $event)"
             />
           </div>
         </div>

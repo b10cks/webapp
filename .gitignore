@@ -26,3 +26,4 @@ logs
 .aws-sam
 localhost.crt
 localhost.key
+server/assets/_locales/

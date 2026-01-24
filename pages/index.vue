@@ -1,8 +1,14 @@
 <script setup lang="ts">
+import { NuxtLink } from '#components'
+import { useClipboard } from '@vueuse/core'
 import type { Translation } from 'nuxt-i18n-micro-types/src'
 import { SelectTrigger } from 'reka-ui'
-import { useClipboard } from '@vueuse/core'
+import type { SpaceQueryParams } from '~/api/resources/spaces'
+import AppHeader from '~/components/AppHeader.vue'
+import TeamSelector from '~/components/TeamSelector.vue'
 import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,14 +16,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
-import AppHeader from '~/components/AppHeader.vue'
-import { Button } from '~/components/ui/button'
-import { NuxtLink } from '#components'
-import TeamSelector from '~/components/TeamSelector.vue'
-import { useAlertDialog } from '~/composables/useAlertDialog'
-import type { SpaceQueryParams } from '~/api/resources/spaces'
 import { Select, SelectContent, SelectItem } from '~/components/ui/select'
+import { useAlertDialog } from '~/composables/useAlertDialog'
 
 const { $t } = useI18n()
 const { useSpacesQuery, useArchiveSpaceMutation } = useSpaces()
@@ -232,31 +232,34 @@ const formatLastUpdated = (space: SpaceResource) => {
                   :to="{ name: 'space', params: { space: space.id } }"
                   class="group flex flex-col gap-2"
                 >
-                  <div
-                    class="relative grid min-h-36 place-items-center justify-center overflow-clip rounded-lg bg-input p-4 shadow-lg transition-transform duration-500 ease-micro-bounce group-hover:-translate-y-2"
-                  >
-                    <NuxtImg
-                      v-if="space.icon"
-                      :src="space.icon"
-                      :alt="space.name"
-                      class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl"
-                    />
-                    <NuxtImg
-                      v-if="space.icon"
-                      :src="space.icon"
-                      :alt="space.name"
-                      class="relative z-10 size-16"
-                    />
-                  </div>
-                  <div class="flex items-center">
-                    <div>
-                      <h4 class="font-semibold text-primary">{{ space.name }}</h4>
-                      <p class="text-sm text-muted">
-                        {{ $t('labels.fields.lastUpdated', { timeAgo: formatLastUpdated(space) }) }}
-                      </p>
+                  <DropdownMenu v-slot="{ open }">
+                    <div
+                      :class="{ '-translate-y-2': open }"
+                      class="relative grid min-h-36 place-items-center justify-center overflow-clip rounded-lg bg-input p-4 shadow-lg transition-transform duration-500 ease-micro-bounce group-hover:-translate-y-2"
+                    >
+                      <NuxtImg
+                        v-if="space.icon"
+                        :src="space.icon"
+                        :alt="space.name"
+                        class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl"
+                      />
+                      <NuxtImg
+                        v-if="space.icon"
+                        :src="space.icon"
+                        :alt="space.name"
+                        class="relative z-10 size-16"
+                      />
                     </div>
-                    <div class="ml-auto grid">
-                      <DropdownMenu v-slot="{ open }">
+                    <div class="flex items-center">
+                      <div>
+                        <h4 class="font-semibold text-primary">{{ space.name }}</h4>
+                        <p class="text-sm text-muted">
+                          {{
+                            $t('labels.fields.lastUpdated', { timeAgo: formatLastUpdated(space) })
+                          }}
+                        </p>
+                      </div>
+                      <div class="ml-auto grid">
                         <div
                           class="grid-area-stack flex items-center group-hover:hidden"
                           :class="[open ? 'hidden' : '']"
@@ -292,9 +295,9 @@ const formatLastUpdated = (space: SpaceResource) => {
                             </DropdownMenuItem>
                           </template>
                         </DropdownMenuContent>
-                      </DropdownMenu>
+                      </div>
                     </div>
-                  </div>
+                  </DropdownMenu>
                 </NuxtLink>
               </div>
             </div>

@@ -1,4 +1,5 @@
 {
+  "project_name": "b10cks web app",
   "lsp": {
     "oxlint": {
       "initialization_options": {

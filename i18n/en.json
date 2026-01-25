@@ -212,6 +212,8 @@
         "duration": "Duration",
         "original_filename": "Original File Name"
       },
+      "export": "Export",
+      "import": "Import",
       "describeContent": "Describe the content of the file",
       "addDetailedDescription": "Add a detailed description",
       "size": "Size",

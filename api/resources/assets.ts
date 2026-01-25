@@ -1,4 +1,5 @@
 import type { ApiResponse, BaseQueryParams } from '~/types'
+import type { ExportTypes } from '~/types/assets'
 
 import type { ApiClient } from '../client'
 
@@ -95,5 +96,68 @@ export class Assets extends BaseResource<
         'Content-Type': undefined,
       },
     })
+  }
+
+  /**
+   * Export assets metadata to a file format
+   * @param params Query parameters including filters and format
+   * @returns Blob of the exported data
+   */
+  public async export(params: AssetsQueryParams & { as: ExportTypes }): Promise<Blob> {
+    // Use native fetch for proper blob handling
+    if (typeof window === 'undefined') {
+      throw new Error('Export is only available in the browser')
+    }
+
+    const authHeaders = this.client.getAuthHeaders()
+    const baseURL = (this.client as any).baseURL || ''
+    const url = `${baseURL}${this.basePath}/export`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...authHeaders,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Export failed with status ${response.status}: ${response.statusText}`)
+    }
+
+    return await response.blob()
+  }
+
+  /**
+   * Import assets metadata from a file
+   * @param file The file containing asset data to import
+   * @returns Import result with successes, changes, and errors
+   */
+  public async import(file: File): Promise<AssetDataImportResult> {
+    // Use native fetch for proper FormData handling with Laravel/PHP backend
+    if (typeof window === 'undefined') {
+      throw new Error('Import is only available in the browser')
+    }
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const authHeaders = this.client.getAuthHeaders()
+    const baseURL = (this.client as any).baseURL || ''
+    const url = `${baseURL}${this.basePath}/import`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: authHeaders,
+      body: formData,
+    })
+
+    if (!response.ok) {
+      throw new Error(`Import failed with status ${response.status}: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return data.data || data
   }
 }

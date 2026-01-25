@@ -4,6 +4,12 @@ import { toast } from 'vue-sonner'
 
 import type { AssetsQueryParams } from '~/api/resources/assets'
 import type { MaybeRefOrComputed } from '~/types'
+import type {
+  AssetResource,
+  ExportTypes,
+  UpdateAssetPayload,
+  UploadAssetPayload,
+} from '~/types/assets'
 
 import { api } from '~/api'
 
@@ -167,6 +173,32 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
     })
   }
 
+  const useExportAssetsMutation = () => {
+    return useMutation({
+      mutationFn: async (params: AssetsQueryParams & { as: ExportTypes }) => {
+        return await spaceAPI.value.assets.export(params)
+      },
+      onError: (error: Error) => {
+        toast.error(`Failed to export assets: ${error.message || 'Unknown error'}`)
+      },
+    })
+  }
+
+  const useImportAssetsMutation = () => {
+    return useMutation({
+      mutationFn: async (file: File) => {
+        return await spaceAPI.value.assets.import(file)
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).lists() })
+        toast.success(`Assets imported successfully`)
+      },
+      onError: (error: Error) => {
+        toast.error(`Failed to import assets: ${error.message || 'Unknown error'}`)
+      },
+    })
+  }
+
   return {
     // State
     error,
@@ -178,6 +210,8 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
     // Mutations
     useUpdateAssetMutation,
     useDeleteAssetMutation,
+    useExportAssetsMutation,
+    useImportAssetsMutation,
     uploadAsset,
   }
 }

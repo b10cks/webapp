@@ -89,3 +89,64 @@ interface UploadFile extends UploadAssetPayload {
   preview?: string
   type: AssetTypes
 }
+
+export type ExportTypes = 'csv' | 'excel' | 'json' | 'xliff' | 'yaml'
+
+export interface AssetChange {
+  field: string
+  language: string
+  old: string | null
+  new: string
+}
+
+export interface ImportSuccess {
+  id: string
+  filename: string
+}
+
+export interface ImportedAssetChanges {
+  id: string
+  filename: string
+  changes: AssetChange[]
+}
+
+export interface ImportError {
+  row?: number
+  id?: string
+  message: string
+}
+
+export interface ImportSummary {
+  total_success: number
+  total_changes: number
+  total_errors: number
+}
+
+export interface AssetDataImportResult {
+  /**
+   * List of successfully imported assets (unchanged or changed)
+   */
+  successes: ImportSuccess[]
+
+  /**
+   * List of assets with their modifications
+   */
+  changes: ImportedAssetChanges[]
+
+  /**
+   * Fields and language combinations that were ignored
+   * (not configured in space.settings.asset_fields or languages)
+   */
+  ignored_fields: string[]
+
+  /**
+   * Errors encountered during import
+   * Import continues on errors (non-blocking)
+   */
+  errors: ImportError[]
+
+  /**
+   * Summary statistics of the import operation
+   */
+  summary: ImportSummary
+}

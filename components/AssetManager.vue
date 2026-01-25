@@ -5,8 +5,11 @@ import AssetFolderTree from '~/components/assets/AssetFolderTree.vue'
 import AssetGrid from '~/components/assets/AssetGrid.vue'
 import AssetListView from '~/components/assets/AssetListView.vue'
 import AssetTagTree from '~/components/assets/AssetTagTree.vue'
+import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { TabsList, TabsTrigger } from '~/components/ui/tabs'
+import ExportAssetsDialog from './assets/ExportAssetsDialog.vue'
+import ImportAssetsDialog from './assets/ImportAssetsDialog.vue'
 
 const tabs = {
   folders: {
@@ -43,6 +46,8 @@ const selectedTag = defineModel<string | null>('tagId', {
 
 const viewMode = useRouteQuery('view', 'grid') as Ref<'grid' | 'list'>
 const sidebarMode = ref<'folders' | 'tags'>('folders')
+const exportDialogOpen = ref(false)
+const importDialogOpen = ref(false)
 
 watch(sidebarMode, (newMode) => {
   if (newMode === 'folders') {
@@ -102,9 +107,9 @@ watch(sidebarMode, (newMode) => {
           </TabsContent>
           <TabsContent value="list">
             <AssetListView
-              :space-id="spaceId"
               v-model:folder-id="selectedFolder"
               :tag-id="selectedTag"
+              :space-id="spaceId"
             />
           </TabsContent>
         </div>
@@ -123,5 +128,33 @@ watch(sidebarMode, (newMode) => {
         </div>
       </TabsRoot>
     </div>
+
+    <ClientOnly>
+      <Teleport to="#appHeaderActions">
+        <div class="flex gap-2">
+          <Button @click="importDialogOpen = true">
+            <Icon name="lucide:upload" />
+            {{ $t('labels.assets.import') }}
+          </Button>
+          <Button @click="exportDialogOpen = true">
+            <Icon name="lucide:download" />
+            {{ $t('labels.assets.export') }}
+          </Button>
+        </div>
+      </Teleport>
+    </ClientOnly>
+
+    <ExportAssetsDialog
+      v-model:open="exportDialogOpen"
+      :space-id="spaceId"
+      :folder-id="selectedFolder"
+      :tag-id="selectedTag"
+      :filters="{}"
+    />
+
+    <ImportAssetsDialog
+      v-model:open="importDialogOpen"
+      :space-id="spaceId"
+    />
   </div>
 </template>

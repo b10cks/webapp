@@ -103,12 +103,12 @@ watch(sidebarMode, (newMode) => {
           <TabsContent value="list">
             <AssetListView
               :space-id="spaceId"
-              :folder-id="selectedFolder"
+              v-model:folder-id="selectedFolder"
               :tag-id="selectedTag"
             />
           </TabsContent>
         </div>
-        <div class="flex">
+        <div class="mt-6 flex">
           <TabsList class="mx-auto">
             <TabsTrigger
               v-for="({ icon, label }, key) in modes"

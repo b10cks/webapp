@@ -53,6 +53,14 @@ const { settings } = useSpaceSettings(props.spaceId)
 const { useSpaceQuery } = useSpaces()
 const { useAssetsQuery, useDeleteAssetMutation, useUpdateAssetMutation } = useAssets(props.spaceId)
 
+const { useFolderStructure } = useAssetFolders(props.spaceId)
+const { getBreadcrumbs, getChildrenOfFolder } = useFolderStructure()
+
+const breadcrumbs = computed(() => {
+  if (!folderId.value) return []
+  return getBreadcrumbs(folderId.value)
+})
+
 const { data: space } = useSpaceQuery(props.spaceId)
 const { mutate: updateAsset } = useUpdateAssetMutation()
 const { mutate: deleteAsset } = useDeleteAssetMutation()
@@ -308,7 +316,62 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <main class="flex flex-col gap-6">
+    <header class="flex h-5 items-center justify-between">
+      <Breadcrumb class="flex gap-2">
+        <BreadcrumbItem @click="folderId = null">
+          <button
+            class="flex cursor-pointer items-center gap-2 hover:text-primary"
+            @click="folderId = null"
+          >
+            <Icon name="lucide:home" />
+            <span>{{ $t('labels.assets.allAssets') }}</span>
+          </button>
+        </BreadcrumbItem>
+
+        <template
+          v-for="{ id, color, icon, name } in breadcrumbs"
+          :key="id"
+        >
+          <li
+            role="presentation"
+            aria-hidden="true"
+            class="flex items-center gap-2"
+          >
+            /
+          </li>
+          <BreadcrumbItem>
+            <button
+              class="flex cursor-pointer items-center gap-2 hover:text-primary"
+              @click="folderId = id"
+            >
+              <Icon
+                :name="`lucide:${icon}`"
+                :style="{ color: color || 'inherit' }"
+              />
+              <span>{{ name }}</span>
+            </button>
+          </BreadcrumbItem>
+        </template>
+      </Breadcrumb>
+      <div class="flex items-center gap-2">
+        <Button
+          v-if="allowUpload"
+          variant="primary"
+          @click="showUploadDialog = true"
+        >
+          <Icon name="lucide:upload" />
+          {{ $t('actions.assets.upload') }}
+        </Button>
+        <Button
+          v-if="allowFolderCreation"
+          @click="handleFolderCreate(null)"
+        >
+          <Icon name="lucide:folder-plus" />
+          {{ $t('actions.assetFolders.create') }}
+        </Button>
+      </div>
+    </header>
     <div class="flex items-center justify-between gap-4">
       <div class="flex items-center gap-2">
         <DropdownMenu>
@@ -402,7 +465,7 @@ onMounted(async () => {
               <TableHead class="min-w-64">{{ lang.name }}</TableHead>
             </template>
 
-            <TableHead class="w-24"> Actions </TableHead>
+            <TableHead class="w-24" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -425,8 +488,8 @@ onMounted(async () => {
                     v-if="asset.mime_type?.startsWith('image/')"
                     :src="asset.full_path"
                     :alt="asset.filename"
-                    width="80"
-                    height="80"
+                    width="160"
+                    height="160"
                     class="h-full w-full object-cover"
                   />
                   <div
@@ -547,5 +610,5 @@ onMounted(async () => {
       @update:current-page="currentPage = $event"
       @update:per-page="perPage = $event"
     />
-  </div>
+  </main>
 </template>

@@ -526,7 +526,7 @@ const assetItemProps = computed(() => {
       v-if="showFolders && folders.length > 0"
       class="grid grow gap-6"
     >
-      <div>
+      <button @click="settings.assets.gridFolders = !settings.assets.gridFolders">
         <h2 class="flex items-center gap-2 text-2xl">
           <Icon
             name="lucide:folder"
@@ -534,9 +534,15 @@ const assetItemProps = computed(() => {
           />
           <span class="font-semibold text-primary">Folders</span>
           <Badge>{{ folders.length }}</Badge>
+          <Icon
+            name="lucide:chevron-up"
+            class="transition-transform duration-200"
+            :class="{ 'rotate-180': settings.assets.gridFolders }"
+          />
         </h2>
-      </div>
+      </button>
       <div
+        v-if="settings.assets.gridFolders"
         class="grid grid-cols-3 gap-3 rounded-lg bg-surface p-3 xl:grid-cols-2 2xl:grid-cols-3"
         role="listbox"
         aria-label="Folders"

@@ -13,6 +13,7 @@ export default function useSpaceSettings(spaceId: string) {
     },
     assets: {
       gridSize: 'md',
+      gridFolders: true,
       expanded: [],
       visibleFields: [],
       visibleLanguages: [],

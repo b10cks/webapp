@@ -40,7 +40,7 @@ const selectedSpace = computed(() => {
 
 <template>
   <div
-    class="fixed top-0 z-20 flex h-14 w-full items-center gap-3 border-b border-border bg-surface p-3"
+    class="fixed top-0 z-20 flex h-14 w-full items-center gap-3 border-b border-border bg-surface p-3 select-none"
   >
     <div class="flex items-center gap-3">
       <DropdownMenu>

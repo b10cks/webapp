@@ -483,7 +483,7 @@ onMounted(async () => {
               :data-asset-id="asset.id"
             >
               <TableCell class="w-24">
-                <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-muted">
+                <div class="checkerboard relative size-20 shrink-0 overflow-hidden rounded-md">
                   <NuxtImg
                     v-if="asset.mime_type?.startsWith('image/')"
                     :src="asset.full_path"

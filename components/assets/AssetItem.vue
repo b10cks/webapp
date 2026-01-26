@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
+import type { AssetResource } from '~/types/assets'
 
 const { formatFileSize } = useFormat()
 const { getFileIcon, getFileType } = useFileUtils()

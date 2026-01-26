@@ -140,7 +140,7 @@ provide('updateHoverItem', (id: string) => {
       >
         <TabsContent
           value="edit"
-          class="p-4"
+          class="p-4 select-none"
         >
           <EditorComponent
             v-model="content.content"
@@ -179,9 +179,9 @@ provide('updateHoverItem', (id: string) => {
         v-else
         class="grow"
       />
-      <TabsList class="flex h-full w-14 shrink-0 flex-col border-l border-l-border p-3">
+      <TabsList class="flex h-full w-14 shrink-0 flex-col border-l border-l-border p-3 select-none">
         <div class="flex min-h-0 flex-1 flex-col overflow-auto">
-          <div class="relative flex w-full min-w-0 flex-col gap-3">
+          <div class="relative flex w-full min-w-0 flex-col gap-2">
             <TabsTrigger
               v-for="tab in tabs"
               :key="tab.value"

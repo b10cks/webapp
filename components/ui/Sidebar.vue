@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDark, useToggle } from '@vueuse/core'
+import { Avatar } from '~/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { Switch } from '~/components/ui/switch'
-import { Avatar } from '~/components/ui/avatar'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 
 const isDark = useDark()
@@ -38,7 +38,7 @@ const buildLink = (name: string) => ({
 </script>
 
 <template>
-  <div class="flex h-full w-14 flex-col overflow-hidden border-r border-r-border p-3">
+  <div class="flex h-full w-14 flex-col overflow-hidden border-r border-r-border p-3 select-none">
     <div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <div class="relative flex w-full min-w-0 flex-col gap-2">
         <SimpleTooltip

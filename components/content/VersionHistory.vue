@@ -325,8 +325,8 @@ const openInTab = () => {
                       class="absolute z-0 border-3 border-transparent border-t-border border-l-border"
                       :style="{
                         borderTopLeftRadius: `${getVersionIndentLevel(version.id) ? 12 : 0}px`,
-                        top: `anchor(--v${version.id} center)`,
-                        left: `calc(anchor(--v${version.parent_id} center) - 2px)`,
+                        top: `calc(anchor(--v${version.id} center) - 1px)`,
+                        left: `calc(anchor(--v${version.parent_id} center) - 1.5px)`,
                         bottom: `anchor(--v${version.parent_id} center)`,
                         right: `anchor(--v${version.id} center)`,
                       }"

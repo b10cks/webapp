@@ -19,12 +19,13 @@ const { useSpacesQuery } = useSpaces()
 const { data: spaces } = useSpacesQuery()
 
 const router = useRouter()
+const route = useRoute()
 const commandOpen = inject('commandOpen')
 
 const selectedSpaceId = computed({
-  get: () => useRoute().params?.space,
+  get: () => route.params?.space as string | undefined,
   set: (space: string) => {
-    useRouter().push({
+    router.push({
       name: 'space',
       params: {
         space,
@@ -34,8 +35,38 @@ const selectedSpaceId = computed({
 })
 
 const selectedSpace = computed(() => {
-  return spaces.value?.find((space) => space.id === selectedSpaceId.value) || null
+  return spaces.value?.find((space) => space.id === selectedSpaceId.value) ?? null
 })
+
+const toDashboard = () => {
+  router.push('/')
+}
+
+const toSpaceDashboard = () => {
+  if (selectedSpaceId.value) {
+    router.push(`/${selectedSpaceId.value}`)
+  }
+}
+
+const openQuickActions = () => {
+  if (typeof commandOpen === 'object' && commandOpen !== null) {
+    commandOpen.value = true
+  }
+}
+
+const switchSpace = (spaceId: string) => {
+  selectedSpaceId.value = spaceId
+}
+
+const createNewSpace = () => {
+  router.push('/spaces/new')
+}
+
+const logout = () => {
+  useAuth().logout()
+}
+
+const isSpaceSelected = computed(() => !!selectedSpace.value)
 </script>
 
 <template>
@@ -60,54 +91,65 @@ const selectedSpace = computed(() => {
           class="min-w-56"
           align="start"
         >
+          <!-- Main Actions -->
           <DropdownMenuGroup>
-            <DropdownMenuItem @select="router.push('/')">{{
-              $t('actions.toDashboard')
-            }}</DropdownMenuItem>
+            <DropdownMenuItem @select="toDashboard">
+              {{ $t('actions.toDashboard') }}
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
+
+          <!-- Current Space -->
           <DropdownMenuGroup>
-            <DropdownMenuLabel v-if="selectedSpace">{{ selectedSpace.name }} </DropdownMenuLabel>
+            <DropdownMenuLabel v-if="selectedSpace">
+              {{ selectedSpace.name }}
+            </DropdownMenuLabel>
             <DropdownMenuItem
-              v-if="selectedSpace"
-              @select="router.push(`/${selectedSpaceId}`)"
-              >Space Dashboard
+              v-if="isSpaceSelected"
+              @select="toSpaceDashboard"
+            >
+              Space Dashboard
             </DropdownMenuItem>
-            <DropdownMenuItem @select="commandOpen = true">
+            <DropdownMenuItem @select="openQuickActions">
               {{ $t('actions.quickActions') }}
               <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
+
+          <!-- Space Switcher -->
           <DropdownMenuGroup>
             <DropdownMenuSub>
-              <DropdownMenuSubTrigger>{{ $t('actions.spaces.switch') }}</DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger>
+                {{ $t('actions.spaces.switch') }}
+              </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
                 <DropdownMenuItem
-                  v-for="{ id, name } in spaces"
-                  :key="id"
-                  :value="id"
+                  v-for="space in spaces"
+                  :key="space.id"
                   :class="[
                     'w-full cursor-pointer',
-                    id === selectedSpaceId ? 'bg-blue-600 text-primary' : '',
+                    space.id === selectedSpaceId ? 'bg-blue-600 text-primary' : '',
                   ]"
-                  @select="selectedSpaceId = id"
+                  @select="switchSpace(space.id)"
                 >
-                  {{ name }}
+                  {{ space.name }}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem @select="router.push('/spaces/new')">
+                <DropdownMenuItem @select="createNewSpace">
                   {{ $t('actions.spaces.add') }}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
+
+          <!-- User Actions -->
           <DropdownMenuGroup>
             <DropdownMenuItem>
               {{ $t('actions.user.account') }}
             </DropdownMenuItem>
-            <DropdownMenuItem @select="useAuth().logout()">
+            <DropdownMenuItem @select="logout">
               {{ $t('actions.logout') }}
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -125,3 +167,4 @@ const selectedSpace = computed(() => {
     </div>
   </div>
 </template>
+

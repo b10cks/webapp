@@ -762,6 +762,7 @@
     "toDashboard": "Go to dashboard",
     "quickActions": "Quick actions...",
     "saveClose": "Save & close",
+    "save": "Save",
     "deleteSelected": "Delete selected",
     "move": "Move",
     "clear": "Clear",
@@ -773,6 +774,14 @@
     "signup": "Sign up with email",
     "newTab": "Open in new tab",
     "copyLink": "Copy link",
+    "content": {
+      "publish": "Publish",
+      "publishNow": "Publish Now",
+      "unpublish": "Unpublish",
+      "publishWithMessage": "Publish with Message",
+      "schedule": "Schedule",
+      "schedulePublish": "Schedule Publish"
+    },
     "user": {
       "account": "Account"
     },

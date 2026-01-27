@@ -149,7 +149,7 @@ const isSpaceSelected = computed(() => !!selectedSpace.value)
             <DropdownMenuItem>
               {{ $t('actions.user.account') }}
             </DropdownMenuItem>
-            <DropdownMenuItem @select="logout">
+            <DropdownMenuItem @select="logout()">
               {{ $t('actions.logout') }}
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -167,4 +167,3 @@ const isSpaceSelected = computed(() => !!selectedSpace.value)
     </div>
   </div>
 </template>
-

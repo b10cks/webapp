@@ -105,7 +105,7 @@ const buildLink = (name: string) => ({
               />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem @select="logout">
+            <DropdownMenuItem @select="logout()">
               <span>Logout</span>
               <Icon
                 class="ml-auto"

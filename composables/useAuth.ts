@@ -150,7 +150,7 @@ export function useAuth() {
         setupTokenRefresh(response.expires_in)
         await loadUser()
 
-        router.push('/')
+        router.push(route.query.return || '/')
         return true
       }
 
@@ -289,9 +289,11 @@ export function useAuth() {
     const { api } = await import('~/api')
     api.setAuthToken(undefined)
 
+    console.log(returnPath, route.query.return, route.fullPath, '/')
+
     navigateTo({
       name: 'login',
-      query: { return: returnPath || route.fullPath || '/' },
+      query: { return: returnPath || route.query.return || route.fullPath || '/' },
     })
   }
 

@@ -33,6 +33,16 @@ export default function useFormat() {
     return dayjs(date).locale(locale.value).fromNow()
   }
 
+  function formatDateTimeDynamically(date: string | Date | number, relativeCutOff: number = 1) {
+    const now = dayjs()
+    const diff = Math.abs(now.diff(dayjs(date), 'days'))
+
+    if (diff > relativeCutOff) {
+      return formatDateTime(date)
+    }
+    return formatRelativeTime(date)
+  }
+
   function formatCalendarTime(date: string | Date | number) {
     return dayjs(date).locale(locale.value).calendar()
   }
@@ -146,6 +156,7 @@ export default function useFormat() {
     formatTrafficSize,
     formatRelativeTime,
     formatCalendarTime,
+    formatDateTimeDynamically,
     formatDuration,
     formatNumber,
   }

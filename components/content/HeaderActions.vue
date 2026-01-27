@@ -8,6 +8,7 @@ import {
 } from '~/components/ui/dropdown-menu'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import type { ContentResource } from '~/types/contents'
+import PublishDialog from './PublishDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,6 +22,7 @@ const {
   useCreateContentMutation,
   useUpdateContentMutation,
   usePublishContentMutation,
+  useScheduleContentMutation,
   useUnpublishContentMutation,
 } = useContent(props.spaceId)
 
@@ -29,11 +31,14 @@ const { data: space } = useSpaceQuery(props.spaceId)
 
 const { mutate: createContent } = useCreateContentMutation()
 const { mutate: updateContent } = useUpdateContentMutation()
-const { mutate: publishContent } = usePublishContentMutation()
+const { mutate: publishContent, isPending: isPublishing } = usePublishContentMutation()
+const { mutate: scheduleContent, isPending: isScheduling } = useScheduleContentMutation()
 const { mutate: unpublishContent } = useUnpublishContentMutation()
 
-const isLocalization = computed(() => route.name == 'space-content-contentId-localization')
-const isVersions = computed(() => route.name == 'space-content-contentId-history')
+const isLocalization = computed(() => route.name === 'space-content-contentId-localization')
+const isVersions = computed(() => route.name === 'space-content-contentId-versions')
+const publishDialogOpen = ref(false)
+const publishType = ref<'now' | 'schedule'>('now')
 
 const save = async () => {
   if (props.content.id) {
@@ -41,28 +46,45 @@ const save = async () => {
   } else {
     await createContent(props.content)
   }
-
-  // Refresh the preview after saving
-  // if (previewRef.value) {
-  //   previewRef.value.refresh()
-  // }
 }
 
-const publish = async () => {
+const isPublished = computed(() => props.content.published_at !== null)
+
+const publishDirectly = async () => {
   await publishContent({ id: props.content.id, payload: props.content })
-
-  // Refresh the preview after publishing
-  // if (previewRef.value) {
-  //   previewRef.value.refresh()
-  // }
 }
+
+const publishWithMessage = () => {
+  publishType.value = 'now'
+  publishDialogOpen.value = true
+}
+
+const schedulePublish = () => {
+  publishType.value = 'schedule'
+  publishDialogOpen.value = true
+}
+
+const handlePublish = async (payload: { message?: string; published_at?: string | null }) => {
+  const publishPayload = {
+    ...props.content,
+    ...payload,
+  }
+  await publishContent({ id: props.content.id, payload: publishPayload })
+  publishDialogOpen.value = false
+}
+
+const handleSchedule = async (payload: { message?: string; scheduled_at?: string | null }) => {
+  const schedulePayload = {
+    ...props.content,
+    message: payload.message,
+    scheduled_at: payload.scheduled_at,
+  }
+  await scheduleContent({ id: props.content.id, payload: schedulePayload })
+  publishDialogOpen.value = false
+}
+
 const unpublish = async () => {
   await unpublishContent({ id: props.content.id, payload: props.content })
-
-  // Refresh the preview after unpublishing
-  // if (previewRef.value) {
-  //   previewRef.value.refresh()
-  // }
 }
 
 const switchLocalization = () => {
@@ -82,7 +104,7 @@ const switchVersions = () => {
 }
 
 const canPublish = computed(() => {
-  return !!props.content.id
+  return !!props.content.id && !isPublished.value
 })
 
 const hasLocalization = computed(() => {
@@ -121,27 +143,48 @@ const hasLocalization = computed(() => {
       >Save
     </Button>
     <SplitButton
-      :primary-action="publish"
       variant="accent"
-      :disabled="disabled && !canPublish"
+      :primary-action="publishDirectly"
+      :disabled="disabled || !canPublish"
+      :loading="isPublishing || isScheduling"
     >
-      <span>Publish</span>
+      <span>{{ $t('actions.content.publish') }}</span>
       <template #menu>
-        <DropdownMenuLabel> Publish </DropdownMenuLabel>
-        <DropdownMenuItem @select="publish">
+        <DropdownMenuLabel>Publish</DropdownMenuLabel>
+        <DropdownMenuItem
+          :disabled="disabled || !canPublish"
+          @select="publishWithMessage"
+        >
           <Icon name="lucide:send" />
-          <span>Publish Now</span>
+          <span>{{ $t('actions.content.publishWithMessage') }}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          :disabled="disabled || !canPublish"
+          @select="schedulePublish"
+        >
           <Icon name="lucide:clock-fading" />
-          <span>Schedule</span>
+          <span>{{ $t('actions.content.schedule') }}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem @select="unpublish">
+        <DropdownMenuItem
+          :disabled="!isPublished"
+          @select="unpublish"
+        >
           <Icon name="lucide:eye-off" />
-          <span>Unpublish</span>
+          <span>{{ $t('actions.content.unpublish') }}</span>
         </DropdownMenuItem>
       </template>
     </SplitButton>
+
+    <!-- Publish Dialog -->
+    <PublishDialog
+      :open="publishDialogOpen"
+      :content="content"
+      :loading="isPublishing || isScheduling"
+      :publish-type="publishType"
+      @update:open="publishDialogOpen = $event"
+      @publish="handlePublish"
+      @schedule="handleSchedule"
+    />
   </div>
 </template>

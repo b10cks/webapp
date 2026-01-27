@@ -16,6 +16,7 @@ declare interface ContentVersionListResource {
   message: string | null
   parent_id: string | null
   published_at: string | null
+  scheduled_at: string | null
   release: SimpleReleaseResource | null
   created_at: string
 }
@@ -81,4 +82,6 @@ export interface UpdateContentPayload {
   content?: object
   settings?: Partial<ContentSettings>
   description?: string
+  message?: string
+  scheduled_at?: string | null
 }

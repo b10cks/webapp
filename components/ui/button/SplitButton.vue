@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
-import { computed } from 'vue'
-import type { ButtonVariants } from './index'
-import { buttonVariants } from './index'
 import type { PrimitiveProps } from 'reka-ui'
 import { Primitive } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../dropdown-menu'
+import type { ButtonVariants } from './index'
+import { buttonVariants } from './index'
 
 interface Props extends PrimitiveProps {
   variant?: ButtonVariants['variant']
@@ -13,6 +12,8 @@ interface Props extends PrimitiveProps {
   class?: HTMLAttributes['class']
   primaryAction?: () => void
   disabled?: boolean
+  menuDisabled?: boolean
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'default',
   size: 'default',
   disabled: false,
+  menuDisabled: false,
 })
 
 const primaryButtonClasses = computed(() => {
@@ -47,13 +49,18 @@ const triggerButtonClasses = computed(() => {
     <DropdownMenu>
       <button
         :class="primaryButtonClasses"
-        :disabled="disabled"
+        :disabled="disabled || loading"
         @click="primaryAction && primaryAction()"
       >
+        <Icon
+          v-if="loading"
+          name="lucide:loader"
+          class="animate-spin"
+        />
         <slot />
       </button>
       <DropdownMenuTrigger
-        :disabled="disabled"
+        :disabled="menuDisabled || loading"
         :class="triggerButtonClasses"
       >
         <Icon name="lucide:chevron-down" />

@@ -202,7 +202,7 @@ const handleConfirmAssign = (versionIds: string[]) => {
           <span>{{ $t('actions.content.publishWithMessage') }}</span>
         </DropdownMenuItem>
         <DropdownMenuItem
-          :disabled="disabled || !contentModel.canPublish || !contentModel.isInRelease"
+          :disabled="disabled || !contentModel.canPublish || contentModel.isInRelease"
           @select="schedulePublish"
         >
           <Icon name="lucide:clock-fading" />

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ContentModel } from '~/api/resources/content-model'
 import AssignToReleaseDialog from '~/components/releases/AssignToReleaseDialog.vue'
 import { Button } from '~/components/ui/button'
 import SplitButton from '~/components/ui/button/SplitButton.vue'
@@ -50,6 +51,7 @@ const publishDialogOpen = ref(false)
 const publishType = ref<'now' | 'schedule'>('now')
 const assignReleaseDialogOpen = ref(false)
 const selectedReleaseForAssign = ref<any>(null)
+const contentModel = computed(() => new ContentModel(props.content))
 
 const save = async () => {
   if (props.content.id) {
@@ -97,7 +99,7 @@ const unpublish = async () => {
 }
 
 const switchLocalization = () => {
-  router.push({
+  navigateTo({
     ...route,
     hash: undefined,
     name: isLocalization.value ? 'space-content-contentId' : 'space-content-contentId-localization',
@@ -105,50 +107,30 @@ const switchLocalization = () => {
 }
 
 const switchVersions = () => {
-  router.push({
+  navigateTo({
     ...route,
     hash: undefined,
     name: isVersions.value ? 'space-content-contentId' : 'space-content-contentId-versions',
   })
 }
 
-const isPublished = computed(() => {
-  return props.content.published_at !== null
-})
+const assignedRelease = computed(() =>
+  (releases.value || []).find((release) => release.id === contentModel.value.releaseId)
+)
 
-const isCurrentVersionPublished = computed(() => {
-  return props.content.current_version?.published_at !== null
-})
+const isInScheduledRelease = computed(
+  () => assignedRelease.value && getReleaseState(assignedRelease.value) !== 'draft'
+)
 
-const isInRelease = computed(() => {
-  return !!props.content.current_version?.release_id
-})
+const hasLocalization = computed(() => space.value?.settings?.languages?.length > 0)
 
-const assignedRelease = computed(() => {
-  return (releases.value || []).find(
-    (release) => release.id === props.content.current_version?.release_id
-  )
-})
+const draftReleases = computed(() =>
+  (releases.value || []).filter((release) => getReleaseState(release) === 'draft')
+)
 
-const isInScheduledRelease = computed(() => {
-  return assignedRelease.value && getReleaseState(assignedRelease.value) !== 'draft'
-})
-
-const canPublish = computed(() => {
-  return !isCurrentVersionPublished.value && !isInRelease.value
-})
-
-const hasLocalization = computed(() => {
-  return space.value?.settings?.languages?.length > 0
-})
-
-const draftReleases = computed(() => {
-  return (releases.value || []).filter((release) => getReleaseState(release) === 'draft')
-})
-
-const canPublishToRelease = computed(() => {
-  return !isInScheduledRelease.value && !isPublished.value
-})
+const canPublishToRelease = computed(
+  () => !isInScheduledRelease.value && !contentModel.value.isPublished
+)
 
 const handleAssignToRelease = (release: any) => {
   selectedReleaseForAssign.value = release
@@ -206,21 +188,21 @@ const handleConfirmAssign = (versionIds: string[]) => {
     <SplitButton
       variant="accent"
       :primary-action="publishDirectly"
-      :disabled="disabled || !canPublish"
+      :disabled="disabled || !contentModel.canPublish"
       :loading="isPublishing || isScheduling"
     >
       <span>{{ $t('actions.content.publish') }}</span>
       <template #menu>
         <DropdownMenuLabel>Publish</DropdownMenuLabel>
         <DropdownMenuItem
-          :disabled="disabled || !canPublish"
+          :disabled="disabled || !contentModel.canPublish"
           @select="publishWithMessage"
         >
           <Icon name="lucide:send" />
           <span>{{ $t('actions.content.publishWithMessage') }}</span>
         </DropdownMenuItem>
         <DropdownMenuItem
-          :disabled="disabled || !canPublish || !isInRelease"
+          :disabled="disabled || !contentModel.canPublish || !contentModel.isInRelease"
           @select="schedulePublish"
         >
           <Icon name="lucide:clock-fading" />
@@ -229,10 +211,7 @@ const handleConfirmAssign = (versionIds: string[]) => {
         <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger :disabled="disabled || !canPublishToRelease">
-            <Icon
-              name="lucide:tag"
-              class="mr-2"
-            />
+            <Icon name="lucide:tag" />
             <span>Add to Release</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
@@ -260,7 +239,7 @@ const handleConfirmAssign = (versionIds: string[]) => {
         </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          :disabled="!isPublished"
+          :disabled="!contentModel.isPublished"
           @select="unpublish"
         >
           <Icon name="lucide:eye-off" />

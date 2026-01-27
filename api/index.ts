@@ -11,6 +11,7 @@ import { Assets } from './resources/assets'
 import { BlockTags } from './resources/block-tags'
 import { Blocks } from './resources/blocks'
 import { ContentMenu } from './resources/content-menu'
+import { ContentModel } from './resources/content-model'
 import { ContentVersions } from './resources/content-versions'
 import { Contents } from './resources/contents'
 import { Spaces } from './resources/spaces'
@@ -68,3 +69,5 @@ export class API {
 }
 
 export const api = new API()
+
+export { ContentModel }

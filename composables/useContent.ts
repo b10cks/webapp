@@ -124,6 +124,30 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
     })
   }
 
+  const useScheduleContentMutation = () => {
+    return useMutation({
+      mutationFn: async ({ id, payload }: { id: string; payload: UpdateContentPayload }) => {
+        const response = await spaceAPI.value.contents.schedule(id, payload)
+        return response.data
+      },
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+        })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+        })
+
+        toast.success(`Content "${data.name}" scheduled successfully`)
+      },
+      onError: (error: Error) => {
+        toast.error(`Failed to schedule content: ${error.message || 'Unknown error'}`)
+      },
+    })
+  }
+
   const useUnpublishContentMutation = () => {
     return useMutation({
       mutationFn: async ({ id, payload }: { id: string; payload: UpdateContentPayload }) => {
@@ -150,13 +174,7 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const useDuplicateContentMutation = () => {
     return useMutation({
-      mutationFn: async ({
-        id,
-        options,
-      }: {
-        id: string
-        options?: { name?: string; parent_id?: string | null }
-      }) => {
+      mutationFn: async ({ id, options }: { id: string; options?: { name?: string; parent_id?: string | null } }) => {
         const response = await spaceAPI.value.contents.duplicate(id, options)
         return response.data
       },
@@ -201,6 +219,7 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
     useCreateContentMutation,
     useUpdateContentMutation,
     usePublishContentMutation,
+    useScheduleContentMutation,
     useUnpublishContentMutation,
     useDuplicateContentMutation,
     useDeleteContentMutation,

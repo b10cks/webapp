@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { ScrollArea } from '~/components/ui/scroll-area'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import { Button } from '~/components/ui/button'
-import { Badge } from '~/components/ui/badge'
-import { SimpleTooltip } from '~/components/ui/tooltip'
-import { Avatar } from '~/components/ui/avatar'
-import SearchFilter from '~/components/SearchFilter.vue'
-import dayjs from 'dayjs'
-import type { ContentResource, ContentVersionListResource } from '~/types/contents'
-import { RadioGroupItem, RadioGroupRoot } from 'reka-ui'
-import RenamableTitle from '~/components/ui/RenamableTitle.vue'
-import DiffViewer from '~/components/content/DiffViewer.vue'
 import { useRouteQuery } from '@vueuse/router'
+import dayjs from 'dayjs'
+import { RadioGroupItem, RadioGroupRoot } from 'reka-ui'
+import DiffViewer from '~/components/content/DiffViewer.vue'
+import SearchFilter from '~/components/SearchFilter.vue'
+import { Avatar } from '~/components/ui/avatar'
+import { Badge, SplitBadge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import RenamableTitle from '~/components/ui/RenamableTitle.vue'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable'
+import { ScrollArea } from '~/components/ui/scroll-area'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { SimpleTooltip } from '~/components/ui/tooltip'
+import type { ContentResource, ContentVersionListResource } from '~/types/contents'
 
-const { formatDateTime, formatRelativeTime, formatCalendarTime } = useFormat()
+const { formatDateTime, formatRelativeTime, formatCalendarTime, formatDateTimeDynamically } =
+  useFormat()
 const { user } = useAuth()
 const route = useRoute()
 const router = useRouter()
@@ -198,12 +198,26 @@ const versionFilterFields = [
   { id: 'created_at', label: 'Date', datepicker: { max: new Date().toISOString() } },
 ]
 
+const getIndicatorClass = (version: ContentVersionListResource) => {
+  if (wasPublished(version)) {
+    return 'border-success bg-success-background'
+  }
+  if (isScheduled(version)) {
+    return 'border-warning bg-warning-background'
+  }
+  return 'border-border bg-background'
+}
+
 const isCurrentDraft = (version: ContentVersionListResource) => {
   return version.id === props.content.current_version_id
 }
 
 const wasPublished = (version: ContentVersionListResource) => {
   return !!version.published_at
+}
+
+const isScheduled = (version: ContentVersionListResource) => {
+  return !!version.scheduled_at
 }
 
 const isCurrentlyPublished = (version: ContentVersionListResource) => {
@@ -285,7 +299,7 @@ const openInTab = () => {
 
             <RadioGroupRoot
               v-else
-              class="p-2"
+              class="relative p-2"
             >
               <div
                 v-for="(groupVersions, groupKey) in groupedVersions"
@@ -302,10 +316,26 @@ const openInTab = () => {
                 </div>
 
                 <div class="grid">
+                  <div
+                    v-for="version in groupVersions"
+                    :key="`line-${version.id}`"
+                  >
+                    <div
+                      v-if="version.parent_id"
+                      class="absolute z-0 border-3 border-transparent border-t-border border-l-border"
+                      :style="{
+                        borderTopLeftRadius: `${getVersionIndentLevel(version.id) ? 12 : 0}px`,
+                        top: `anchor(--v${version.id} center)`,
+                        left: `calc(anchor(--v${version.parent_id} center) - 2px)`,
+                        bottom: `anchor(--v${version.parent_id} center)`,
+                        right: `anchor(--v${version.id} center)`,
+                      }"
+                    />
+                  </div>
                   <RadioGroupItem
                     v-for="version in groupVersions"
                     :key="version.id"
-                    class="group ring-none relative flex items-center rounded-md px-3 py-1 transition-colors outline-none"
+                    class="group ring-none relative z-10 flex items-center rounded-md px-3 py-1 transition-colors outline-none"
                     :class="{
                       'bg-secondary/50': selectedVersionId === version.id,
                       'cursor-pointer hover:bg-secondary/20': selectedVersionId !== version.id,
@@ -315,20 +345,14 @@ const openInTab = () => {
                     <div
                       v-if="getVersionIndentLevel(version.id) > 0"
                       :style="`width: ${getVersionIndentLevel(version.id) * 16}px`"
-                      class="flex-shrink-0"
+                      class="shrink-0"
                     />
                     <div
-                      v-if="version.parent_id"
-                      class="absolute top-6 h-8 w-0.5 bg-border"
-                      :style="{ left: `${1 + getVersionIndentLevel(version.id)}rem` }"
-                    />
-                    <div
-                      class="relative z-10 mr-3 h-3 w-3 flex-shrink-0 rounded-full border-2"
-                      :class="[
-                        wasPublished(version)
-                          ? 'border-success bg-success-background'
-                          : 'border-border bg-background',
-                      ]"
+                      class="z-10 mr-3 h-3 w-3 shrink-0 rounded-full border-2"
+                      :class="getIndicatorClass(version)"
+                      :style="{
+                        anchorName: `--v${version.id}`,
+                      }"
                     />
                     <div class="flex flex-1 grow items-center">
                       <div class="flex grow items-center justify-start gap-2">
@@ -340,13 +364,40 @@ const openInTab = () => {
                           >
                             Draft
                           </Badge>
-                          <Badge
-                            v-if="isCurrentlyPublished(version)"
-                            variant="success"
-                            size="sm"
+                          <SimpleTooltip
+                            v-if="isScheduled(version)"
+                            :tooltip="formatDateTime(version.scheduled_at)"
                           >
-                            Published
-                          </Badge>
+                            <Badge
+                              v-if="version.published_at"
+                              variant="warning"
+                              size="sm"
+                            >
+                              Scheduled
+                            </Badge>
+                            <SplitBadge
+                              v-else
+                              variant="secondary"
+                              label-variant="warning"
+                              size="sm"
+                              label="Scheduled"
+                            >
+                              {{ formatDateTimeDynamically(version.scheduled_at, 7) }}
+                            </SplitBadge>
+                          </SimpleTooltip>
+                          <SimpleTooltip
+                            v-if="isCurrentlyPublished(version)"
+                            :tooltip="formatDateTime(version.published_at)"
+                          >
+                            <SplitBadge
+                              label-variant="success"
+                              variant="secondary"
+                              size="sm"
+                              label="Published"
+                            >
+                              <time>{{ formatDateTimeDynamically(version.published_at, 14) }}</time>
+                            </SplitBadge>
+                          </SimpleTooltip>
                         </div>
                         <RenamableTitle
                           :name="version.message"
@@ -386,7 +437,7 @@ const openInTab = () => {
                         <span>•</span>
                         <SimpleTooltip :tooltip="formatDateTime(version.created_at)">
                           <time class="text-primary">{{
-                            formatRelativeTime(version.created_at)
+                            formatDateTimeDynamically(version.created_at, 14)
                           }}</time>
                         </SimpleTooltip>
                       </div>

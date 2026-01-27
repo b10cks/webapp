@@ -60,6 +60,29 @@ const { mutate: setCurrentVersion, isPending: isSettingCurrent } = useSetCurrent
 const { mutate: publishVersion, isPending: isPublishing } = usePublishVersionMutation()
 const { mutate: updateVersion, isPending: isUpdating } = useUpdateVersionMutation()
 
+const { useRemoveVersionsMutation } = useReleases(props.spaceId)
+const { mutate: removeVersions, isPending: isRemovingVersion } = useRemoveVersionsMutation()
+const { alert } = useAlertDialog()
+
+const handleRemoveFromReleaseClick = async (version: ContentVersionListResource) => {
+  if (version.release) {
+    await alert.confirm(
+      `Are you sure you want to remove this version from the release "${version.release.name}"?`,
+      {
+        title: 'Remove from Release',
+        confirmLabel: 'Remove',
+        variant: 'destructive',
+        onConfirm: () => {
+          removeVersions({
+            releaseId: version.release!.id,
+            payload: { version_ids: [version.id] },
+          })
+        },
+      }
+    )
+  }
+}
+
 // Compute date-based groups for the versions
 const groupedVersions = computed(() => {
   if (!versions.value) return {}
@@ -398,6 +421,21 @@ const openInTab = () => {
                               <time>{{ formatDateTimeDynamically(version.published_at, 14) }}</time>
                             </SplitBadge>
                           </SimpleTooltip>
+                          <SplitBadge
+                            v-if="version.release"
+                            size="sm"
+                            variant="accent"
+                            label-variant="secondary"
+                            label="Release"
+                            removable
+                            @remove="handleRemoveFromReleaseClick(version)"
+                          >
+                            <Icon
+                              name="lucide:rocket"
+                              size="0.75rem"
+                            />
+                            <span class="truncate">{{ version.release.name }}</span>
+                          </SplitBadge>
                         </div>
                         <RenamableTitle
                           :name="version.message"
@@ -406,18 +444,6 @@ const openInTab = () => {
                           :disabled="!isMine"
                           @update="handleUpdateMessage(version.id, $event)"
                         />
-                        <Badge
-                          v-if="version.release"
-                          size="sm"
-                          variant="outline"
-                          class="gap-1 text-nowrap"
-                        >
-                          <Icon
-                            name="lucide:rocket"
-                            size="0.75rem"
-                          />
-                          <span class="text-primary">{{ version.release.name }}</span>
-                        </Badge>
                       </div>
 
                       <div class="ml-auto flex items-center gap-2">

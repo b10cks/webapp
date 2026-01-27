@@ -289,8 +289,6 @@ export function useAuth() {
     const { api } = await import('~/api')
     api.setAuthToken(undefined)
 
-    console.log(returnPath, route.query.return, route.fullPath, '/')
-
     navigateTo({
       name: 'login',
       query: { return: returnPath || route.query.return || route.fullPath || '/' },

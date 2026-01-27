@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { AlertDialogActionProps } from 'reka-ui'
 import { AlertDialogAction } from 'reka-ui'
@@ -17,7 +18,7 @@ const delegatedProps = computed(() => {
 <template>
   <AlertDialogAction
     v-bind="delegatedProps"
-    :class="cn(props.class)"
+    :class="cn(buttonVariants(), 'mt-2 sm:mt-0', props.class)"
   >
     <slot />
   </AlertDialogAction>

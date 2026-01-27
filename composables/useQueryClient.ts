@@ -109,4 +109,11 @@ export const queryKeys = {
     detail: (id: string) =>
       [...queryKeys.dataEntries(spaceId, dataSourceId).details(), id] as const,
   }),
+  releases: (spaceId: string) => ({
+    all: () => ['spaces', spaceId, 'releases'] as const,
+    lists: () => [...queryKeys.releases(spaceId).all(), 'list'] as const,
+    list: (filters: any = {}) => [...queryKeys.releases(spaceId).lists(), filters] as const,
+    details: () => [...queryKeys.releases(spaceId).all(), 'detail'] as const,
+    detail: (id: string) => [...queryKeys.releases(spaceId).details(), id] as const,
+  }),
 }

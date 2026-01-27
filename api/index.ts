@@ -1,6 +1,7 @@
 import { BlockFolders } from '~/api/resources/block-folders'
 import { DataSources } from '~/api/resources/data-sources'
 import { Redirects } from '~/api/resources/redirects'
+import { Releases } from '~/api/resources/releases'
 import { Tokens } from '~/api/resources/tokens'
 
 import { ApiClient } from './client'
@@ -10,6 +11,7 @@ import { Assets } from './resources/assets'
 import { BlockTags } from './resources/block-tags'
 import { Blocks } from './resources/blocks'
 import { ContentMenu } from './resources/content-menu'
+import { ContentModel } from './resources/content-model'
 import { ContentVersions } from './resources/content-versions'
 import { Contents } from './resources/contents'
 import { Spaces } from './resources/spaces'
@@ -60,9 +62,12 @@ export class API {
       dataSources: new DataSources(this.client, spaceId),
       tokens: new Tokens(this.client, spaceId),
       redirects: new Redirects(this.client, spaceId),
+      releases: new Releases(this.client, spaceId),
       contentVersions: (contentId: string) => new ContentVersions(this.client, spaceId, contentId),
     }
   }
 }
 
 export const api = new API()
+
+export { ContentModel }

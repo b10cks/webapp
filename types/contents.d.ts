@@ -15,6 +15,7 @@ declare interface ContentVersionListResource {
   } | null
   message: string | null
   parent_id: string | null
+  release_id: string | null
   published_at: string | null
   scheduled_at: string | null
   release: SimpleReleaseResource | null
@@ -57,7 +58,9 @@ export interface ContentResource {
   content: object
   settings: ContentSettings
   published_version_id: string | null
+  published_version?: ContentVersionListResource | null
   current_version_id: string | null
+  current_version?: ContentVersionListResource | null
   description: string
   first_published_at: string | null
   published_at: string | null

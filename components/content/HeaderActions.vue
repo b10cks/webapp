@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import AssignToReleaseDialog from '~/components/releases/AssignToReleaseDialog.vue'
 import { Button } from '~/components/ui/button'
 import SplitButton from '~/components/ui/button/SplitButton.vue'
 import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from '~/components/ui/dropdown-menu'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import type { ContentResource } from '~/types/contents'
@@ -29,6 +33,11 @@ const {
 const { useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(props.spaceId)
 
+const { useReleasesQuery, useAssignVersionsMutation, getReleaseState } = useReleases(props.spaceId)
+const { data: releases } = useReleasesQuery()
+
+const { mutate: assignVersions, isPending: isAssigning } = useAssignVersionsMutation()
+
 const { mutate: createContent } = useCreateContentMutation()
 const { mutate: updateContent } = useUpdateContentMutation()
 const { mutate: publishContent, isPending: isPublishing } = usePublishContentMutation()
@@ -39,6 +48,8 @@ const isLocalization = computed(() => route.name === 'space-content-contentId-lo
 const isVersions = computed(() => route.name === 'space-content-contentId-versions')
 const publishDialogOpen = ref(false)
 const publishType = ref<'now' | 'schedule'>('now')
+const assignReleaseDialogOpen = ref(false)
+const selectedReleaseForAssign = ref<any>(null)
 
 const save = async () => {
   if (props.content.id) {
@@ -47,8 +58,6 @@ const save = async () => {
     await createContent(props.content)
   }
 }
-
-const isPublished = computed(() => props.content.published_at !== null)
 
 const publishDirectly = async () => {
   await publishContent({ id: props.content.id, payload: props.content })
@@ -103,13 +112,65 @@ const switchVersions = () => {
   })
 }
 
+const isPublished = computed(() => {
+  return props.content.published_at !== null
+})
+
+const isCurrentVersionPublished = computed(() => {
+  return props.content.current_version?.published_at !== null
+})
+
+const isInRelease = computed(() => {
+  return !!props.content.current_version?.release_id
+})
+
+const assignedRelease = computed(() => {
+  return (releases.value || []).find(
+    (release) => release.id === props.content.current_version?.release_id
+  )
+})
+
+const isInScheduledRelease = computed(() => {
+  return assignedRelease.value && getReleaseState(assignedRelease.value) !== 'draft'
+})
+
 const canPublish = computed(() => {
-  return !!props.content.id && !isPublished.value
+  return !isCurrentVersionPublished.value && !isInRelease.value
 })
 
 const hasLocalization = computed(() => {
   return space.value?.settings?.languages?.length > 0
 })
+
+const draftReleases = computed(() => {
+  return (releases.value || []).filter((release) => getReleaseState(release) === 'draft')
+})
+
+const canPublishToRelease = computed(() => {
+  return !isInScheduledRelease.value && !isPublished.value
+})
+
+const handleAssignToRelease = (release: any) => {
+  selectedReleaseForAssign.value = release
+  assignReleaseDialogOpen.value = true
+}
+
+const handleConfirmAssign = (versionIds: string[]) => {
+  if (selectedReleaseForAssign.value) {
+    assignVersions(
+      {
+        releaseId: selectedReleaseForAssign.value.id,
+        payload: { version_ids: versionIds },
+      },
+      {
+        onSuccess: () => {
+          assignReleaseDialogOpen.value = false
+          selectedReleaseForAssign.value = null
+        },
+      }
+    )
+  }
+}
 </script>
 
 <template>
@@ -159,12 +220,44 @@ const hasLocalization = computed(() => {
           <span>{{ $t('actions.content.publishWithMessage') }}</span>
         </DropdownMenuItem>
         <DropdownMenuItem
-          :disabled="disabled || !canPublish"
+          :disabled="disabled || !canPublish || !isInRelease"
           @select="schedulePublish"
         >
           <Icon name="lucide:clock-fading" />
           <span>{{ $t('actions.content.schedule') }}</span>
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger :disabled="disabled || !canPublishToRelease">
+            <Icon
+              name="lucide:tag"
+              class="mr-2"
+            />
+            <span>Add to Release</span>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            <DropdownMenuItem
+              v-if="draftReleases.length === 0"
+              disabled
+            >
+              No draft releases available
+            </DropdownMenuItem>
+            <template v-else>
+              <DropdownMenuItem
+                v-for="release in draftReleases"
+                :key="release.id"
+                :disabled="disabled"
+                @select="handleAssignToRelease(release)"
+              >
+                <Icon
+                  name="lucide:plus"
+                  class="mr-2 h-4 w-4"
+                />
+                {{ release.name }}
+              </DropdownMenuItem>
+            </template>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           :disabled="!isPublished"
@@ -185,6 +278,16 @@ const hasLocalization = computed(() => {
       @update:open="publishDialogOpen = $event"
       @publish="handlePublish"
       @schedule="handleSchedule"
+    />
+
+    <!-- Assign to Release Dialog -->
+    <AssignToReleaseDialog
+      :open="assignReleaseDialogOpen"
+      :release="selectedReleaseForAssign"
+      :current-version="content.current_version"
+      :loading="isAssigning"
+      @update:open="assignReleaseDialogOpen = $event"
+      @assign="handleConfirmAssign"
     />
   </div>
 </template>

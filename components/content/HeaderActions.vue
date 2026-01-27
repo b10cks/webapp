@@ -143,10 +143,10 @@ const hasLocalization = computed(() => {
       >Save
     </Button>
     <SplitButton
-      :primary-action="publishDirectly"
       variant="accent"
+      :primary-action="publishDirectly"
       :disabled="disabled || !canPublish"
-      :loading="isPublishing"
+      :loading="isPublishing || isScheduling"
     >
       <span>{{ $t('actions.content.publish') }}</span>
       <template #menu>

@@ -13,6 +13,7 @@ interface Props extends PrimitiveProps {
   primaryAction?: () => void
   disabled?: boolean
   menuDisabled?: boolean
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -48,13 +49,18 @@ const triggerButtonClasses = computed(() => {
     <DropdownMenu>
       <button
         :class="primaryButtonClasses"
-        :disabled="disabled"
+        :disabled="disabled || loading"
         @click="primaryAction && primaryAction()"
       >
+        <Icon
+          v-if="loading"
+          name="lucide:loader"
+          class="animate-spin"
+        />
         <slot />
       </button>
       <DropdownMenuTrigger
-        :disabled="menuDisabled"
+        :disabled="menuDisabled || loading"
         :class="triggerButtonClasses"
       >
         <Icon name="lucide:chevron-down" />

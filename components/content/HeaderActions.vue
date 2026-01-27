@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { Button } from '~/components/ui/button'
 import SplitButton from '~/components/ui/button/SplitButton.vue'
-import { DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '~/components/ui/dropdown-menu'
+import {
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from '~/components/ui/dropdown-menu'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import type { ContentResource } from '~/types/contents'
 import PublishDialog from './PublishDialog.vue'
@@ -32,7 +36,7 @@ const { mutate: scheduleContent, isPending: isScheduling } = useScheduleContentM
 const { mutate: unpublishContent } = useUnpublishContentMutation()
 
 const isLocalization = computed(() => route.name === 'space-content-contentId-localization')
-const isVersions = computed(() => route.name === 'space-content-contentId-history')
+const isVersions = computed(() => route.name === 'space-content-contentId-versions')
 const publishDialogOpen = ref(false)
 const publishType = ref<'now' | 'schedule'>('now')
 
@@ -162,7 +166,10 @@ const hasLocalization = computed(() => {
           <span>{{ $t('actions.content.schedule') }}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem @select="unpublish">
+        <DropdownMenuItem
+          :disabled="!isPublished"
+          @select="unpublish"
+        >
           <Icon name="lucide:eye-off" />
           <span>{{ $t('actions.content.unpublish') }}</span>
         </DropdownMenuItem>

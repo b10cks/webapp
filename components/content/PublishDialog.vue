@@ -37,7 +37,7 @@ const handlePublish = () => {
   } else {
     const payload = {
       message: message.value || undefined,
-      published_at: undefined,
+      scheduled_at: undefined,
     }
     emits('publish', payload)
   }

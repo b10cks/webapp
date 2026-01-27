@@ -2,7 +2,7 @@
 import { Badge } from '~/components/ui/badge'
 import type { Release } from '~/types/releases'
 
-const { getReleaseState } = useReleases()
+const { getReleaseState } = useReleases(inject<string>('spaceId') || '')
 
 defineProps<{
   release: Release

@@ -1,5 +1,6 @@
 {
   "project_name": "b10cks web app",
+  "language_servers": ["!eslint", "..."],
   "lsp": {
     "oxlint": {
       "initialization_options": {

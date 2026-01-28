@@ -14,6 +14,7 @@ interface RegisterPayload {
   password: string
   firstname: string
   lastname: string
+  invite_id?: string
 }
 
 interface AuthResponse {
@@ -45,7 +46,7 @@ class TokenManager {
   }
 
   static getRefreshToken(): string | null {
-    return this.authStorage.value?.refreshToken || null
+    return this.authStorage.value?.accessToken || null
   }
 
   static getExpiresAt(): number {
@@ -135,6 +136,20 @@ export function useAuth() {
     }
   }
 
+  const handleAuthResponse = async (api: Api, response: AuthResponse, cb: CallableFunction) => {
+    if (!response.access_token) {
+      throw new Error('Invalid response from server')
+    }
+    TokenManager.setTokens(response.access_token, response.refresh_token, response.expires_in)
+
+    api.setAuthToken(response.access_token)
+    setupTokenRefresh(response.expires_in)
+    await loadUser()
+    cb()
+
+    return true
+  }
+
   const login = async (payload: LoginPayload): Promise<boolean> => {
     isLoading.value = true
     error.value = null
@@ -143,18 +158,9 @@ export function useAuth() {
       const { api } = await import('~/api')
       const response = await api.client.post<AuthResponse>('/auth/v1/token', payload)
 
-      if (response.access_token) {
-        TokenManager.setTokens(response.access_token, response.access_token, response.expires_in)
-
-        api.setAuthToken(response.access_token)
-        setupTokenRefresh(response.expires_in)
-        await loadUser()
-
-        router.push(route.query.return || '/')
-        return true
-      }
-
-      throw new Error('Invalid response from server')
+      return await handleAuthResponse(api, response, () => {
+        router.push((route.query.return as string) || '/')
+      })
     } catch (err: any) {
       error.value =
         err?.response?.status === 401
@@ -172,11 +178,10 @@ export function useAuth() {
 
     try {
       const { api } = await import('~/api')
-      await api.client.post('/auth/v1/register', payload)
+      const response = await api.client.post<AuthResponse>('/auth/v1/register', payload)
 
-      return await login({
-        email: payload.email,
-        password: payload.password,
+      return await handleAuthResponse(api, response, () => {
+        router.push((route.query.return as string) || '/')
       })
     } catch (err: any) {
       error.value =
@@ -215,17 +220,9 @@ export function useAuth() {
         refresh_token: refreshTokenValue,
       })
 
-      if (response.access_token) {
-        TokenManager.setTokens(response.access_token, response.access_token, response.expires_in)
-
-        api.setAuthToken(response.access_token)
-        setupTokenRefresh(response.expires_in)
+      return await handleAuthResponse(api, response, () => {
         processRequestQueue(true, response.access_token)
-
-        return true
-      }
-
-      throw new Error('Invalid refresh response')
+      })
     } catch (err: any) {
       processRequestQueue(false)
 
@@ -288,6 +285,10 @@ export function useAuth() {
     TokenManager.clearTokens()
     const { api } = await import('~/api')
     api.setAuthToken(undefined)
+
+    if (route.fullPath.startsWith('/login')) {
+      return Promise.resolve()
+    }
 
     navigateTo({
       name: 'login',

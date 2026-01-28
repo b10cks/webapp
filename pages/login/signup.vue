@@ -1,52 +1,67 @@
 <script setup lang="ts">
 import Logo from '~/assets/logo.svg'
 import Markdown from '~/components/Markdown.vue'
+import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
+import { digest } from '~/lib/utils'
 
 const route = useRoute()
 const router = useRouter()
-const { login } = useAuth()
+const { register } = useAuth()
 const { usePublicInviteQuery } = useInvites()
 
 const inviteId = computed(() => route.query.invite_id as string | undefined)
 const inviteToken = computed(() => route.query.invite_token as string | undefined)
 
-// Fetch public invite details if token is provided
-const { data: publicInvite } = usePublicInviteQuery(computed(() => inviteToken.value || ''))
+const { data: publicInvite, error: inviteError } = usePublicInviteQuery(inviteId)
 
 const formData = ref<{
   firstname: string
   lastname: string
   email: string
   password: string
+  password_confirmation: string
   invite_id?: string
 }>({
   firstname: '',
   lastname: '',
   email: '',
   password: '',
+  password_confirmation: '',
   invite_id: inviteId.value,
 })
 
+const emailHash = ref<string | undefined>()
+
+watch(
+  () => formData.value.email,
+  async () => {
+    emailHash.value = await digest(formData.value.email)
+  }
+)
+
+const loginUrl = computed(
+  () =>
+    `/login${inviteId.value ? `?return=/invites/${inviteId.value}?token=${inviteToken.value}` : ''}`
+)
+
 const emailMismatch = computed(() => {
-  if (!publicInvite.value?.email_hash || !formData.value.email) {
+  if (!publicInvite.value?.email_hash || !emailHash.value || !formData.value.email) {
     return false
   }
-  // Compare email hashes (would need to be done server-side properly)
-  return false
+
+  return publicInvite.value.email_hash !== emailHash.value
 })
 
 const handleSignup = async () => {
-  await login({
+  await register({
     ...formData.value,
-    password_confirmation: formData.value.password,
     invite_id: formData.value.invite_id || undefined,
   })
 
-  // After successful registration, redirect to invite acceptance if invite_id exists
-  if (inviteId.value) {
-    router.push(`/invites/${inviteId.value}`)
+  if (publicInvite.value?.space?.id) {
+    router.push(`/${publicInvite.value.space.id}`)
   }
 }
 </script>
@@ -64,30 +79,34 @@ const handleSignup = async () => {
             class="font-script mb-6 text-2xl font-semibold text-primary"
             v-text="$t('labels.login.signupHeader')"
           />
-          <Markdown :content="$t('labels.login.signupDescription')" />
-
-          <!-- Invite Info Banner -->
-          <div
+          <Alert
             v-if="publicInvite"
-            class="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300"
+            color="info"
+            variant="modern"
+            icon="lucide:handshake"
           >
-            <p class="font-semibold">You've been invited!</p>
-            <p class="mt-1">
-              <span class="font-medium">{{ publicInvite.inviter.firstname }}</span>
-              has invited you to join
-              <span class="font-medium">{{
-                publicInvite.space?.name || publicInvite.team?.name || 'their team'
-              }}</span>
-            </p>
-            <p
-              v-if="emailMismatch"
-              class="mt-2 text-xs opacity-75"
-            >
-              Note: You're registering with a different email than the invite.
-            </p>
-          </div>
+            <Markdown
+              :content="
+                $t('labels.login.invite', {
+                  inviter: publicInvite.inviter?.name,
+                  name: publicInvite.space?.name || publicInvite.team?.name || 'their team',
+                })
+              "
+            />
+          </Alert>
+          <Alert
+            v-else-if="inviteError"
+            color="warning"
+            variant="modern"
+            icon="lucide:octagon-x"
+          >
+            {{ inviteError.data.message }}
+          </Alert>
+          <Markdown
+            v-else
+            :content="$t('labels.login.signupDescription')"
+          />
         </div>
-
         <form
           class="grid gap-6"
           @submit.prevent="handleSignup"
@@ -114,23 +133,27 @@ const handleSignup = async () => {
             name="email"
             :label="$t('labels.login.fields.emailLabel')"
             :placeholder="$t('labels.login.fields.emailPlaceholder')"
+            :description="emailMismatch ? $t('labels.login.emailMismatch') : ''"
             required
           />
-          <div class="grid gap-3">
-            <InputField
-              v-model="formData.password"
-              type="password"
-              name="password"
-              :label="$t('labels.login.fields.passwordLabel')"
-              :placeholder="$t('labels.login.fields.passwordPlaceholder')"
-              required
-            />
-          </div>
-          <Button
-            variant="primary"
-          >{{ $t('actions.signup') }}</Button
-          >
-          <Markdown :content="$t('labels.login.login')" />
+          <InputField
+            v-model="formData.password"
+            type="password"
+            name="password"
+            :label="$t('labels.login.fields.passwordLabel')"
+            :placeholder="$t('labels.login.fields.passwordPlaceholder')"
+            required
+          />
+          <InputField
+            v-model="formData.password_confirmation"
+            type="password"
+            name="password_confirmation"
+            :label="$t('labels.login.fields.passwordConfirmationLabel')"
+            :placeholder="$t('labels.login.fields.passwordConfirmationPlaceholder')"
+            required
+          />
+          <Button variant="primary">{{ $t('actions.signup') }}</Button>
+          <Markdown :content="$t('labels.login.login', { url: loginUrl })" />
         </form>
       </div>
     </NuxtLayout>

@@ -1,14 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
-import { api } from '~/api'
+
 import type { MaybeRefOrComputed } from '~/types'
-import type {
-  AcceptInvitePayload,
-  CreateInvitePayload,
-  InviteQueryParams,
-  InviteResource,
-  PublicInviteResource,
-} from '~/types/invites'
+import type { AcceptInvitePayload, CreateInvitePayload, InviteQueryParams } from '~/types/invites'
+
+import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
@@ -23,6 +19,7 @@ export function useInvites() {
       queryKey: computed(() => queryKeys.invites.public(token.value)),
       queryFn: async () => {
         const response = await api.invites.getPublicInvite(token.value)
+        console.log(response.data)
         return response.data
       },
       enabled: computed(() => !!token.value),
@@ -94,7 +91,13 @@ export function useInvites() {
   // Space Invites Mutations
   const useCreateSpaceInviteMutation = () => {
     return useMutation({
-      mutationFn: async ({ spaceId, payload }: { spaceId: string; payload: CreateInvitePayload }) => {
+      mutationFn: async ({
+        spaceId,
+        payload,
+      }: {
+        spaceId: string
+        payload: CreateInvitePayload
+      }) => {
         const response = await api.invites.createSpaceInvite(spaceId, payload)
         return { spaceId, invite: response.data }
       },
@@ -190,12 +193,19 @@ export function useInvites() {
   // Accept Invite Mutation
   const useAcceptInviteMutation = () => {
     return useMutation({
-      mutationFn: async ({ inviteId, payload }: { inviteId: string; payload: AcceptInvitePayload }) => {
+      mutationFn: async ({
+        inviteId,
+        payload,
+      }: {
+        inviteId: string
+        payload: AcceptInvitePayload
+      }) => {
         const response = await api.invites.acceptInvite(inviteId, payload)
         return response.data
       },
       onSuccess: (invite) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.myList() })
+        console.log('Invite accepted', invite)
         const targetName = invite.space?.name || invite.team?.name || 'resource'
         toast.success(`Successfully joined ${targetName}`)
       },

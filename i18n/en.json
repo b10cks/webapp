@@ -11,12 +11,16 @@
         "emailLabel": "Email",
         "emailPlaceholder": "Enter your email address",
         "passwordLabel": "Password",
-        "passwordPlaceholder": "Enter your password"
+        "passwordPlaceholder": "Enter your password",
+        "passwordConfirmationLabel": "Confirm Password",
+        "passwordConfirmationPlaceholder": "Confirm your password"
       },
+      "emailMismatch": "Note: You're registering with a different email than the invite.",
       "signupHeader": "Create your account",
       "signupDescription": "Join us to start building your content with b10cks.",
+      "invite": "**You've been invited!**\n\n**{inviter}** has invited you to join **{name}**.",
       "signup": "Don't have an account? [Sign up](/login/signup)",
-      "login": "Already have an account? [Login](/login)",
+      "login": "Already have an account? [Login]({url})",
       "terms": "I agree to the [Terms of Service](https://www.b10cks.com/legal/terms-of-service) and [Privacy Policy](https://www.b10cks.com/legal/privacy-policy)",
       "forgotPassword": "Forgot your password?",
       "marketing": {

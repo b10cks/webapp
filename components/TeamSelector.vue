@@ -35,9 +35,14 @@ const handleSelect = (value: string) => {
   }
 }
 
+onMounted(() => {
+  if (!selectTeam) {
+    selectTeam(null)
+  }
+})
+
 const getTeamIcon = (team: Pick<TeamResource, 'icon' | 'type'>) => {
-  if (team.icon) return team.icon
-  return team.type === 'department' ? 'lucide:building-2' : 'lucide:users'
+  return team.icon ? `lucide:${team.icon}` : 'lucide:users'
 }
 
 interface TreeNode {

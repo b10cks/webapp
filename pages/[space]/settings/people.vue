@@ -7,7 +7,8 @@ import ContentHeader from '~/components/ui/ContentHeader.vue'
 const route = useRoute()
 const spaceId = computed(() => route.params.space as string)
 
-const { useSpaceInvitesQuery, useDeleteSpaceInviteMutation, useResendSpaceInviteMutation } = useInvites()
+const { useSpaceInvitesQuery, useDeleteSpaceInviteMutation, useResendSpaceInviteMutation } =
+  useInvites()
 const { data: invites, isPending } = useSpaceInvitesQuery(spaceId)
 const { mutate: deleteInvite } = useDeleteSpaceInviteMutation()
 const { mutate: resendInvite } = useResendSpaceInviteMutation()
@@ -21,11 +22,6 @@ const handleDeleteInvite = (inviteId: string) => {
 const handleResendInvite = (inviteId: string) => {
   resendInvite({ spaceId: spaceId.value, inviteId })
 }
-
-definePageMeta({
-  layout: 'default',
-  middleware: 'auth',
-})
 </script>
 
 <template>
@@ -37,7 +33,10 @@ definePageMeta({
             variant="primary"
             @click="inviteDialogOpen = true"
           >
-            <Icon name="lucide:plus" class="h-4 w-4 mr-2" />
+            <Icon
+              name="lucide:plus"
+              class="mr-2 h-4 w-4"
+            />
             Send Invite
           </Button>
         </ContentHeader>
@@ -48,15 +47,18 @@ definePageMeta({
               <h3 class="text-lg font-semibold">Pending Invites</h3>
               <span
                 v-if="invites && invites.length > 0"
-                class="text-sm text-muted-foreground"
+                class="text-muted-foreground text-sm"
               >
                 {{ invites.length }} invite{{ invites.length !== 1 ? 's' : '' }}
               </span>
             </div>
 
-            <div v-if="isPending" class="space-y-2">
-              <div class="h-16 rounded-lg border border-muted bg-muted/50 animate-pulse" />
-              <div class="h-16 rounded-lg border border-muted bg-muted/50 animate-pulse" />
+            <div
+              v-if="isPending"
+              class="space-y-2"
+            >
+              <div class="h-16 animate-pulse rounded-lg border border-muted bg-muted/50" />
+              <div class="h-16 animate-pulse rounded-lg border border-muted bg-muted/50" />
             </div>
 
             <InvitesList
@@ -80,4 +82,3 @@ definePageMeta({
     />
   </div>
 </template>
-

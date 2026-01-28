@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '~/components/ui/button'
 import type { InviteResource } from '~/types/invites'
-import { InviteStatus } from '~/types/invites'
+import { InviteStatus } from '~/types/invites.d'
 
 const props = defineProps<{
   spaceId?: string
@@ -41,16 +41,14 @@ const getExpiresInDays = (expiresAt: string) => {
   <div class="space-y-4">
     <div
       v-if="!invites || invites.length === 0"
-      class="text-center py-8"
+      class="py-8 text-center"
     >
       <Icon
         name="lucide:inbox"
-        class="h-12 w-12 mx-auto text-muted-foreground mb-2"
+        class="text-muted-foreground mx-auto mb-2 h-12 w-12"
       />
       <p class="text-muted-foreground">No invites yet</p>
-      <p class="text-sm text-muted-foreground">
-        Start by sending an invite to someone
-      </p>
+      <p class="text-muted-foreground text-sm">Start by sending an invite to someone</p>
     </div>
 
     <div
@@ -60,48 +58,54 @@ const getExpiresInDays = (expiresAt: string) => {
       <div
         v-for="invite in invites"
         :key="invite.id"
-        class="flex items-center justify-between rounded-lg border border-muted p-4 hover:bg-muted/50 transition-colors"
+        class="flex items-center justify-between rounded-lg border border-muted p-4 transition-colors hover:bg-muted/50"
       >
-        <div class="flex-1 min-w-0">
+        <div class="min-w-0 flex-1">
           <div class="flex items-center gap-3">
-            <div class="flex-1 min-w-0">
-              <p class="font-medium text-sm truncate">{{ invite.email }}</p>
-              <p class="text-xs text-muted-foreground">
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-medium">{{ invite.email }}</p>
+              <p class="text-muted-foreground text-xs">
                 Role: <span class="capitalize">{{ invite.role }}</span>
               </p>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <span :class="['text-xs px-2 py-1 rounded-full font-medium', getStatusBadgeColor(invite.status)]">
+            <div class="flex shrink-0 items-center gap-2">
+              <span
+                :class="[
+                  'rounded-full px-2 py-1 text-xs font-medium',
+                  getStatusBadgeColor(invite.status),
+                ]"
+              >
                 {{ invite.status.charAt(0).toUpperCase() + invite.status.slice(1) }}
               </span>
             </div>
           </div>
 
-          <p class="text-xs text-muted-foreground mt-2">
+          <p class="text-muted-foreground mt-2 text-xs">
             <span v-if="invite.status === InviteStatus.ACCEPTED">
               Accepted on {{ new Date(invite.accepted_at).toLocaleDateString() }}
             </span>
-            <span v-else>
-              Expires in {{ getExpiresInDays(invite.expires_at) }} days
-            </span>
+            <span v-else> Expires in {{ getExpiresInDays(invite.expires_at) }} days </span>
           </p>
 
           <p
             v-if="invite.message"
-            class="text-xs text-muted-foreground mt-1 italic"
+            class="text-muted-foreground mt-1 text-xs italic"
           >
             "{{ invite.message }}"
           </p>
         </div>
 
-        <div class="flex items-center gap-2 ml-4 shrink-0">
+        <div class="ml-4 flex shrink-0 items-center gap-2">
           <Button
             v-if="invite.status === InviteStatus.PENDING"
             size="sm"
             variant="ghost"
             @click="emit('resend', invite.id)"
           >
-            <Icon name="lucide:send" class="h-4 w-4" />
+            <Icon
+              name="lucide:send"
+              class="h-4 w-4"
+            />
           </Button>
           <Button
             v-if="invite.status !== InviteStatus.ACCEPTED"
@@ -110,7 +114,10 @@ const getExpiresInDays = (expiresAt: string) => {
             class="text-destructive hover:text-destructive"
             @click="emit('delete', invite.id)"
           >
-            <Icon name="lucide:trash-2" class="h-4 w-4" />
+            <Icon
+              name="lucide:trash-2"
+              class="h-4 w-4"
+            />
           </Button>
         </div>
       </div>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableEmpty,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableSortableHead,
-} from '~/components/ui/table'
+import SearchFilter from '~/components/SearchFilter.vue'
+import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
+import { Checkbox } from '~/components/ui/checkbox'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
 import { Input } from '~/components/ui/input'
 import {
   Select,
@@ -18,23 +18,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import { Checkbox } from '~/components/ui/checkbox'
-import { Badge } from '~/components/ui/badge'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu'
-import SearchFilter from '~/components/SearchFilter.vue'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableSortableHead,
+} from '~/components/ui/table'
 import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
 
-import RedirectsIcon from '~/assets/images/redirects.svg?component'
 import type { RedirectsQueryParams } from '~/api/resources/redirects'
+import RedirectsIcon from '~/assets/images/redirects.svg?component'
 import SortSelect from '~/components/ui/SortSelect.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 
 const { $t } = useI18n()
 const { alert } = useAlertDialog()
@@ -554,7 +553,7 @@ watch(
                   >
                     <Icon
                       name="lucide:check"
-                      class="text-green-500"
+                      class="text-success"
                     />
                     <span class="sr-only">Save</span>
                   </Button>
@@ -565,7 +564,7 @@ watch(
                   >
                     <Icon
                       name="lucide:x"
-                      class="text-red-500"
+                      class="text-destructive"
                     />
                     <span class="sr-only">Cancel</span>
                   </Button>

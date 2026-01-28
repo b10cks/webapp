@@ -64,7 +64,7 @@ export function useInvites() {
       queryKey: computed(() => queryKeys.invites.spaceList(spaceId.value, params.value)),
       queryFn: async () => {
         const response = await api.invites.listSpaceInvites(spaceId.value, params.value)
-        return response.data
+        return response
       },
       enabled: computed(() => !!spaceId.value),
     })
@@ -82,7 +82,7 @@ export function useInvites() {
       queryKey: computed(() => queryKeys.invites.teamList(teamId.value, params.value)),
       queryFn: async () => {
         const response = await api.invites.listTeamInvites(teamId.value, params.value)
-        return response.data
+        return response
       },
       enabled: computed(() => !!teamId.value),
     })

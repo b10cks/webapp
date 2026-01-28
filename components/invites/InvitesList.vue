@@ -1,31 +1,116 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+import SearchFilter from '~/components/SearchFilter.vue'
+import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
+import { Checkbox } from '~/components/ui/checkbox'
+import SortSelect from '~/components/ui/SortSelect.vue'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableEmpty,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableSortableHead,
+} from '~/components/ui/table'
+import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import { SimpleTooltip } from '~/components/ui/tooltip'
+import type { LaravelMeta } from '~/types'
 import type { InviteResource } from '~/types/invites'
 import { InviteStatus } from '~/types/invites.d'
 
-const props = defineProps<{
-  spaceId?: string
-  teamId?: string
-  resourceType: 'space' | 'team'
-  invites: InviteResource[]
-  isLoading?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    invites: InviteResource[]
+    isLoading: boolean
+    meta?: LaravelMeta
+    currentPage: number
+    perPage: number
+    sortBy?: { column: string; direction: 'asc' | 'desc' }
+  }>(),
+  {
+    sortBy: () => ({
+      column: 'created_at',
+      direction: 'desc' as const,
+    }),
+  }
+)
 
 const emit = defineEmits<{
   delete: [inviteId: string]
   resend: [inviteId: string]
+  'update:currentPage': [page: number]
+  'update:perPage': [perPage: number]
+  'update:sortBy': [sort: { column: string; direction: 'asc' | 'desc' }]
+  'update:filters': [filters: Record<string, unknown>]
 }>()
 
-const getStatusBadgeColor = (status: InviteStatus) => {
+const { alert } = useAlertDialog()
+const { formatDateTime, formatRelativeTime } = useFormat()
+
+const inviteStatusOptions = [
+  { value: InviteStatus.PENDING, label: 'Pending' },
+  { value: InviteStatus.ACCEPTED, label: 'Accepted' },
+  { value: InviteStatus.EXPIRED, label: 'Expired' },
+]
+
+const inviteFilters = computed(() => [
+  {
+    id: 'email',
+    label: 'Email',
+    operators: [
+      { value: 'like' as const, label: 'Contains' },
+      { value: '^like' as const, label: 'Starts with' },
+      { value: 'like$' as const, label: 'Ends with' },
+      { value: 'eq' as const, label: 'Equals' },
+    ],
+  },
+  {
+    id: 'role',
+    label: 'Role',
+    operators: [{ value: 'eq' as const, label: 'Equals' }],
+    items: [
+      { value: 'owner', label: 'Owner' },
+      { value: 'admin', label: 'Admin' },
+      { value: 'editor', label: 'Editor' },
+      { value: 'member', label: 'Member' },
+      { value: 'viewer', label: 'Viewer' },
+    ],
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    operators: [{ value: 'eq' as const, label: 'Equals' }],
+    items: inviteStatusOptions,
+  },
+])
+
+const sortOptions = [
+  { value: 'email', label: 'Email' },
+  { value: 'role', label: 'Role' },
+  { value: 'created_at', label: 'Created At' },
+  { value: 'expires_at', label: 'Expires At' },
+  { value: 'accepted_at', label: 'Accepted At' },
+]
+
+const filters = ref<Record<string, unknown>>({})
+const selectedInvites = ref<Map<string, InviteResource>>(new Map())
+
+const getStatusVariant = (
+  status: InviteStatus
+): 'warning' | 'success' | 'destructive' | 'outline' => {
   switch (status) {
     case InviteStatus.PENDING:
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+      return 'warning'
     case InviteStatus.ACCEPTED:
-      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+      return 'success'
     case InviteStatus.EXPIRED:
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+      return 'destructive'
     default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
+      return 'outline'
   }
 }
 
@@ -35,92 +120,310 @@ const getExpiresInDays = (expiresAt: string) => {
   const days = Math.ceil((expires.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
   return days
 }
+
+const handleDelete = async (invite: InviteResource, force: boolean = false) => {
+  const confirmed =
+    force ||
+    (await alert.confirm(`Are you sure you want to delete the invite for ${invite.email}?`, {
+      title: 'Delete Invite',
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      variant: 'destructive',
+    }))
+  if (confirmed) {
+    emit('delete', invite.id)
+  }
+}
+
+const handleResend = (invite: InviteResource) => {
+  emit('resend', invite.id)
+}
+
+const selectionCount = computed(() => selectedInvites.value.size)
+const isAllSelected = computed(() => {
+  return selectionCount.value > 0 && props.invites.length === selectionCount.value
+})
+
+const handleSelectAll = (checked: boolean) => {
+  if (checked) {
+    props.invites.forEach((invite) => {
+      selectedInvites.value.set(invite.id, invite)
+    })
+  } else {
+    clearSelection()
+  }
+}
+
+const handleInviteSelect = (invite: InviteResource, selected: boolean) => {
+  if (selected) {
+    selectedInvites.value.set(invite.id, invite)
+  } else {
+    selectedInvites.value.delete(invite.id)
+  }
+}
+
+const clearSelection = () => {
+  selectedInvites.value.clear()
+}
+
+const isInviteSelected = (invite: InviteResource) => {
+  return selectedInvites.value.has(invite.id)
+}
+
+const handleBulkDelete = async () => {
+  const confirmed = await alert.confirm(
+    `Are you sure you want to delete ${selectionCount.value} invite(s)?`,
+    {
+      title: 'Delete Invites',
+      confirmLabel: `Delete (${selectionCount.value})`,
+      cancelLabel: 'Cancel',
+      variant: 'destructive',
+    }
+  )
+  if (confirmed) {
+    const selectedIds = Array.from(selectedInvites.value.keys())
+    for (const id of selectedIds) {
+      emit('delete', id)
+    }
+    clearSelection()
+  }
+}
+
+const handleBulkResend = async () => {
+  const confirmed = await alert.confirm(
+    `Are you sure you want to resend ${selectionCount.value} invite(s)?`,
+    {
+      title: 'Resend Invites',
+      confirmLabel: `Resend (${selectionCount.value})`,
+      cancelLabel: 'Cancel',
+    }
+  )
+  if (confirmed) {
+    const selectedIds = Array.from(selectedInvites.value.keys())
+    for (const id of selectedIds) {
+      emit('resend', id)
+    }
+    clearSelection()
+  }
+}
 </script>
 
 <template>
   <div class="space-y-4">
-    <div
-      v-if="!invites || invites.length === 0"
-      class="py-8 text-center"
-    >
-      <Icon
-        name="lucide:inbox"
-        class="text-muted-foreground mx-auto mb-2 h-12 w-12"
-      />
-      <p class="text-muted-foreground">No invites yet</p>
-      <p class="text-muted-foreground text-sm">Start by sending an invite to someone</p>
-    </div>
-
-    <div
-      v-else
-      class="space-y-2"
-    >
-      <div
-        v-for="invite in invites"
-        :key="invite.id"
-        class="flex items-center justify-between rounded-lg border border-muted p-4 transition-colors hover:bg-muted/50"
-      >
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-3">
-            <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-medium">{{ invite.email }}</p>
-              <p class="text-muted-foreground text-xs">
-                Role: <span class="capitalize">{{ invite.role }}</span>
-              </p>
-            </div>
-            <div class="flex shrink-0 items-center gap-2">
-              <span
-                :class="[
-                  'rounded-full px-2 py-1 text-xs font-medium',
-                  getStatusBadgeColor(invite.status),
-                ]"
-              >
-                {{ invite.status.charAt(0).toUpperCase() + invite.status.slice(1) }}
-              </span>
-            </div>
-          </div>
-
-          <p class="text-muted-foreground mt-2 text-xs">
-            <span v-if="invite.status === InviteStatus.ACCEPTED">
-              Accepted on {{ new Date(invite.accepted_at).toLocaleDateString() }}
-            </span>
-            <span v-else> Expires in {{ getExpiresInDays(invite.expires_at) }} days </span>
-          </p>
-
-          <p
-            v-if="invite.message"
-            class="text-muted-foreground mt-1 text-xs italic"
-          >
-            "{{ invite.message }}"
-          </p>
-        </div>
-
-        <div class="ml-4 flex shrink-0 items-center gap-2">
-          <Button
-            v-if="invite.status === InviteStatus.PENDING"
-            size="sm"
-            variant="ghost"
-            @click="emit('resend', invite.id)"
-          >
-            <Icon
-              name="lucide:send"
-              class="h-4 w-4"
-            />
-          </Button>
-          <Button
-            v-if="invite.status !== InviteStatus.ACCEPTED"
-            size="sm"
-            variant="ghost"
-            class="text-destructive hover:text-destructive"
-            @click="emit('delete', invite.id)"
-          >
-            <Icon
-              name="lucide:trash-2"
-              class="h-4 w-4"
-            />
-          </Button>
-        </div>
+    <!-- Filters and Sort Controls -->
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex flex-1 flex-col gap-2 sm:flex-row">
+        <SearchFilter
+          :model-value="filters"
+          :filterable-fields="inviteFilters"
+          @update:model-value="(value) => emit('update:filters', value)"
+        />
+        <SortSelect
+          :model-value="sortBy"
+          :options="sortOptions"
+          @update:model-value="(value) => emit('update:sortBy', value)"
+        />
       </div>
     </div>
+
+    <!-- Selection and Bulk Actions -->
+    <div
+      v-if="selectionCount > 0"
+      class="flex flex-col gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div class="flex items-center gap-2">
+        <Badge variant="primary">{{ selectionCount }} selected</Badge>
+      </div>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <Button
+          size="sm"
+          variant="outline"
+          @click="handleBulkResend"
+        >
+          <Icon
+            name="lucide:send"
+            class="mr-2 h-4 w-4"
+          />
+          Resend ({{ selectionCount }})
+        </Button>
+        <Button
+          size="sm"
+          variant="destructive"
+          @click="handleBulkDelete"
+        >
+          <Icon
+            name="lucide:trash-2"
+            class="mr-2 h-4 w-4"
+          />
+          Delete ({{ selectionCount }})
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          @click="clearSelection"
+        >
+          Clear
+        </Button>
+      </div>
+    </div>
+
+    <!-- Invites Table -->
+    <div class="rounded-lg border border-input">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-12">
+              <Checkbox
+                :checked="isAllSelected"
+                :indeterminate="selectionCount > 0 && !isAllSelected"
+                @update:checked="handleSelectAll"
+              />
+            </TableHead>
+            <TableSortableHead
+              :model-value="sortBy"
+              column="email"
+              @update:model-value="(value) => emit('update:sortBy', value)"
+            >
+              Email
+            </TableSortableHead>
+            <TableSortableHead
+              :model-value="sortBy"
+              column="role"
+              @update:model-value="(value) => emit('update:sortBy', value)"
+            >
+              Role
+            </TableSortableHead>
+            <TableHead column="status"> Status </TableHead>
+            <TableSortableHead
+              :model-value="sortBy"
+              column="created_at"
+              @update:model-value="(value) => emit('update:sortBy', value)"
+            >
+              Created
+            </TableSortableHead>
+            <TableHead class="hidden sm:table-cell">Details</TableHead>
+            <TableHead class="w-24"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableLoadingRow
+            v-if="isLoading"
+            :colspan="7"
+          />
+          <TableEmpty
+            v-else-if="!invites || invites.length === 0"
+            :colspan="7"
+          >
+            <div class="flex flex-col items-center gap-2">
+              <Icon
+                name="lucide:inbox"
+                class="text-muted-foreground h-12 w-12"
+              />
+              <div class="text-center">
+                <p class="font-medium">No invites yet</p>
+                <p class="text-muted-foreground text-sm">Start by sending an invite to someone</p>
+              </div>
+            </div>
+          </TableEmpty>
+
+          <template v-else>
+            <TableRow
+              v-for="invite in invites"
+              :key="invite.id"
+              :class="{ 'bg-muted/30': isInviteSelected(invite) }"
+            >
+              <TableCell class="w-12">
+                <Checkbox
+                  :checked="isInviteSelected(invite)"
+                  @update:checked="(checked) => handleInviteSelect(invite, checked)"
+                />
+              </TableCell>
+
+              <TableCell>
+                {{ invite.email }}
+              </TableCell>
+
+              <TableCell>
+                {{ invite.role }}
+              </TableCell>
+
+              <TableCell>
+                <Badge
+                  :variant="getStatusVariant(invite.status)"
+                  size="sm"
+                >
+                  {{ invite.status }}
+                </Badge>
+              </TableCell>
+
+              <TableCell class="text-muted-foreground text-sm">
+                <SimpleTooltip :tooltip="formatDateTime(invite.created_at)">
+                  {{ formatRelativeTime(invite.created_at) }}
+                </SimpleTooltip>
+              </TableCell>
+
+              <TableCell class="hidden sm:table-cell">
+                <SimpleTooltip
+                  v-if="invite.status === InviteStatus.ACCEPTED"
+                  :tooltip="formatDateTime(invite.accepted_at)"
+                >
+                  Accepted on {{ new Date(invite.accepted_at).toLocaleDateString() }}
+                </SimpleTooltip>
+                <SimpleTooltip
+                  v-else
+                  :tooltip="formatDateTime(invite.expires_at)"
+                >
+                  Expires in {{ getExpiresInDays(invite.expires_at) }} days
+                </SimpleTooltip>
+              </TableCell>
+
+              <TableCell class="text-right">
+                <div class="flex justify-end gap-1">
+                  <Button
+                    v-if="invite.status === InviteStatus.PENDING"
+                    size="icon"
+                    variant="ghost"
+                    title="Resend invite"
+                    @click="handleResend(invite)"
+                  >
+                    <Icon name="lucide:send" />
+                  </Button>
+                  <Button
+                    v-if="invite.status !== InviteStatus.ACCEPTED"
+                    size="icon"
+                    variant="ghost"
+                    title="Delete invite"
+                    @click="handleDelete(invite)"
+                  >
+                    <Icon
+                      name="lucide:trash-2"
+                      class="text-destructive"
+                    />
+                  </Button>
+                  <Button
+                    v-if="invite.status === InviteStatus.ACCEPTED"
+                    size="icon"
+                    variant="ghost"
+                    @click="handleDelete(invite, true)"
+                  >
+                    <Icon name="lucide:archive" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </template>
+        </TableBody>
+      </Table>
+    </div>
+
+    <!-- Pagination -->
+    <TablePaginationFooter
+      v-if="meta"
+      :meta="meta"
+      :current-page="currentPage"
+      :per-page="perPage"
+      @update:current-page="(val) => emit('update:currentPage', val)"
+      @update:per-page="(val) => emit('update:perPage', val)"
+    />
   </div>
 </template>

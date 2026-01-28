@@ -83,11 +83,9 @@ export const queryKeys = {
   contentVersions: (spaceId: string, contentId: string) => ({
     all: () => ['spaces', spaceId, 'contents', contentId, 'history'] as const,
     lists: () => [...queryKeys.contentVersions(spaceId, contentId).all(), 'list'] as const,
-    list: (filters: any = {}) =>
-      [...queryKeys.contentVersions(spaceId, contentId).lists(), filters] as const,
+    list: (filters: any = {}) => [...queryKeys.contentVersions(spaceId, contentId).lists(), filters] as const,
     details: () => [...queryKeys.contentVersions(spaceId, contentId).all(), 'detail'] as const,
-    detail: (id: string) =>
-      [...queryKeys.contentVersions(spaceId, contentId).details(), id] as const,
+    detail: (id: string) => [...queryKeys.contentVersions(spaceId, contentId).details(), id] as const,
   }),
   contentMenu: (spaceId: string) => ({
     all: () => ['spaces', spaceId, 'content-menu'] as const,
@@ -103,12 +101,31 @@ export const queryKeys = {
   dataEntries: (spaceId: string, dataSourceId: string) => ({
     all: () => ['spaces', spaceId, 'data-sources', dataSourceId, 'entries'] as const,
     lists: () => [...queryKeys.dataEntries(spaceId, dataSourceId).all(), 'list'] as const,
-    list: (filters: any = {}) =>
-      [...queryKeys.dataEntries(spaceId, dataSourceId).lists(), filters] as const,
+    list: (filters: any = {}) => [...queryKeys.dataEntries(spaceId, dataSourceId).lists(), filters] as const,
     details: () => [...queryKeys.dataEntries(spaceId, dataSourceId).all(), 'detail'] as const,
-    detail: (id: string) =>
-      [...queryKeys.dataEntries(spaceId, dataSourceId).details(), id] as const,
+    detail: (id: string) => [...queryKeys.dataEntries(spaceId, dataSourceId).details(), id] as const,
   }),
+  invites: {
+    all: () => ['invites'] as const,
+    public: (token: string) => [...queryKeys.invites.all(), 'public', token] as const,
+    my: () => [...queryKeys.invites.all(), 'my'] as const,
+    myLists: () => [...queryKeys.invites.my(), 'list'] as const,
+    myList: (filters: any = {}) => [...queryKeys.invites.myLists(), filters] as const,
+    myDetails: () => [...queryKeys.invites.my(), 'detail'] as const,
+    myDetail: (id: string) => [...queryKeys.invites.myDetails(), id] as const,
+    spaces: (spaceId: string) => ({
+      all: () => ['spaces', spaceId, 'invites'] as const,
+      lists: () => [...queryKeys.invites.spaces(spaceId).all(), 'list'] as const,
+      list: (filters: any = {}) => [...queryKeys.invites.spaces(spaceId).lists(), filters] as const,
+    }),
+    teams: (teamId: string) => ({
+      all: () => ['teams', teamId, 'invites'] as const,
+      lists: () => [...queryKeys.invites.teams(teamId).all(), 'list'] as const,
+      list: (filters: any = {}) => [...queryKeys.invites.teams(teamId).lists(), filters] as const,
+    }),
+    spaceList: (spaceId: string, filters: any = {}) => [...queryKeys.invites.spaces(spaceId).list(filters)] as const,
+    teamList: (teamId: string, filters: any = {}) => [...queryKeys.invites.teams(teamId).list(filters)] as const,
+  },
   releases: (spaceId: string) => ({
     all: () => ['spaces', spaceId, 'releases'] as const,
     lists: () => [...queryKeys.releases(spaceId).all(), 'list'] as const,

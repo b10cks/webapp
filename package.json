@@ -31,9 +31,9 @@
     "marked": "^16.4.2",
     "mini-handlebars": "^0.1.1",
     "nuxt-i18n-micro": "^2.20.1",
-    "posthog-js": "^1.335.3",
+    "posthog-js": "^1.336.1",
     "pusher-js": "^8.4.0",
-    "reka-ui": "^2.7.0",
+    "reka-ui": "^2.8.0",
     "sortablejs": "^1.15.6",
     "vue-chartjs": "^5.3.3",
     "vue-sonner": "^2.0.9"

@@ -31,20 +31,27 @@ const isLoading = computed(() => {
 })
 
 const handleSendInvite = async () => {
-  if (props.resourceType === 'space' && props.spaceId) {
-    createSpaceInviteMutation.mutate({ spaceId: props.spaceId, payload: formData.value })
-  } else if (props.resourceType === 'team' && props.teamId) {
-    createTeamInviteMutation.mutate({ teamId: props.teamId, payload: formData.value })
+  const mutationOptions = {
+    onSuccess: () => {
+      open.value = false
+      formData.value = {
+        email: '',
+        role: 'member',
+        message: '',
+        expires_in_days: 7,
+      }
+    },
   }
-
-  if (!isLoading.value) {
-    open.value = false
-    formData.value = {
-      email: '',
-      role: 'member',
-      message: '',
-      expires_in_days: 7,
-    }
+  if (props.resourceType === 'space' && props.spaceId) {
+    createSpaceInviteMutation.mutate(
+      { spaceId: props.spaceId, payload: formData.value },
+      mutationOptions
+    )
+  } else if (props.resourceType === 'team' && props.teamId) {
+    createTeamInviteMutation.mutate(
+      { teamId: props.teamId, payload: formData.value },
+      mutationOptions
+    )
   }
 }
 

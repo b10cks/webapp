@@ -1,4 +1,4 @@
-import type { MaybeRefOrGetter } from '@vue/reactivity'
+import type { MaybeRefOrGetter } from 'vue'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'

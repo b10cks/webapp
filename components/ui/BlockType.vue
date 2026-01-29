@@ -21,6 +21,7 @@ const types: Record<string, BlockType> = {
   text: { cls: 'text-green-400 border border-green-600 bg-green-800', text: 'Aa' },
   textarea: { cls: 'text-green-400 border border-green-600 bg-green-800', text: 'Tx' },
   markdown: { cls: 'text-green-400 border border-green-600 bg-green-800', text: 'Md' },
+  richtext: { cls: 'text-green-400 border border-green-600 bg-green-800', text: 'Rt' },
   option: {
     cls: 'text-violet-300 border border-violet-400 bg-violet-800',
     icon: 'lucide:rectangle-ellipsis',

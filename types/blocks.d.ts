@@ -74,6 +74,19 @@ interface MarkdownSchema extends Schema {
   translatable: boolean
 }
 
+interface HtmlClassConfig {
+  name: string
+  className: string
+  css?: string
+}
+
+interface RichTextSchema extends Schema {
+  type: 'richtext'
+  translatable: boolean
+  html_classes: HtmlClassConfig[]
+  heading_levels?: Array<'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'>
+}
+
 interface NumberSchema extends Schema {
   type: 'number'
 }
@@ -94,13 +107,14 @@ interface OptionSchema extends Schema {
   exclude_empty: boolean
 }
 
-type TranslatableSchema = TextSchema | TextareaSchema | MarkdownSchema | LinkSchema | MetaSchema
+type TranslatableSchema = TextSchema | TextareaSchema | MarkdownSchema | RichTextSchema | LinkSchema | MetaSchema
 type SchemaType =
   | BlocksSchema
   | LinkSchema
   | TextSchema
   | TextareaSchema
   | MarkdownSchema
+  | RichTextSchema
   | NumberSchema
   | BooleanSchema
   | OptionSchema

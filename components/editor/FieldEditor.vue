@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import TextBlock from '~/components/editor/TextBlock.vue'
-import NumberBlock from '~/components/editor/NumberBlock.vue'
-import BlocksBlock from '~/components/editor/BlocksBlock.vue'
-import TextareaBlock from '~/components/editor/TextareaBlock.vue'
-import OptionBlock from '~/components/editor/OptionBlock.vue'
-import BooleanBlock from '~/components/editor/BooleanBlock.vue'
-import MarkdownBlock from '~/components/editor/MarkdownBlock.vue'
-import LinkBlock from '~/components/editor/LinkBlock.vue'
 import AssetBlock from '~/components/editor/AssetBlock.vue'
-import MultiAssetsBlock from '~/components/editor/MultiAssetsBlock.vue'
-import ReferenceBlock from '~/components/editor/ReferenceBlock.vue'
-import MetaBlock from '~/components/editor/MetaBlock.vue'
+import BlocksBlock from '~/components/editor/BlocksBlock.vue'
+import BooleanBlock from '~/components/editor/BooleanBlock.vue'
 import DateBlock from '~/components/editor/DateBlockEditor.vue'
+import LinkBlock from '~/components/editor/LinkBlock.vue'
+import MarkdownBlock from '~/components/editor/MarkdownBlock.vue'
+import MetaBlock from '~/components/editor/MetaBlock.vue'
+import MultiAssetsBlock from '~/components/editor/MultiAssetsBlock.vue'
+import NumberBlock from '~/components/editor/NumberBlock.vue'
+import OptionBlock from '~/components/editor/OptionBlock.vue'
+import ReferenceBlock from '~/components/editor/ReferenceBlock.vue'
+import RichTextBlock from '~/components/editor/RichTextBlock.vue'
+import TextareaBlock from '~/components/editor/TextareaBlock.vue'
+import TextBlock from '~/components/editor/TextBlock.vue'
 
 const editors = {
   text: TextBlock,
   textarea: TextareaBlock,
   markdown: MarkdownBlock,
+  richtext: RichTextBlock,
   option: OptionBlock,
   link: LinkBlock,
   boolean: BooleanBlock,

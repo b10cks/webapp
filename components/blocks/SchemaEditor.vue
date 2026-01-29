@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { deepClone } from '@vue/devtools-shared'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import { AccordionRoot } from 'reka-ui'
-import { Button } from '~/components/ui/button'
-import { deepClone } from '@vue/devtools-shared'
-import { Input } from '~/components/ui/input'
 import Add from '~/components/blocks/Add.vue'
 import Block from '~/components/blocks/Block.vue'
+import { Button } from '~/components/ui/button'
+import { Input } from '~/components/ui/input'
 
 interface EditorPage {
   header: string
@@ -83,12 +83,9 @@ const deletePage = async (pageIndex: number) => {
 
 const deleteField = async (key: string) => {
   const fieldName = localSchema.value[key]?.name || key
-  const confirmed = await alert.confirm(
-    `Are you sure you want to delete the "${fieldName}" field?`,
-    {
-      title: 'Delete Field',
-    }
-  )
+  const confirmed = await alert.confirm(`Are you sure you want to delete the "${fieldName}" field?`, {
+    title: 'Delete Field',
+  })
 
   if (confirmed) {
     const updatedSchema = { ...localSchema.value }
@@ -165,6 +162,12 @@ const createDefaultSchemaForType = (type: string, key: string) => {
       return {
         ...baseSchema,
         default: '',
+      }
+    case 'richtext':
+      return {
+        ...baseSchema,
+        html_classes: [],
+        default: {},
       }
     case 'boolean':
       return {

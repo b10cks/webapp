@@ -1,12 +1,20 @@
 <script setup lang="ts">
+import { deepClone } from '@vue/devtools-shared'
 import { AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger } from 'reka-ui'
-import BooleanBlock from '~/components/blocks/BooleanBlock.vue'
+import AssetBlock from '~/components/blocks/AssetBlock.vue'
 import BlocksBlock from '~/components/blocks/BlocksBlock.vue'
+import BooleanBlock from '~/components/blocks/BooleanBlock.vue'
+import DateBlock from '~/components/blocks/DateBlock.vue'
 import LinkBlock from '~/components/blocks/LinkBlock.vue'
+import MetaBlock from '~/components/blocks/MetaBlock.vue'
+import MultiAssetBlock from '~/components/blocks/MultiAssetBlock.vue'
 import NumberBlock from '~/components/blocks/NumberBlock.vue'
 import OptionBlock from '~/components/blocks/OptionBlock.vue'
-import TextBlock from '~/components/blocks/TextBlock.vue'
+import ReferencesBlock from '~/components/blocks/ReferencesBlock.vue'
+import RichTextBlock from '~/components/blocks/RichTextBlock.vue'
 import TextareaBlock from '~/components/blocks/TextareaBlock.vue'
+import TextBlock from '~/components/blocks/TextBlock.vue'
+import BlockType from '~/components/ui/BlockType.vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,14 +22,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import BlockType from '~/components/ui/BlockType.vue'
 import { CheckboxField, InputField, TextField } from '~/components/ui/form'
-import ReferencesBlock from '~/components/blocks/ReferencesBlock.vue'
-import AssetBlock from '~/components/blocks/AssetBlock.vue'
-import MultiAssetBlock from '~/components/blocks/MultiAssetBlock.vue'
-import MetaBlock from '~/components/blocks/MetaBlock.vue'
-import DateBlock from '~/components/blocks/DateBlock.vue'
-import { deepClone } from '@vue/devtools-shared'
 
 const emit = defineEmits(['delete', 'to-page', 'update:name', 'update:item'])
 
@@ -34,7 +35,7 @@ const props = defineProps<{
 }>()
 
 const localItem = ref({ ...props.item })
-const translatable = ['text', 'textarea', 'markdown', 'number', 'link', 'meta']
+const translatable = ['text', 'textarea', 'markdown', 'richtext', 'number', 'link', 'meta']
 
 const schemas = {
   asset: AssetBlock,
@@ -49,6 +50,7 @@ const schemas = {
   textarea: TextareaBlock,
   meta: MetaBlock,
   date: DateBlock,
+  richtext: RichTextBlock,
 }
 
 watch(

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import TextLocalization from './TextLocalization.vue'
-import TextareaLocalization from './TextareaLocalization.vue'
-import MarkdownLocalization from './MarkdownLocalization.vue'
 import { toast } from 'vue-sonner'
-import type { ApiResponse } from '~/types'
-import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import { CheckboxField } from '~/components/ui/form'
 import MetaLocalization from '~/components/localization/MetaLocalization.vue'
+import { Button } from '~/components/ui/button'
+import { CheckboxField } from '~/components/ui/form'
+import { Input } from '~/components/ui/input'
+import type { ApiResponse } from '~/types'
+import MarkdownLocalization from './MarkdownLocalization.vue'
+import RichTextLocalization from './RichTextLocalization.vue'
+import TextareaLocalization from './TextareaLocalization.vue'
+import TextLocalization from './TextLocalization.vue'
 
 interface SchemaType {
   type: string
@@ -43,6 +44,7 @@ const localizers = {
   text: TextLocalization,
   textarea: TextareaLocalization,
   markdown: MarkdownLocalization,
+  richtext: RichTextLocalization,
   meta: MetaLocalization,
 }
 
@@ -52,9 +54,7 @@ const props = defineProps<{
   blockSchema: Record<string, SchemaType>
   spaceId: string
   targetLanguage: string
-  getBlockSchema?: (
-    blockSlug: string
-  ) => { schema: Record<string, SchemaType>; name: string } | undefined
+  getBlockSchema?: (blockSlug: string) => { schema: Record<string, SchemaType>; name: string } | undefined
 }>()
 
 const { useSpaceQuery } = useSpaces()
@@ -111,8 +111,7 @@ const traverseContent = (
       })
     } else if ('translatable' in schemaItem && schemaItem.translatable) {
       const translatedValue = translation?.[key]
-      const isTranslated =
-        translatedValue !== undefined && translatedValue !== null && translatedValue !== ''
+      const isTranslated = translatedValue !== undefined && translatedValue !== null && translatedValue !== ''
 
       result.push({
         key,
@@ -159,8 +158,8 @@ const filteredFields = computed(() => {
     if (searchQuery.value) {
       const searchLower = searchQuery.value.toLowerCase()
       return (
-        field.fieldName.toLowerCase().includes(searchLower) ||
-        field.path.join(' > ').toLowerCase().includes(searchLower)
+        field.fieldName.toLowerCase().includes(searchLower)
+        || field.path.join(' > ').toLowerCase().includes(searchLower)
       )
     }
 
@@ -237,10 +236,7 @@ const getUntranslatedFields = (): Record<string, string> => {
 
   translatableFields.value
     .filter(
-      (field) =>
-        !field.isTranslated &&
-        typeof field.originalValue === 'string' &&
-        field.originalValue.trim() !== ''
+      (field) => !field.isTranslated && typeof field.originalValue === 'string' && field.originalValue.trim() !== ''
     )
     .forEach((field) => {
       const fieldPath = [...field.path.slice(0, -1), field.key].join('-')
@@ -261,9 +257,7 @@ const translateWithAI = async (): Promise<void> => {
 
   try {
     isTranslating.value = true
-    toast.info(
-      `Translating ${fieldCount} fields from ${sourceLanguage.value} to ${props.targetLanguage}...`
-    )
+    toast.info(`Translating ${fieldCount} fields from ${sourceLanguage.value} to ${props.targetLanguage}...`)
     const requestData = {
       source: sourceLanguage.value,
       target: props.targetLanguage,
@@ -271,11 +265,9 @@ const translateWithAI = async (): Promise<void> => {
       fields: fieldsToTranslate,
     }
 
-    const response = await apiClient.post<ApiResponse<Record<string, string>>>(
-      '/mgmt/v1/ai/translate',
-      requestData,
-      { query: { spaceId: props.spaceId } }
-    )
+    const response = await apiClient.post<ApiResponse<Record<string, string>>>('/mgmt/v1/ai/translate', requestData, {
+      query: { spaceId: props.spaceId },
+    })
     updateTranslatedValues(response.data)
 
     toast.success(`Successfully translated ${Object.keys(response.data).length} fields`)
@@ -288,9 +280,7 @@ const translateWithAI = async (): Promise<void> => {
 }
 
 const translationStats = computed(() => {
-  const fieldItems = translatableFields.value.filter(
-    (field) => field.schemaItem.type !== 'block_header'
-  )
+  const fieldItems = translatableFields.value.filter((field) => field.schemaItem.type !== 'block_header')
 
   const total = fieldItems.length
   const translated = fieldItems.filter((f) => f.isTranslated).length
@@ -379,6 +369,7 @@ const translationStats = computed(() => {
             :model-value="field.translatedValue"
             :disabled="isTranslating"
             :is-machine-translated="isMachineTranslated(field)"
+            :space-id="props.spaceId"
             @update:model-value="(newValue) => updateTranslatedValue(field, newValue)"
           />
           <div

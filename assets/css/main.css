@@ -238,7 +238,7 @@
   }
 
   .grid-area-stack {
-    grid-area: 1/1;
+    grid-area: 1 / 1;
   }
 
   .content-grid {
@@ -325,6 +325,143 @@
       content: '✓';
       color: var(--color-accent);
       @apply absolute -left-8 w-4 rounded-md bg-accent/10 text-center text-sm font-semibold;
+    }
+  }
+
+  .ProseMirror {
+    @apply p-3 space-y-3 max-w-prose mx-auto outline-none h-full bg-background;
+
+    h1 {
+      @apply text-2xl font-bold;
+    }
+
+    h2 {
+      @apply text-xl font-bold;
+    }
+
+    h3 {
+      @apply text-lg font-bold;
+    }
+
+    ul {
+      @apply list-disc;
+    }
+
+    ol {
+      @apply list-decimal;
+    }
+
+    li p.is-empty {
+      @apply ml-2;
+    }
+
+    ul,
+    ol {
+      @apply pl-8 first:mt-0 last:mb-0;
+
+      ul,
+      ol,
+      li {
+        @apply my-1 ml-4;
+      }
+
+      p {
+        @apply mt-0 mb-1;
+      }
+    }
+
+    & > ul,
+    & > ol {
+      @apply pl-0 first:mt-0 last:mb-0;
+    }
+
+    ul[data-type='taskList'] {
+      @apply list-none p-0;
+
+      p {
+        @apply m-0;
+      }
+
+      li {
+        @apply flex;
+
+        > label {
+          @apply grow-0 shrink-0 flex-auto mt-1 mr-2 select-none;
+        }
+
+        > div {
+          @apply flex-auto;
+        }
+
+        &[data-checked='true'] {
+          @apply line-through;
+        }
+      }
+    }
+
+    code {
+      @apply font-mono bg-popover border border-popover-border text-popover-foreground rounded px-1 p-0.5 text-sm;
+    }
+
+    pre code {
+      @apply p-2 block;
+    }
+
+    blockquote {
+      @apply border-l-4 border-gray-100 pl-2;
+    }
+
+    mark {
+      @apply bg-accent/50 p-0.5 rounded;
+    }
+
+    a {
+      @apply text-accent transition-colors underline underline-offset-2 cursor-pointer;
+    }
+
+    .selection {
+      @apply inline;
+    }
+
+    .selection,
+    .highlight-paragraph,
+    *::selection {
+      @apply bg-accent/25;
+    }
+
+    blockquote {
+      @apply border-l-gray-700 border-l-3 pl-4;
+    }
+
+    .ProseMirror-gapcursor {
+      @apply relative w-full max-w-2xl mx-auto;
+
+      &:after {
+        @apply border-t-muted w-full -top-[1.5em] max-w-2xl mx-auto left-0 right-0;
+      }
+    }
+
+    table {
+      @apply w-full border-collapse;
+
+      td,
+      th {
+        @apply border border-border px-3 py-2 text-left;
+      }
+
+      th {
+        @apply font-semibold text-foreground bg-secondary/50;
+      }
+    }
+
+    /* Table column resize handle styling */
+    .selectedCell {
+      @apply bg-accent/10;
+    }
+
+    /* TextClass mark - preserve the applied class styling */
+    span[class] {
+      /* The class attribute value is applied directly by TipTap */
     }
   }
 }

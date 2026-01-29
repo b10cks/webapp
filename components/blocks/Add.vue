@@ -9,6 +9,7 @@ const types = [
   'number',
   'textarea',
   'markdown',
+  'richtext',
   'blocks',
   'option',
   'options',

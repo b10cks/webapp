@@ -40,7 +40,10 @@ const emit = defineEmits<{
 const safeModelValue = computed(() => {
   const value = props.modelValue
   if (!value || typeof value !== 'object' || !('column' in value) || !value.column) {
-    return DEFAULT_SORT
+    return {
+      column: 'created_at',
+      direction: 'desc' as const,
+    }
   }
   return value
 })

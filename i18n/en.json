@@ -164,6 +164,23 @@
         "descriptionPlaceholder": "Enter folder description"
       }
     },
+    "invites": {
+      "empty": "Feeling lonely? Invite collaborators to get started",
+      "title": "Invitations",
+      "create": "Invite collaborators to {name}",
+      "createDescription": "Invite collaborators to work together on your project.",
+      "sending": "Sending invitation...",
+      "fields": {
+        "email": "Email",
+        "emailPlaceholder": "name@example.com",
+        "message": "Personal Message",
+        "messagePlaceholder": "Add a personal note (optional)",
+        "expires": "Invitation Expires in",
+        "expiresDays": "{days} days",
+        "role": "Role",
+        "rolePlaceholder": "Choose a role for the collaborator"
+      }
+    },
     "preview": {
       "liveEdit": "Live Edit available"
     },
@@ -848,6 +865,8 @@
     "delete": "Delete",
     "create": "Create",
     "cancel": "Cancel",
+    "send": "Send",
+    "invite": "Invite",
     "login": "Login",
     "logout": "Logout",
     "retry": "Retry"

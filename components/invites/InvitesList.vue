@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import UsersIcon from '~/assets/images/users.svg?component'
 import SearchFilter from '~/components/SearchFilter.vue'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
@@ -9,7 +9,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableEmpty,
   TableHead,
   TableHeader,
   TableRow,
@@ -21,6 +20,7 @@ import { SimpleTooltip } from '~/components/ui/tooltip'
 import type { LaravelMeta } from '~/types'
 import type { InviteResource } from '~/types/invites'
 import { InviteStatus } from '~/types/invites.d'
+import TableEmptyRow from '../ui/TableEmptyRow.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -310,21 +310,12 @@ const handleBulkResend = async () => {
             v-if="isLoading"
             :colspan="7"
           />
-          <TableEmpty
+          <TableEmptyRow
             v-else-if="!invites || invites.length === 0"
             :colspan="7"
-          >
-            <div class="flex flex-col items-center gap-2">
-              <Icon
-                name="lucide:inbox"
-                class="text-muted-foreground h-12 w-12"
-              />
-              <div class="text-center">
-                <p class="font-medium">No invites yet</p>
-                <p class="text-muted-foreground text-sm">Start by sending an invite to someone</p>
-              </div>
-            </div>
-          </TableEmpty>
+            :icon="UsersIcon"
+            :label="$t('labels.invites.empty')"
+          />
 
           <template v-else>
             <TableRow
@@ -415,8 +406,6 @@ const handleBulkResend = async () => {
         </TableBody>
       </Table>
     </div>
-
-    <!-- Pagination -->
     <TablePaginationFooter
       v-if="meta"
       :meta="meta"

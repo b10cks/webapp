@@ -33,8 +33,8 @@ const handleResendInvite = (inviteId: string) => {
               variant="primary"
               @click="inviteDialogOpen = true"
             >
-              <Icon name="lucide:plus" />
-              Send Invite
+              <Icon name="lucide:user-plus" />
+              {{ $t('actions.invite') }}
             </Button>
           </template>
         </ContentHeader>

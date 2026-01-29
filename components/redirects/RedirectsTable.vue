@@ -512,7 +512,9 @@ watch(
                     @keydown="handleKeyDown($event, redirect)"
                   >
                     <SelectTrigger class="w-full">
-                      <SelectValue :placeholder="$t('labels.redirects.selectStatusCode')" />
+                      <SelectValue
+                        :placeholder="$t('labels.redirects.selectStatusCode') as string"
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem

@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="T">
+import { useVModel } from '@vueuse/core'
+import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
-import { useVModel } from '@vueuse/core'
-import FormField from './FormField.vue'
 import {
   Select,
   SelectContent,
@@ -12,11 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+import FormField from './FormField.vue'
 
 export interface SelectOption<T = unknown> {
   value: T
-  label: string
+  label: string | CleanTranslation
   disabled?: boolean
 }
 

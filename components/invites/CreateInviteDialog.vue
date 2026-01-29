@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
-import { InputField } from '~/components/ui/form'
+import { InputField, SelectField, TextField } from '~/components/ui/form'
 import type { CreateInvitePayload } from '~/types/invites'
 
 const open = defineModel<boolean>('open')
@@ -56,56 +56,54 @@ const roles = ['member', 'editor', 'admin', 'owner'] as const
     @update:open="open = $event"
   >
     <DialogContent>
-      <DialogHeaderCombined :title="`Invite to ${resourceType}`" />
-      
-      <form class="grid gap-4" @submit.prevent="handleSendInvite">
+      <DialogHeaderCombined
+        :title="$t('labels.invites.create', { name: resourceType })"
+        :description="$t('labels.invites.createDescription')"
+      />
+
+      <form
+        class="grid gap-4"
+        @submit.prevent="handleSendInvite"
+      >
         <InputField
           v-model="formData.email"
           type="email"
           name="email"
-          label="Email"
-          placeholder="user@example.com"
+          :label="$t('labels.invites.fields.email')"
+          :placeholder="$t('labels.invites.fields.emailPlaceholder')"
           required
         />
 
-        <div class="grid gap-2">
-          <label class="text-sm font-medium">Role</label>
-          <select
-            v-model="formData.role"
-            class="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <option
-              v-for="role in roles"
-              :key="role"
-              :value="role"
-            >
-              {{ role.charAt(0).toUpperCase() + role.slice(1) }}
-            </option>
-          </select>
-        </div>
+        <SelectField
+          name="role"
+          :label="$t('labels.invites.fields.role')"
+          :placeholder="$t('labels.invites.fields.rolePlaceholder')"
+          v-model="formData.role"
+          :options="roles.map((role) => ({ label: role, value: role }))"
+          required
+        />
 
-        <InputField
+        <TextField
           v-model="formData.message"
           as="textarea"
           name="message"
-          label="Message (Optional)"
-          placeholder="Add a personal message..."
-          rows="3"
+          :label="$t('labels.invites.fields.message')"
+          :placeholder="$t('labels.invites.fields.messagePlaceholder')"
+          :rows="3"
         />
 
-        <div class="grid gap-2">
-          <label class="text-sm font-medium">Expires in</label>
-          <select
-            v-model.number="formData.expires_in_days"
-            class="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <option :value="1">1 day</option>
-            <option :value="7">7 days</option>
-            <option :value="14">14 days</option>
-            <option :value="30">30 days</option>
-            <option :value="90">90 days</option>
-          </select>
-        </div>
+        <SelectField
+          name="expires_in_days"
+          :label="$t('labels.invites.fields.expires')"
+          v-model="formData.expires_in_days"
+          :options="
+            [1, 7, 14, 30, 90].map((days) => ({
+              label: $t('labels.invites.fields.expiresDays', { days }),
+              value: days,
+            }))
+          "
+          required
+        />
 
         <DialogFooter>
           <Button
@@ -113,7 +111,7 @@ const roles = ['member', 'editor', 'admin', 'owner'] as const
             variant="outline"
             @click="open = false"
           >
-            Cancel
+            {{ $t('actions.cancel') }}
           </Button>
           <Button
             type="submit"
@@ -123,9 +121,9 @@ const roles = ['member', 'editor', 'admin', 'owner'] as const
             <Icon
               v-if="isLoading"
               name="lucide:loader-2"
-              class="h-4 w-4 mr-2 animate-spin"
+              class="mr-2 h-4 w-4 animate-spin"
             />
-            {{ isLoading ? 'Sending...' : 'Send Invite' }}
+            {{ isLoading ? $t('labels.invites.sending') : $t('actions.send') }}
           </Button>
         </DialogFooter>
       </form>

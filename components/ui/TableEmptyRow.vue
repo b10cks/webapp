@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CleanTranslation } from 'nuxt-i18n-micro-types'
 import { TableCell, TableRow } from '~/components/ui/table'
 
 const { $t } = useI18n()
@@ -7,7 +8,7 @@ const props = withDefaults(
   defineProps<{
     colspan?: number
     icon?: string
-    label?: string
+    label?: string | CleanTranslation
   }>(),
   {
     colspan: 3,
@@ -25,7 +26,7 @@ const labelText = computed(() => {
   <TableRow>
     <TableCell
       :colspan="colspan"
-      class="bg-surface py-12 text-center"
+      class="bg-surface py-12 text-center select-none"
     >
       <div class="flex flex-col items-center justify-center gap-6">
         <Component

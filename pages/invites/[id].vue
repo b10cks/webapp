@@ -106,7 +106,6 @@ const handleAccept = () => {
             class="space-y-6"
             @submit.prevent="handleAccept"
           >
-            {{ token }}
             <div>
               {{ $t('labels.invites.page.invitedToJoin') }}
               <span class="font-semibold">{{ resourceName }}</span>

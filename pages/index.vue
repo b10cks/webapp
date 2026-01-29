@@ -160,15 +160,15 @@ const formatLastUpdated = (space: SpaceResource) => {
               >
                 {{ $t('actions.inviteMember') }}
               </Button>
+              <Button
+                :as="NuxtLink"
+                size="sm"
+                variant="primary"
+                :to="{ name: 'spaces-new' }"
+              >
+                {{ $t('actions.createNewSpace') }}
+              </Button>
             </template>
-            <Button
-              :as="NuxtLink"
-              size="sm"
-              variant="primary"
-              :to="{ name: 'spaces-new' }"
-            >
-              {{ $t('actions.createNewSpace') }}
-            </Button>
           </div>
         </template>
       </AppHeader>

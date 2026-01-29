@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { Button } from '~/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -7,49 +8,86 @@ import {
   SelectItem,
   SelectTrigger,
 } from '~/components/ui/select'
-import { Button } from '~/components/ui/button'
-import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
 interface SortOption {
   value: string
-  label: string | CleanTranslation
+  label: string
 }
 
-const props = defineProps<{
-  options: SortOption[]
-  modelValue: {
-    column: string
-    direction: 'asc' | 'desc'
+const props = withDefaults(
+  defineProps<{
+    options: SortOption[]
+    modelValue?: {
+      column: string
+      direction: 'asc' | 'desc'
+    } | null
+    placeholder?: string
+  }>(),
+  {
+    modelValue: () => ({
+      column: 'created_at',
+      direction: 'desc' as const,
+    }),
+    placeholder: () => 'Sort by',
   }
-  placeholder?: string | CleanTranslation
+)
+
+const emit = defineEmits<{
+  'update:modelValue': [value: { column: string; direction: 'asc' | 'desc' }]
 }>()
 
-const emit = defineEmits(['update:modelValue'])
+// Ensure we always have a valid sort value
+const safeModelValue = computed(() => {
+  const value = props.modelValue
+  if (!value || typeof value !== 'object' || !('column' in value) || !value.column) {
+    return {
+      column: 'created_at',
+      direction: 'desc' as const,
+    }
+  }
+  return value
+})
 
 const sortDirection = computed(() => {
-  return props.modelValue.direction
+  const value = safeModelValue.value
+  return value && value.direction ? value.direction : 'desc'
 })
 
 const sortField = computed(() => {
-  return props.modelValue.column
+  const value = safeModelValue.value
+  return value && value.column ? value.column : 'created_at'
 })
 
 const handleFieldChange = (field: string) => {
+  if (typeof field !== 'string' || field.length === 0) return
+
+  const currentDirection = sortDirection.value
+  const safeDirection =
+    currentDirection === 'asc' || currentDirection === 'desc' ? currentDirection : 'desc'
   emit('update:modelValue', {
     column: field,
-    direction: sortDirection.value,
+    direction: safeDirection,
   })
 }
 
 const toggleDirection = () => {
+  const currentColumn = sortField.value
+  if (typeof currentColumn !== 'string' || currentColumn.length === 0) return
+
+  const currentDir = sortDirection.value
+  const newDirection = currentDir === 'asc' ? 'desc' : 'asc'
   emit('update:modelValue', {
-    column: sortField.value,
-    direction: sortDirection.value === 'asc' ? 'desc' : 'asc',
+    column: currentColumn,
+    direction: newDirection,
   })
 }
 
 const selectedOptionLabel = computed(() => {
-  const option = props.options.find((opt) => opt.value === sortField.value)
+  const field = sortField.value
+  if (!field) {
+    return props.placeholder || 'Sort by'
+  }
+  const option = props.options.find((opt) => opt.value === field)
   return option ? option.label : props.placeholder || 'Sort by'
 })
 

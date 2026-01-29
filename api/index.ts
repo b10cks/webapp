@@ -14,6 +14,7 @@ import { ContentMenu } from './resources/content-menu'
 import { ContentModel } from './resources/content-model'
 import { ContentVersions } from './resources/content-versions'
 import { Contents } from './resources/contents'
+import { Invites } from './resources/invites'
 import { Spaces } from './resources/spaces'
 import { Teams } from './resources/teams'
 
@@ -21,6 +22,7 @@ export class API {
   public client: ApiClient
   private readonly _spaces: Spaces
   private readonly _teams: Teams
+  private readonly _invites: Invites
 
   constructor(
     options: {
@@ -31,6 +33,7 @@ export class API {
     this.client = new ApiClient(options)
     this._spaces = new Spaces(this.client)
     this._teams = new Teams(this.client)
+    this._invites = new Invites(this.client)
   }
 
   public setAuthToken(token?: string): void {
@@ -47,6 +50,10 @@ export class API {
 
   public get teams(): Teams {
     return this._teams
+  }
+
+  public get invites(): Invites {
+    return this._invites
   }
 
   public forSpace(spaceId: string) {

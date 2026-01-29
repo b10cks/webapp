@@ -107,7 +107,7 @@ const editor = useEditor({
 
 const applyClass = (className: string) => {
   if (!editor.value) return
-  editor.value.chain().focus().setMark('textClass', { class: className }).run()
+  editor.value.chain().focus().toggleMark('textClass', { class: className }).run()
 }
 
 const openInternalLinkPicker = () => {
@@ -443,7 +443,6 @@ onBeforeUnmount(() => {
         variant="ghost"
         title="External Link"
         :class="editor?.isActive('link') && 'bg-primary text-primary-foreground'"
-        :disabled="!props.spaceId"
         @click="insertExternalLink"
       >
         <Icon name="lucide:link" />

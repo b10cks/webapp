@@ -179,6 +179,94 @@
         "expiresDays": "{days} days",
         "role": "Role",
         "rolePlaceholder": "Choose a role for the collaborator"
+      },
+      "status": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "expired": "Expired"
+      },
+      "filters": {
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "roles": {
+          "owner": "Owner",
+          "admin": "Admin",
+          "editor": "Editor",
+          "member": "Member",
+          "viewer": "Viewer"
+        }
+      },
+      "operators": {
+        "contains": "Contains",
+        "startsWith": "Starts with",
+        "endsWith": "Ends with",
+        "equals": "Equals"
+      },
+      "sort": {
+        "email": "Email",
+        "role": "Role",
+        "created_at": "Created At",
+        "expires_at": "Expires At",
+        "accepted_at": "Accepted At"
+      },
+      "columns": {
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "created": "Created",
+        "details": "Details"
+      },
+      "deleteConfirm": {
+        "title": "Delete Invite",
+        "message": "Are you sure you want to delete the invite for {email}?",
+        "confirmLabel": "Delete",
+        "bulkTitle": "Delete Invites",
+        "bulkConfirmLabel": "Delete ({count})"
+      },
+      "resendConfirm": {
+        "title": "Resend Invites",
+        "confirmLabel": "Resend ({count})"
+      },
+      "selection": {
+        "selected": "{count} selected",
+        "clear": "Clear"
+      },
+      "actions": {
+        "resend": "Resend ({count})",
+        "delete": "Delete ({count})",
+        "bulkResend": "Are you sure you want to resend {count} invite(s)?",
+        "bulkDelete": "Are you sure you want to delete {count} invite(s)?"
+      },
+      "tooltip": {
+        "acceptedOn": "Accepted on",
+        "expiresIn": "Expires in",
+        "resend": "Resend invite",
+        "delete": "Delete invite"
+      },
+      "toast": {
+        "sent": "Invite sent to {email}",
+        "sendFailed": "Failed to send invite: {error}",
+        "revoked": "Invite revoked",
+        "revokeFailed": "Failed to revoke invite: {error}",
+        "resent": "Invite resent to {email}",
+        "resendFailed": "Failed to resend invite: {error}",
+        "joined": "Successfully joined {name}",
+        "acceptFailed": "Failed to accept invite: {error}"
+      },
+      "page": {
+        "title": "Join an Invite",
+        "loading": "Loading...",
+        "invalidOrExpired": "Invalid or expired invite",
+        "invalidOrExpiredDesc": "The invite you're trying to use is no longer valid.",
+        "expired": "Invite has expired",
+        "expiredDesc": "Please contact the inviter to send you a new invite.",
+        "alreadyAccepted": "Invite already accepted",
+        "alreadyAcceptedDesc": "You've already accepted this invite.",
+        "invitedToJoin": "You've been invited to join",
+        "acceptingButton": "Accepting...",
+        "acceptButton": "Accept Invite",
+        "declineButton": "Decline"
       }
     },
     "preview": {

@@ -48,53 +48,54 @@ const emit = defineEmits<{
   'update:filters': [filters: Record<string, unknown>]
 }>()
 
+const { t } = useI18n()
 const { alert } = useAlertDialog()
 const { formatDateTime, formatRelativeTime } = useFormat()
 
-const inviteStatusOptions = [
-  { value: InviteStatus.PENDING, label: 'Pending' },
-  { value: InviteStatus.ACCEPTED, label: 'Accepted' },
-  { value: InviteStatus.EXPIRED, label: 'Expired' },
-]
+const inviteStatusOptions = computed(() => [
+  { value: InviteStatus.PENDING, label: t('labels.invites.status.pending') },
+  { value: InviteStatus.ACCEPTED, label: t('labels.invites.status.accepted') },
+  { value: InviteStatus.EXPIRED, label: t('labels.invites.status.expired') },
+])
 
 const inviteFilters = computed(() => [
   {
     id: 'email',
-    label: 'Email',
+    label: t('labels.invites.filters.email'),
     operators: [
-      { value: 'like' as const, label: 'Contains' },
-      { value: '^like' as const, label: 'Starts with' },
-      { value: 'like$' as const, label: 'Ends with' },
-      { value: 'eq' as const, label: 'Equals' },
+      { value: 'like' as const, label: t('labels.invites.operators.contains') },
+      { value: '^like' as const, label: t('labels.invites.operators.startsWith') },
+      { value: 'like$' as const, label: t('labels.invites.operators.endsWith') },
+      { value: 'eq' as const, label: t('labels.invites.operators.equals') },
     ],
   },
   {
     id: 'role',
-    label: 'Role',
-    operators: [{ value: 'eq' as const, label: 'Equals' }],
+    label: t('labels.invites.filters.role'),
+    operators: [{ value: 'eq' as const, label: t('labels.invites.operators.equals') }],
     items: [
-      { value: 'owner', label: 'Owner' },
-      { value: 'admin', label: 'Admin' },
-      { value: 'editor', label: 'Editor' },
-      { value: 'member', label: 'Member' },
-      { value: 'viewer', label: 'Viewer' },
+      { value: 'owner', label: t('labels.invites.filters.roles.owner') },
+      { value: 'admin', label: t('labels.invites.filters.roles.admin') },
+      { value: 'editor', label: t('labels.invites.filters.roles.editor') },
+      { value: 'member', label: t('labels.invites.filters.roles.member') },
+      { value: 'viewer', label: t('labels.invites.filters.roles.viewer') },
     ],
   },
   {
     id: 'status',
-    label: 'Status',
-    operators: [{ value: 'eq' as const, label: 'Equals' }],
-    items: inviteStatusOptions,
+    label: t('labels.invites.filters.status'),
+    operators: [{ value: 'eq' as const, label: t('labels.invites.operators.equals') }],
+    items: inviteStatusOptions.value,
   },
 ])
 
-const sortOptions = [
-  { value: 'email', label: 'Email' },
-  { value: 'role', label: 'Role' },
-  { value: 'created_at', label: 'Created At' },
-  { value: 'expires_at', label: 'Expires At' },
-  { value: 'accepted_at', label: 'Accepted At' },
-]
+const sortOptions = computed(() => [
+  { value: 'email', label: t('labels.invites.sort.email') },
+  { value: 'role', label: t('labels.invites.sort.role') },
+  { value: 'created_at', label: t('labels.invites.sort.created_at') },
+  { value: 'expires_at', label: t('labels.invites.sort.expires_at') },
+  { value: 'accepted_at', label: t('labels.invites.sort.accepted_at') },
+])
 
 const filters = ref<Record<string, unknown>>({})
 const selectedInvites = ref<Map<string, InviteResource>>(new Map())
@@ -124,10 +125,10 @@ const getExpiresInDays = (expiresAt: string) => {
 const handleDelete = async (invite: InviteResource, force: boolean = false) => {
   const confirmed =
     force ||
-    (await alert.confirm(`Are you sure you want to delete the invite for ${invite.email}?`, {
-      title: 'Delete Invite',
-      confirmLabel: 'Delete',
-      cancelLabel: 'Cancel',
+    (await alert.confirm(t('labels.invites.deleteConfirm.message', { email: invite.email }), {
+      title: t('labels.invites.deleteConfirm.title'),
+      confirmLabel: t('labels.invites.deleteConfirm.confirmLabel'),
+      cancelLabel: t('actions.cancel'),
       variant: 'destructive',
     }))
   if (confirmed) {
@@ -172,11 +173,13 @@ const isInviteSelected = (invite: InviteResource) => {
 
 const handleBulkDelete = async () => {
   const confirmed = await alert.confirm(
-    `Are you sure you want to delete ${selectionCount.value} invite(s)?`,
+    t('labels.invites.actions.bulkDelete', { count: selectionCount.value }),
     {
-      title: 'Delete Invites',
-      confirmLabel: `Delete (${selectionCount.value})`,
-      cancelLabel: 'Cancel',
+      title: t('labels.invites.deleteConfirm.bulkTitle'),
+      confirmLabel: t('labels.invites.deleteConfirm.bulkConfirmLabel', {
+        count: selectionCount.value,
+      }),
+      cancelLabel: t('actions.cancel'),
       variant: 'destructive',
     }
   )
@@ -191,11 +194,13 @@ const handleBulkDelete = async () => {
 
 const handleBulkResend = async () => {
   const confirmed = await alert.confirm(
-    `Are you sure you want to resend ${selectionCount.value} invite(s)?`,
+    t('labels.invites.actions.bulkResend', { count: selectionCount.value }),
     {
-      title: 'Resend Invites',
-      confirmLabel: `Resend (${selectionCount.value})`,
-      cancelLabel: 'Cancel',
+      title: t('labels.invites.resendConfirm.title'),
+      confirmLabel: t('labels.invites.resendConfirm.confirmLabel', {
+        count: selectionCount.value,
+      }),
+      cancelLabel: t('actions.cancel'),
     }
   )
   if (confirmed) {
@@ -232,7 +237,9 @@ const handleBulkResend = async () => {
       class="flex flex-col gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between"
     >
       <div class="flex items-center gap-2">
-        <Badge variant="primary">{{ selectionCount }} selected</Badge>
+        <Badge variant="primary">{{
+          $t('labels.invites.selection.selected', { count: selectionCount })
+        }}</Badge>
       </div>
       <div class="flex flex-col gap-2 sm:flex-row">
         <Button
@@ -244,7 +251,7 @@ const handleBulkResend = async () => {
             name="lucide:send"
             class="mr-2 h-4 w-4"
           />
-          Resend ({{ selectionCount }})
+          {{ $t('labels.invites.actions.resend', { count: selectionCount }) }}
         </Button>
         <Button
           size="sm"
@@ -255,14 +262,14 @@ const handleBulkResend = async () => {
             name="lucide:trash-2"
             class="mr-2 h-4 w-4"
           />
-          Delete ({{ selectionCount }})
+          {{ $t('labels.invites.actions.delete', { count: selectionCount }) }}
         </Button>
         <Button
           size="sm"
           variant="ghost"
           @click="clearSelection"
         >
-          Clear
+          {{ $t('labels.invites.selection.clear') }}
         </Button>
       </div>
     </div>
@@ -284,24 +291,26 @@ const handleBulkResend = async () => {
               column="email"
               @update:model-value="(value) => emit('update:sortBy', value)"
             >
-              Email
+              {{ $t('labels.invites.columns.email') }}
             </TableSortableHead>
             <TableSortableHead
               :model-value="sortBy"
               column="role"
               @update:model-value="(value) => emit('update:sortBy', value)"
             >
-              Role
+              {{ $t('labels.invites.columns.role') }}
             </TableSortableHead>
-            <TableHead column="status"> Status </TableHead>
+            <TableHead column="status"> {{ $t('labels.invites.columns.status') }} </TableHead>
             <TableSortableHead
               :model-value="sortBy"
               column="created_at"
               @update:model-value="(value) => emit('update:sortBy', value)"
             >
-              Created
+              {{ $t('labels.invites.columns.created') }}
             </TableSortableHead>
-            <TableHead class="hidden sm:table-cell">Details</TableHead>
+            <TableHead class="hidden sm:table-cell">{{
+              $t('labels.invites.columns.details')
+            }}</TableHead>
             <TableHead class="w-24"></TableHead>
           </TableRow>
         </TableHeader>
@@ -358,13 +367,15 @@ const handleBulkResend = async () => {
                   v-if="invite.status === InviteStatus.ACCEPTED"
                   :tooltip="formatDateTime(invite.accepted_at)"
                 >
-                  Accepted on {{ new Date(invite.accepted_at).toLocaleDateString() }}
+                  {{ $t('labels.invites.tooltip.acceptedOn') }}
+                  {{ new Date(invite.accepted_at).toLocaleDateString() }}
                 </SimpleTooltip>
                 <SimpleTooltip
                   v-else
                   :tooltip="formatDateTime(invite.expires_at)"
                 >
-                  Expires in {{ getExpiresInDays(invite.expires_at) }} days
+                  {{ $t('labels.invites.tooltip.expiresIn') }}
+                  {{ getExpiresInDays(invite.expires_at) }} days
                 </SimpleTooltip>
               </TableCell>
 
@@ -374,7 +385,7 @@ const handleBulkResend = async () => {
                     v-if="invite.status === InviteStatus.PENDING"
                     size="icon"
                     variant="ghost"
-                    title="Resend invite"
+                    :title="$t('labels.invites.tooltip.resend')"
                     @click="handleResend(invite)"
                   >
                     <Icon name="lucide:send" />
@@ -383,7 +394,7 @@ const handleBulkResend = async () => {
                     v-if="invite.status !== InviteStatus.ACCEPTED"
                     size="icon"
                     variant="ghost"
-                    title="Delete invite"
+                    :title="$t('labels.invites.tooltip.delete')"
                     @click="handleDelete(invite)"
                   >
                     <Icon

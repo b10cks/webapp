@@ -9,6 +9,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useInvites() {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   // Public Invites Queries
@@ -103,10 +104,12 @@ export function useInvites() {
       },
       onSuccess: ({ spaceId, invite }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.spaceList(spaceId) })
-        toast.success(`Invite sent to ${invite.email}`)
+        toast.success(t('labels.invites.toast.sent', { email: invite.email }))
       },
       onError: (error: Error) => {
-        toast.error(`Failed to send invite: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('labels.invites.toast.sendFailed', { error: error.message || 'Unknown error' })
+        )
       },
     })
   }
@@ -119,10 +122,12 @@ export function useInvites() {
       },
       onSuccess: ({ spaceId }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.spaceList(spaceId) })
-        toast.success('Invite revoked')
+        toast.success(t('labels.invites.toast.revoked'))
       },
       onError: (error: Error) => {
-        toast.error(`Failed to revoke invite: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('labels.invites.toast.revokeFailed', { error: error.message || 'Unknown error' })
+        )
       },
     })
   }
@@ -134,10 +139,12 @@ export function useInvites() {
         return { spaceId, invite: response.data }
       },
       onSuccess: ({ invite }) => {
-        toast.success(`Invite resent to ${invite.email}`)
+        toast.success(t('labels.invites.toast.resent', { email: invite.email }))
       },
       onError: (error: Error) => {
-        toast.error(`Failed to resend invite: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('labels.invites.toast.resendFailed', { error: error.message || 'Unknown error' })
+        )
       },
     })
   }
@@ -151,10 +158,12 @@ export function useInvites() {
       },
       onSuccess: ({ teamId, invite }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.teamList(teamId) })
-        toast.success(`Invite sent to ${invite.email}`)
+        toast.success(t('labels.invites.toast.sent', { email: invite.email }))
       },
       onError: (error: Error) => {
-        toast.error(`Failed to send invite: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('labels.invites.toast.sendFailed', { error: error.message || 'Unknown error' })
+        )
       },
     })
   }
@@ -167,10 +176,12 @@ export function useInvites() {
       },
       onSuccess: ({ teamId }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.teamList(teamId) })
-        toast.success('Invite revoked')
+        toast.success(t('labels.invites.toast.revoked'))
       },
       onError: (error: Error) => {
-        toast.error(`Failed to revoke invite: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('labels.invites.toast.revokeFailed', { error: error.message || 'Unknown error' })
+        )
       },
     })
   }
@@ -182,10 +193,12 @@ export function useInvites() {
         return { teamId, invite: response.data }
       },
       onSuccess: ({ invite }) => {
-        toast.success(`Invite resent to ${invite.email}`)
+        toast.success(t('labels.invites.toast.resent', { email: invite.email }))
       },
       onError: (error: Error) => {
-        toast.error(`Failed to resend invite: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('labels.invites.toast.resendFailed', { error: error.message || 'Unknown error' })
+        )
       },
     })
   }
@@ -204,13 +217,14 @@ export function useInvites() {
         return response.data
       },
       onSuccess: (invite) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.invites.myList() })
         console.log('Invite accepted', invite)
         const targetName = invite.space?.name || invite.team?.name || 'resource'
-        toast.success(`Successfully joined ${targetName}`)
+        toast.success(t('labels.invites.toast.joined', { name: targetName }))
       },
       onError: (error: Error) => {
-        toast.error(`Failed to accept invite: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('labels.invites.toast.acceptFailed', { error: error.message || 'Unknown error' })
+        )
       },
     })
   }

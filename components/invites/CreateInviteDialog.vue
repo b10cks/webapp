@@ -5,6 +5,7 @@ import { InputField, SelectField, TextField } from '~/components/ui/form'
 import type { CreateInvitePayload } from '~/types/invites'
 
 const open = defineModel<boolean>('open')
+const { t } = useI18n()
 
 const props = defineProps<{
   spaceId?: string
@@ -48,6 +49,13 @@ const handleSendInvite = async () => {
 }
 
 const roles = ['member', 'editor', 'admin', 'owner'] as const
+
+const roleOptions = computed(() =>
+  roles.map((role) => ({
+    label: t(`labels.invites.filters.roles.${role}`),
+    value: role,
+  }))
+)
 </script>
 
 <template>
@@ -79,7 +87,7 @@ const roles = ['member', 'editor', 'admin', 'owner'] as const
           :label="$t('labels.invites.fields.role')"
           :placeholder="$t('labels.invites.fields.rolePlaceholder')"
           v-model="formData.role"
-          :options="roles.map((role) => ({ label: role, value: role }))"
+          :options="roleOptions"
           required
         />
 

@@ -69,36 +69,36 @@ const handleAccept = () => {
       </AppHeader>
       <div class="flex w-full grow items-center justify-center bg-background pt-14">
         <div class="w-full max-w-md space-y-6">
-          <h1 class="text-2xl font-bold">Join an Invite</h1>
+          <h1 class="text-2xl font-bold">{{ $t('labels.invites.page.title') }}</h1>
           <Alert
             v-if="isPending"
             class="space-y-4"
           >
-            Loading...
+            {{ $t('labels.invites.page.loading') }}
           </Alert>
           <Alert
             v-else-if="error"
             icon="lucide:alert-circle"
             color="destructive"
           >
-            <p class="font-semibold">Invalid or expired invite</p>
-            <p class="mt-1 text-sm">The invite you're trying to use is no longer valid.</p>
+            <p class="font-semibold">{{ $t('labels.invites.page.invalidOrExpired') }}</p>
+            <p class="mt-1 text-sm">{{ $t('labels.invites.page.invalidOrExpiredDesc') }}</p>
           </Alert>
           <Alert
             v-else-if="isExpired"
             color="destructive"
             icon="lucide:clock"
           >
-            <p class="font-semibold">Invite has expired</p>
-            <p class="mt-1 text-sm">Please contact the inviter to send you a new invite.</p>
+            <p class="font-semibold">{{ $t('labels.invites.page.expired') }}</p>
+            <p class="mt-1 text-sm">{{ $t('labels.invites.page.expiredDesc') }}</p>
           </Alert>
           <Alert
             v-else-if="isAccepted"
             color="success"
             icon="lucide:check-circle"
           >
-            <p class="font-semibold">Invite already accepted</p>
-            <p class="mt-1 text-sm">You've already accepted this invite.</p>
+            <p class="font-semibold">{{ $t('labels.invites.page.alreadyAccepted') }}</p>
+            <p class="mt-1 text-sm">{{ $t('labels.invites.page.alreadyAcceptedDesc') }}</p>
           </Alert>
 
           <form
@@ -108,7 +108,8 @@ const handleAccept = () => {
           >
             {{ token }}
             <div>
-              You've been invited to join <span class="font-semibold">{{ resourceName }}</span>
+              {{ $t('labels.invites.page.invitedToJoin') }}
+              <span class="font-semibold">{{ resourceName }}</span>
             </div>
             <Alert
               variant="modern"
@@ -129,7 +130,11 @@ const handleAccept = () => {
                   name="lucide:loader-2"
                   class="mr-2 h-4 w-4 animate-spin"
                 />
-                {{ isAccepting ? 'Accepting...' : 'Accept Invite' }}
+                {{
+                  isAccepting
+                    ? $t('labels.invites.page.acceptingButton')
+                    : $t('labels.invites.page.acceptButton')
+                }}
               </Button>
 
               <Button
@@ -138,7 +143,7 @@ const handleAccept = () => {
                 class="w-full"
                 @click="router.back()"
               >
-                Decline
+                {{ $t('labels.invites.page.declineButton') }}
               </Button>
             </div>
           </form>

@@ -12,7 +12,6 @@ export function useInvites() {
   const { t } = useI18n()
   const queryClient = useQueryClient()
 
-  // Public Invites Queries
   const usePublicInviteQuery = (tokenRef: MaybeRefOrComputed<string>) => {
     const token = computed(() => unref(tokenRef))
 
@@ -20,14 +19,12 @@ export function useInvites() {
       queryKey: computed(() => queryKeys.invites.public(token.value)),
       queryFn: async () => {
         const response = await api.invites.getPublicInvite(token.value)
-        console.log(response.data)
         return response.data
       },
       enabled: computed(() => !!token.value),
     })
   }
 
-  // User Invites Queries
   const useMyInvitesQuery = (paramsRef: MaybeRefOrComputed<InviteQueryParams> = {}) => {
     const params = computed(() => unref(paramsRef))
 
@@ -53,7 +50,6 @@ export function useInvites() {
     })
   }
 
-  // Space Invites Queries
   const useSpaceInvitesQuery = (
     spaceIdRef: MaybeRefOrComputed<string>,
     paramsRef: MaybeRefOrComputed<InviteQueryParams> = {}
@@ -71,7 +67,6 @@ export function useInvites() {
     })
   }
 
-  // Team Invites Queries
   const useTeamInvitesQuery = (
     teamIdRef: MaybeRefOrComputed<string>,
     paramsRef: MaybeRefOrComputed<InviteQueryParams> = {}
@@ -89,7 +84,6 @@ export function useInvites() {
     })
   }
 
-  // Space Invites Mutations
   const useCreateSpaceInviteMutation = () => {
     return useMutation({
       mutationFn: async ({
@@ -104,11 +98,13 @@ export function useInvites() {
       },
       onSuccess: ({ spaceId, invite }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.spaceList(spaceId) })
-        toast.success(t('labels.invites.toast.sent', { email: invite.email }))
+        toast.success(t('labels.invites.toast.sent', { email: invite.email }) as string)
       },
       onError: (error: Error) => {
         toast.error(
-          t('labels.invites.toast.sendFailed', { error: error.message || 'Unknown error' })
+          t('labels.invites.toast.sendFailed', {
+            error: error.message || 'Unknown error',
+          }) as string
         )
       },
     })
@@ -122,11 +118,13 @@ export function useInvites() {
       },
       onSuccess: ({ spaceId }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.spaceList(spaceId) })
-        toast.success(t('labels.invites.toast.revoked'))
+        toast.success(t('labels.invites.toast.revoked') as string)
       },
       onError: (error: Error) => {
         toast.error(
-          t('labels.invites.toast.revokeFailed', { error: error.message || 'Unknown error' })
+          t('labels.invites.toast.revokeFailed', {
+            error: error.message || 'Unknown error',
+          }) as string
         )
       },
     })
@@ -139,11 +137,13 @@ export function useInvites() {
         return { spaceId, invite: response.data }
       },
       onSuccess: ({ invite }) => {
-        toast.success(t('labels.invites.toast.resent', { email: invite.email }))
+        toast.success(t('labels.invites.toast.resent', { email: invite.email }) as string)
       },
       onError: (error: Error) => {
         toast.error(
-          t('labels.invites.toast.resendFailed', { error: error.message || 'Unknown error' })
+          t('labels.invites.toast.resendFailed', {
+            error: error.message || 'Unknown error',
+          }) as string
         )
       },
     })
@@ -158,11 +158,13 @@ export function useInvites() {
       },
       onSuccess: ({ teamId, invite }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.teamList(teamId) })
-        toast.success(t('labels.invites.toast.sent', { email: invite.email }))
+        toast.success(t('labels.invites.toast.sent', { email: invite.email }) as string)
       },
       onError: (error: Error) => {
         toast.error(
-          t('labels.invites.toast.sendFailed', { error: error.message || 'Unknown error' })
+          t('labels.invites.toast.sendFailed', {
+            error: error.message || 'Unknown error',
+          }) as string
         )
       },
     })
@@ -176,11 +178,13 @@ export function useInvites() {
       },
       onSuccess: ({ teamId }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.invites.teamList(teamId) })
-        toast.success(t('labels.invites.toast.revoked'))
+        toast.success(t('labels.invites.toast.revoked') as string)
       },
       onError: (error: Error) => {
         toast.error(
-          t('labels.invites.toast.revokeFailed', { error: error.message || 'Unknown error' })
+          t('labels.invites.toast.revokeFailed', {
+            error: error.message || 'Unknown error',
+          }) as string
         )
       },
     })
@@ -193,11 +197,13 @@ export function useInvites() {
         return { teamId, invite: response.data }
       },
       onSuccess: ({ invite }) => {
-        toast.success(t('labels.invites.toast.resent', { email: invite.email }))
+        toast.success(t('labels.invites.toast.resent', { email: invite.email }) as string)
       },
       onError: (error: Error) => {
         toast.error(
-          t('labels.invites.toast.resendFailed', { error: error.message || 'Unknown error' })
+          t('labels.invites.toast.resendFailed', {
+            error: error.message || 'Unknown error',
+          }) as string
         )
       },
     })
@@ -217,13 +223,14 @@ export function useInvites() {
         return response.data
       },
       onSuccess: (invite) => {
-        console.log('Invite accepted', invite)
         const targetName = invite.space?.name || invite.team?.name || 'resource'
-        toast.success(t('labels.invites.toast.joined', { name: targetName }))
+        toast.success(t('labels.invites.toast.joined', { name: targetName }) as string)
       },
       onError: (error: Error) => {
         toast.error(
-          t('labels.invites.toast.acceptFailed', { error: error.message || 'Unknown error' })
+          t('labels.invites.toast.acceptFailed', {
+            error: error.message || 'Unknown error',
+          }) as string
         )
       },
     })

@@ -9,7 +9,13 @@ import {
 } from '~/components/ui/dropdown-menu'
 import { PulseDot } from '~/components/ui/pulse-dot'
 import { SimpleTooltip } from '~/components/ui/tooltip'
-import type { FieldUpdateEvent } from '~/utils/preview-bridge'
+import type { CommentResource } from '~/types/comments'
+import type {
+  CommentClickEvent,
+  CommentCreateEvent,
+  CommentUpdateEvent,
+  FieldUpdateEvent,
+} from '~/utils/preview-bridge'
 import { PreviewBridge } from '~/utils/preview-bridge'
 
 const { t } = useI18n()
@@ -20,6 +26,7 @@ const props = defineProps<{
   updatedAt?: string
   content?: never // Content for live updates
   itemId?: string | null // Currently selected item in the editor
+  comments?: CommentResource[] // Comments for the preview
 }>()
 
 const { useSpaceQuery } = useSpaces()
@@ -29,6 +36,9 @@ const { settings } = useSpaceSettings(props.spaceId)
 const emit = defineEmits<{
   (e: 'selectItem', itemId: string): void
   (e: 'updateField', payload: FieldUpdateEvent): void
+  (e: 'commentClick', payload: CommentClickEvent): void
+  (e: 'commentCreate', payload: CommentCreateEvent): void
+  (e: 'commentUpdate', payload: CommentUpdateEvent): void
 }>()
 
 const iframeRef = ref<HTMLIFrameElement | null>(null)
@@ -36,7 +46,7 @@ const iframeKey = ref<string>()
 const loading = ref<boolean>(true)
 const isConnected = ref<boolean>(false)
 const mode = ref<'desktop' | 'mobile'>('desktop')
-let previewBridge: PreviewBridge = undefined
+let previewBridge: PreviewBridge
 
 const baseSrc = computed(() => {
   const env = settings.value.content.environment
@@ -63,6 +73,15 @@ const setupConnection = async () => {
   previewBridge.on('FIELD_UPDATE', (payload) => {
     emit('updateField', payload)
   })
+  previewBridge.on('COMMENT_CLICK', (payload) => {
+    emit('commentClick', payload)
+  })
+  previewBridge.on('COMMENT_CREATE', (payload) => {
+    emit('commentCreate', payload)
+  })
+  previewBridge.on('COMMENT_UPDATE', (payload) => {
+    emit('commentUpdate', payload)
+  })
   isConnected.value = true
 }
 
@@ -87,6 +106,12 @@ watchEffect(() => {
 watchEffect(() => {
   if (isConnected.value && props.itemId !== undefined) {
     previewBridge.updateSelectedItem(props.itemId)
+  }
+})
+
+watchEffect(() => {
+  if (isConnected.value && props.comments) {
+    previewBridge.updateComments(props.comments)
   }
 })
 
@@ -118,9 +143,7 @@ const updateHover = (itemId: string | null) => {
 }
 
 const copyLink = () => {
-  navigator.clipboard
-    .writeText(src.value)
-    .then(() => toast.message(t('notifications.preview.copied') as string))
+  navigator.clipboard.writeText(src.value).then(() => toast.message(t('notifications.preview.copied') as string))
 }
 
 // Expose the refresh method to parent components

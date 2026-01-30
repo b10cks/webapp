@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
-import FieldEditor from '~/components/editor/FieldEditor.vue'
-import ContentBreadcrumbs from '~/components/editor/ContentBreadcrumbs.vue'
-import { useContentTree } from '~/composables/useContentTree'
-import { useGlobalClipboard } from '~/composables/useGlobalClipboard'
-import type { ContentBlock } from '~/types/contents'
 import { useElementHover } from '@vueuse/core'
-import { Button } from '~/components/ui/button'
+import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
+import ContentBreadcrumbs from '~/components/editor/ContentBreadcrumbs.vue'
+import FieldEditor from '~/components/editor/FieldEditor.vue'
+import { useContentTree } from '~/composables/useContentTree'
+import type { ContentBlock } from '~/types/contents'
 
 interface EditorPage {
   header: string
@@ -57,9 +55,7 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'navigate', itemId: string | null): void
-}>()
+const emit = defineEmits<(e: 'navigate', itemId: string | null) => void>()
 
 const hoverRegistry = inject<Map<string, boolean>>('hoverRegistry', new Map())
 const componentId = computed((): string => (content.value?.id || props.itemId || '') as string)

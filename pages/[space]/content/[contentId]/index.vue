@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
+import CommentsSidebar from '~/components/comments/CommentsSidebar.vue'
 import ContentHeader from '~/components/content/ContentHeader.vue'
 import HeaderActions from '~/components/content/HeaderActions.vue'
 import ContentInfo from '~/components/ContentInfo.vue'
@@ -21,6 +22,9 @@ const { hasClipboardItem, clearClipboard } = useGlobalClipboard()
 
 const { useContentQuery } = useContent(spaceId)
 const { data: originalContent } = useContentQuery(contentId)
+
+const { useCommentsQuery } = useComments(spaceId, contentId)
+const { data: comments } = useCommentsQuery()
 
 const content = ref<ContentResource | null>(null)
 watch(
@@ -54,6 +58,7 @@ const tabs = [
   { value: 'edit', icon: 'lucide:pencil', label: 'Edit' },
   { value: 'config', icon: 'lucide:wrench', label: 'Config' },
   { value: 'info', icon: 'lucide:badge-info', label: 'Info' },
+  { value: 'comments', icon: 'lucide:message-square', label: 'Comments' },
 ]
 
 // Update page title
@@ -88,7 +93,7 @@ const findNestedObjectById = (data: unknown[], id: string): Record<string, unkno
 
       // Search in nested arrays
       for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key) && Array.isArray(obj[key])) {
+        if (Object.hasOwn(obj, key) && Array.isArray(obj[key])) {
           const result = findNestedObjectById(obj[key] as unknown[], id)
           if (result) return result
         }
@@ -109,6 +114,13 @@ const updateField = (update: { itemId: string; field: string; value: unknown }) 
 
 provide('content', content)
 provide('rootBlock', rootBlock)
+provide('spaceId', spaceId.value)
+provide('contentId', contentId)
+provide(
+  'contentVersionId',
+  computed(() => content.value?.current_version_id)
+)
+provide('comments', comments)
 provide('updatePreviewItem', updatePreviewItem)
 provide('updateHoverItem', (id: string) => {
   if (previewRef.value) {
@@ -174,6 +186,15 @@ provide('updateHoverItem', (id: string) => {
         >
           <ContentSettings v-model="content" />
         </TabsContent>
+        <TabsContent
+          value="comments"
+          class="p-4"
+        >
+          <CommentsSidebar
+            :content-id="content.id"
+            :content-version-id="content.current_version_id || undefined"
+          />
+        </TabsContent>
       </ScrollArea>
       <div
         v-else
@@ -182,23 +203,23 @@ provide('updateHoverItem', (id: string) => {
       <TabsList class="flex h-full w-14 shrink-0 flex-col border-l border-l-border p-3 select-none">
         <div class="flex min-h-0 flex-1 flex-col overflow-auto">
           <div class="relative flex w-full min-w-0 flex-col gap-2">
-            <TabsTrigger
+            <SimpleTooltip
               v-for="tab in tabs"
+              :tooltip="tab.label"
               :key="tab.value"
-              :value="tab.value"
-              class="flex size-8 items-center justify-center rounded-lg transition-colors duration-200 ease-butter hover:bg-input data-[state=active]:bg-input data-[state=active]:text-primary data-[state=inactive]:cursor-pointer"
+              side="left"
+              class="flex cursor-pointer"
             >
-              <SimpleTooltip
-                :tooltip="tab.label"
-                side="left"
-                class="flex cursor-pointer"
+              <TabsTrigger
+                :value="tab.value"
+                class="flex size-8 items-center justify-center rounded-lg transition-colors duration-200 ease-butter hover:bg-input data-[state=active]:bg-input data-[state=active]:text-primary data-[state=inactive]:cursor-pointer"
               >
                 <Icon
                   :name="tab.icon"
                   size="1.25rem"
                 />
-              </SimpleTooltip>
-            </TabsTrigger>
+              </TabsTrigger>
+            </SimpleTooltip>
           </div>
         </div>
       </TabsList>

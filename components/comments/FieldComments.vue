@@ -41,7 +41,11 @@ const addReactionMutation = useAddReactionMutation()
 const removeReactionMutation = useRemoveReactionMutation()
 
 const fieldComments = computed(() => {
-  return comments.value?.filter((c) => c.item_id === (props.itemId || null) && c.field === props.field) || []
+  return (
+    comments.value?.filter(
+      (c) => c.item_id === (props.itemId || null) && c.field === props.field
+    ) || []
+  )
 })
 
 const unresolvedCount = computed(() => {
@@ -116,69 +120,73 @@ const handleRemoveReaction = (commentId: string, emoji: string) => {
       </Button>
     </PopoverTrigger>
     <PopoverContent
-      class="flex w-md max-w-full flex-col"
+      class="w-md max-w-full"
       side="left"
       :sideOffset="16"
       align="start"
     >
-      <div class="flex items-center justify-between">
-        <h4 class="text-sm font-medium">Field Comments</h4>
-        <Button
-          variant="ghost"
-          size="toolbar"
-          @click="isOpen = false"
-        >
-          <Icon name="lucide:x" />
-        </Button>
-      </div>
-
-      <ScrollArea class="flex-1">
-        <div
-          v-if="fieldComments.length === 0"
-          class="flex items-start gap-2 py-3 text-muted"
-        >
-          <Icon
-            name="lucide:message-circle"
-            class="shrink-0"
-          />
-          <p class="text-sm">
-            Give feedback, ask questions, or share your thoughts. You can also click anywhere in the
-            preview to leave a positioned comment.
-          </p>
-        </div>
-        <CommentsList
-          v-else
-          :comments="fieldComments"
-          @reply="handleReply"
-          @edit="handleEdit"
-          @delete="handleDelete"
-          @resolve="handleResolve"
-          @unresolve="handleUnresolve"
-          @add-reaction="handleAddReaction"
-          @remove-reaction="handleRemoveReaction"
-          class="mx-2"
-        />
-      </ScrollArea>
-
-      <div class="space-y-1">
-        <TextField
-          name="comment"
-          v-model="newCommentBody"
-          placeholder="Add a comment..."
-          :auto-size="100"
-        />
-        <div class="flex justify-end">
+      <div class="flex h-160 flex-col">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-medium">Field Comments</h4>
           <Button
-            :disabled="!newCommentBody.trim() || createCommentMutation.isPending.value"
-            @click="handleCreateComment"
+            variant="ghost"
+            size="toolbar"
+            @click="isOpen = false"
           >
-            <Icon
-              v-if="createCommentMutation.isPending.value"
-              name="lucide:loader-2"
-              class="mr-1 animate-spin"
-            />
-            <span> Add Comment </span>
+            <Icon name="lucide:x" />
           </Button>
+        </div>
+
+        <ScrollArea class="h-96">
+          <div class="flex h-full w-full flex-1 flex-col">
+            <div
+              v-if="fieldComments.length === 0"
+              class="flex items-start gap-2 py-3 text-muted"
+            >
+              <Icon
+                name="lucide:message-circle"
+                class="shrink-0"
+              />
+              <p class="text-sm">
+                Give feedback, ask questions, or share your thoughts. You can also click anywhere in
+                the preview to leave a positioned comment.
+              </p>
+            </div>
+            <CommentsList
+              v-else
+              :comments="fieldComments"
+              @reply="handleReply"
+              @edit="handleEdit"
+              @delete="handleDelete"
+              @resolve="handleResolve"
+              @unresolve="handleUnresolve"
+              @add-reaction="handleAddReaction"
+              @remove-reaction="handleRemoveReaction"
+              class="mx-2"
+            />
+          </div>
+        </ScrollArea>
+
+        <div class="h-full space-y-1">
+          <TextField
+            name="comment"
+            v-model="newCommentBody"
+            placeholder="Add a comment..."
+            :auto-size="100"
+          />
+          <div class="flex justify-end">
+            <Button
+              :disabled="!newCommentBody.trim() || createCommentMutation.isPending.value"
+              @click="handleCreateComment"
+            >
+              <Icon
+                v-if="createCommentMutation.isPending.value"
+                name="lucide:loader-2"
+                class="mr-1 animate-spin"
+              />
+              <span> Add Comment </span>
+            </Button>
+          </div>
         </div>
       </div>
     </PopoverContent>

@@ -795,7 +795,28 @@
     "selectionCount": "Selected {count} items",
     "showingEntries": "Showing {from} to {to} of {total} items",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "emojis": {
+      "groups": {
+        "favorites": "Frequently used",
+        "smileys_people": "Smileys & People",
+        "animals_nature": "Animals & Nature",
+        "food_drinks": "Foods & Drinks",
+        "activities": "Activities",
+        "travel_places": "Travel & Places",
+        "objects": "Objects",
+        "symbols": "Symbols",
+        "flags": "Flags"
+      },
+      "skinTones": {
+        "neutral": "Neutral",
+        "1f3fb": "Light",
+        "1f3fc": "Medium-Light",
+        "1f3fd": "Medium",
+        "1f3fe": "Medium-Dark",
+        "1f3ff": "Dark"
+      }
+    }
   },
   "notifications": {
     "inputField": {

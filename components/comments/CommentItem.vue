@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Avatar } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
+import { Emoji, EmojiPicker } from '~/components/ui/emoji'
 import { TextField } from '~/components/ui/form'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import type { CommentResource } from '~/types/comments'
 
 const props = defineProps<{
@@ -200,43 +200,18 @@ const toggleResolved = () => {
         <Button
           v-for="(users, emoji) in reactions"
           :key="emoji"
-          variant="outline"
+          :variant="hasUserReacted(emoji) ? 'accent' : 'default'"
           size="xs"
-          :class="[
-            'gap-1 px-2 py-1',
-            hasUserReacted(emoji) ? 'bg-primary/10 border-primary' : '',
-          ]"
           @click="toggleReaction(emoji)"
         >
-          <span>{{ emoji }}</span>
+          <Emoji :code="emoji" />
           <span class="text-xs">{{ users.length }}</span>
         </Button>
 
-        <Popover v-model:open="isEmojiPickerOpen">
-          <PopoverTrigger as-child>
-            <Button
-              variant="ghost"
-              size="xs"
-              class="px-2 py-1"
-            >
-              <Icon name="lucide:smile-plus" class="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent class="w-auto p-2">
-            <div class="flex gap-1">
-              <Button
-                v-for="emoji in commonEmojis"
-                :key="emoji"
-                variant="ghost"
-                size="sm"
-                class="px-2"
-                @click="addReaction(emoji)"
-              >
-                {{ emoji }}
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+        <EmojiPicker
+          @select="addReaction($event)"
+          class="opacity-0 group-hover:opacity-100"
+        />
       </div>
 
       <div v-if="hasReplies && !isReply">

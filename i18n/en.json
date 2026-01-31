@@ -171,13 +171,13 @@
       "createDescription": "Invite collaborators to work together on your project.",
       "sending": "Sending invitation...",
       "fields": {
-        "email": "Email",
+        "email": "Invite by email",
         "emailPlaceholder": "name@example.com",
         "message": "Personal Message",
         "messagePlaceholder": "Add a personal note (optional)",
         "expires": "Invitation Expires in",
         "expiresDays": "{days} days",
-        "role": "Role",
+        "role": "Invite as",
         "rolePlaceholder": "Choose a role for the collaborator"
       },
       "status": {

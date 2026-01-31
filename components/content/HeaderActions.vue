@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ContentModel } from '~/api/resources/content-model'
 import AssignToReleaseDialog from '~/components/releases/AssignToReleaseDialog.vue'
+import { AvatarList } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import SplitButton from '~/components/ui/button/SplitButton.vue'
 import {
@@ -52,6 +53,11 @@ const publishType = ref<'now' | 'schedule'>('now')
 const assignReleaseDialogOpen = ref(false)
 const selectedReleaseForAssign = ref<any>(null)
 const contentModel = computed(() => new ContentModel(props.content))
+
+const { users: presentUsers } = useContentPresence(
+  computed(() => props.spaceId),
+  computed(() => props.content.id)
+)
 
 const save = async () => {
   if (props.content.id) {
@@ -156,7 +162,13 @@ const handleConfirmAssign = (versionIds: string[]) => {
 </script>
 
 <template>
-  <div class="flex gap-3">
+  <div class="flex items-center gap-3">
+    <AvatarList
+      v-if="presentUsers.length > 0"
+      :users="presentUsers"
+      :max="3"
+      tooltip-side="bottom"
+    />
     <SimpleTooltip
       :tooltip="
         hasLocalization

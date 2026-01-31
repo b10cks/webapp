@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { TreeItemToggleEvent } from 'reka-ui'
 import { TreeItem, TreeRoot } from 'reka-ui'
-import RenamableTitle from '~/components/ui/RenamableTitle.vue'
-import { Button } from '~/components/ui/button'
 import CreateContentDialog from '~/components/content/CreateContentDialog.vue'
-import type { ContentResource } from '~/types/contents'
+import { AvatarList } from '~/components/ui/avatar'
+import { Button } from '~/components/ui/button'
+import RenamableTitle from '~/components/ui/RenamableTitle.vue'
 import { SimpleTooltip } from '~/components/ui/tooltip'
+import type { ContentResource } from '~/types/contents'
 
 const props = defineProps<{
   title?: string
@@ -28,6 +29,8 @@ const { settings } = useSpaceSettings(props.spaceId)
 
 const { isLoading, error, data } = useContentMenuQuery()
 const rootItems = computed(() => getRootItems(data.value) || [])
+
+const { getUsersForContent } = useContentMenuPresence(props.spaceId)
 
 const selectedItemId = ref<string | null>(null)
 const currentlyEditingId = ref<string | null>(null)
@@ -216,6 +219,13 @@ const initDelete = async (item: ContentResource) => {
         />
 
         <div class="ml-auto flex items-center gap-2">
+          <AvatarList
+            v-if="getUsersForContent(item.value.id).length > 0"
+            :users="getUsersForContent(item.value.id)"
+            :max="2"
+            size="sm"
+            class="mr-1"
+          />
           <div
             v-if="!item.value.pat"
             class="h-2 w-2 rounded-full bg-text-muted"

@@ -783,6 +783,52 @@
         }
       }
     },
+    "account": {
+      "profile": {
+        "title": "Profile",
+        "description": "Manage your personal information and profile settings.",
+        "personalInfo": "Personal Information",
+        "personalInfoDescription": "Update your name and profile picture.",
+        "avatar": "Profile Picture",
+        "avatarDescription": "Upload a profile picture. Recommended size: 400x400px.",
+        "firstname": "First Name",
+        "firstnamePlaceholder": "Enter your first name",
+        "lastname": "Last Name",
+        "lastnamePlaceholder": "Enter your last name",
+        "email": "Email Address",
+        "emailReadonly": "Your email address cannot be changed.",
+        "userId": "User ID",
+        "toast": {
+          "updated": "Profile updated successfully",
+          "updateFailed": "Failed to update profile: {error}",
+          "avatarUploaded": "Profile picture updated successfully",
+          "avatarUploadFailed": "Failed to upload profile picture: {error}"
+        }
+      },
+      "invites": {
+        "title": "Invitations",
+        "description": "View and manage your pending invitations to spaces and teams.",
+        "myInvites": "My Invitations",
+        "myInvitesDescription": "Invitations you've received to join spaces and teams."
+      },
+      "security": {
+        "title": "Security",
+        "description": "Manage your password and account security settings.",
+        "changePassword": "Change Password",
+        "changePasswordDescription": "Update your password to keep your account secure.",
+        "oldPassword": "Current Password",
+        "oldPasswordPlaceholder": "Enter your current password",
+        "newPassword": "New Password",
+        "newPasswordPlaceholder": "Enter your new password",
+        "confirmPassword": "Confirm New Password",
+        "confirmPasswordPlaceholder": "Confirm your new password",
+        "changePasswordButton": "Change Password",
+        "toast": {
+          "passwordChanged": "Password changed successfully",
+          "passwordChangeFailed": "Failed to change password: {error}"
+        }
+      }
+    },
     "teams": {
       "selectPlaceholder": "Select a team..."
     },

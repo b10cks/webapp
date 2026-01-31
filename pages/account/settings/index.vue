@@ -1,0 +1,191 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button } from '~/components/ui/button'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import { FormField, InputField } from '~/components/ui/form'
+import { useFileUpload } from '~/composables/useFileUpload'
+
+const { useUserQuery, useUpdateUserMutation, useUploadAvatarMutation } = useUser()
+const { data: user } = useUserQuery()
+const { mutate: updateUser, isPending: isUpdating } = useUpdateUserMutation()
+const { mutate: uploadAvatar, isPending: isUploadingAvatar } = useUploadAvatarMutation()
+
+const firstname = ref('')
+const lastname = ref('')
+const avatar = ref<string | null>(null)
+const avatarInputRef = ref<HTMLInputElement | null>(null)
+const uploadProgress = ref(0)
+const { upload, isUploading: fileUploadIsUploading } = useFileUpload()
+
+watch(
+  () => user.value,
+  (newUser) => {
+    if (newUser) {
+      firstname.value = newUser.firstname
+      lastname.value = newUser.lastname
+      avatar.value = newUser.avatar || null
+    }
+  },
+  { immediate: true }
+)
+
+const handleSave = async () => {
+  await updateUser({
+    firstname: firstname.value,
+    lastname: lastname.value,
+  })
+}
+
+const handleAvatarFile = async (file: File) => {
+  if (!file) return
+  uploadProgress.value = 0
+  try {
+    const response = await upload(file, {
+      url: '/mgmt/v1/users/me/avatar',
+      fieldName: 'avatar',
+      onProgress: (p) => (uploadProgress.value = p),
+    })
+    if (response?.data?.avatar) {
+      avatar.value = response.data.avatar
+    }
+  } catch {
+    // Error handled by useFileUpload
+  }
+}
+
+const handleUploadAvatar = () => {
+  avatarInputRef.value?.click()
+}
+
+const onAvatarInputChange = (e: Event) => {
+  const files = (e.target as HTMLInputElement).files
+  if (files && files[0]) {
+    handleAvatarFile(files[0])
+  }
+}
+
+const onDropAvatar = (e: DragEvent) => {
+  e.preventDefault()
+  if (e.dataTransfer?.files && e.dataTransfer.files[0]) {
+    handleAvatarFile(e.dataTransfer.files[0])
+  }
+}
+
+const onDragOverAvatar = (e: DragEvent) => {
+  e.preventDefault()
+}
+</script>
+
+<template>
+  <div class="content-grid gap-6 pb-6">
+    <ContentHeader
+      :header="$t('labels.account.profile.title')"
+      :description="$t('labels.account.profile.description')"
+    />
+
+    <Card
+      v-if="user"
+      variant="outline"
+    >
+      <CardHeader>
+        <CardTitle>{{ $t('labels.account.profile.personalInfo') }}</CardTitle>
+        <CardDescription>{{ $t('labels.account.profile.personalInfoDescription') }}</CardDescription>
+      </CardHeader>
+      <CardContent class="grid gap-6">
+        <div class="space-y-2">
+          <FormField
+            name="avatar"
+            :label="$t('labels.account.profile.avatar')"
+            :description="$t('labels.account.profile.avatarDescription')"
+          >
+            <div
+              class="flex items-center gap-4"
+              @drop="onDropAvatar"
+              @dragover="onDragOverAvatar"
+            >
+              <div
+                v-if="avatar"
+                class="h-20 w-20 rounded-full flex items-center justify-center bg-surface cursor-pointer overflow-hidden"
+                @click="handleUploadAvatar"
+              >
+                <NuxtImg
+                  :src="avatar"
+                  alt="Avatar"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+              <div
+                v-else
+                class="h-20 w-20 rounded-full border border-dashed border-muted flex items-center justify-center bg-surface cursor-pointer"
+                @click="handleUploadAvatar"
+              >
+                <Icon
+                  name="lucide:user"
+                  class="h-10 w-10 text-muted"
+                />
+              </div>
+              <input
+                ref="avatarInputRef"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                @change="onAvatarInputChange"
+              >
+              <span
+                v-if="fileUploadIsUploading"
+                class="ml-2 text-muted text-xs"
+              >{{ uploadProgress }}%</span>
+            </div>
+          </FormField>
+        </div>
+
+        <InputField
+          v-model="firstname"
+          :label="$t('labels.account.profile.firstname')"
+          :placeholder="$t('labels.account.profile.firstnamePlaceholder')"
+          name="firstname"
+          required
+        />
+
+        <InputField
+          v-model="lastname"
+          :label="$t('labels.account.profile.lastname')"
+          :placeholder="$t('labels.account.profile.lastnamePlaceholder')"
+          name="lastname"
+          required
+        />
+
+        <InputField
+          :label="$t('labels.account.profile.email')"
+          name="email"
+          :model-value="user.email"
+          readonly
+          :description="$t('labels.account.profile.emailReadonly')"
+        />
+
+        <InputField
+          :label="$t('labels.account.profile.userId')"
+          name="user-id"
+          :model-value="user.id"
+          readonly
+          :actions="['copy']"
+        />
+      </CardContent>
+      <CardFooter>
+        <Button
+          variant="primary"
+          :disabled="isUpdating"
+          @click="handleSave"
+        >
+          <Icon
+            v-if="isUpdating"
+            name="lucide:loader"
+            class="mr-2 h-4 w-4 animate-spin"
+          />
+          {{ $t('actions.saveChanges') }}
+        </Button>
+      </CardFooter>
+    </Card>
+  </div>
+</template>

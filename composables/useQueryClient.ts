@@ -140,4 +140,8 @@ export const queryKeys = {
     details: () => [...queryKeys.releases(spaceId).all(), 'detail'] as const,
     detail: (id: string) => [...queryKeys.releases(spaceId).details(), id] as const,
   }),
+  users: {
+    all: () => ['users'] as const,
+    me: () => [...queryKeys.users.all(), 'me'] as const,
+  },
 }

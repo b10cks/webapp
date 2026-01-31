@@ -4,6 +4,7 @@ import { DataSources } from '~/api/resources/data-sources'
 import { Redirects } from '~/api/resources/redirects'
 import { Releases } from '~/api/resources/releases'
 import { Tokens } from '~/api/resources/tokens'
+import { Users } from '~/api/resources/users'
 
 import { ApiClient } from './client'
 import { AssetFolders } from './resources/asset-folders'
@@ -24,6 +25,7 @@ export class API {
   private readonly _spaces: Spaces
   private readonly _teams: Teams
   private readonly _invites: Invites
+  private readonly _users: Users
 
   constructor(
     options: {
@@ -35,6 +37,7 @@ export class API {
     this._spaces = new Spaces(this.client)
     this._teams = new Teams(this.client)
     this._invites = new Invites(this.client)
+    this._users = new Users(this.client)
   }
 
   public setAuthToken(token?: string): void {
@@ -55,6 +58,10 @@ export class API {
 
   public get invites(): Invites {
     return this._invites
+  }
+
+  public get users(): Users {
+    return this._users
   }
 
   public forSpace(spaceId: string) {

@@ -13,6 +13,7 @@ import ReferenceBlock from '~/components/editor/ReferenceBlock.vue'
 import RichTextBlock from '~/components/editor/RichTextBlock.vue'
 import TextareaBlock from '~/components/editor/TextareaBlock.vue'
 import TextBlock from '~/components/editor/TextBlock.vue'
+import FieldComments from '../comments/FieldComments.vue'
 
 const editors = {
   text: TextBlock,
@@ -65,7 +66,11 @@ const fieldValue = computed({
 </script>
 
 <template>
-  <div>
+  <div class="relative">
+    <FieldComments
+      :item-id="modelValue.id as string"
+      :field="item.key"
+    />
     <component
       :is="editors[item.type]"
       v-if="item.type in editors"

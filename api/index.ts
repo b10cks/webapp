@@ -1,4 +1,5 @@
 import { BlockFolders } from '~/api/resources/block-folders'
+import { Comments } from '~/api/resources/comments'
 import { DataSources } from '~/api/resources/data-sources'
 import { Redirects } from '~/api/resources/redirects'
 import { Releases } from '~/api/resources/releases'
@@ -71,6 +72,7 @@ export class API {
       redirects: new Redirects(this.client, spaceId),
       releases: new Releases(this.client, spaceId),
       contentVersions: (contentId: string) => new ContentVersions(this.client, spaceId, contentId),
+      comments: (contentId: string) => new Comments(this.client, spaceId, contentId),
     }
   }
 }

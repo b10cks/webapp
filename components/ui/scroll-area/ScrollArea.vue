@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { cn } from '@/lib/utils'
 import {
   ScrollAreaCorner,
@@ -12,7 +12,7 @@ import ScrollBar from './ScrollBar.vue'
 const props = defineProps<ScrollAreaRootProps & { class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _a, type: _b, scrollHideDelay: _c, ...delegated } = props
 
   return delegated
 })
@@ -20,13 +20,25 @@ const delegatedProps = computed(() => {
 
 <template>
   <ScrollAreaRoot
-    v-bind="delegatedProps"
     :class="cn('relative overflow-hidden', props.class)"
+    :scroll-hide-delay="1500"
+    type="glimpse"
+    v-bind="delegatedProps"
   >
-    <ScrollAreaViewport class="h-full w-full rounded-[inherit]">
+    <ScrollAreaViewport
+      :as-child="true"
+      class="h-full w-full rounded-[inherit]"
+    >
       <slot />
     </ScrollAreaViewport>
-    <ScrollBar />
+    <ScrollBar
+      force-mount
+      orientation="horizontal"
+    />
+    <ScrollBar
+      force-mount
+      orientation="vertical"
+    />
     <ScrollAreaCorner />
   </ScrollAreaRoot>
 </template>

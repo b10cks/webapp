@@ -1,3 +1,5 @@
+import type { CommentResource } from '~/types/comments'
+
 export type ContentUpdateEvent = {
   content: Record<string, never>
 }
@@ -12,13 +14,47 @@ export type FieldUpdateEvent = {
   value: unknown
 }
 
-export type EventType = 'CONTENT_UPDATE' | 'SELECT_UPDATE' | 'HOVER_UPDATE' | 'FIELD_UPDATE'
+export type CommentsUpdateEvent = {
+  comments: CommentResource[]
+}
+
+export type CommentClickEvent = {
+  commentId: string
+}
+
+export type CommentCreateEvent = {
+  x: number
+  y: number
+  body: string
+}
+
+export type CommentUpdateEvent = {
+  commentId: string
+  x: number
+  y: number
+  body?: string
+  isResolved?: boolean
+}
+
+export type EventType =
+  | 'CONTENT_UPDATE'
+  | 'SELECT_UPDATE'
+  | 'HOVER_UPDATE'
+  | 'FIELD_UPDATE'
+  | 'COMMENTS_UPDATE'
+  | 'COMMENT_CLICK'
+  | 'COMMENT_CREATE'
+  | 'COMMENT_UPDATE'
 
 export type EventPayloadMap = {
   CONTENT_UPDATE: ContentUpdateEvent
   FIELD_UPDATE: FieldUpdateEvent
   SELECT_UPDATE: SelectUpdateEvent
   HOVER_UPDATE: SelectUpdateEvent
+  COMMENTS_UPDATE: CommentsUpdateEvent
+  COMMENT_CLICK: CommentClickEvent
+  COMMENT_CREATE: CommentCreateEvent
+  COMMENT_UPDATE: CommentUpdateEvent
 }
 
 export type BridgeEvent = {
@@ -81,6 +117,13 @@ export class PreviewBridge {
 
   public updateHover(selectedItem: string | null): void {
     this.postMessageToIframe('HOVER_UPDATE', { selectedItem })
+  }
+
+  public updateComments(comments: CommentResource[]): void {
+    const positionComments = comments.filter(
+      (c) => c.position && c.position.x !== undefined && c.position.y !== undefined
+    )
+    this.postMessageToIframe('COMMENTS_UPDATE', { comments: positionComments })
   }
 
   public on<T extends EventType>(

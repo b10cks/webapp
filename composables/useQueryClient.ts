@@ -87,6 +87,13 @@ export const queryKeys = {
     details: () => [...queryKeys.contentVersions(spaceId, contentId).all(), 'detail'] as const,
     detail: (id: string) => [...queryKeys.contentVersions(spaceId, contentId).details(), id] as const,
   }),
+  comments: (spaceId: string, contentId: string) => ({
+    all: () => ['spaces', spaceId, 'contents', contentId, 'comments'] as const,
+    lists: () => [...queryKeys.comments(spaceId, contentId).all(), 'list'] as const,
+    list: (filters: any = {}) => [...queryKeys.comments(spaceId, contentId).lists(), filters] as const,
+    details: () => [...queryKeys.comments(spaceId, contentId).all(), 'detail'] as const,
+    detail: (id: string) => [...queryKeys.comments(spaceId, contentId).details(), id] as const,
+  }),
   contentMenu: (spaceId: string) => ({
     all: () => ['spaces', spaceId, 'content-menu'] as const,
   }),

@@ -42,20 +42,20 @@ class TokenManager {
   private static authStorage = useStorage<AuthTokens | null>(this.AUTH_KEY, {})
 
   static getAccessToken(): string | null {
-    return this.authStorage.value?.accessToken || null
+    return TokenManager.authStorage.value?.accessToken || null
   }
 
   static getRefreshToken(): string | null {
-    return this.authStorage.value?.accessToken || null
+    return TokenManager.authStorage.value?.accessToken || null
   }
 
   static getExpiresAt(): number {
-    return this.authStorage.value?.expiresAt || 0
+    return TokenManager.authStorage.value?.expiresAt || 0
   }
 
   static setTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
     const expiresAt = Date.now() + expiresIn * 1000
-    this.authStorage.value = {
+    TokenManager.authStorage.value = {
       accessToken,
       refreshToken,
       expiresAt,
@@ -63,11 +63,11 @@ class TokenManager {
   }
 
   static clearTokens(): void {
-    this.authStorage.value = null
+    TokenManager.authStorage.value = null
   }
 
   static isTokenExpired(): boolean {
-    const expiresAt = this.getExpiresAt()
+    const expiresAt = TokenManager.getExpiresAt()
     return Date.now() >= expiresAt - 60000 // 1 minute buffer
   }
 }
@@ -143,6 +143,7 @@ export function useAuth() {
     TokenManager.setTokens(response.access_token, response.refresh_token, response.expires_in)
 
     api.setAuthToken(response.access_token)
+
     setupTokenRefresh(response.expires_in)
     await loadUser()
     cb()
@@ -162,10 +163,7 @@ export function useAuth() {
         router.push((route.query.return as string) || '/')
       })
     } catch (err: any) {
-      error.value =
-        err?.response?.status === 401
-          ? 'Invalid email or password'
-          : 'Login failed. Please try again.'
+      error.value = err?.response?.status === 401 ? 'Invalid email or password' : 'Login failed. Please try again.'
       return false
     } finally {
       isLoading.value = false

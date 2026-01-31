@@ -70,6 +70,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || '',
       posthog: {
         key: process.env.NUXT_PUBLIC_POSTHOG_KEY,
         host: process.env.NUXT_PUBLIC_POSTHOG_HOST,
@@ -99,6 +100,11 @@ export default defineNuxtConfig({
         changeOrigin: true,
         headers: { 'accept-encoding': 'identity' },
       },
+      '/broadcasting': {
+        target: `${process.env.NUXT_API_PROXY_URL}broadcasting`,
+        changeOrigin: true,
+        headers: { 'accept-encoding': 'identity' },
+      },
       '/mgmt/v1': {
         target: `${process.env.NUXT_API_PROXY_URL}mgmt/v1`,
         changeOrigin: true,
@@ -113,10 +119,10 @@ export default defineNuxtConfig({
   },
 
   devServer: {
-    https: {
-      key: './localhost.key',
-      cert: './localhost.crt',
-    },
+    // https: {
+    // key: './localhost.key',
+    // cert: './localhost.crt',
+    // },
   },
 
   css: ['~/assets/css/main.css'],

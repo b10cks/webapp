@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { NuxtLink } from '#components'
 import { useClipboard } from '@vueuse/core'
 import type { Translation } from 'nuxt-i18n-micro-types/src'
 import { SelectTrigger } from 'reka-ui'
+import { NuxtLink } from '#components'
 import type { SpaceQueryParams } from '~/api/resources/spaces'
 import AppHeader from '~/components/AppHeader.vue'
+import SpacePresence from '~/components/space/SpacePresence.vue'
 import TeamSelector from '~/components/TeamSelector.vue'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
@@ -101,9 +102,7 @@ const actions: Array<Action | string> = [
     icon: 'lucide:copy',
     label: $t('actions.copyLink'),
     action: (s) => {
-      const url = new URL(
-        window.location.origin + router.resolve({ name: 'space', params: { space: s.id } }).href
-      )
+      const url = new URL(window.location.origin + router.resolve({ name: 'space', params: { space: s.id } }).href)
       console.log(url.toString())
       useClipboard().copy(url.toString())
     },
@@ -261,9 +260,10 @@ const formatLastUpdated = (space: SpaceResource) => {
                       </div>
                       <div class="ml-auto grid">
                         <div
-                          class="grid-area-stack flex items-center group-hover:hidden"
+                          class="grid-area-stack flex items-center gap-2 group-hover:hidden"
                           :class="[open ? 'hidden' : '']"
                         >
+                          <SpacePresence :space="space" />
                           <Badge size="xs">Free</Badge>
                         </div>
                         <DropdownMenuTrigger class="grid-area-stack">

@@ -32,11 +32,7 @@ const { formatRelativeTime } = useFormat()
 
 const hasReplies = computed(() => props.comment?.replies?.length > 0)
 const repliesCount = computed(() => props.comment?.replies?.length || 0)
-
 const reactions = computed(() => props.comment.reactions || {})
-const hasReactions = computed(() => Object.keys(reactions.value).length > 0)
-
-const commonEmojis = [':thumbsup:', ':heart:', ':laughing:', ':confused:', ':tada:']
 
 const hasUserReacted = (emoji: string): boolean => {
   const users = reactions.value[emoji] || []
@@ -192,11 +188,7 @@ const toggleResolved = () => {
         {{ comment.body }}
       </p>
 
-      <!-- Reactions -->
-      <div
-        v-if="hasReactions || !isReply"
-        class="mt-2 flex flex-wrap items-center gap-1"
-      >
+      <div class="mt-2 flex flex-wrap items-center gap-1">
         <Button
           v-for="(users, emoji) in reactions"
           :key="emoji"
@@ -235,12 +227,14 @@ const toggleResolved = () => {
             is-reply
             @edit="(c, body) => emit('edit', c, body)"
             @delete="(c) => emit('delete', c)"
+            @add-reaction="(c, emoji) => emit('addReaction', c, emoji)"
+            @remove-reaction="(c, emoji) => emit('removeReaction', c, emoji)"
           />
         </div>
       </div>
 
       <div
-        v-if="isReplying"
+        v-if="isReplying && !isReply"
         class="mt-3 border-l-2 border-border pl-4"
       >
         <div class="flex flex-col gap-1">

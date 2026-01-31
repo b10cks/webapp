@@ -97,7 +97,7 @@ const buildLink = (name: string) => ({
                 </template>
               </Switch>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem @click="navigateTo('/account/settings')">
               <span>Settings</span>
               <Icon
                 class="ml-auto"

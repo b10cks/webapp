@@ -14,8 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog'
-import { buttonVariants } from '~/components/ui/button'
-type ActionType = 'primary' | 'secondary' | 'destructive' | 'cancel'
+type ActionType = 'primary' | 'destructive' | 'cancel' | 'ghost' | 'link'
 export interface DialogAction {
   type: ActionType
   label: string | CleanTranslation
@@ -158,14 +157,7 @@ const useAlertDialogBase = () => {
                                     AlertDialogAction,
                                     {
                                       onClick: () => handleAction(action),
-                                      class: [
-                                        action.type === 'destructive' &&
-                                          buttonVariants({ variant: 'destructive' }),
-                                        action.type === 'secondary' &&
-                                          buttonVariants({ variant: 'primary' }),
-                                        action.type === 'primary' &&
-                                          buttonVariants({ variant: 'primary' }),
-                                      ],
+                                      variant: action.type,
                                     },
                                     () => action.label
                                   )

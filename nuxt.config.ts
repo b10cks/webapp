@@ -100,11 +100,6 @@ export default defineNuxtConfig({
         changeOrigin: true,
         headers: { 'accept-encoding': 'identity' },
       },
-      '/broadcasting': {
-        target: `${process.env.NUXT_API_PROXY_URL}broadcasting`,
-        changeOrigin: true,
-        headers: { 'accept-encoding': 'identity' },
-      },
       '/mgmt/v1': {
         target: `${process.env.NUXT_API_PROXY_URL}mgmt/v1`,
         changeOrigin: true,

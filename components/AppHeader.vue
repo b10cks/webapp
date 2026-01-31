@@ -54,6 +54,10 @@ const openQuickActions = () => {
   }
 }
 
+const openAccountSettings = () => {
+  router.push('/account/settings')
+}
+
 const switchSpace = (spaceId: string) => {
   selectedSpaceId.value = spaceId
 }
@@ -146,7 +150,7 @@ const isSpaceSelected = computed(() => !!selectedSpace.value)
 
           <!-- User Actions -->
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem @click="openAccountSettings()">
               {{ $t('actions.user.account') }}
             </DropdownMenuItem>
             <DropdownMenuItem @select="logout()">

@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import Logo from '~/assets/logo.svg'
+import Markdown from '~/components/Markdown.vue'
+import TwoFactorVerifyDialog from '~/components/TwoFactorVerifyDialog.vue'
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
-import Logo from '~/assets/logo.svg'
-import Markdown from '~/components/Markdown.vue'
-
-const { login, error } = useAuth()
+const { login, error, requiresTwoFactor, verifyTwoFactorAndLogin, cancelTwoFactorLogin } = useAuth()
 const route = useRoute()
 
 const formData = ref<{
@@ -15,6 +15,20 @@ const formData = ref<{
   email: '',
   password: '',
 })
+
+const twoFactorDialogOpen = ref(false)
+
+watch(requiresTwoFactor, (value) => {
+  twoFactorDialogOpen.value = value
+})
+
+const handleVerify = async (code: string): Promise<boolean> => {
+  return await verifyTwoFactorAndLogin(code)
+}
+
+const handleCancel = () => {
+  cancelTwoFactorLogin()
+}
 
 // Handle session expired message
 onMounted(() => {
@@ -42,8 +56,13 @@ onMounted(() => {
           class="grid gap-6"
           @submit.prevent="login(formData)"
         >
+          <TwoFactorVerifyDialog
+            v-model:open="twoFactorDialogOpen"
+            :on-verify="handleVerify"
+            :on-cancel="handleCancel"
+          />
           <div
-            v-if="error"
+            v-if="error && !requiresTwoFactor"
             class="animate-in fade-in-0 slide-in-from-top-1 flex items-center gap-2 rounded-md border border-destructive bg-destructive-background p-2 text-destructive-foreground duration-300"
           >
             <Icon

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Button } from '~/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 import { FormField, InputField } from '~/components/ui/form'
 import { useFileUpload } from '~/composables/useFileUpload'
 
@@ -88,10 +88,10 @@ const onDragOverAvatar = (e: DragEvent) => {
       v-if="user"
       variant="outline"
     >
-      <CardHeader>
-        <CardTitle>{{ $t('labels.account.profile.personalInfo') }}</CardTitle>
-        <CardDescription>{{ $t('labels.account.profile.personalInfoDescription') }}</CardDescription>
-      </CardHeader>
+      <CardHeaderCombined
+        :title="$t('labels.account.profile.personalInfo')"
+        :description="$t('labels.account.profile.personalInfoDescription')"
+      />
       <CardContent class="grid gap-6">
         <div class="space-y-2">
           <FormField
@@ -106,7 +106,7 @@ const onDragOverAvatar = (e: DragEvent) => {
             >
               <div
                 v-if="avatar"
-                class="h-20 w-20 rounded-full flex items-center justify-center bg-surface cursor-pointer overflow-hidden"
+                class="flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-surface"
                 @click="handleUploadAvatar"
               >
                 <NuxtImg
@@ -117,7 +117,7 @@ const onDragOverAvatar = (e: DragEvent) => {
               </div>
               <div
                 v-else
-                class="h-20 w-20 rounded-full border border-dashed border-muted flex items-center justify-center bg-surface cursor-pointer"
+                class="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full border border-dashed border-muted bg-surface"
                 @click="handleUploadAvatar"
               >
                 <Icon
@@ -131,13 +131,22 @@ const onDragOverAvatar = (e: DragEvent) => {
                 accept="image/*"
                 class="hidden"
                 @change="onAvatarInputChange"
-              >
+              />
               <span
                 v-if="fileUploadIsUploading"
-                class="ml-2 text-muted text-xs"
-              >{{ uploadProgress }}%</span>
+                class="ml-2 text-xs text-muted"
+                >{{ uploadProgress }}%</span
+              >
             </div>
           </FormField>
+
+          <InputField
+            :label="$t('labels.account.profile.userId')"
+            name="user-id"
+            :model-value="user.id"
+            readonly
+            :actions="['copy']"
+          />
         </div>
 
         <InputField
@@ -155,22 +164,6 @@ const onDragOverAvatar = (e: DragEvent) => {
           name="lastname"
           required
         />
-
-        <InputField
-          :label="$t('labels.account.profile.email')"
-          name="email"
-          :model-value="user.email"
-          readonly
-          :description="$t('labels.account.profile.emailReadonly')"
-        />
-
-        <InputField
-          :label="$t('labels.account.profile.userId')"
-          name="user-id"
-          :model-value="user.id"
-          readonly
-          :actions="['copy']"
-        />
       </CardContent>
       <CardFooter>
         <Button
@@ -181,11 +174,30 @@ const onDragOverAvatar = (e: DragEvent) => {
           <Icon
             v-if="isUpdating"
             name="lucide:loader"
-            class="mr-2 h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{ $t('actions.saveChanges') }}
         </Button>
       </CardFooter>
     </Card>
+    <Card
+      v-if="user"
+      variant="outline"
+    >
+      <CardHeaderCombined
+        :title="$t('labels.account.profile.email')"
+        :description="$t('labels.account.profile.emailReadonly')"
+      />
+      <CardContent>
+        <InputField
+          :label="$t('labels.account.profile.email')"
+          name="email"
+          :model-value="user.email"
+          readonly
+          :description="$t('labels.account.profile.emailReadonly')"
+        />
+      </CardContent>
+    </Card>
+    <Card> </Card>
   </div>
 </template>

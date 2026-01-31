@@ -151,23 +151,89 @@ export function useAuth() {
     return true
   }
 
-  const login = async (payload: LoginPayload): Promise<boolean> => {
+  const requiresTwoFactor = ref(false)
+  const pendingLoginPayload = ref<LoginPayload | null>(null)
+
+  const parseErrorResponse = (
+    err: any
+  ): { status?: number; errorCode?: string; message?: string } => {
+    // Handle $fetch error structure which may vary
+    const status = err?.status || err?.statusCode || err?.response?.status
+    const data = err?.data || err?.response?.data || err?.response?._data
+    const errorCode = data?.error_code || data?.code
+    const message = data?.message || data?.error || err?.message
+
+    return { status, errorCode, message }
+  }
+
+  const login = async (payload: LoginPayload, twoFactorCode?: string): Promise<boolean> => {
     isLoading.value = true
     error.value = null
 
     try {
       const { api } = await import('~/api')
-      const response = await api.client.post<AuthResponse>('/auth/v1/token', payload)
+      const headers: Record<string, string> = {}
+
+      if (twoFactorCode) {
+        headers['X-TOTP-Code'] = twoFactorCode
+      }
+
+      const response = await api.client.post<AuthResponse>('/auth/v1/token', payload, { headers })
+
+      requiresTwoFactor.value = false
+      pendingLoginPayload.value = null
 
       return await handleAuthResponse(api, response, () => {
         router.push((route.query.return as string) || '/')
       })
     } catch (err: any) {
-      error.value = err?.response?.status === 401 ? 'Invalid email or password' : 'Login failed. Please try again.'
+      const { status, errorCode, message } = parseErrorResponse(err)
+
+      // Debug logging for 2FA troubleshooting
+      if (import.meta.dev) {
+        console.log('Login error:', { status, errorCode, message, rawError: err })
+      }
+
+      // Check for 2FA required (423 status with TOTP_VERIFICATION_REQUIRED)
+      if (status === 423 && errorCode === 'TOTP_VERIFICATION_REQUIRED') {
+        requiresTwoFactor.value = true
+        pendingLoginPayload.value = payload
+        error.value = null
+        return false
+      }
+
+      // Handle specific error cases
+      if (status === 401) {
+        error.value = 'Invalid email or password'
+      } else if (status === 403 && errorCode === 'INVALID_TOTP_CODE') {
+        error.value = 'Invalid authentication code. Please try again.'
+      } else if (status === 409 && errorCode === 'EMAIL_NOT_VERIFIED') {
+        error.value = 'Please verify your email address before logging in.'
+      } else if (message) {
+        error.value = message
+      } else {
+        error.value = 'Login failed. Please try again.'
+      }
+
       return false
     } finally {
       isLoading.value = false
     }
+  }
+
+  const verifyTwoFactorAndLogin = async (code: string): Promise<boolean> => {
+    if (!pendingLoginPayload.value) {
+      error.value = 'Login session expired. Please try again.'
+      return false
+    }
+
+    return await login(pendingLoginPayload.value, code)
+  }
+
+  const cancelTwoFactorLogin = () => {
+    requiresTwoFactor.value = false
+    pendingLoginPayload.value = null
+    error.value = null
   }
 
   const register = async (payload: RegisterPayload): Promise<boolean> => {
@@ -332,8 +398,11 @@ export function useAuth() {
     isAuthenticated: readonly(isAuthenticated),
     isLoading: readonly(isLoading),
     error,
+    requiresTwoFactor: readonly(requiresTwoFactor),
 
     login,
+    verifyTwoFactorAndLogin,
+    cancelTwoFactorLogin,
     register,
     logout,
     refreshToken,

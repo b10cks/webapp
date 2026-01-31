@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppHeader from '~/components/AppHeader.vue'
 interface NavItem {
   title: string
   name: string
@@ -27,10 +28,12 @@ const items: NavItem[] = [
 
 <template>
   <div>
-    <NuxtLayout>
-      <div class="flex h-full w-full bg-background">
-        <aside class="p-6 xl:w-1/5">
-          <nav class="sticky top-20 flex flex-col space-y-1">
+    <NuxtLayout name="start">
+      <AppHeader />
+
+      <div class="flex w-full grow bg-background pt-14">
+        <aside class="w-64 bg-surface">
+          <nav class="sticky top-20 flex flex-col space-y-1 p-1">
             <NuxtLink
               v-for="item in items"
               :key="item.name"

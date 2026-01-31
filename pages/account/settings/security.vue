@@ -1,17 +1,37 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import BackupCodesDisplay from '~/components/BackupCodesDisplay.vue'
+import TwoFactorSetupDialog from '~/components/TwoFactorSetupDialog.vue'
+import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { InputField } from '~/components/ui/form'
+import { useAlertDialog } from '~/composables/useAlertDialog'
 
 const { useChangePasswordMutation } = useUser()
 const { mutate: changePassword, isPending: isChanging } = useChangePasswordMutation()
+const { useTwoFactorStatusQuery, useTwoFactorDisableMutation, useRegenerateBackupCodesMutation } =
+  useTwoFactor()
+const { alert } = useAlertDialog()
+
+const { data: twoFactorStatus } = useTwoFactorStatusQuery()
+const { mutate: disable2FA, isPending: isDisabling } = useTwoFactorDisableMutation()
+const {
+  mutate: regenerateBackupCodes,
+  data: newBackupCodes,
+  isPending: isRegenerating,
+} = useRegenerateBackupCodesMutation()
 
 const oldPassword = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
 const passwordError = ref<string | null>(null)
+const setupDialogOpen = ref(false)
+const disablePassword = ref('')
+const showDisableDialog = ref(false)
+const showBackupCodes = ref(false)
 
 const handleChangePassword = async () => {
   passwordError.value = null
@@ -36,6 +56,48 @@ const handleChangePassword = async () => {
   newPassword.value = ''
   confirmPassword.value = ''
 }
+
+const handleDisable2FA = async () => {
+  if (!disablePassword.value) return
+
+  const confirmed = await alert.confirm(
+    'Are you sure you want to disable two-factor authentication? This will make your account less secure.',
+    {
+      title: 'Disable 2FA',
+      confirmLabel: 'Disable',
+      cancelLabel: 'Cancel',
+      variant: 'destructive',
+    }
+  )
+
+  if (confirmed) {
+    disable2FA(
+      { password: disablePassword.value },
+      {
+        onSuccess: () => {
+          showDisableDialog.value = false
+          disablePassword.value = ''
+        },
+      }
+    )
+  }
+}
+
+const handleRegenerateBackupCodes = async () => {
+  const confirmed = await alert.confirm(
+    'Regenerating backup codes will invalidate all existing codes. Make sure to save the new codes.',
+    {
+      title: 'Regenerate Backup Codes',
+      confirmLabel: 'Regenerate',
+      cancelLabel: 'Cancel',
+    }
+  )
+
+  if (confirmed) {
+    regenerateBackupCodes()
+    showBackupCodes.value = true
+  }
+}
 </script>
 
 <template>
@@ -46,10 +108,10 @@ const handleChangePassword = async () => {
     />
 
     <Card variant="outline">
-      <CardHeader>
-        <CardTitle>{{ $t('labels.account.security.changePassword') }}</CardTitle>
-        <CardDescription>{{ $t('labels.account.security.changePasswordDescription') }}</CardDescription>
-      </CardHeader>
+      <CardHeaderCombined
+        :title="$t('labels.account.security.changePassword')"
+        :description="$t('labels.account.security.changePasswordDescription')"
+      />
       <CardContent class="grid gap-6">
         <InputField
           v-model="oldPassword"
@@ -94,5 +156,132 @@ const handleChangePassword = async () => {
         </Button>
       </CardFooter>
     </Card>
+
+    <Card variant="outline">
+      <CardHeaderCombined
+        :title="$t('labels.twoFactor.title')"
+        :description="$t('labels.twoFactor.description')"
+      />
+      <CardContent class="space-y-6">
+        <div
+          v-if="twoFactorStatus?.enabled"
+          class="space-y-4"
+        >
+          <Alert
+            color="success"
+            variant="modern"
+            icon="lucide:shield-check"
+          >
+            <b>{{ $t('labels.twoFactor.enabled') }}</b>
+          </Alert>
+
+          <div class="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              @click="handleRegenerateBackupCodes"
+            >
+              <Icon name="lucide:refresh-cw" />
+              {{ $t('labels.twoFactor.regenerateCodes') }}
+            </Button>
+            <Button
+              variant="destructive"
+              @click="showDisableDialog = true"
+            >
+              <Icon name="lucide:shield-off" />
+              {{ $t('labels.twoFactor.disable') }}
+            </Button>
+          </div>
+        </div>
+
+        <div
+          v-else
+          class="space-y-4"
+        >
+          <Alert
+            color="destructive"
+            variant="modern"
+            icon="lucide:shield-off"
+          >
+            <b>{{ $t('labels.twoFactor.disabled') }}</b>
+          </Alert>
+
+          <Button @click="setupDialogOpen = true">
+            <Icon name="lucide:shield-plus" />
+            {{ $t('labels.twoFactor.enable') }}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Dialog v-model:open="showDisableDialog">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeaderCombined
+          :title="$t('labels.twoFactor.disableTitle')"
+          :description="$t('labels.twoFactor.disableDescription')"
+        />
+
+        <Alert
+          variant="modern"
+          color="destructive"
+          icon="lucide:shield-off"
+        >
+          <p>{{ $t('labels.twoFactor.disableWarning') }}</p>
+        </Alert>
+
+        <InputField
+          name="password"
+          v-model="disablePassword"
+          type="password"
+          :label="$t('labels.twoFactor.passwordLabel')"
+          :placeholder="$t('labels.twoFactor.passwordPlaceholder')"
+        />
+
+        <DialogFooter>
+          <Button
+            variant="outline"
+            @click="showDisableDialog = false"
+          >
+            {{ $t('actions.cancel') }}
+          </Button>
+          <Button
+            variant="destructive"
+            :disabled="!disablePassword || isDisabling"
+            @click="handleDisable2FA"
+          >
+            <Icon
+              v-if="isDisabling"
+              name="lucide:loader"
+              class="mr-2 h-4 w-4 animate-spin"
+            />
+            {{ $t('labels.twoFactor.disableConfirm') }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    <Dialog v-model:open="showBackupCodes">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeaderCombined
+          :title="$t('labels.twoFactor.backupCodes.title')"
+          :description="$t('labels.twoFactor.backupCodes.description')"
+        />
+        <div
+          v-if="newBackupCodes?.backup_codes"
+          class="space-y-4"
+        >
+          <BackupCodesDisplay :codes="newBackupCodes.backup_codes" />
+        </div>
+        <DialogFooter>
+          <Button
+            variant="primary"
+            @click="showBackupCodes = false"
+          >
+            {{ $t('actions.close') }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    <TwoFactorSetupDialog v-model:open="setupDialogOpen" />
   </div>
 </template>

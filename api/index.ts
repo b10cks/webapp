@@ -4,6 +4,7 @@ import { DataSources } from '~/api/resources/data-sources'
 import { Redirects } from '~/api/resources/redirects'
 import { Releases } from '~/api/resources/releases'
 import { Tokens } from '~/api/resources/tokens'
+import { TwoFactorAuth } from '~/api/resources/two-factor'
 import { Users } from '~/api/resources/users'
 
 import { ApiClient } from './client'
@@ -26,6 +27,7 @@ export class API {
   private readonly _teams: Teams
   private readonly _invites: Invites
   private readonly _users: Users
+  private readonly _twoFactor: TwoFactorAuth
 
   constructor(
     options: {
@@ -38,6 +40,7 @@ export class API {
     this._teams = new Teams(this.client)
     this._invites = new Invites(this.client)
     this._users = new Users(this.client)
+    this._twoFactor = new TwoFactorAuth(this.client)
   }
 
   public setAuthToken(token?: string): void {
@@ -62,6 +65,10 @@ export class API {
 
   public get users(): Users {
     return this._users
+  }
+
+  public get twoFactor(): TwoFactorAuth {
+    return this._twoFactor
   }
 
   public forSpace(spaceId: string) {

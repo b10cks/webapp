@@ -829,6 +829,63 @@
         }
       }
     },
+    "twoFactor": {
+      "title": "Two-Factor Authentication",
+      "description": "Add an extra layer of security to your account by enabling two-factor authentication.",
+      "enabled": "2FA is enabled",
+      "disabled": "2FA is not enabled",
+      "enable": "Enable 2FA",
+      "disable": "Disable 2FA",
+      "regenerateCodes": "Regenerate Backup Codes",
+      "setup": {
+        "title": "Set Up Two-Factor Authentication",
+        "description": "Secure your account with an authenticator app.",
+        "whatIsTitle": "What is 2FA?",
+        "whatIsDescription": "Two-factor authentication adds an extra layer of security by requiring both your password and a code from your authenticator app to log in.",
+        "howItWorksTitle": "How it works",
+        "step1": "Scan the QR code with your authenticator app",
+        "step2": "Enter the 6-digit code to verify",
+        "step3": "Save your backup codes in a safe place",
+        "start": "Start Setup",
+        "manualEntry": "Or enter this code manually:",
+        "enterCode": "Enter the 6-digit code from your authenticator app:",
+        "codePlaceholder": "000000",
+        "verify": "Verify & Enable",
+        "done": "Done",
+        "confirmed": "2FA enabled successfully",
+        "confirmError": "Failed to verify code: {error}",
+        "error": "Failed to start setup: {error}"
+      },
+      "verify": {
+        "title": "Two-Factor Authentication",
+        "description": "Enter the code from your authenticator app to continue.",
+        "codeLabel": "Authentication Code",
+        "codePlaceholder": "000000",
+        "codeDescription": "Enter the 6-digit code from your authenticator app, or an 8-character backup code",
+        "button": "Verify"
+      },
+      "backupCodes": {
+        "title": "Backup Codes",
+        "description": "These codes can be used to access your account if you lose your authenticator device.",
+        "saveTitle": "Important: Save your backup codes",
+        "saveDescription": "Each code can only be used once. Keep them in a safe place.",
+        "saveWarning": "These codes will only be shown once. Make sure to save them now!",
+        "copyAll": "Copy All",
+        "download": "Download",
+        "copy": "Copy",
+        "confirmCheckbox": "I have securely saved these backup codes. I understand that losing them may result in permanent account lockout.",
+        "regenerated": "Backup codes regenerated successfully",
+        "regenerateError": "Failed to regenerate backup codes: {error}"
+      },
+      "disableTitle": "Disable Two-Factor Authentication",
+      "disableDescription": "Enter your password to confirm.",
+      "disableWarning": "Disabling 2FA will make your account less secure. Are you sure?",
+      "disableConfirm": "Disable 2FA",
+      "passwordLabel": "Current Password",
+      "passwordPlaceholder": "Enter your password",
+      "disableSuccess": "2FA disabled successfully",
+      "disableError": "Failed to disable 2FA: {error}"
+    },
     "teams": {
       "selectPlaceholder": "Select a team..."
     },

@@ -144,4 +144,8 @@ export const queryKeys = {
     all: () => ['users'] as const,
     me: () => [...queryKeys.users.all(), 'me'] as const,
   },
+  twoFactor: {
+    all: () => ['two-factor'] as const,
+    status: () => [...queryKeys.twoFactor.all(), 'status'] as const,
+  },
 }

@@ -7,29 +7,27 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useContentMenu(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useContentMenu(spaceId: MaybeRef<string>) {
   const queryClient = useQueryClient()
-  // Create a computed property that unwraps the spaceId value
-  const spaceId = computed(() => unref(spaceIdRef))
 
   // Create a computed API instance that updates when spaceId changes
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
   // Query to fetch the content menu
   const useContentMenuQuery = () => {
     return useQuery({
-      queryKey: computed(() => queryKeys.contentMenu(spaceId.value).all()),
+      queryKey: computed(() => queryKeys.contentMenu(spaceId).all()),
       queryFn: async () => {
         const response = await spaceAPI.value.contentMenu.get()
         return response.data
       },
-      enabled: computed(() => !!spaceId.value), // Only run query if spaceId is provided
+      enabled: computed(() => !!toValue(spaceId)),
     })
   }
 
   const findItemById = (
     menuData: Record<string, FlatContentMenuItem> | undefined,
-    idRef: MaybeRefOrComputed<string>
+    idRef: MaybeRef<string>
   ): FlatContentMenuItem | null => {
     const id = unref(idRef)
     if (!menuData) return null
@@ -52,7 +50,7 @@ export function useContentMenu(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const getChildren = (
     menuData: Record<string, FlatContentMenuItem> | undefined,
-    parentIdRef: MaybeRefOrComputed<string | null>
+    parentIdRef: MaybeRef<string | null>
   ): FlatContentMenuItem[] => {
     const parentId = unref(parentIdRef)
     if (!menuData) return []
@@ -63,7 +61,7 @@ export function useContentMenu(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const buildBreadcrumbs = (
     menuData: Record<string, FlatContentMenuItem> | undefined,
-    contentIdRef: MaybeRefOrComputed<string>
+    contentIdRef: MaybeRef<string>
   ): Array<{
     id: string
     name: string
@@ -103,10 +101,10 @@ export function useContentMenu(spaceIdRef: MaybeRefOrComputed<string>) {
     try {
       const echo = useEcho()
       echo
-        .channel(`spaces.${spaceId.value}.content`)
+        .channel(`spaces.${toValue(spaceId)}.content`)
         .listen('.content:updated', (content: ContentResource) => {
           const contentTree =
-            (queryClient.getQueryData(queryKeys.contentMenu(spaceId.value).all()) as Record<
+            (queryClient.getQueryData(queryKeys.contentMenu(spaceId).all()) as Record<
               string,
               FlatContentMenuItem
             >) || {}
@@ -126,7 +124,7 @@ export function useContentMenu(spaceIdRef: MaybeRefOrComputed<string>) {
           if (!item) return
           const newContentTree = { ...contentTree }
           newContentTree[content.id] = item
-          queryClient.setQueryData(queryKeys.contentMenu(spaceId.value).all(), newContentTree)
+          queryClient.setQueryData(queryKeys.contentMenu(spaceId).all(), newContentTree)
         })
     } catch (err: unknown) {
       /** */

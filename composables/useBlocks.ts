@@ -2,52 +2,46 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
 import type { BlocksQueryParams } from '~/api/resources/blocks'
-import type { ApiResponse, MaybeRefOrComputed } from '~/types'
+import type { ApiResponse } from '~/types'
 
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useBlocks(spaceId: MaybeRef<string>) {
   const queryClient = useQueryClient()
-  const spaceId = computed(() => unref(spaceIdRef))
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
-  const useBlocksQuery = (paramsRef: MaybeRefOrComputed<BlocksQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
+  const useBlocksQuery = (params: MaybeRef<BlocksQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.blocks(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.blocks(spaceId).list(params)),
       queryFn: async () => {
         return await spaceAPI.value.blocks.index({
           sort: '+slug',
-          ...params.value,
+          ...toValue(params),
         })
       },
-      enabled: computed(() => !!spaceId.value),
+      enabled: computed(() => !!toValue(spaceId)),
     })
   }
 
-  const useBlockQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useBlockQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.blocks(spaceId.value).detail(id.value)),
+      queryKey: computed(() => queryKeys.blocks(spaceId).detail(id)),
       queryFn: async () => {
-        const response = await spaceAPI.value.blocks.get(id.value)
+        const response = await spaceAPI.value.blocks.get(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!id.value),
     })
   }
 
-  const useBlockBySlugQuery = (slugRef: MaybeRefOrComputed<string>) => {
-    const slug = computed(() => unref(slugRef))
+  const useBlockBySlugQuery = (slug: MaybeRef<string>) => {
     const { data: blocks, isLoading } = useBlocksQuery()
 
     // Find block by slug
     const block = computed(() => {
       if (!blocks.value?.data) return null
-      return blocks.value.data.find((b) => b.slug === slug.value) || null
+      return blocks.value.data.find((b) => b.slug === toValue(slug)) || null
     })
 
     return {
@@ -63,7 +57,7 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
         toast.success(`Block "${data.slug}" created successfully`)
       },
       onError: (error: { message: string }) => {
@@ -80,8 +74,12 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
       },
       onSuccess: (data) => {
         // Invalidate the blocks list and the specific block detail
-        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId.value).detail(data.id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).detail(data.id) })
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.blockVersions(spaceId, data.id).lists(),
+        })
+
         toast.success(`Block "${data.slug}" updated successfully`)
       },
       onError: (error: { message: string }) => {
@@ -97,8 +95,8 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: (id) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId.value).lists() })
-        queryClient.removeQueries({ queryKey: queryKeys.blocks(spaceId.value).detail(id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
+        queryClient.removeQueries({ queryKey: queryKeys.blocks(spaceId).detail(id) })
         toast.success(`Block deleted successfully`)
       },
       onError: (error: { message: string }) => {
@@ -109,7 +107,7 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const getBlockBySlug = (
     blocksRef: ApiResponse<BlockResource[] | undefined>,
-    slugRef: MaybeRefOrComputed<string>
+    slugRef: MaybeRef<string>
   ) => {
     const blocks = unref(blocksRef)
     const slug = slugRef
@@ -120,7 +118,7 @@ export function useBlocks(spaceIdRef: MaybeRefOrComputed<string>) {
 
   const getBlockById = (
     blocksRef: ApiResponse<BlockResource[] | undefined>,
-    idRef: MaybeRefOrComputed<string>
+    idRef: MaybeRef<string>
   ) => {
     const blocks = unref(blocksRef)
     const id = idRef

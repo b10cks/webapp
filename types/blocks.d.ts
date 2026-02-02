@@ -142,6 +142,7 @@ interface BlockResource {
   editor: EditorPage[]
   tags: string[]
   folder_id: string | null
+  templates_count?: number
   created_at: string
   updated_at: string
 }
@@ -166,4 +167,77 @@ interface UpdateBlockPayload {
   schema?: Record<string, SchemaType>
   tags: string[]
   folder_id: string | null
+}
+
+// Block Template Types
+interface BlockTemplate {
+  id: string
+  name: string
+  icon?: string | null
+  color?: string | null
+  description?: string | null
+  content: Record<string, any>
+  preview_file?: string | null
+  block_id?: string | null
+  created_by?: {
+    id: string
+    name: string
+    email: string
+    avatar?: string | null
+  } | null
+  created_at: string
+  updated_at: string
+}
+
+interface CreateBlockTemplatePayload {
+  name: string
+  icon?: string | null
+  color?: string | null
+  description?: string | null
+  content: Record<string, any>
+  preview_file?: File | null
+  block_id?: string | null
+}
+
+interface UpdateBlockTemplatePayload {
+  name?: string
+  icon?: string | null
+  color?: string | null
+  description?: string | null
+  preview_file?: File | null
+}
+
+// Block Version Types
+interface BlockVersionData {
+  external_id?: string | null
+  slug: string
+  name: string
+  icon?: string | null
+  color?: string | null
+  description?: string | null
+  type: 'root' | 'nestable' | 'single' | 'universal'
+  preview_template?: string | null
+  schema?: Record<string, SchemaType> | null
+  editor?: EditorPage[] | null
+  tags?: string[]
+  folder_id?: string | null
+}
+
+interface BlockVersion {
+  id: string
+  block_id: string
+  parent_id?: string | null
+  data: BlockVersionData
+  commit_message?: string | null
+  created_by?: {
+    id: string
+    name: string
+    email: string
+    avatar?: string | null
+  } | null
+  created_at: string
+}
+
+interface UpdateBlockVersionPayload {
+  commit_message?: string | null
 }

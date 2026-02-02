@@ -1,19 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
+import type { AssetFolderResource, UpsertAssetFolderPayload } from '~/types/assets'
+
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useAssetFolders(spaceId: string) {
+export function useAssetFolders(spaceId: MaybeRef<string>) {
   const queryClient = useQueryClient()
-  const spaceAPI = api.forSpace(spaceId)
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
   const useAssetFoldersQuery = (filters = {}) => {
     return useQuery({
       queryKey: queryKeys.assetFolders(spaceId).list(filters),
       queryFn: async () => {
-        const response = await spaceAPI.assetFolders.index({
+        const response = await spaceAPI.value.assetFolders.index({
           sort: '+name',
           ...filters,
         })
@@ -26,7 +28,7 @@ export function useAssetFolders(spaceId: string) {
     return useQuery({
       queryKey: queryKeys.assetFolders(spaceId).detail(id),
       queryFn: async () => {
-        const response = await spaceAPI.assetFolders.get(id)
+        const response = await spaceAPI.value.assetFolders.get(id)
         return response.data
       },
     })
@@ -35,7 +37,7 @@ export function useAssetFolders(spaceId: string) {
   const useCreateAssetFolderMutation = () => {
     return useMutation({
       mutationFn: async (payload: UpsertAssetFolderPayload) => {
-        const response = await spaceAPI.assetFolders.create(payload)
+        const response = await spaceAPI.value.assetFolders.create(payload)
         return response.data
       },
       onSuccess: (data) => {
@@ -51,7 +53,7 @@ export function useAssetFolders(spaceId: string) {
   const useUpdateAssetFolderMutation = () => {
     return useMutation({
       mutationFn: async ({ id, payload }: { id: string; payload: UpsertAssetFolderPayload }) => {
-        const response = await spaceAPI.assetFolders.update(id, payload)
+        const response = await spaceAPI.value.assetFolders.update(id, payload)
         return response.data
       },
       onSuccess: (data) => {
@@ -68,7 +70,7 @@ export function useAssetFolders(spaceId: string) {
   const useDeleteAssetFolderMutation = () => {
     return useMutation({
       mutationFn: async (id: string) => {
-        await spaceAPI.assetFolders.delete(id)
+        await spaceAPI.value.assetFolders.delete(id)
         return id
       },
       onSuccess: (id) => {

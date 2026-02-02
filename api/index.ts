@@ -1,4 +1,6 @@
 import { BlockFolders } from '~/api/resources/block-folders'
+import { BlockTemplates } from '~/api/resources/block-templates'
+import { BlockVersions } from '~/api/resources/block-versions'
 import { Comments } from '~/api/resources/comments'
 import { DataSources } from '~/api/resources/data-sources'
 import { Redirects } from '~/api/resources/redirects'
@@ -79,6 +81,8 @@ export class API {
       blocks: new Blocks(this.client, spaceId),
       blockTags: new BlockTags(this.client, spaceId),
       blockFolders: new BlockFolders(this.client, spaceId),
+      blockTemplates: (blockId: string) => new BlockTemplates(this.client, spaceId, blockId),
+      blockVersions: (blockId: string) => new BlockVersions(this.client, spaceId, blockId),
       contents: new Contents(this.client, spaceId),
       contentMenu: new ContentMenu(this.client, spaceId),
       dataSources: new DataSources(this.client, spaceId),

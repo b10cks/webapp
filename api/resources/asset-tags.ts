@@ -1,4 +1,5 @@
 import type { BaseQueryParams } from '~/types'
+import type { AssetTagResource, UpsertAssetTagPayload } from '~/types/assets'
 
 import type { ApiClient } from '../client'
 

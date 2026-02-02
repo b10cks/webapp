@@ -5,6 +5,7 @@ import ContentBreadcrumbs from '~/components/editor/ContentBreadcrumbs.vue'
 import FieldEditor from '~/components/editor/FieldEditor.vue'
 import { useContentTree } from '~/composables/useContentTree'
 import type { ContentBlock } from '~/types/contents'
+import { Button } from '../ui/button'
 
 interface EditorPage {
   header: string
@@ -55,7 +56,10 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<(e: 'navigate', itemId: string | null) => void>()
+const emit = defineEmits<{
+  (e: 'navigate', itemId: string | null): void
+  (e: 'createTemplate', blockId: string, content: object): void
+}>()
 
 const hoverRegistry = inject<Map<string, boolean>>('hoverRegistry', new Map())
 const componentId = computed((): string => (content.value?.id || props.itemId || '') as string)
@@ -128,6 +132,14 @@ const handleBreadcrumbNavigation = (itemId: string | null): void => {
   emit('navigate', itemId)
 }
 
+const handleTemplateTrigger = (): void => {
+  emit('createTemplate', currentBlock.value.id, currentItem.value || content)
+}
+
+const handleCreateTemplate = (blockId: string, content: Record<string, unknown>): void => {
+  emit('createTemplate', blockId, content)
+}
+
 const updateSubItem = (updatedValue: unknown): void => {
   if (!props.itemId || !currentItem.value || !updatePreviewItem) return
 
@@ -155,12 +167,21 @@ const updateItem = (updatedValue: unknown): void => {
       :breadcrumbs="breadcrumbs"
       @navigate="handleBreadcrumbNavigation"
     />
-    <h2
+    <div
+      class="flex"
       v-if="!isChild"
-      class="mb-2 text-xl font-bold text-primary"
     >
-      {{ currentBlock?.name || currentBlock?.slug }}
-    </h2>
+      <h2 class="mb-2 text-xl font-bold text-primary">
+        {{ currentBlock?.name || currentBlock?.slug }}
+      </h2>
+      <Button
+        class="ml-auto"
+        size="xs"
+        variant="ghost"
+        @click="handleTemplateTrigger()"
+        ><Icon name="lucide:notepad-text-dashed"
+      /></Button>
+    </div>
     <TabsRoot
       :key="`${id}-tabs`"
       :default-value="`${id}-page-0`"
@@ -192,6 +213,7 @@ const updateItem = (updatedValue: unknown): void => {
               :item="currentBlock?.schema?.[item]"
               :space-id="spaceId"
               @update:model-value="updateSubItem"
+              @create-template="handleCreateTemplate"
             />
           </template>
           <template v-else>
@@ -202,6 +224,7 @@ const updateItem = (updatedValue: unknown): void => {
               :item="currentBlock?.schema?.[item]"
               :space-id="spaceId"
               @update:model-value="updateItem"
+              @create-template="handleCreateTemplate"
             />
           </template>
         </div>

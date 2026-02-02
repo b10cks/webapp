@@ -34,6 +34,7 @@ const {
 
 const emit = defineEmits<{
   'update:modelValue': [value: Array<Record<string, unknown>>]
+  createTemplate: [blockId: string, content: Record<string, unknown>]
 }>()
 
 const blockItems = computed({
@@ -93,6 +94,11 @@ const pasteItem = async (event?: ClipboardEvent, insertIndex?: number) => {
     updatedItems.splice(index, 0, pastedItem)
     emit('update:modelValue', updatedItems)
   }
+}
+
+const handleTemplateTrigger = (content: Record<string, unknown>) => {
+  const block = getBlockBySlug(blocks, content.block as string)
+  emit('createTemplate', block.id, content)
 }
 
 const setupSortable = () => {
@@ -162,6 +168,15 @@ const navigateToItem = (itemId: string) => {
                 :block="getBlockBySlug(blocks, content.block as string)"
               />
               <div class="ml-auto flex items-center gap-2 opacity-0 group-hover:opacity-100">
+                <button
+                  v-if="content.id"
+                  type="button"
+                  title="Create Template from this block"
+                  class="flex transform cursor-pointer items-center hover:text-primary"
+                  @click.stop="handleTemplateTrigger(content)"
+                >
+                  <Icon name="lucide:notepad-text-dashed" />
+                </button>
                 <button
                   v-if="content.id"
                   type="button"

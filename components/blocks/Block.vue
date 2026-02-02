@@ -31,6 +31,7 @@ const props = defineProps<{
   pages: EditorPage[]
   currentPage: number
   isOpen: boolean
+  readonly: boolean
   name: string
 }>()
 
@@ -89,6 +90,7 @@ const updateValue = (key: string, value: unknown) => {
         <DropdownMenu>
           <DropdownMenuTrigger
             class="cursor-pointer hover:text-primary focus:text-primary"
+            v-if="!readonly"
             :disabled="pages.length <= 1"
           >
             <Icon name="lucide:folder-input" />
@@ -107,6 +109,7 @@ const updateValue = (key: string, value: unknown) => {
           </DropdownMenuContent>
         </DropdownMenu>
         <button
+          v-if="!readonly"
           class="cursor-pointer hover:text-destructive focus:text-destructive"
           type="button"
           @click="$emit('delete', name)"
@@ -132,12 +135,14 @@ const updateValue = (key: string, value: unknown) => {
         :model-value="localItem.name"
         :label="$t('labels.blocks.fields.name')"
         name="name"
+        :disabled="readonly"
         @update:model-value="(v) => updateValue('name', v)"
       />
       <TextField
         :model-value="localItem.description"
         :label="$t('labels.blocks.fields.description')"
         name="description"
+        :disabled="readonly"
         @update:model-value="(v) => updateValue('description', v)"
       />
       <CheckboxField
@@ -145,6 +150,7 @@ const updateValue = (key: string, value: unknown) => {
         name="required"
         :label="$t('labels.blocks.fields.required')"
         :tooltip="$t('labels.blocks.fields.requiredTooltip')"
+        :disabled="readonly"
         @update:model-value="(v) => updateValue('required', v)"
       />
       <CheckboxField
@@ -153,12 +159,14 @@ const updateValue = (key: string, value: unknown) => {
         name="translatable"
         :label="$t('labels.blocks.fields.translatable')"
         :tooltip="$t('labels.blocks.fields.translatableTooltip')"
+        :disabled="readonly"
         @update:model-value="(v) => updateValue('translatable', v)"
       />
       <component
         :is="schemas[localItem.type]"
         :name="name"
         :value="item as SchemaType"
+        :readonly="readonly"
         @update:item-value="(key, value) => updateValue(key, value)"
       />
     </AccordionContent>

@@ -14,7 +14,7 @@ export const buttonVariants = cva(
           'bg-destructive-background/20 text-destructive shadow-sm hover:bbg-destructive-background/80',
         warning: 'bg-warning-background/20 text-warning shadow-sm hover:bg-warning-background/80',
         outline: 'border border-border bg-transparent shadow-sm hover:bg-input/80',
-        ghost: 'hover:bg-gray-50/80 hover:text-gray-900',
+        ghost: 'hover:bg-secondary/80',
         link: 'text-primary underline-offset-4 hover:underline !px-0',
       },
       size: {

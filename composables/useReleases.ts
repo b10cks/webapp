@@ -13,34 +13,27 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useReleases(spaceId: MaybeRef<string>) {
   const queryClient = useQueryClient()
-  const spaceId = computed(() => unref(spaceIdRef))
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
-  const useReleasesQuery = (paramsRef: MaybeRefOrComputed<any> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useReleasesQuery = (params: MaybeRef<any> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.releases(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.releases(spaceId).list(params)),
       queryFn: async () => {
-        const response = await spaceAPI.value.releases.index(params.value)
+        const response = await spaceAPI.value.releases.index(toValue(params))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
-  const useReleaseQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useReleaseQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.releases(spaceId.value).detail(id.value)),
+      queryKey: computed(() => queryKeys.releases(spaceId).detail(id)),
       queryFn: async () => {
-        const response = await spaceAPI.value.releases.getDetail(id.value)
+        const response = await spaceAPI.value.releases.getDetail(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!id.value),
     })
   }
 
@@ -51,7 +44,7 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
 
         toast.success(`Release "${data.name}" created successfully`)
       },
@@ -68,9 +61,9 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
         toast.success(`Release "${data.name}" updated successfully`)
@@ -88,9 +81,9 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
         toast.success(`Release "${data.name}" committed successfully`)
@@ -108,9 +101,9 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
         toast.success(`Release "${data.name}" cancelled successfully`)
@@ -128,9 +121,9 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
         toast.success(`Release "${data.name}" published successfully`)
@@ -148,8 +141,8 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: (id) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
-        queryClient.removeQueries({ queryKey: queryKeys.releases(spaceId.value).detail(id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
+        queryClient.removeQueries({ queryKey: queryKeys.releases(spaceId).detail(id) })
 
         toast.success(`Release deleted successfully`)
       },
@@ -172,9 +165,9 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
         const versionCount = (data as any).versions?.length || 1
@@ -199,9 +192,9 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
         toast.success(`Version(s) removed from release "${data.name}"`)

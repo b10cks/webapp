@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import { useRouteQuery } from '@vueuse/router'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
-import { Button } from '~/components/ui/button'
-import CreateBlockDialog from '~/components/blocks/CreateBlockDialog.vue'
-import SortSelect from '~/components/ui/SortSelect.vue'
-import SearchFilter from '~/components/SearchFilter.vue'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableSortableHead,
-} from '~/components/ui/table'
-import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
-import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
-import { Badge } from '~/components/ui/badge'
-import IconName from '~/components/ui/IconName.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import BlocksIcon from '~/assets/images/blocks.svg?component'
+import CreateBlockDialog from '~/components/blocks/CreateBlockDialog.vue'
+import SearchFilter from '~/components/SearchFilter.vue'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
+import IconName from '~/components/ui/IconName.vue'
+import SortSelect from '~/components/ui/SortSelect.vue'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableSortableHead } from '~/components/ui/table'
 
 const props = defineProps<{
   spaceId: string
@@ -58,9 +50,7 @@ const { data: blockTags, isLoading: isLoadingTags } = useBlockTagsQuery({ per_pa
 const { useBlockFoldersQuery } = useBlockFolders(props.spaceId)
 const { data: blockFolders, isLoading: isLoadingFolders } = useBlockFoldersQuery({ per_page: 500 })
 
-const isLoading = computed(
-  () => isLoadingBlocks.value || isLoadingTags.value || isLoadingFolders.value
-)
+const isLoading = computed(() => isLoadingBlocks.value || isLoadingTags.value || isLoadingFolders.value)
 
 const pageSizeOptions = [25, 50, 100, 500, 1000]
 const sortOptions = [
@@ -106,14 +96,11 @@ const getBlockFolder = (folderId: string | null) => {
 }
 
 const handleDelete = async (block: BlockResource) => {
-  const confirmed = await alert.confirm(
-    $t('messages.blockTags.deleteConfirmation', { name: block.name }),
-    {
-      title: $t('labels.blockTags.deleteTitle'),
-      confirmLabel: $t('actions.delete'),
-      cancelLabel: $t('actions.cancel'),
-    }
-  )
+  const confirmed = await alert.confirm($t('messages.blockTags.deleteConfirmation', { name: block.name }), {
+    title: $t('labels.blockTags.deleteTitle'),
+    confirmLabel: $t('actions.delete'),
+    cancelLabel: $t('actions.cancel'),
+  })
 
   if (confirmed) {
     await deleteBlock(block.id)
@@ -178,18 +165,21 @@ const handleDelete = async (block: BlockResource) => {
                 <TableHead>
                   {{ $t('labels.blocks.fields.folder') }}
                 </TableHead>
+                <TableHead class="text-center">
+                  {{ $t('labels.blocks.fields.templates') }}
+                </TableHead>
                 <TableHead class="w-12" />
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableLoadingRow
                 v-if="isLoading"
-                :colspan="5"
+                :colspan="6"
               />
               <TableEmptyRow
                 v-else-if="blocks.meta?.total === 0"
                 :icon="BlocksIcon"
-                :colspan="5"
+                :colspan="6"
               />
               <template v-else>
                 <TableRow
@@ -230,6 +220,21 @@ const handleDelete = async (block: BlockResource) => {
                       v-if="block.folder_id"
                       v-bind="getBlockFolder(block.folder_id)"
                     />
+                  </TableCell>
+                  <TableCell class="text-center">
+                    <Badge
+                      v-if="block.templates_count"
+                      variant="secondary"
+                      size="sm"
+                    >
+                      {{ block.templates_count }}
+                    </Badge>
+                    <span
+                      v-else
+                      class="text-muted-foreground"
+                    >
+                      -
+                    </span>
                   </TableCell>
                   <TableCell class="text-right">
                     <div class="flex gap-1">

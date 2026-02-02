@@ -40,6 +40,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:modelValue': [value: Record<string, unknown>]
+  createTemplate: [blockId: string, content: Record<string, unknown>]
 }>()
 
 // const updatePreviewItem = inject<(data: never) => void>('updatePreviewItem')
@@ -63,6 +64,10 @@ const fieldValue = computed({
     emit('update:modelValue', updatedModel)
   },
 })
+
+const handleCreateTemplate = (blockId: string, content: Record<string, unknown>): void => {
+  emit('createTemplate', blockId, content)
+}
 </script>
 
 <template>
@@ -77,6 +82,7 @@ const fieldValue = computed({
       v-model="fieldValue"
       :item="item"
       :space-id="spaceId"
+      @create-template="handleCreateTemplate"
     />
     <div v-else>Unknown editor type: {{ item.type }}</div>
   </div>

@@ -3,7 +3,6 @@ import { useDebounceFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 
 import type { AssetsQueryParams } from '~/api/resources/assets'
-import type { MaybeRefOrComputed } from '~/types'
 import type {
   AssetResource,
   ExportTypes,
@@ -15,39 +14,32 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useAssets(spaceId: MaybeRef<string>) {
   const queryClient = useQueryClient()
 
-  const spaceId = computed(() => unref(spaceIdRef))
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
   const { client: apiClient } = useApiClient()
   const error = ref<string | null>(null)
 
-  const useAssetsQuery = (paramsRef: MaybeRefOrComputed<AssetsQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useAssetsQuery = (params: MaybeRef<AssetsQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.assets(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.assets(spaceId).list(params)),
       queryFn: async () => {
         return await spaceAPI.value.assets.index({
           sort: '+created_at',
-          ...params.value,
+          ...toValue(params),
         })
       },
-      enabled: computed(() => !!spaceId.value), // Only run query if spaceId is provided
     })
   }
 
-  const useAssetQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useAssetQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.assets(spaceId.value).detail(id.value)),
+      queryKey: computed(() => queryKeys.assets(spaceId).detail(id)),
       queryFn: async () => {
-        const response = await spaceAPI.value.assets.get(id.value)
+        const response = await spaceAPI.value.assets.get(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!id.value),
     })
   }
 
@@ -59,7 +51,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
     onProgress?: (progress: number) => void
   ): Promise<AssetResource | null> => {
     const debouncedInvalidateQueries = useDebounceFn(() => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
       toast.success(`Assets uploaded successfully`)
     }, 300)
 
@@ -119,7 +111,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
         const apiBaseUrl = ''
         const authToken = apiClient.getAuthHeaders()['Authorization']?.replace('Bearer ', '') || ''
 
-        xhr.open('POST', `${apiBaseUrl}/mgmt/v1/spaces/${spaceId.value}/assets`)
+        xhr.open('POST', `${apiBaseUrl}/mgmt/v1/spaces/${toValue(spaceId)}/assets`)
 
         // Set headers
         if (authToken) {
@@ -146,8 +138,8 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).detail(data.id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).detail(data.id) })
         toast.success(`Asset updated successfully`)
       },
       onError: (error: Error) => {
@@ -163,8 +155,8 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: (id) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).lists() })
-        queryClient.removeQueries({ queryKey: queryKeys.assets(spaceId.value).detail(id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
+        queryClient.removeQueries({ queryKey: queryKeys.assets(spaceId).detail(id) })
         toast.success(`Asset deleted successfully`)
       },
       onError: (error: Error) => {
@@ -190,7 +182,7 @@ export function useAssets(spaceIdRef: MaybeRefOrComputed<string>) {
         return await spaceAPI.value.assets.import(file)
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
         toast.success(`Assets imported successfully`)
       },
       onError: (error: Error) => {

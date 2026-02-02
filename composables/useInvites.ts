@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
-import type { MaybeRefOrComputed } from '~/types'
 import type { AcceptInvitePayload, CreateInvitePayload, InviteQueryParams } from '~/types/invites'
 
 import { api } from '~/api'
@@ -12,75 +11,59 @@ export function useInvites() {
   const { t } = useI18n()
   const queryClient = useQueryClient()
 
-  const usePublicInviteQuery = (tokenRef: MaybeRefOrComputed<string>) => {
-    const token = computed(() => unref(tokenRef))
-
+  const usePublicInviteQuery = (token: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.invites.public(token.value)),
+      queryKey: computed(() => queryKeys.invites.public(token)),
       queryFn: async () => {
-        const response = await api.invites.getPublicInvite(token.value)
-        return response.data
-      },
-      enabled: computed(() => !!token.value),
-    })
-  }
-
-  const useMyInvitesQuery = (paramsRef: MaybeRefOrComputed<InviteQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
-    return useQuery({
-      queryKey: computed(() => queryKeys.invites.myList(params.value)),
-      queryFn: async () => {
-        const response = await api.invites.listMyInvites(params.value)
+        const response = await api.invites.getPublicInvite(toValue(token))
         return response.data
       },
     })
   }
 
-  const useMyInviteQuery = (inviteIdRef: MaybeRefOrComputed<string>) => {
-    const inviteId = computed(() => unref(inviteIdRef))
-
+  const useMyInvitesQuery = (params: MaybeRef<InviteQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.invites.myDetail(inviteId.value)),
+      queryKey: computed(() => queryKeys.invites.myList(params)),
       queryFn: async () => {
-        const response = await api.invites.getMyInvite(inviteId.value)
+        const response = await api.invites.listMyInvites(toValue(params))
         return response.data
       },
-      enabled: computed(() => !!inviteId.value),
+    })
+  }
+
+  const useMyInviteQuery = (inviteId: MaybeRef<string>) => {
+    return useQuery({
+      queryKey: computed(() => queryKeys.invites.myDetail(inviteId)),
+      queryFn: async () => {
+        const response = await api.invites.getMyInvite(toValue(inviteId))
+        return response.data
+      },
     })
   }
 
   const useSpaceInvitesQuery = (
-    spaceIdRef: MaybeRefOrComputed<string>,
-    paramsRef: MaybeRefOrComputed<InviteQueryParams> = {}
+    spaceId: MaybeRef<string>,
+    params: MaybeRef<InviteQueryParams> = {}
   ) => {
-    const spaceId = computed(() => unref(spaceIdRef))
-    const params = computed(() => unref(paramsRef))
-
     return useQuery({
-      queryKey: computed(() => queryKeys.invites.spaceList(spaceId.value, params.value)),
+      queryKey: computed(() => queryKeys.invites.spaceList(spaceId, params)),
       queryFn: async () => {
-        const response = await api.invites.listSpaceInvites(spaceId.value, params.value)
+        const response = await api.invites.listSpaceInvites(toValue(spaceId), toValue(params))
         return response
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
   const useTeamInvitesQuery = (
-    teamIdRef: MaybeRefOrComputed<string>,
-    paramsRef: MaybeRefOrComputed<InviteQueryParams> = {}
+    teamId: MaybeRef<string>,
+    params: MaybeRef<InviteQueryParams> = {}
   ) => {
-    const teamId = computed(() => unref(teamIdRef))
-    const params = computed(() => unref(paramsRef))
-
     return useQuery({
-      queryKey: computed(() => queryKeys.invites.teamList(teamId.value, params.value)),
+      queryKey: computed(() => queryKeys.invites.teamList(teamId, params)),
       queryFn: async () => {
-        const response = await api.invites.listTeamInvites(teamId.value, params.value)
+        const response = await api.invites.listTeamInvites(toValue(teamId), toValue(params))
         return response
       },
-      enabled: computed(() => !!teamId.value),
     })
   }
 

@@ -20,6 +20,7 @@ interface AddFieldPayload {
 const props = defineProps<{
   schema: Record<string, unknown>
   editor: EditorPage[]
+  readonly?: boolean
 }>()
 
 const emit = defineEmits(['update:schema', 'update:editor'])
@@ -83,9 +84,12 @@ const deletePage = async (pageIndex: number) => {
 
 const deleteField = async (key: string) => {
   const fieldName = localSchema.value[key]?.name || key
-  const confirmed = await alert.confirm(`Are you sure you want to delete the "${fieldName}" field?`, {
-    title: 'Delete Field',
-  })
+  const confirmed = await alert.confirm(
+    `Are you sure you want to delete the "${fieldName}" field?`,
+    {
+      title: 'Delete Field',
+    }
+  )
 
   if (confirmed) {
     const updatedSchema = { ...localSchema.value }
@@ -248,7 +252,7 @@ watch(
 
 const setupTabsSortable = () => {
   nextTick(() => {
-    if (!tabsContainer.value) return
+    if (!tabsContainer.value || props.readonly) return
 
     useSortable(tabsContainer.value, localEditor.value, {
       handle: '[tab-handle]',
@@ -270,6 +274,8 @@ const setupTabsSortable = () => {
 }
 
 const setupFieldSortable = (pageIndex: number, element: HTMLElement) => {
+  if (props.readonly) return
+
   useSortable(element, localEditor.value[pageIndex].items, {
     handle: '[draggable]',
     group: 'schema-fields',
@@ -333,12 +339,13 @@ watch(
           />
           <Input
             v-model="page.header"
+            :disabled="readonly"
             name="header"
             type="text"
             class="!bg-background"
           />
           <button
-            v-if="localEditor.length > 1"
+            v-if="localEditor.length > 1 && !readonly"
             type="button"
             title="Delete page"
             class="absolute top-1/2 right-4 z-10 -translate-y-1/2 transform cursor-pointer opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive"
@@ -352,6 +359,7 @@ watch(
         </button>
 
         <Button
+          v-if="!readonly"
           title="Add new page"
           type="button"
           size="icon"
@@ -384,6 +392,7 @@ watch(
             :pages="localEditor"
             :current-page="pageIndex"
             :is-open="modelValue.includes(key)"
+            :readonly="readonly"
             class="rounded-md border border-border bg-surface p-2"
             @update:item="(v) => updateSchemaItem(key, v)"
             @to-page="moveFieldToPage(key, $event)"
@@ -391,7 +400,10 @@ watch(
           />
         </AccordionRoot>
 
-        <Add @add="addField" />
+        <Add
+          v-if="!readonly"
+          @add="addField"
+        />
       </div>
     </div>
   </div>

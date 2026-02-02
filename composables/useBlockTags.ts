@@ -2,25 +2,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
 import type { BlockTagsQueryParams, UpsertBlockTagPayload } from '~/api/resources/block-tags'
-import type { MaybeRefOrComputed } from '~/types'
 
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useBlockTags(spaceId: string) {
+export function useBlockTags(spaceId: MaybeRef<string>) {
   const queryClient = useQueryClient()
-  const spaceAPI = api.forSpace(spaceId)
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
-  const useBlockTagsQuery = (paramsRef: MaybeRefOrComputed<BlockTagsQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useBlockTagsQuery = (params: MaybeRef<BlockTagsQueryParams> = {}) => {
     return useQuery({
-      queryKey: queryKeys.blockTags(spaceId).list(params.value),
+      queryKey: queryKeys.blockTags(spaceId).list(params),
       queryFn: async () => {
-        return await spaceAPI.blockTags.index({
+        return await spaceAPI.value.blockTags.index({
           sort: '+name',
-          ...params.value,
+          ...toValue(params),
         })
       },
     })
@@ -32,7 +29,7 @@ export function useBlockTags(spaceId: string) {
     return useQuery({
       queryKey: queryKeys.blockTags(spaceId).detail(tagName.value),
       queryFn: async () => {
-        const response = await spaceAPI.blockTags.get(tagName.value)
+        const response = await spaceAPI.value.blockTags.get(tagName.value)
         return response.data
       },
       enabled: computed(() => !!tagName.value),
@@ -42,7 +39,7 @@ export function useBlockTags(spaceId: string) {
   const useCreateBlockTagMutation = () => {
     return useMutation({
       mutationFn: async (payload: UpsertBlockTagPayload) => {
-        const response = await spaceAPI.blockTags.create(payload)
+        const response = await spaceAPI.value.blockTags.create(payload)
         return response.data
       },
       onSuccess: (data) => {
@@ -65,7 +62,7 @@ export function useBlockTags(spaceId: string) {
         tagName: string
         payload: UpsertBlockTagPayload
       }) => {
-        const response = await spaceAPI.blockTags.update(tagName, payload)
+        const response = await spaceAPI.value.blockTags.update(tagName, payload)
         return response.data
       },
       onSuccess: (data, variables) => {
@@ -86,7 +83,7 @@ export function useBlockTags(spaceId: string) {
   const useDeleteBlockTagMutation = () => {
     return useMutation({
       mutationFn: async (tagName: string) => {
-        await spaceAPI.blockTags.delete(tagName)
+        await spaceAPI.value.blockTags.delete(tagName)
         return tagName
       },
       onSuccess: (tagName) => {

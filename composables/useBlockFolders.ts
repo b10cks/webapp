@@ -7,15 +7,15 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useBlockFolders(spaceId: string) {
+export function useBlockFolders(spaceId: MaybeRef<string>) {
   const queryClient = useQueryClient()
-  const spaceAPI = api.forSpace(spaceId)
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
   const useBlockFoldersQuery = (filters = {}) => {
     return useQuery({
       queryKey: queryKeys.blockFolders(spaceId).list(filters),
       queryFn: async () => {
-        const response = await spaceAPI.blockFolders.index({
+        const response = await spaceAPI.value.blockFolders.index({
           sort: '+name',
           ...filters,
         })
@@ -28,7 +28,7 @@ export function useBlockFolders(spaceId: string) {
     return useQuery({
       queryKey: queryKeys.blockFolders(spaceId).detail(folderId),
       queryFn: async () => {
-        const response = await spaceAPI.blockFolders.get(folderId)
+        const response = await spaceAPI.value.blockFolders.get(folderId)
         return response.data
       },
       enabled: !!folderId,
@@ -38,7 +38,7 @@ export function useBlockFolders(spaceId: string) {
   const useCreateBlockFolderMutation = () => {
     return useMutation({
       mutationFn: async (payload: UpsertBlockFolderPayload) => {
-        const response = await spaceAPI.blockFolders.create(payload)
+        const response = await spaceAPI.value.blockFolders.create(payload)
         return response.data
       },
       onSuccess: (data) => {
@@ -61,7 +61,7 @@ export function useBlockFolders(spaceId: string) {
         folderId: string
         payload: UpsertBlockFolderPayload
       }) => {
-        const response = await spaceAPI.blockFolders.update(folderId, payload)
+        const response = await spaceAPI.value.blockFolders.update(folderId, payload)
         return response.data
       },
       onSuccess: (data) => {
@@ -79,7 +79,7 @@ export function useBlockFolders(spaceId: string) {
   const useDeleteBlockFolderMutation = () => {
     return useMutation({
       mutationFn: async (folderId: string) => {
-        await spaceAPI.blockFolders.delete(folderId)
+        await spaceAPI.value.blockFolders.delete(folderId)
         return folderId
       },
       onSuccess: (folderId) => {

@@ -2,14 +2,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
 import type { TeamsQueryParams } from '~/api/resources/teams'
-import type { MaybeRefOrComputed } from '~/types'
 import type {
-  CreateTeamPayload,
-  UpdateTeamPayload,
   AddTeamUserPayload,
-  UpdateTeamUserPayload,
-  TeamUserQueryParams,
+  CreateTeamPayload,
   TeamHierarchyItem,
+  TeamUserQueryParams,
+  UpdateTeamPayload,
+  UpdateTeamUserPayload,
 } from '~/types/teams'
 
 import { api } from '~/api'
@@ -20,31 +19,26 @@ export function useTeams() {
   const queryClient = useQueryClient()
 
   // Teams Queries
-  const useTeamsQuery = (paramsRef: MaybeRefOrComputed<TeamsQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useTeamsQuery = (params: MaybeRef<TeamsQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.teams.list(params.value)),
+      queryKey: computed(() => queryKeys.teams.list(params)),
       queryFn: async () => {
         const response = await api.teams.index({
           sort: '+name',
-          ...params.value,
+          ...toValue(params),
         })
         return response.data
       },
     })
   }
 
-  const useTeamQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useTeamQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.teams.detail(id.value)),
+      queryKey: computed(() => queryKeys.teams.detail(id)),
       queryFn: async () => {
-        const response = await api.teams.get(id.value)
+        const response = await api.teams.get(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!id.value),
     })
   }
 
@@ -60,22 +54,18 @@ export function useTeams() {
 
   // Team Users Queries
   const useTeamUsersQuery = (
-    teamIdRef: MaybeRefOrComputed<string>,
-    paramsRef: MaybeRefOrComputed<TeamUserQueryParams> = {}
+    teamId: MaybeRef<string>,
+    params: MaybeRef<TeamUserQueryParams> = {}
   ) => {
-    const teamId = computed(() => unref(teamIdRef))
-    const params = computed(() => unref(paramsRef))
-
     return useQuery({
-      queryKey: computed(() => queryKeys.teams.users(teamId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.teams.users(teamId).list(params)),
       queryFn: async () => {
-        const response = await api.teams.getUsers(teamId.value, {
+        const response = await api.teams.getUsers(toValue(teamId), {
           sort: '+user.firstname',
-          ...params.value,
+          ...toValue(params),
         })
         return response
       },
-      enabled: computed(() => !!teamId.value),
     })
   }
 
@@ -196,18 +186,17 @@ export function useTeams() {
 
   // Utility functions
   const findTeamInHierarchy = (
-    hierarchyRef: MaybeRefOrComputed<TeamHierarchyItem[] | undefined>,
-    teamIdRef: MaybeRefOrComputed<string>
+    hierarchy: MaybeRef<TeamHierarchyItem[] | undefined>,
+    teamId: MaybeRef<string>
   ): ComputedRef<TeamHierarchyItem | undefined> => {
-    const hierarchy = computed(() => unref(hierarchyRef))
-    const teamId = computed(() => unref(teamIdRef))
-
     return computed(() => {
-      if (!hierarchy.value || !teamId.value) return undefined
+      const hierarchyValue = toValue(hierarchy)
+      const teamIdValue = toValue(teamId)
+      if (!hierarchyValue || !teamIdValue) return undefined
 
       const findInTree = (items: TeamHierarchyItem[]): TeamHierarchyItem | undefined => {
         for (const item of items) {
-          if (item.id === teamId.value) return item
+          if (item.id === teamIdValue) return item
           if (item.children?.length) {
             const found = findInTree(item.children)
             if (found) return found
@@ -216,19 +205,18 @@ export function useTeams() {
         return undefined
       }
 
-      return findInTree(hierarchy.value)
+      return findInTree(toValue(hierarchyValue))
     })
   }
 
   const getTeamAncestors = (
-    hierarchyRef: MaybeRefOrComputed<TeamHierarchyItem[] | undefined>,
-    teamIdRef: MaybeRefOrComputed<string>
+    hierarchy: MaybeRef<TeamHierarchyItem[] | undefined>,
+    teamId: MaybeRef<string>
   ): ComputedRef<TeamHierarchyItem[]> => {
-    const hierarchy = computed(() => unref(hierarchyRef))
-    const teamId = computed(() => unref(teamIdRef))
-
     return computed(() => {
-      if (!hierarchy.value || !teamId.value) return []
+      const hierarchyValue = toValue(hierarchy)
+      const teamIdValue = toValue(teamId)
+      if (!hierarchyValue || !teamIdValue) return []
 
       const findAncestors = (
         items: TeamHierarchyItem[],
@@ -250,19 +238,18 @@ export function useTeams() {
         return []
       }
 
-      return findAncestors(hierarchy.value, teamId.value)
+      return findAncestors(hierarchyValue, teamIdValue)
     })
   }
 
   const getTeamDescendants = (
-    hierarchyRef: MaybeRefOrComputed<TeamHierarchyItem[] | undefined>,
-    teamIdRef: MaybeRefOrComputed<string>
+    hierarchy: MaybeRef<TeamHierarchyItem[] | undefined>,
+    teamId: MaybeRef<string>
   ): ComputedRef<TeamHierarchyItem[]> => {
-    const hierarchy = computed(() => unref(hierarchyRef))
-    const teamId = computed(() => unref(teamIdRef))
-
     return computed(() => {
-      if (!hierarchy.value || !teamId.value) return []
+      const hierarchyValue = toValue(hierarchy)
+      const teamIdValue = toValue(teamId)
+      if (!hierarchyValue || !teamIdValue) return []
 
       const team = findTeamInHierarchy(hierarchy, teamId).value
       if (!team) return []

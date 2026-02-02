@@ -8,42 +8,27 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useComments(
-  spaceIdRef: MaybeRefOrComputed<string>,
-  contentIdRef: MaybeRefOrComputed<string>
-) {
+export function useComments(spaceId: MaybeRef<string>, contentId: MaybeRef<string>) {
   const queryClient = useQueryClient()
-  const spaceId = computed(() => unref(spaceIdRef))
-  const contentId = computed(() => unref(contentIdRef))
-  const commentsAPI = computed(() => api.forSpace(spaceId.value).comments(contentId.value))
+  const commentsAPI = computed(() => api.forSpace(toValue(spaceId)).comments(toValue(contentId)))
 
-  const useCommentsQuery = (paramsRef: MaybeRefOrComputed<CommentsQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useCommentsQuery = (params: MaybeRef<CommentsQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() =>
-        queryKeys.comments(spaceId.value, contentId.value).list(params.value)
-      ),
+      queryKey: computed(() => queryKeys.comments(spaceId, contentId).list(params)),
       queryFn: async () => {
-        const response = await commentsAPI.value.index(params.value)
+        const response = await commentsAPI.value.index(toValue(params))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!contentId.value),
     })
   }
 
-  const useCommentQuery = (commentIdRef: MaybeRefOrComputed<string>) => {
-    const commentId = computed(() => unref(commentIdRef))
-
+  const useCommentQuery = (commentId: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() =>
-        queryKeys.comments(spaceId.value, contentId.value).detail(commentId.value)
-      ),
+      queryKey: computed(() => queryKeys.comments(spaceId, contentId).detail(commentId)),
       queryFn: async () => {
-        const response = await commentsAPI.value.get(commentId.value)
+        const response = await commentsAPI.value.get(toValue(commentId))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!contentId.value && !!commentId.value),
     })
   }
 
@@ -55,7 +40,7 @@ export function useComments(
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         toast.success('Comment added successfully')
       },
@@ -73,10 +58,10 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
         toast.success('Comment updated successfully')
       },
@@ -94,10 +79,10 @@ export function useComments(
       },
       onSuccess: (id) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.removeQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(id),
         })
         toast.success('Comment deleted successfully')
       },
@@ -115,10 +100,10 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
         toast.success('Comment resolved')
       },
@@ -136,10 +121,10 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
         toast.success('Comment unresolved')
       },
@@ -157,10 +142,10 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
       },
       onError: (error: Error) => {
@@ -176,7 +161,7 @@ export function useComments(
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
       },
       onError: (error: Error) => {

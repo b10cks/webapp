@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
-import { OtpField } from '~/components/ui/form'
+import { InputField, OtpField } from '~/components/ui/form'
 
 const open = defineModel<boolean>('open')
 
@@ -73,6 +73,7 @@ const handleCancel = () => {
         </div>
 
         <InputField
+          name="code"
           v-if="useBackup"
           v-model="code"
           type="text"

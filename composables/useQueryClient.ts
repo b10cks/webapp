@@ -148,4 +148,11 @@ export const queryKeys = {
     all: () => ['two-factor'] as const,
     status: () => [...queryKeys.twoFactor.all(), 'status'] as const,
   },
+  backups: (spaceId: string) => ({
+    all: () => ['spaces', spaceId, 'backups'] as const,
+    lists: () => [...queryKeys.backups(spaceId).all(), 'list'] as const,
+    list: (filters: any = {}) => [...queryKeys.backups(spaceId).lists(), filters] as const,
+    details: () => [...queryKeys.backups(spaceId).all(), 'detail'] as const,
+    detail: (id: string) => [...queryKeys.backups(spaceId).details(), id] as const,
+  }),
 }

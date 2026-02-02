@@ -22,6 +22,11 @@ const items: NavItem[] = [
     name: 'space-settings-people',
     icon: 'lucide:users',
   },
+  {
+    title: 'labels.settings.backups.title',
+    name: 'space-settings-backups',
+    icon: 'lucide:database-backup',
+  },
 ]
 
 const route = useRoute()

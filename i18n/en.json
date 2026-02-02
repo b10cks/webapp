@@ -613,6 +613,48 @@
         "createdAt": "Created At"
       }
     },
+    "backups": {
+      "title": "Backups",
+      "description": "Create and manage space backups to protect your content and data",
+      "listTitle": "Backup History",
+      "listDescription": "View and manage all your space backups",
+      "createTitle": "Create Backup",
+      "createDescription": "Create a new backup of your space data and content",
+      "noBackups": "No backups found. Create your first backup to get started.",
+      "openMenu": "Open menu",
+      "states": {
+        "pending": "Pending",
+        "active": "Active",
+        "expired": "Expired",
+        "failed": "Failed"
+      },
+      "fields": {
+        "name": "Name",
+        "namePlaceholder": "e.g., Monthly Backup",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional description for this backup",
+        "recipients": "Recipients",
+        "recipientsPlaceholder": "email1@example.com, email2@example.com",
+        "recipientsHint": "Separate multiple email addresses with commas",
+        "password": "Password Protection",
+        "passwordPlaceholder": "Enter password for ZIP encryption",
+        "passwordHint": "If set, the backup will be encrypted with AES-256",
+        "expiresAt": "Expiration Date"
+      },
+      "columns": {
+        "name": "Name",
+        "state": "Status",
+        "progress": "Progress",
+        "size": "Size",
+        "recipients": "Recipients",
+        "expiresAt": "Expires",
+        "createdAt": "Created"
+      },
+      "deleteConfirmTitle": "Delete Backup",
+      "deleteConfirmMessage": "Are you sure you want to delete the backup \"{name}\"? This action cannot be undone.",
+      "bulkDeleteConfirmTitle": "Delete Multiple Backups",
+      "bulkDeleteConfirmMessage": "Are you sure you want to delete {count} backups? This action cannot be undone."
+    },
     "settings": {
       "general": {
         "title": "General Settings",
@@ -625,6 +667,10 @@
       "people": {
         "title": "People",
         "description": "Manage team members and their access to your space."
+      },
+      "backups": {
+        "title": "Backups",
+        "description": "Create and manage space backups for disaster recovery."
       },
       "space": {
         "title": "Space",
@@ -1054,6 +1100,11 @@
       "reset": "Reset  Usage Stats",
       "save": "Save Redirect"
     },
+    "backups": {
+      "create": "Create Backup",
+      "delete": "Delete Backup",
+      "download": "Download Backup"
+    },
     "references": {
       "add": "Add Reference"
     },
@@ -1076,6 +1127,7 @@
     "copy": "Copy",
     "delete": "Delete",
     "create": "Create",
+    "creating": "Creating...",
     "cancel": "Cancel",
     "send": "Send",
     "invite": "Invite",

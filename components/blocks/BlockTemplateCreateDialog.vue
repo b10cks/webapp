@@ -7,6 +7,7 @@ import { ScrollArea } from '~/components/ui/scroll-area'
 import IconNameField from '~/components/ui/IconNameField.vue'
 
 const open = defineModel<boolean>('open')
+const { $t } = useI18n()
 
 const props = defineProps<{
   spaceId: string

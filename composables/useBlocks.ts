@@ -9,6 +9,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useBlocks(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
@@ -58,10 +59,14 @@ export function useBlocks(spaceId: MaybeRef<string>) {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
-        toast.success(`Block "${data.slug}" created successfully`)
+        toast.success(t('composables.blocks.createSuccess', { slug: data.slug }) as string)
       },
       onError: (error: { message: string }) => {
-        toast.error(`Failed to create block: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blocks.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -80,10 +85,14 @@ export function useBlocks(spaceId: MaybeRef<string>) {
           queryKey: queryKeys.blockVersions(spaceId, data.id).lists(),
         })
 
-        toast.success(`Block "${data.slug}" updated successfully`)
+        toast.success(t('composables.blocks.updateSuccess', { slug: data.slug }) as string)
       },
       onError: (error: { message: string }) => {
-        toast.error(`Failed to update block: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blocks.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -97,10 +106,14 @@ export function useBlocks(spaceId: MaybeRef<string>) {
       onSuccess: (id) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.blocks(spaceId).detail(id) })
-        toast.success(`Block deleted successfully`)
+        toast.success(t('composables.blocks.deleteSuccess') as string)
       },
       onError: (error: { message: string }) => {
-        toast.error(`Failed to delete block: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blocks.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

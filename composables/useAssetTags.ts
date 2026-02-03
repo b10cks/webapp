@@ -9,6 +9,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useAssetTags(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
@@ -47,10 +48,14 @@ export function useAssetTags(spaceId: MaybeRef<string>) {
       onSuccess: (data) => {
         // Invalidate the asset tags list query to trigger a refetch
         queryClient.invalidateQueries({ queryKey: queryKeys.assetTags(spaceId).lists() })
-        toast.success(`Tag "${data.name}" created successfully`)
+        toast.success(t('composables.assetTags.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create tag: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assetTags.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -68,10 +73,14 @@ export function useAssetTags(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.assetTags(spaceId).detail(data.id),
         })
-        toast.success(`Tag "${data.name}" updated successfully`)
+        toast.success(t('composables.assetTags.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update tag: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assetTags.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -89,10 +98,14 @@ export function useAssetTags(spaceId: MaybeRef<string>) {
         queryClient.removeQueries({ queryKey: queryKeys.assetTags(spaceId).detail(id) })
         // Also invalidate assets that might have used this tag
         queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
-        toast.success(`Tag deleted successfully`)
+        toast.success(t('composables.assetTags.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete tag: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assetTags.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

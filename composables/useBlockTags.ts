@@ -8,6 +8,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useBlockTags(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
@@ -45,10 +46,14 @@ export function useBlockTags(spaceId: MaybeRef<string>) {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.blockTags(spaceId).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
-        toast.success(`Tag "${data.name}" created successfully`)
+        toast.success(t('composables.blockTags.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create tag: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockTags.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -72,10 +77,14 @@ export function useBlockTags(spaceId: MaybeRef<string>) {
         })
         queryClient.invalidateQueries({ queryKey: queryKeys.blockTags(spaceId).detail(data.name) })
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
-        toast.success(`Tag "${data.name}" updated successfully`)
+        toast.success(t('composables.blockTags.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update tag: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockTags.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -90,10 +99,14 @@ export function useBlockTags(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({ queryKey: queryKeys.blockTags(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.blockTags(spaceId).detail(tagName) })
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
-        toast.success(`Tag deleted successfully`)
+        toast.success(t('composables.blockTags.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete tag: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockTags.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

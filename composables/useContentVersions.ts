@@ -8,6 +8,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useContentVersions(spaceId: MaybeRef<string>, contentId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
@@ -53,10 +54,14 @@ export function useContentVersions(spaceId: MaybeRef<string>, contentId: MaybeRe
         queryClient.invalidateQueries({
           queryKey: queryKeys.contents(spaceId).detail(contentId),
         })
-        toast.success('Version set as current successfully')
+        toast.success(t('composables.contentVersions.setCurrentSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to set version as current: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.contentVersions.setCurrentError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -77,10 +82,14 @@ export function useContentVersions(spaceId: MaybeRef<string>, contentId: MaybeRe
         queryClient.invalidateQueries({
           queryKey: queryKeys.contents(spaceId).detail(contentId),
         })
-        toast.success('Version set as current successfully')
+        toast.success(t('composables.contentVersions.setCurrentSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to set version as current: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.contentVersions.setCurrentError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -103,10 +112,14 @@ export function useContentVersions(spaceId: MaybeRef<string>, contentId: MaybeRe
         queryClient.invalidateQueries({
           queryKey: queryKeys.contents(spaceId).detail(contentId),
         })
-        toast.success('Version published successfully')
+        toast.success(t('composables.contentVersions.publishSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to publish version: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.contentVersions.publishError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

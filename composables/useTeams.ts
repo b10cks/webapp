@@ -16,6 +16,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useTeams() {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   // Teams Queries
@@ -79,10 +80,14 @@ export function useTeams() {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.hierarchy() })
-        toast.success(`Team "${data.name}" created successfully`)
+        toast.success(t('composables.teams.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create team: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.teams.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -97,10 +102,14 @@ export function useTeams() {
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.detail(data.id) })
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.hierarchy() })
-        toast.success(`Team "${data.name}" updated successfully`)
+        toast.success(t('composables.teams.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update team: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.teams.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -117,10 +126,14 @@ export function useTeams() {
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.hierarchy() })
         // Also invalidate team users queries
         queryClient.removeQueries({ queryKey: queryKeys.teams.users(id).all() })
-        toast.success('Team deleted successfully')
+        toast.success(t('composables.teams.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete team: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.teams.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -135,10 +148,19 @@ export function useTeams() {
       onSuccess: ({ teamId, user }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.users(teamId).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.detail(teamId) })
-        toast.success(`User "${user.user.firstname} ${user.user.lastname}" added to team`)
+        toast.success(
+          t('composables.teams.addUserSuccess', {
+            firstname: user.user.firstname,
+            lastname: user.user.lastname,
+          }) as string
+        )
       },
       onError: (error: Error) => {
-        toast.error(`Failed to add user to team: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.teams.addUserError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -159,10 +181,14 @@ export function useTeams() {
       },
       onSuccess: ({ teamId, user }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.users(teamId).lists() })
-        toast.success(`User role updated to ${user.role}`)
+        toast.success(t('composables.teams.updateUserSuccess', { role: user.role }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update user role: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.teams.updateUserError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -176,10 +202,14 @@ export function useTeams() {
       onSuccess: ({ teamId }) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.users(teamId).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.teams.detail(teamId) })
-        toast.success('User removed from team')
+        toast.success(t('composables.teams.removeUserSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to remove user from team: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.teams.removeUserError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

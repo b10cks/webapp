@@ -10,6 +10,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useSpaces() {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   const useSpacesQuery = (params: MaybeRefOrGetter<SpaceQueryParams>) => {
@@ -44,10 +45,14 @@ export function useSpaces() {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.spaces.lists() })
-        toast.success(`Space "${data.name}" created successfully`)
+        toast.success(t('composables.spaces.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create space: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.spaces.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -61,10 +66,14 @@ export function useSpaces() {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.spaces.lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.spaces.detail(data.id) })
-        toast.success(`Space "${data.name}" updated successfully`)
+        toast.success(t('composables.spaces.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update space: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.spaces.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -78,10 +87,14 @@ export function useSpaces() {
       onSuccess: (id) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.spaces.lists() })
         queryClient.removeQueries({ queryKey: queryKeys.spaces.detail(id) })
-        toast.success(`Space deleted successfully`)
+        toast.success(t('composables.spaces.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete space: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.spaces.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -95,10 +108,14 @@ export function useSpaces() {
       onSuccess: (id) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.spaces.lists() })
         queryClient.removeQueries({ queryKey: queryKeys.spaces.detail(id) })
-        toast.success(`Space archived successfully`)
+        toast.success(t('composables.spaces.archiveSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to archive space: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.spaces.archiveError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

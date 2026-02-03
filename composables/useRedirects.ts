@@ -8,6 +8,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useRedirects(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
@@ -43,10 +44,14 @@ export function useRedirects(spaceId: MaybeRef<string>) {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId).lists() })
-        toast.success(`Redirect "${data.source}" created successfully`)
+        toast.success(t('composables.redirects.createSuccess', { source: data.source }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create redirect: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -62,10 +67,14 @@ export function useRedirects(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.redirects(spaceId).detail(data.id),
         })
-        toast.success(`Redirect "${data.source}" updated successfully`)
+        toast.success(t('composables.redirects.updateSuccess', { source: data.source }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update redirect: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -79,10 +88,14 @@ export function useRedirects(spaceId: MaybeRef<string>) {
       onSuccess: (id) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.redirects(spaceId).detail(id) })
-        toast.success(`Redirect deleted successfully`)
+        toast.success(t('composables.redirects.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete redirect: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -98,10 +111,16 @@ export function useRedirects(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.redirects(spaceId).detail(data.id),
         })
-        toast.success(`Statistics for redirect "${data.source}" reset successfully`)
+        toast.success(
+          t('composables.redirects.resetStatsSuccess', { source: data.source }) as string
+        )
       },
       onError: (error: Error) => {
-        toast.error(`Failed to reset redirect statistics: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.resetStatsError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

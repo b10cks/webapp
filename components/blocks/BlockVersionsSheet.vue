@@ -30,6 +30,7 @@ const props = defineProps<{
 
 const { formatDateTime, formatDateTimeDynamically } = useFormat()
 const { user } = useAuth()
+const { $t } = useI18n()
 
 const selectedVersionId = ref<string | null>(null)
 const selectedTab = ref('preview')
@@ -136,24 +137,21 @@ const selectVersion = (version: BlockVersion) => {
 }
 
 const handleRestore = async (versionId: string) => {
-  await alert.confirm(
-    'Restoring this version will create a backup of the current state first. Are you sure you want to proceed?',
-    {
-      title: 'Restore Version',
-      confirmLabel: 'Restore',
-      onConfirm: () => {
-        restoreVersion(versionId)
-      },
-    }
-  )
+  await alert.confirm($t('labels.blockVersions.restore.message'), {
+    title: $t('labels.blockVersions.restore.title'),
+    confirmLabel: $t('labels.blockVersions.restore.confirmLabel'),
+    onConfirm: () => {
+      restoreVersion(versionId)
+    },
+  })
 }
 
 const handleDelete = async (version: BlockVersion) => {
   await alert.confirm(
-    `Are you sure you want to delete this version from ${formatDateTime(version.created_at)}? This action cannot be undone.`,
+    $t('labels.blockVersions.delete.message', { date: formatDateTime(version.created_at) }),
     {
-      title: 'Delete Version',
-      confirmLabel: 'Delete',
+      title: $t('labels.blockVersions.delete.title'),
+      confirmLabel: $t('labels.blockVersions.delete.confirmLabel'),
       variant: 'destructive',
       onConfirm: () => {
         deleteVersion(version.id)
@@ -169,15 +167,15 @@ const handleUpdateMessage = (id: string, message: string | null | undefined) => 
 const getGroupLabel = (groupKey: string) => {
   switch (groupKey) {
     case 'today':
-      return 'Today'
+      return $t('labels.blockVersions.groups.today')
     case 'yesterday':
-      return 'Yesterday'
+      return $t('labels.blockVersions.groups.yesterday')
     case 'thisWeek':
-      return 'This Week'
+      return $t('labels.blockVersions.groups.thisWeek')
     case 'lastWeek':
-      return 'Last Week'
+      return $t('labels.blockVersions.groups.lastWeek')
     case 'older':
-      return 'Earlier'
+      return $t('labels.blockVersions.groups.older')
     default:
       return groupKey
   }
@@ -304,7 +302,7 @@ watch(
                         <div class="flex grow items-center justify-start gap-2">
                           <RenamableTitle
                             :name="version.commit_message"
-                            fallback="No commit message"
+                            :fallback="$t('labels.blockVersions.noCommitMessage')"
                             class="text-left"
                             :disabled="!isMine(version)"
                             @update="handleUpdateMessage(version.id, $event)"

@@ -14,6 +14,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useReleases(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
@@ -46,10 +47,14 @@ export function useReleases(spaceId: MaybeRef<string>) {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
 
-        toast.success(`Release "${data.name}" created successfully`)
+        toast.success(t('composables.releases.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -66,10 +71,14 @@ export function useReleases(spaceId: MaybeRef<string>) {
           queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" updated successfully`)
+        toast.success(t('composables.releases.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -86,10 +95,14 @@ export function useReleases(spaceId: MaybeRef<string>) {
           queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" committed successfully`)
+        toast.success(t('composables.releases.commitSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to commit release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.commitError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -106,10 +119,14 @@ export function useReleases(spaceId: MaybeRef<string>) {
           queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" cancelled successfully`)
+        toast.success(t('composables.releases.cancelSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to cancel release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.cancelError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -126,10 +143,14 @@ export function useReleases(spaceId: MaybeRef<string>) {
           queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" published successfully`)
+        toast.success(t('composables.releases.publishSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to publish release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.publishError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -144,10 +165,14 @@ export function useReleases(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.releases(spaceId).detail(id) })
 
-        toast.success(`Release deleted successfully`)
+        toast.success(t('composables.releases.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -171,10 +196,19 @@ export function useReleases(spaceId: MaybeRef<string>) {
         })
 
         const versionCount = (data as any).versions?.length || 1
-        toast.success(`${versionCount} version(s) added to release "${data.name}"`)
+        toast.success(
+          t('composables.releases.assignVersionsSuccess', {
+            count: versionCount,
+            name: data.name,
+          }) as string
+        )
       },
       onError: (error: Error) => {
-        toast.error(`Failed to assign versions: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.assignVersionsError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -197,10 +231,16 @@ export function useReleases(spaceId: MaybeRef<string>) {
           queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Version(s) removed from release "${data.name}"`)
+        toast.success(
+          t('composables.releases.removeVersionsSuccess', { name: data.name }) as string
+        )
       },
       onError: (error: Error) => {
-        toast.error(`Failed to remove versions: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.removeVersionsError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

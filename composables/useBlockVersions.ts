@@ -1,13 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
-import type { BlockVersionsQueryParams } from '~/api/resources/block-versions'
-
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
 export function useBlockVersions(spaceId: MaybeRef<string>, blockId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
@@ -50,10 +49,14 @@ export function useBlockVersions(spaceId: MaybeRef<string>, blockId: MaybeRef<st
         queryClient.invalidateQueries({
           queryKey: queryKeys.blockVersions(spaceId, blockId).detail(data.id),
         })
-        toast.success('Version updated successfully')
+        toast.success(t('composables.blockVersions.updateSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update version: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockVersions.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -71,10 +74,14 @@ export function useBlockVersions(spaceId: MaybeRef<string>, blockId: MaybeRef<st
         queryClient.invalidateQueries({
           queryKey: queryKeys.blocks(spaceId).detail(blockId),
         })
-        toast.success('Version restored successfully')
+        toast.success(t('composables.blockVersions.restoreSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to restore version: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockVersions.restoreError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -89,10 +96,14 @@ export function useBlockVersions(spaceId: MaybeRef<string>, blockId: MaybeRef<st
         queryClient.invalidateQueries({
           queryKey: queryKeys.blockVersions(spaceId, blockId).lists(),
         })
-        toast.success('Version deleted successfully')
+        toast.success(t('composables.blockVersions.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete version: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockVersions.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

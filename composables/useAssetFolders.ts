@@ -8,6 +8,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useAssetFolders(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
@@ -42,10 +43,14 @@ export function useAssetFolders(spaceId: MaybeRef<string>) {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.assetFolders(spaceId).lists() })
-        toast.success(`Folder "${data.name}" created successfully`)
+        toast.success(t('composables.assetFolders.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create folder: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assetFolders.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -59,10 +64,14 @@ export function useAssetFolders(spaceId: MaybeRef<string>) {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.assetFolders(spaceId).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.assetFolders(spaceId).detail(data.id) })
-        toast.success(`Folder "${data.name}" updated successfully`)
+        toast.success(t('composables.assetFolders.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update folder: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assetFolders.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -76,10 +85,14 @@ export function useAssetFolders(spaceId: MaybeRef<string>) {
       onSuccess: (id) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.assetFolders(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.assetFolders(spaceId).detail(id) })
-        toast.success(`Folder deleted successfully`)
+        toast.success(t('composables.assetFolders.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete folder: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assetFolders.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

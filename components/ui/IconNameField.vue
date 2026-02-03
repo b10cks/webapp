@@ -12,6 +12,7 @@ const props = defineProps<{
     name?: string
   }
   disabled?: boolean
+  placeholder?: string | CleanTranslation
   label?: string | CleanTranslation
   name?: string | CleanTranslation
 }>()
@@ -59,6 +60,7 @@ const update = (key: keyof typeof localValue.value, value: unknown) => {
       <Input
         :model-value="localValue.name"
         :disabled="disabled"
+        :placeholder="placeholder"
         @update:model-value="update('name', $event)"
       />
     </div>

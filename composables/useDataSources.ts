@@ -9,6 +9,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useDataSources(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   // Get the API instance for this space
@@ -53,10 +54,14 @@ export function useDataSources(spaceId: MaybeRef<string>) {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId).lists() })
-        toast.success(`Data source "${data.name}" created successfully`)
+        toast.success(t('composables.dataSources.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create data source: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataSources.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -75,10 +80,14 @@ export function useDataSources(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.dataSources(spaceId).detail(data.id),
         })
-        toast.success(`Data source "${data.name}" updated successfully`)
+        toast.success(t('composables.dataSources.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update data source: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataSources.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -95,10 +104,14 @@ export function useDataSources(spaceId: MaybeRef<string>) {
       onSuccess: (id) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.dataSources(spaceId).detail(id) })
-        toast.success(`Data source deleted successfully`)
+        toast.success(t('composables.dataSources.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete data source: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataSources.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

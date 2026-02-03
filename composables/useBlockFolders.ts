@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
-import type { BlockFolderResource, UpsertBlockFolderPayload } from '~/api/resources/block-folders'
+import type { BlockFolderResource, UpsertBlockFolderPayload } from '~/types/blocks'
 
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
 export function useBlockFolders(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
@@ -44,10 +45,14 @@ export function useBlockFolders(spaceId: MaybeRef<string>) {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.blockFolders(spaceId).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
-        toast.success(`Folder "${data.name}" created successfully`)
+        toast.success(t('composables.blockFolders.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create folder: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockFolders.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -68,10 +73,14 @@ export function useBlockFolders(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({ queryKey: queryKeys.blockFolders(spaceId).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.blockFolders(spaceId).detail(data.id) })
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
-        toast.success(`Folder "${data.name}" updated successfully`)
+        toast.success(t('composables.blockFolders.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update folder: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockFolders.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -86,10 +95,14 @@ export function useBlockFolders(spaceId: MaybeRef<string>) {
         queryClient.invalidateQueries({ queryKey: queryKeys.blockFolders(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.blockFolders(spaceId).detail(folderId) })
         queryClient.invalidateQueries({ queryKey: queryKeys.blocks(spaceId).lists() })
-        toast.success(`Folder deleted successfully`)
+        toast.success(t('composables.blockFolders.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete folder: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockFolders.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

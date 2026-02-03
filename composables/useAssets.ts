@@ -15,6 +15,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useAssets(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
@@ -52,7 +53,7 @@ export function useAssets(spaceId: MaybeRef<string>) {
   ): Promise<AssetResource | null> => {
     const debouncedInvalidateQueries = useDebounceFn(() => {
       queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
-      toast.success(`Assets uploaded successfully`)
+      toast.success(t('composables.assets.uploadSuccess') as string)
     }, 300)
 
     try {
@@ -124,7 +125,8 @@ export function useAssets(spaceId: MaybeRef<string>) {
       return await promise
     } catch (err) {
       console.error(err)
-      error.value = err instanceof Error ? err.message : 'Failed to upload asset'
+      error.value =
+        err instanceof Error ? err.message : (t('composables.assets.uploadError') as string)
       return null
     } finally {
       // isLoading.value = false
@@ -140,10 +142,14 @@ export function useAssets(spaceId: MaybeRef<string>) {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
         queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).detail(data.id) })
-        toast.success(`Asset updated successfully`)
+        toast.success(t('composables.assets.updateSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update asset: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assets.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -157,10 +163,14 @@ export function useAssets(spaceId: MaybeRef<string>) {
       onSuccess: (id) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
         queryClient.removeQueries({ queryKey: queryKeys.assets(spaceId).detail(id) })
-        toast.success(`Asset deleted successfully`)
+        toast.success(t('composables.assets.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete asset: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assets.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -171,7 +181,11 @@ export function useAssets(spaceId: MaybeRef<string>) {
         return await spaceAPI.value.assets.export(params)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to export assets: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assets.exportError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -183,10 +197,14 @@ export function useAssets(spaceId: MaybeRef<string>) {
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: queryKeys.assets(spaceId).lists() })
-        toast.success(`Assets imported successfully`)
+        toast.success(t('composables.assets.importSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to import assets: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.assets.importError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

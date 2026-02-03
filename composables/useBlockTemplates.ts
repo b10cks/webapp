@@ -8,6 +8,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useBlockTemplates(spaceId: MaybeRef<string>, blockId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
   const templatesAPI = computed(() => spaceAPI.value.blockTemplates(toValue(blockId)))
@@ -45,10 +46,14 @@ export function useBlockTemplates(spaceId: MaybeRef<string>, blockId: MaybeRef<s
         queryClient.invalidateQueries({
           queryKey: queryKeys.blockTemplates(spaceId, blockId).lists(),
         })
-        toast.success(`Template "${data.name}" created successfully`)
+        toast.success(t('composables.blockTemplates.createSuccess', { name: data.name }) as string)
       },
       onError: (error: { message: string }) => {
-        toast.error(`Failed to create template: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockTemplates.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -66,10 +71,14 @@ export function useBlockTemplates(spaceId: MaybeRef<string>, blockId: MaybeRef<s
         queryClient.invalidateQueries({
           queryKey: queryKeys.blockTemplates(spaceId, blockId).detail(data.id),
         })
-        toast.success(`Template "${data.name}" updated successfully`)
+        toast.success(t('composables.blockTemplates.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: { message: string }) => {
-        toast.error(`Failed to update template: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockTemplates.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -84,10 +93,14 @@ export function useBlockTemplates(spaceId: MaybeRef<string>, blockId: MaybeRef<s
         queryClient.invalidateQueries({
           queryKey: queryKeys.blockTemplates(spaceId, blockId).lists(),
         })
-        toast.success('Template deleted successfully')
+        toast.success(t('composables.blockTemplates.deleteSuccess') as string)
       },
       onError: (error: { message: string }) => {
-        toast.error(`Failed to delete template: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.blockTemplates.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

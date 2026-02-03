@@ -15,6 +15,7 @@ import IconNameField from '~/components/ui/IconNameField.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
 
 const open = defineModel<boolean>('open')
+const { $t } = useI18n()
 
 const props = defineProps<{
   spaceId: string
@@ -93,17 +94,14 @@ const handleUpdate = async () => {
 }
 
 const handleDelete = async (template: BlockTemplate) => {
-  await alert.confirm(
-    `Are you sure you want to delete the template "${template.name}"? This action cannot be undone.`,
-    {
-      title: 'Delete Template',
-      confirmLabel: 'Delete',
-      variant: 'destructive',
-      onConfirm: () => {
-        deleteTemplate(template.id)
-      },
-    }
-  )
+  await alert.confirm($t('labels.blockTemplates.delete.message', { name: template.name }), {
+    title: $t('labels.blockTemplates.delete.title'),
+    confirmLabel: $t('labels.blockTemplates.delete.confirmLabel'),
+    variant: 'destructive',
+    onConfirm: () => {
+      deleteTemplate(template.id)
+    },
+  })
 }
 
 const formatDate = (date: string) => {

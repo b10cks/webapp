@@ -19,7 +19,8 @@ const editableTag = ref<BlockTagResource>({ ...props.tag })
   <div class="flex flex-col gap-6">
     <IconNameField
       v-model="editableTag"
-      :label="$t('labels.blocks.fields.name')"
+      :label="$t('labels.blockTags.fields.name')"
+      :placeholder="$t('labels.blockTags.fields.namePlaceholder')"
       name="name"
     />
     <slot :tag="editableTag" />

@@ -27,7 +27,7 @@ const perPageProxy = computed({
 <template>
   <div class="flex items-center rounded-lg bg-surface px-2 py-2">
     <div class="pl-2 text-sm font-semibold text-muted">
-      {{ $t('labels.showingEntries', meta) }}
+      {{ meta.total ? $t('labels.showingEntries', meta) : $t('labels.nothingToShow') }}
     </div>
     <LaravelPagination
       v-model="currentPageProxy"

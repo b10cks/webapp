@@ -1,13 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
-import type { CreateTokenRequest, TokenQueryParams } from '~/api/resources/tokens'
-
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
 export function useTokens(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
   const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
@@ -32,10 +31,14 @@ export function useTokens(spaceId: MaybeRef<string>) {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId).lists() })
-        toast.success(`Token "${data.data.name}" created successfully`)
+        toast.success(t('composables.tokens.createSuccess', { name: data.data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create token: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.tokens.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -49,10 +52,14 @@ export function useTokens(spaceId: MaybeRef<string>) {
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId).lists() })
-        toast.success(`Token deleted successfully`)
+        toast.success(t('composables.tokens.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete token: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.tokens.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

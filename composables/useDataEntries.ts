@@ -14,6 +14,7 @@ import { api } from '~/api'
 import { queryKeys } from './useQueryClient'
 
 export function useDataEntries(spaceId: MaybeRef<string>, dataSourceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   // Get the API instance for this space
@@ -70,10 +71,14 @@ export function useDataEntries(spaceId: MaybeRef<string>, dataSourceId: MaybeRef
         queryClient.invalidateQueries({
           queryKey: queryKeys.dataSources(spaceId).detail(dataSourceId),
         })
-        toast.success(`Data entry "${data.key}" created successfully`)
+        toast.success(t('composables.dataEntries.createSuccess', { key: data.key }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create data entry: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataEntries.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -98,10 +103,14 @@ export function useDataEntries(spaceId: MaybeRef<string>, dataSourceId: MaybeRef
         queryClient.invalidateQueries({
           queryKey: queryKeys.dataEntries(spaceId, dataSourceId).detail(data.id),
         })
-        toast.success(`Data entry "${data.key}" updated successfully`)
+        toast.success(t('composables.dataEntries.updateSuccess', { key: data.key }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update data entry: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataEntries.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -125,10 +134,14 @@ export function useDataEntries(spaceId: MaybeRef<string>, dataSourceId: MaybeRef
         queryClient.invalidateQueries({
           queryKey: queryKeys.dataSources(spaceId).detail(dataSourceId),
         })
-        toast.success(`Data entry deleted successfully`)
+        toast.success(t('composables.dataEntries.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete data entry: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataEntries.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -153,10 +166,14 @@ export function useDataEntries(spaceId: MaybeRef<string>, dataSourceId: MaybeRef
         queryClient.invalidateQueries({
           queryKey: queryKeys.dataSources(spaceId).detail(dataSourceId),
         })
-        toast.success(`Batch update completed successfully`)
+        toast.success(t('composables.dataEntries.batchUpdateSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to batch update entries: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataEntries.batchUpdateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

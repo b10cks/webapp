@@ -103,7 +103,7 @@ const handleTypeChange = (type) => {
           name="type"
         >
           <div
-            v-for="type in ['nestable', 'universal', 'root', 'single']"
+            v-for="type in ['nestable', 'root', 'universal', 'single']"
             :key="type"
             :class="[
               'flex cursor-pointer gap-3 rounded-lg border px-3 py-2 text-left',

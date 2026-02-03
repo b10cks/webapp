@@ -67,21 +67,23 @@ const inputProps = computed(() => {
     :class="props.class"
   >
     <template #default="{ id, hasError }">
-      <InputOTP
-        :maxlength="maxlength"
-        :id="id"
-        v-model="modelValue"
-        :class="{ 'border-red-500': hasError }"
-      >
-        <InputOTPGroup>
-          <InputOTPSlot
-            v-for="i in maxlength"
-            :key="i"
-            :index="i - 1"
-            v-bind="{ ...inputProps, ...$attrs }"
-          />
-        </InputOTPGroup>
-      </InputOTP>
+      <div class="flex justify-center">
+        <InputOTP
+          :maxlength="maxlength"
+          :id="id"
+          v-model="modelValue"
+          :class="{ 'border-red-500': hasError }"
+        >
+          <InputOTPGroup>
+            <InputOTPSlot
+              v-for="i in maxlength"
+              :key="i"
+              :index="i - 1"
+              v-bind="{ ...inputProps, ...$attrs }"
+            />
+          </InputOTPGroup>
+        </InputOTP>
+      </div>
     </template>
   </FormField>
 </template>

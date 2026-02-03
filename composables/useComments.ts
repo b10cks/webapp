@@ -1,49 +1,32 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
-import type { CommentsQueryParams } from '~/api/resources/comments'
-import type { CreateCommentRequest, UpdateCommentRequest } from '~/types/comments'
-
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useComments(
-  spaceIdRef: MaybeRefOrComputed<string>,
-  contentIdRef: MaybeRefOrComputed<string>
-) {
+export function useComments(spaceId: MaybeRef<string>, contentId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
-  const spaceId = computed(() => unref(spaceIdRef))
-  const contentId = computed(() => unref(contentIdRef))
-  const commentsAPI = computed(() => api.forSpace(spaceId.value).comments(contentId.value))
+  const commentsAPI = computed(() => api.forSpace(toValue(spaceId)).comments(toValue(contentId)))
 
-  const useCommentsQuery = (paramsRef: MaybeRefOrComputed<CommentsQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useCommentsQuery = (params: MaybeRef<CommentsQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() =>
-        queryKeys.comments(spaceId.value, contentId.value).list(params.value)
-      ),
+      queryKey: computed(() => queryKeys.comments(spaceId, contentId).list(params)),
       queryFn: async () => {
-        const response = await commentsAPI.value.index(params.value)
+        const response = await commentsAPI.value.index(toValue(params))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!contentId.value),
     })
   }
 
-  const useCommentQuery = (commentIdRef: MaybeRefOrComputed<string>) => {
-    const commentId = computed(() => unref(commentIdRef))
-
+  const useCommentQuery = (commentId: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() =>
-        queryKeys.comments(spaceId.value, contentId.value).detail(commentId.value)
-      ),
+      queryKey: computed(() => queryKeys.comments(spaceId, contentId).detail(commentId)),
       queryFn: async () => {
-        const response = await commentsAPI.value.get(commentId.value)
+        const response = await commentsAPI.value.get(toValue(commentId))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!contentId.value && !!commentId.value),
     })
   }
 
@@ -55,12 +38,16 @@ export function useComments(
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
-        toast.success('Comment added successfully')
+        toast.success(t('composables.comments.addSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to add comment: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.comments.addError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -73,15 +60,19 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
-        toast.success('Comment updated successfully')
+        toast.success(t('composables.comments.updateSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update comment: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.comments.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -94,15 +85,19 @@ export function useComments(
       },
       onSuccess: (id) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.removeQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(id),
         })
-        toast.success('Comment deleted successfully')
+        toast.success(t('composables.comments.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete comment: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.comments.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -115,15 +110,19 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
-        toast.success('Comment resolved')
+        toast.success(t('composables.comments.resolveSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to resolve comment: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.comments.resolveError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -136,15 +135,19 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
-        toast.success('Comment unresolved')
+        toast.success(t('composables.comments.unresolveSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to unresolve comment: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.comments.unresolveError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -157,14 +160,18 @@ export function useComments(
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).detail(data.id),
+          queryKey: queryKeys.comments(spaceId, contentId).detail(data.id),
         })
       },
       onError: (error: Error) => {
-        toast.error(`Failed to add reaction: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.comments.addReactionError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -176,11 +183,15 @@ export function useComments(
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.comments(spaceId.value, contentId.value).lists(),
+          queryKey: queryKeys.comments(spaceId, contentId).lists(),
         })
       },
       onError: (error: Error) => {
-        toast.error(`Failed to remove reaction: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.comments.removeReactionError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

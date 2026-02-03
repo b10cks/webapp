@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import {
@@ -10,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '~/components/ui/dialog'
-import { CheckboxField, InputField } from '~/components/ui/form'
+import { CheckboxField, InputField, OtpField } from '~/components/ui/form'
 import BackupCodesDisplay from './BackupCodesDisplay.vue'
 import TwoFactorQRCode from './TwoFactorQRCode.vue'
 
@@ -123,18 +122,19 @@ const handleClose = () => {
           :label="$t('labels.twoFactor.setup.manualEntry')"
           :model-value="setupData.secret"
           readonly
+          input-class="font-mono tracking-widest"
           :actions="['copy']"
         />
 
-        <InputField
+        <OtpField
           v-model="verificationCode"
+          :maxlength="6"
           name="verificationCode"
           inputmode="numeric"
           pattern="[0-9]*"
           maxlength="6"
           :label="$t('labels.twoFactor.setup.enterCode')"
           :placeholder="$t('labels.twoFactor.setup.codePlaceholder')"
-          class="mt-2"
         />
 
         <div

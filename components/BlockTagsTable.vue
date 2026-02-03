@@ -64,7 +64,7 @@ const possibleFilters = [
 
 const handleDelete = async (tag: BlockTagResource) => {
   const confirmed = await alert.confirm(
-    $t('messages.blockTags.deleteConfirmation', { name: tag.name }),
+    $t('labels.blockTags.deleteConfirmation', { name: tag.name }),
     {
       title: $t('labels.blockTags.deleteTitle'),
       confirmLabel: $t('actions.delete'),

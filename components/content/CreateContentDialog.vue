@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import IconName from '~/components/ui/IconName.vue'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
-import type { CreateContentPayload } from '~/types/contents'
+import { FormField, InputField } from '~/components/ui/form'
+import { ScrollArea } from '~/components/ui/scroll-area'
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
 } from '~/components/ui/select'
-import { FormField, InputField } from '~/components/ui/form'
-import { Button } from '~/components/ui/button'
+import type { CreateContentPayload } from '~/types/contents'
 
 const open = defineModel<boolean>('open')
 const props = withDefaults(
@@ -37,6 +41,10 @@ const content = ref<CreateContentPayload>({
   name: '',
 })
 
+const blockId = computed(() => content.value.block_id)
+const { useBlockTemplatesQuery } = useBlockTemplates(props.spaceId, blockId)
+const selectedTemplate = ref<BlockTemplate | null>(null)
+
 watch(
   space,
   () => {
@@ -48,13 +56,27 @@ watch(
 )
 
 const handleCreate = async (editContent: CreateContentPayload) => {
-  await createContent({ ...editContent, parent_id: props.parentId })
+  const payload: CreateContentPayload = {
+    ...editContent,
+    parent_id: props.parentId,
+  }
+
+  if (selectedTemplate.value) {
+    payload.content = selectedTemplate.value.content
+  }
+
+  await createContent(payload)
   open.value = false
+  resetForm()
+}
+
+const resetForm = () => {
   content.value = {
     block_id: content.value.block_id,
     slug: '',
     name: '',
   }
+  selectedTemplate.value = null
 }
 
 const possibleBlocks = computed(() => {
@@ -69,12 +91,18 @@ const currentBlock = computed(() => {
   return possibleBlocks.value?.find((b: BlockResource) => b.id === content.value?.block_id)
 })
 
+const { data: templates } = useBlockTemplatesQuery()
+
 const createSlug = () => {
   if (content.value.slug?.trim()) return
   content.value.slug = content.value.name
     .replace(/[^a-zA-Z0-9]+/g, '-')
     .toLocaleLowerCase()
     .replace(/--/g, '-')
+}
+
+const selectTemplate = (template: BlockTemplate | null) => {
+  selectedTemplate.value = template
 }
 </script>
 
@@ -83,7 +111,7 @@ const createSlug = () => {
     :open="open"
     @update:open="open = $event"
   >
-    <DialogContent>
+    <DialogContent class="sm:max-w-lg">
       <form
         class="grid gap-4"
         @submit.prevent="handleCreate(content)"
@@ -149,10 +177,55 @@ const createSlug = () => {
               </Select>
             </template>
           </FormField>
+
+          <div v-if="templates?.length">
+            <FormField
+              name="template"
+              :label="$t('labels.contents.fields.template')"
+            >
+              <Select>
+                <SelectTrigger>
+                  <IconName
+                    v-if="selectedTemplate"
+                    :icon="selectedTemplate.icon"
+                    :color="selectedTemplate.color"
+                    :name="selectedTemplate.name"
+                  />
+                  <span v-else>{{ $t('labels.contents.blankTemplate') }}</span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem
+                      @select="selectTemplate(null)"
+                      :value="null"
+                    >
+                      {{ $t('labels.contents.blankTemplate') }}
+                    </SelectItem>
+                  </SelectGroup>
+                  <SelectGroup>
+                    <SelectLabel>{{ $t('labels.contents.templates') }}</SelectLabel>
+                    <SelectItem
+                      v-for="template in templates"
+                      :key="template.id"
+                      :value="template.id"
+                      @select="selectTemplate(template)"
+                    >
+                      <IconName
+                        :icon="template.icon"
+                        :color="template.color"
+                        :name="template.name"
+                      />
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FormField>
+          </div>
         </div>
         <DialogFooter>
           <Button
             type="button"
+            variant="outline"
             @click="open = false"
           >
             {{ $t('actions.cancel') }}

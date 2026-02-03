@@ -1,30 +1,25 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
-import type { CreateTokenRequest, TokenQueryParams } from '~/api/resources/tokens'
-
 import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useTokens(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useTokens(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
-  const spaceId = computed(() => unref(spaceIdRef))
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
-  const useTokensQuery = (paramsRef: MaybeRefOrComputed<TokenQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useTokensQuery = (params: MaybeRef<TokenQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.tokens(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.tokens(spaceId).list(params)),
       queryFn: async () => {
         const response = await spaceAPI.value.tokens.index({
-          ...params.value,
+          ...toValue(params),
           sort: '+name',
         })
         return response.data
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
@@ -35,11 +30,15 @@ export function useTokens(spaceIdRef: MaybeRefOrComputed<string>) {
         return await spaceAPI.value.tokens.create(payload)
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId.value).lists() })
-        toast.success(`Token "${data.data.name}" created successfully`)
+        queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId).lists() })
+        toast.success(t('composables.tokens.createSuccess', { name: data.data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create token: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.tokens.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -52,11 +51,15 @@ export function useTokens(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId.value).lists() })
-        toast.success(`Token deleted successfully`)
+        queryClient.invalidateQueries({ queryKey: queryKeys.tokens(spaceId).lists() })
+        toast.success(t('composables.tokens.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete token: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.tokens.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

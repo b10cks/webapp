@@ -8,46 +8,38 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useDataSources(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useDataSources(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
-  // Get the space ID value
-  const spaceId = computed(() => unref(spaceIdRef))
-
   // Get the API instance for this space
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
   /**
    * Query all data sources in a space
    */
-  const useDataSourcesQuery = (paramsRef: MaybeRefOrComputed<DataSourcesQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useDataSourcesQuery = (params: MaybeRef<DataSourcesQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.dataSources(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.dataSources(spaceId).list(params)),
       queryFn: async () => {
         return await spaceAPI.value.dataSources.index({
           sort: '+name',
-          ...params.value,
+          ...toValue(params),
         })
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
   /**
    * Query a single data source by ID
    */
-  const useDataSourceQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useDataSourceQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.dataSources(spaceId.value).detail(id.value)),
+      queryKey: computed(() => queryKeys.dataSources(spaceId).detail(id)),
       queryFn: async () => {
-        const response = await spaceAPI.value.dataSources.get(id.value)
+        const response = await spaceAPI.value.dataSources.get(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!id.value),
     })
   }
 
@@ -61,11 +53,15 @@ export function useDataSources(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId.value).lists() })
-        toast.success(`Data source "${data.name}" created successfully`)
+        queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId).lists() })
+        toast.success(t('composables.dataSources.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create data source: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataSources.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -80,14 +76,18 @@ export function useDataSources(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.dataSources(spaceId.value).detail(data.id),
+          queryKey: queryKeys.dataSources(spaceId).detail(data.id),
         })
-        toast.success(`Data source "${data.name}" updated successfully`)
+        toast.success(t('composables.dataSources.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update data source: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataSources.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -102,12 +102,16 @@ export function useDataSources(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: (id) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId.value).lists() })
-        queryClient.removeQueries({ queryKey: queryKeys.dataSources(spaceId.value).detail(id) })
-        toast.success(`Data source deleted successfully`)
+        queryClient.invalidateQueries({ queryKey: queryKeys.dataSources(spaceId).lists() })
+        queryClient.removeQueries({ queryKey: queryKeys.dataSources(spaceId).detail(id) })
+        toast.success(t('composables.dataSources.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete data source: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.dataSources.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

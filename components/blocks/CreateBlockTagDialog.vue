@@ -25,7 +25,7 @@ const handleCreate = async (tag: BlockTagResource) => {
     @update:open="open = $event"
   >
     <DialogContent>
-      <DialogHeaderCombined :title="$t('labels.blocks.createBlock')" />
+      <DialogHeaderCombined :title="$t('labels.blockTags.createTag')" />
       <BlockTagEdit
         v-slot="{ tag }"
         :tag="{}"

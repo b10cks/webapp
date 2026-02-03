@@ -1,103 +1,103 @@
 {
   "labels": {
-    "loading": "Loading...",
+    "loading": "Just a moment...",
     "login": {
       "header": "Welcome back to b10cks",
       "fields": {
         "firstnameLabel": "First Name",
-        "firstnamePlaceholder": "Enter your first name",
+        "firstnamePlaceholder": "What's your first name?",
         "lastnameLabel": "Last Name",
-        "lastnamePlaceholder": "Enter your last name",
+        "lastnamePlaceholder": "And your last name",
         "emailLabel": "Email",
         "emailPlaceholder": "Enter your email address",
         "passwordLabel": "Password",
         "passwordPlaceholder": "Enter your password",
         "passwordConfirmationLabel": "Confirm Password",
-        "passwordConfirmationPlaceholder": "Confirm your password"
+        "passwordConfirmationPlaceholder": "Type it again"
       },
       "emailMismatch": "Note: You're registering with a different email than the invite.",
-      "signupHeader": "Create your account",
-      "signupDescription": "Join us to start building your content with b10cks.",
-      "invite": "**You've been invited!**\n\n**{inviter}** has invited you to join **{name}**.",
-      "signup": "Don't have an account? [Sign up](/login/signup)",
-      "login": "Already have an account? [Login]({url})",
-      "terms": "I agree to the [Terms of Service](https://www.b10cks.com/legal/terms-of-service) and [Privacy Policy](https://www.b10cks.com/legal/privacy-policy)",
+      "signupHeader": "Get started with b10cks",
+      "signupDescription": "Build faster, ship smarter. All the content infrastructure you need—no friction.",
+      "invite": "**You're in!**\n\n**{inviter}** just invited you to join **{name}**.",
+      "signup": "New here? [Create an account](/login/signup)",
+      "login": "Already a member? [Log back in]({url})",
+      "terms": "I agree to b10cks [Terms of Service](https://www.b10cks.com/legal/terms-of-service) and [Privacy Policy](https://www.b10cks.com/legal/privacy-policy)",
       "forgotPassword": "Forgot your password?",
       "marketing": {
-        "demo": "Want to learn more? [Schedule a demo](https://www.b10cks.com/demo) with us.",
-        "header": "Your content, **Enterprise Ready**.",
-        "description": "* Modular by design with atomic block architecture for seamless content composition\n* User-focused visual editor with Git-like versioning and powerful API-first approach\n* Enterprise features standard for everyone — global CDN delivery without premium pricing\n* **No credit card required to get started**",
+        "demo": "Curious? [Book a demo](https://www.b10cks.com/demo) with us.",
+        "header": "Your content, **built for scale**.",
+        "description": "* Modular by design with atomic block architecture for seamless content composition\n* User-focused visual editor with Git-like versioning and powerful API-first approach\n* Enterprise features standard for everyone — global CDN delivery without premium pricing\n* **Start free. No credit card needed.**",
         "asFeatured": "As featured on",
-        "footer": "By using this service, you agree to the [Terms of Service](https://www.b10cks.com/legal/terms-of-service) and [Privacy Policy](https://www.b10cks.com/legal/privacy-policy)."
+        "footer": "By using b10cks, you accept our [Terms of Service](https://www.b10cks.com/legal/terms-of-service) and [Privacy Policy](https://www.b10cks.com/legal/privacy-policy)."
       }
     },
     "command": {
       "input": {
-        "placeholder": "Type to search for spaces, blocks, content ..."
+        "placeholder": "Search spaces, blocks, content..."
       },
-      "empty": "No results found"
+      "empty": "Nothing found. Try different keywords?"
     },
     "search": {
-      "search": "Search...",
-      "searchOrSelectField": "Search or select a field to filter...",
-      "selectOperatorFor": "Select operator for {field}...",
-      "selectValueFor": "Select value for {field}...",
-      "enterDateFor": "Enter date for {field}...",
-      "enterValueFor": "Enter value for {field}...",
-      "removeFilter": "Remove filter: {field} {operator} {value}",
-      "dateInput": "Date input",
-      "typeValueAndEnter": "Type to enter a value and press Enter",
-      "noResultsFound": "No results found",
-      "keyboardNavHint": "Use up and down arrow keys to navigate, Enter to select, Escape to cancel",
-      "fieldDropdownLabel": "Available filter fields",
-      "operatorDropdownLabel": "Available operators",
-      "valueDropdownLabel": "Available values",
+      "search": "Find something...",
+      "searchOrSelectField": "Search fields or pick one to filter...",
+      "selectOperatorFor": "How should we filter {field}?",
+      "selectValueFor": "What value for {field}?",
+      "enterDateFor": "Pick a date for {field}...",
+      "enterValueFor": "Enter a value for {field}...",
+      "removeFilter": "Remove: {field} {operator} {value}",
+      "dateInput": "Date picker",
+      "typeValueAndEnter": "Type your value and hit Enter",
+      "noResultsFound": "No matches",
+      "keyboardNavHint": "↑↓ to navigate · Enter to select · Esc to cancel",
+      "fieldDropdownLabel": "Available fields",
+      "operatorDropdownLabel": "Filter operators",
+      "valueDropdownLabel": "Possible values",
       "clearAllFilters": "Clear all filters",
-      "editFilter": "Edit filter",
-      "fieldSelected": "Selected field: {field}",
-      "operatorSelected": "Selected operator: {operator}",
-      "filterAdded": "Added filter: {field} {operator} {value}",
-      "filterRemoved": "Removed filter: {field}",
-      "filterUpdated": "Updated filter: {field} {operator} {value}",
-      "editingFilter": "Editing filter: {field}",
-      "goingBack": "Going back to previous step",
-      "filteringCancelled": "Filtering cancelled",
+      "editFilter": "Edit this filter",
+      "fieldSelected": "Selected: {field}",
+      "operatorSelected": "Operator: {operator}",
+      "filterAdded": "Filter added: {field} {operator} {value}",
+      "filterRemoved": "Removed filter for {field}",
+      "filterUpdated": "Updated: {field} {operator} {value}",
+      "editingFilter": "Editing {field}",
+      "goingBack": "Going back...",
+      "filteringCancelled": "Filter cancelled",
       "allFiltersCleared": "All filters cleared"
     },
     "datasets": {
       "title": "Datasets",
       "description": "Manage your datasets and their entries.",
-      "backToDataSources": "Back to Data Sources",
-      "copySlugTooltip": "Copy API URL to clipboard",
-      "dataEntries": "Data Entries",
-      "loading": "Loading...",
-      "loadingEntries": "Loading entries...",
-      "noEntries": "No entries found. Create your first entry to get started.",
-      "searchEntriesPlaceholder": "Search entries by key or value...",
+      "backToDataSources": "Back to all data sources",
+      "copySlugTooltip": "Copy API endpoint to clipboard",
+      "dataEntries": "Entries",
+      "loading": "Loading your data...",
+      "loadingEntries": "Fetching entries...",
+      "noEntries": "No entries yet. Create one to get started.",
+      "searchEntriesPlaceholder": "Search by key or value...",
       "perPage": "Per page",
       "singleEdit": "Single Edit",
       "gridEdit": "Grid Edit",
-      "autoSave": "Auto-save",
+      "autoSave": "Auto-saving enabled",
       "dimensions": {
         "default": "Default"
       },
       "fields": {
         "name": "Name",
         "slug": "Technical name (Slug)",
-        "description": "Description",
+        "description": "What's this dataset for?",
         "dimensions": "Dimensions",
         "dimensionsTranslatable": "Are dimensions translatable",
-        "dimensionsTranslatableDescription": "Enable this if dimensions represent translatable content. This allows you to use AI features like translation.",
-        "cacheTtl": "Cache TTL",
-        "cacheTtlDescription": "Time in seconds for which the dataset will be cached. Set to 0 for no caching.",
+        "dimensionsTranslatableDescription": "Turn this on if content needs translation. Unlocks AI translation features.",
+        "cacheTtl": "Cache duration",
+        "cacheTtlDescription": "How long to cache (seconds). Set to 0 to disable.",
         "dimensionTranslatable": "Are dimensions translatable",
         "dimensionTranslatableDescription": "Enable this if dimensions represent translatable content. This allows you to use AI features like translation.",
         "status": "Status",
         "entries": "Entries",
         "active": "Active",
-        "activeDescription": "Enable this dataset to make it available for usage in the API.",
-        "createdAt": "Created at",
-        "updatedAt": "Last updated at",
+        "activeDescription": "Make this dataset available via API.",
+        "createdAt": "Created",
+        "updatedAt": "Last modified",
         "actions": "Actions"
       },
       "status": {
@@ -106,23 +106,21 @@
         "inactive": "Inactive"
       },
       "entries": "Entries",
-      "addEntry": "Add Entry",
-      "editEntry": "Edit Entry",
-      "createEntry": "Create Entry",
-      "saveChanges": "Save Changes",
-      "createDataSource": "Create Data Source",
-      "editDataSources": "Edit Data Source",
-      "editDataSourceDescription": "Update the data source configuration and settings.",
-      "createDataSourceDescription": "Create a new data source to organize your content data.",
-      "slugDescription": "URL-friendly identifier (lowercase, numbers, and hyphens only)",
-
-      "searchPlaceholder": "Search data sources...",
-      "noDataSources": "No data sources found. Create your first data source to get started.",
-
+      "addEntry": "Add entry",
+      "editEntry": "Edit entry",
+      "createEntry": "New entry",
+      "saveChanges": "Save",
+      "createDataSource": "New data source",
+      "editDataSources": "Edit data source",
+      "editDataSourceDescription": "Update settings and configuration.",
+      "createDataSourceDescription": "Set up a new data source for your content.",
+      "slugDescription": "URL-safe name (lowercase, numbers, hyphens)",
+      "searchPlaceholder": "Find data sources...",
+      "noDataSources": "No data sources yet. Create your first one.",
       "deleteConfirm": {
-        "title": "Delete Data Source",
-        "description": "Are you sure you want to delete this data source? This action cannot be undone and all associated entries will be permanently removed.",
-        "confirmText": "Delete Data Source"
+        "title": "Delete this data source?",
+        "description": "This can't be undone. All entries will be permanently removed.",
+        "confirmText": "Yes, delete it"
       }
     },
     "dataEntries": {
@@ -130,38 +128,49 @@
         "key": "Key",
         "value": "Value",
         "type": "Type",
-        "createdAt": "Created at",
-        "updatedAt": "Last updated at",
+        "createdAt": "Created",
+        "updatedAt": "Updated",
         "actions": "Actions",
         "active": "Active",
-        "editEntry": "Edit Entry",
-        "deleteEntry": "Delete Entry",
-        "addEntry": "Add Entry"
+        "editEntry": "Edit",
+        "deleteEntry": "Delete",
+        "addEntry": "Add entry"
       },
 
       "actions": {
         "edit": "Edit",
         "delete": "Delete",
-        "view": "View Entries"
+        "view": "View all"
       },
 
       "deleteConfirm": {
-        "title": "Delete Entry",
-        "description": "Are you sure you want to delete this entry? This action cannot be undone.",
-        "confirmText": "Delete Entry"
+        "title": "Delete this entry?",
+        "description": "This action can't be undone.",
+        "confirmText": "Delete it"
+      }
+    },
+    "assetTags": {
+      "title": "Asset Tags",
+      "create": "New tag",
+      "createDescription": "Organize your assets into tags.",
+      "fields": {
+        "name": "Tag name",
+        "namePlaceholder": "My awesome tag",
+        "description": "Description",
+        "descriptionPlaceholder": "What goes in here?"
       }
     },
     "assetFolders": {
       "title": "Asset Folders",
-      "create": "Create New Folder",
-      "createDescription": "Create a new folder to organize your assets.",
+      "create": "New folder",
+      "createDescription": "Organize your assets into folders.",
       "fields": {
         "icon": "Icon",
         "color": "Color",
-        "name": "Name",
-        "namePlaceholder": "Enter folder name",
+        "name": "Folder name",
+        "namePlaceholder": "My awesome folder",
         "description": "Description",
-        "descriptionPlaceholder": "Enter folder description"
+        "descriptionPlaceholder": "What goes in here?"
       }
     },
     "invites": {
@@ -344,6 +353,7 @@
         "slug": "Slug",
         "block": "Block",
         "fullSlug": "Full slug",
+        "template": "Template",
         "meta": {
           "title": "Title",
           "titlePlaceholder": "Enter SEO title (50-60 characters)",
@@ -367,6 +377,8 @@
         "available": "Switch to localization mode"
       },
       "createContent": "Create New Content",
+      "blankTemplate": "Blank",
+      "templates": "Templates",
       "status": {
         "draft": "Draft",
         "published": "Published",
@@ -379,12 +391,12 @@
     },
     "blocks": {
       "title": "Blocks",
-      "description": "Manage your content blocks and their configurations.",
+      "description": "Build and manage your reusable content blocks.",
       "fields": {
-        "name": "Name",
-        "slug": "Technical name",
-        "slugOf": "Technical name of {name}",
-        "description": "Description",
+        "name": "Block Name",
+        "slug": "API name",
+        "slugOf": "API name: {name}",
+        "description": "What does this block do?",
         "folder": "Folder",
         "tags": "Tags",
         "tagsPlaceholder": "Assign tags to categorize this block",
@@ -392,124 +404,127 @@
         "type": "Type",
         "default": "Default value",
         "icon": "Icon",
-        "isRoot": "Root Content Type",
-        "isRootDescription": "Enable this block to serve as a standalone content type that can be created directly. Root blocks function like pages, posts, or products in traditional CMS systems.",
+        "templates": "Templates",
         "previewTemplate": "Preview template",
         "previewTemplateDescription": "Use handlebars syntax to create a preview template.",
-        "required": "Required field",
-        "requiredTooltip": "You won't be able to create an entry if this field is empty.",
-        "translatable": "Translatable",
-        "translatableTooltip": "This field can be translated using field level translations.",
+        "required": "Required?",
+        "requiredTooltip": "Users can't create an entry without filling this field.",
+        "translatable": "Translatable?",
+        "translatableTooltip": "Users can translate this field in different languages.",
         "color": "Color",
         "order": "Order",
         "restrict_blocks": "Restrict possible blocks",
         "asset_link_type": "Allow asset links",
         "email_link_type": "Allow email links",
         "allow_target_blank": "Allow target blank",
-        "blockWhitelist": "Block Whitelist",
-        "blockWhitelistPlaceholder": "Select specific blocks to restrict",
-        "blockWhitelistDescription": "Restrict the blocks that can be used inside this block. Only the selected blocks will be allowed.",
-        "blockWhitelistEmpty": "No matching blocks found.",
-        "tagWhitelist": "Tag Whitelist",
-        "tagWhitelistPlaceholder": "Select tags to restrict block usage",
-        "tagWhitelistDescription": "Restrict blocks to only those with the selected tags. This allows you to create a curated set of blocks that can be used together.",
-        "tagWhitelistEmpty": "No matching tags found.",
-        "fileTypes": "File Types",
-        "fileTypesPlaceholder": "Select allowed file types for this block",
-        "min": "Allowed minimum",
-        "minPlaceholder": "Enter minimum number of items",
-        "minDescription": "Leave empty to allow zero items.",
-        "max": "Allowed maximum",
-        "maxPlaceholder": "Enter maximum number of items",
-        "maxDescription": "Leave empty to allow unlimited items.",
+        "blockWhitelist": "Allowed blocks",
+        "blockWhitelistPlaceholder": "Choose which blocks can go inside this one",
+        "blockWhitelistDescription": "Only blocks you select here can be used inside this block. Leave empty to allow all.",
+        "blockWhitelistEmpty": "No blocks match your search.",
+        "tagWhitelist": "Allowed tags",
+        "tagWhitelistPlaceholder": "Choose tags to limit blocks",
+        "tagWhitelistDescription": "Only blocks with these tags can be used inside this block. Helpful for curated block sets.",
+        "tagWhitelistEmpty": "No tags match your search.",
+        "fileTypes": "Allowed file types",
+        "fileTypesPlaceholder": "Select file types this block accepts",
+        "min": "Minimum items",
+        "minPlaceholder": "e.g., 1",
+        "minDescription": "Leave blank to allow zero.",
+        "max": "Maximum items",
+        "maxPlaceholder": "e.g., 5",
+        "maxDescription": "Leave blank for unlimited.",
         "createdAt": "Created at",
-        "updatedAt": "Last updated at",
+        "updatedAt": "Last updated",
         "date": {
           "format": "Date Format",
-          "formatDescription": "Choose how the date should be displayed and stored",
+          "formatDescription": "How should dates appear and be stored?",
           "formats": {
             "date": "Date Only (YYYY-MM-DD)",
             "time": "Time Only (HH:MM)",
             "datetime": "Date & Time (YYYY-MM-DD HH:MM)"
           },
-          "min": "Minimum Date",
-          "minDescription": "The earliest date that can be selected",
-          "max": "Maximum Date",
-          "maxDescription": "The latest date that can be selected",
-          "useCurrentAsDefault": "Use Current Date as Default",
-          "useCurrentAsDefaultDescription": "When enabled, new content will default to the current date"
+          "min": "Earliest date",
+          "minDescription": "The earliest date users can pick",
+          "max": "Latest date",
+          "maxDescription": "The latest date users can pick",
+          "useCurrentAsDefault": "Default to today?",
+          "useCurrentAsDefaultDescription": "New entries will default to the current date"
         }
       },
       "types": {
         "root": {
           "label": "Root Block",
-          "description": "Define the main content structures for your experience - like blog posts, product pages, or landing pages. These serve as the foundation that users will navigate to."
+          "description": "Top-level content like blog posts, product pages, or landing pages. Are directly created in the content tree."
         },
         "nestable": {
           "label": "Nestable Block",
-          "description": "Reusable building blocks that make up your pages - like hero sections, image galleries, or newsletter signups. Mix and match these to create rich content experiences."
+          "description": "Building blocks like hero sections, image galleries, or CTAs. Mix and match these inside root blocks."
         },
         "single": {
-          "label": "Unique Block",
-          "description": "Site-wide unique blocks that appear once across your experience - like navigation menus, site settings, or footer information. These blocks can't have children."
+          "label": "Singleton Block",
+          "description": "Site-wide content like navigation or footer settings. Only one instance allowed with no nested blocks."
         },
         "universal": {
           "label": "Universal Block",
-          "description": "Universal blocks that can be used anywhere in your content. They can be nested and reused across different content types, providing flexibility in your content structure."
+          "description": "Flexible blocks that work anywhere. Can be created in the content tree or nested within other blocks."
         }
       },
       "fieldTypes": {
         "date": {
           "label": "Date",
-          "description": "A date field with different formats"
+          "description": "Date picker with format options"
         },
         "boolean": {
           "label": "Boolean",
-          "description": "A boolean value (true/false)"
+          "description": "On/off switch (true/false)"
         },
         "link": {
           "label": "Link",
-          "description": "A link to another content or an external URL"
+          "description": "Link to another content or an external URL"
         },
         "markdown": {
           "label": "Markdown",
-          "description": "A text field with markdown support"
+          "description": "Text with markdown formatting"
+        },
+        "richtext": {
+          "label": "Rich Text",
+          "description": "Text field with rich text support"
         },
         "blocks": {
           "label": "Blocks",
-          "description": "A field that can contain other blocks"
+          "description": "Nest other blocks inside this field"
         },
         "number": {
           "label": "Number",
-          "description": "A number field"
+          "description": "Whole or decimal numbers"
         },
         "option": {
           "label": "Single Option",
-          "description": "A field with a single option"
+          "description": "Pick one option from a list"
         },
         "options": {
           "label": "Multi Options",
-          "description": "A field with multiple options"
+          "description": "Pick multiple options from a list"
         },
         "text": {
           "label": "Text",
-          "description": "A simple text field"
+          "description": "Single-line text field"
         },
         "reference": {
           "label": "Reference",
-          "description": "A reference to another content"
+          "description": "Reference to another content"
         },
         "asset": {
           "label": "Asset",
-          "description": "A reference to an asset"
+          "description": "Reference to an asset"
         },
         "multiAsset": {
           "label": "Multi Asset",
-          "description": "A reference to multiple assets"
+          "description": "Reference multiple assets"
         },
         "textarea": {
           "label": "Textarea",
-          "description": "A larger text field"
+          "description": "Multi-line text field"
         },
         "meta": {
           "label": "SEO Meta",
@@ -524,37 +539,85 @@
     },
     "blockTags": {
       "title": "Block Tags",
-      "description": "Manage tags for your blocks to categorize and filter them.",
-      "createTag": "Create Tag",
-      "editTag": "Edit Tag",
-      "deleteConfirmTitle": "Delete Tag",
-      "deleteConfirmMessage": "Are you sure you want to delete the tag \"{name}\"?",
-      "noTags": "No tags found",
-      "updatedAt": "Last updated at",
-      "blocks_count": "Blocks count",
+      "description": "Tag your blocks to organize and filter them.",
+      "createTag": "New tag",
+      "editTag": "Edit tag",
+      "deleteTitle": "Delete this tag?",
+      "deleteConfirmation": "Delete \"{name}\"? This won't affect the blocks - just removes the tag.",
+      "noTags": "No tags yet. Create one to organize your blocks.",
+      "updatedAt": "Last updated",
+      "blocks_count": "Blocks",
       "fields": {
-        "name": "Name",
+        "name": "Tag name",
+        "namePlaceholder": "Enter a tag name",
         "color": "Color",
         "icon": "Icon",
-        "blockCount": "Block Count",
-        "createdAt": "Created At"
+        "blockCount": "Blocks tagged",
+        "createdAt": "Created"
       }
     },
     "blockFolders": {
       "title": "Block Folders",
-      "description": "Organize your blocks into folders for better management.",
-      "createFolder": "Create Folder",
-      "editFolder": "Edit Folder",
-      "deleteConfirmTitle": "Delete Folder",
-      "deleteConfirmMessage": "Are you sure you want to delete the folder \"{name}\"? All blocks inside this folder will be moved to the root.",
-      "noFolders": "No folders found",
-      "allBlocks": "All Blocks",
+      "description": "Organize blocks into folders for easier navigation.",
+      "createFolder": "New folder",
+      "editFolder": "Edit folder",
+      "deleteConfirmTitle": "Delete this folder?",
+      "deleteConfirmMessage": "Delete \"{name}\"? Blocks inside will move to the root folder.",
+      "noFolders": "No folders yet. Create one to organize your blocks.",
+      "allBlocks": "All blocks",
       "fields": {
-        "name": "Name",
+        "name": "Folder name",
         "color": "Color",
         "icon": "Icon",
-        "description": "Description",
-        "createdAt": "Created At"
+        "createdAt": "Created"
+      }
+    },
+    "blockTemplates": {
+      "title": "Block Templates",
+      "description": "Save block configurations as templates to speed up creation.",
+      "createTitle": "Create a template",
+      "manageTitle": "Block Templates",
+      "loading": "Loading templates...",
+      "noTemplates": "No templates yet. Create one from an existing block.",
+      "fields": {
+        "name": "Template Name",
+        "description": "What's this template for?",
+        "descriptionPlaceholder": "Describe this template",
+        "previewFile": "Preview Image",
+        "previewFileHint": "Upload a screenshot to help recognize this template (optional)"
+      },
+      "createFromBlock": "Save as template",
+      "delete": {
+        "title": "Delete Template",
+        "message": "Are you sure you want to delete the template \"{name}\"? This action cannot be undone.",
+        "confirmLabel": "Delete"
+      }
+    },
+    "blockVersions": {
+      "title": "Block Versions",
+      "description": "Track and restore previous block versions.",
+      "loading": "Loading versions...",
+      "noVersions": "No version history yet.",
+      "selectVersion": "Pick a version to see what changed.",
+      "restoreTooltip": "Restore this version",
+      "deleteTooltip": "Delete this version",
+      "groups": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "thisWeek": "This Week",
+        "lastWeek": "Last Week",
+        "older": "Earlier"
+      },
+      "noCommitMessage": "[No notes]",
+      "restore": {
+        "title": "Restore this version?",
+        "message": "We'll create a backup of the current version first. Your current work will be saved.",
+        "confirmLabel": "Restore"
+      },
+      "delete": {
+        "title": "Delete this version?",
+        "confirmLabel": "Delete",
+        "message": "Delete the version from {date}? This can't be undone."
       }
     },
     "spaces": {
@@ -570,8 +633,8 @@
     },
     "releases": {
       "title": "Releases",
-      "description": "Manage your content releases and deployments.",
-      "createRelease": "Create Release",
+      "description": "Bundle your content and deploy it in releases",
+      "createRelease": "New Release",
       "editRelease": "Edit Release",
       "deleteConfirmTitle": "Delete Release",
       "deleteConfirmMessage": "Are you sure you want to delete the release \"{name}\"?",
@@ -865,9 +928,9 @@
         "oldPassword": "Current Password",
         "oldPasswordPlaceholder": "Enter your current password",
         "newPassword": "New Password",
-        "newPasswordPlaceholder": "Enter your new password",
+        "newPasswordPlaceholder": "Make sure it's strong and unique",
         "confirmPassword": "Confirm New Password",
-        "confirmPasswordPlaceholder": "Confirm your new password",
+        "confirmPasswordPlaceholder": "Type your new password again",
         "changePasswordButton": "Change Password",
         "toast": {
           "passwordChanged": "Password changed successfully",
@@ -876,61 +939,64 @@
       }
     },
     "twoFactor": {
-      "title": "Two-Factor Authentication",
-      "description": "Add an extra layer of security to your account by enabling two-factor authentication.",
+      "title": "Two-Factor Authentication (2FA)",
+      "description": "Add an extra layer of security to your account by enabling two-factor authentication (2FA).",
       "enabled": "2FA is enabled",
       "disabled": "2FA is not enabled",
       "enable": "Enable 2FA",
       "disable": "Disable 2FA",
-      "regenerateCodes": "Regenerate Backup Codes",
+      "regenerateCodes": "Get new backup codes",
       "setup": {
-        "title": "Set Up Two-Factor Authentication",
-        "description": "Secure your account with an authenticator app.",
+        "title": "Set Up 2FA",
+        "description": "Protect your account with an authenticator app.",
         "whatIsTitle": "What is 2FA?",
-        "whatIsDescription": "Two-factor authentication adds an extra layer of security by requiring both your password and a code from your authenticator app to log in.",
+        "whatIsDescription": "Two-factor authentication (2FA) adds an extra layer of security by requiring both your password and a code from your authenticator app to log in.",
         "howItWorksTitle": "How it works",
         "step1": "Scan the QR code with your authenticator app",
         "step2": "Enter the 6-digit code to verify",
-        "step3": "Save your backup codes in a safe place",
+        "step3": "Save your backup codes somewhere safe",
         "start": "Start Setup",
-        "manualEntry": "Or enter this code manually:",
-        "enterCode": "Enter the 6-digit code from your authenticator app:",
+        "manualEntry": "Can't scan? Enter this code manually:",
+        "enterCode": "Enter the 6-digit code from your app:",
         "codePlaceholder": "000000",
         "verify": "Verify & Enable",
-        "done": "Done",
-        "confirmed": "2FA enabled successfully",
-        "confirmError": "Failed to verify code: {error}",
-        "error": "Failed to start setup: {error}"
+        "done": "You're all set",
+        "confirmed": "2FA is now enabled. Your account is more secure.",
+        "confirmError": "That code didn't work. Try again? {error}",
+        "error": "Couldn't start setup. {error}"
       },
       "verify": {
-        "title": "Two-Factor Authentication",
-        "description": "Enter the code from your authenticator app to continue.",
-        "codeLabel": "Authentication Code",
+        "title": "Verify it's you",
+        "description": "Enter a code from your authenticator app.",
+        "codeLabel": "Your code",
         "codePlaceholder": "000000",
-        "codeDescription": "Enter the 6-digit code from your authenticator app, or an 8-character backup code",
+        "codeDescription": "Enter the 6-digit code from your authenticator app",
+        "useBackupCodes": "Use backup code instead?",
+        "backupCode": "Backup Code",
+        "backupCodeDescription": "Enter a backup code from your list",
         "button": "Verify"
       },
       "backupCodes": {
         "title": "Backup Codes",
-        "description": "These codes can be used to access your account if you lose your authenticator device.",
+        "description": "These are your emergency access codes. Use them if you lose your authenticator app.",
         "saveTitle": "Important: Save your backup codes",
-        "saveDescription": "Each code can only be used once. Keep them in a safe place.",
-        "saveWarning": "These codes will only be shown once. Make sure to save them now!",
-        "copyAll": "Copy All",
-        "download": "Download",
+        "saveDescription": "Each code works once. Store them somewhere safe (password manager, secure note, print them).",
+        "saveWarning": "You'll only see these once. Save them before continuing.",
+        "copyAll": "Copy all",
+        "download": "Download as file",
         "copy": "Copy",
-        "confirmCheckbox": "I have securely saved these backup codes. I understand that losing them may result in permanent account lockout.",
+        "confirmCheckbox": "I've saved these codes somewhere safe. I understand that losing them might lock me out of my account.",
         "regenerated": "Backup codes regenerated successfully",
         "regenerateError": "Failed to regenerate backup codes: {error}"
       },
       "disableTitle": "Disable Two-Factor Authentication",
-      "disableDescription": "Enter your password to confirm.",
-      "disableWarning": "Disabling 2FA will make your account less secure. Are you sure?",
-      "disableConfirm": "Disable 2FA",
+      "disableDescription": "Confirm your password to disable 2FA.",
+      "disableWarning": "Without 2FA, your account is less protected. Only turn this off if you have a good reason.",
+      "disableConfirm": "Yes, turn off 2FA",
       "passwordLabel": "Current Password",
       "passwordPlaceholder": "Enter your password",
       "disableSuccess": "2FA disabled successfully",
-      "disableError": "Failed to disable 2FA: {error}"
+      "disableError": "Couldn't disable 2FA. {error}"
     },
     "teams": {
       "selectPlaceholder": "Select a team..."
@@ -943,6 +1009,8 @@
     "sortBy": "Sort by",
     "selectionCount": "Selected {count} items",
     "showingEntries": "Showing {from} to {to} of {total} items",
+    "nothingToShow": "No items to show",
+    "system": "System",
     "yes": "Yes",
     "no": "No",
     "emojis": {
@@ -1039,10 +1107,10 @@
   "actions": {
     "open": "Open",
     "toDashboard": "Go to dashboard",
-    "quickActions": "Quick actions...",
-    "saveClose": "Save & close",
+    "quickActions": "Quick Actions",
+    "saveClose": "Save & Close",
     "save": "Save",
-    "deleteSelected": "Delete selected",
+    "deleteSelected": "Delete Selected",
     "move": "Move",
     "clear": "Clear",
     "clearSelection": "Clear Selection",
@@ -1050,9 +1118,13 @@
     "archive": "Archive",
     "settings": "Settings",
     "inviteMember": "Invite Member",
-    "signup": "Sign up with email",
-    "newTab": "Open in new tab",
-    "copyLink": "Copy link",
+    "signup": "Sign Up",
+    "newTab": "Open in New Tab",
+    "copyLink": "Copy Link",
+    "selectFile": "Select File",
+    "create": "Create",
+    "cancel": "Cancel",
+    "paste": "Paste",
     "content": {
       "publish": "Publish",
       "publishNow": "Publish Now",
@@ -1060,6 +1132,11 @@
       "publishWithMessage": "Publish with Message",
       "schedule": "Schedule",
       "schedulePublish": "Schedule Publish"
+    },
+    "backups": {
+      "create": "Create Backup",
+      "download": "Download Backup",
+      "delete": "Delete Backup"
     },
     "user": {
       "account": "Account"
@@ -1071,54 +1148,58 @@
       "create": "Create new folder"
     },
     "datasources": {
-      "add": "Add new Datasource",
+      "add": "New Datasource",
       "viewEntries": "View entries",
       "edit": "Edit Datasource",
       "delete": "Delete Datasource"
     },
     "blocks": {
-      "add": "Add new block",
-      "delete": "Delete block",
-      "edit": "Edit block",
-      "save": "Save block",
-      "duplicate": "Duplicate block",
+      "add": "Add Block",
+      "delete": "Delete Block",
+      "edit": "Edit Block",
+      "save": "Save Block",
+      "templates": "Block Templates",
+      "duplicate": "Duplicate Block",
       "options": {
-        "add": "Add new option",
-        "delete": "Delete option"
+        "add": "Add Option",
+        "delete": "Delete Option"
+      },
+      "tooltips": {
+        "createTemplate": "Create Template from this block",
+        "editNested": "Edit nested content",
+        "copy": "Copy item",
+        "cut": "Cut item",
+        "delete": "Delete item",
+        "paste": "Paste item"
       }
     },
     "blockTags": {
-      "add": "Add new tag",
-      "edit": "Edit tag",
-      "delete": "Delete tag",
+      "add": "New Tag",
+      "edit": "Edit Tag",
+      "delete": "Delete Tag",
       "save": "Save tag"
     },
     "redirects": {
       "add": "Add Redirect",
       "edit": "Edit Redirect",
       "delete": "Delete Redirect",
-      "reset": "Reset  Usage Stats",
+      "reset": "Reset Usage Stats",
       "save": "Save Redirect"
-    },
-    "backups": {
-      "create": "Create Backup",
-      "delete": "Delete Backup",
-      "download": "Download Backup"
     },
     "references": {
       "add": "Add Reference"
     },
     "spaces": {
-      "add": "Add new space",
+      "add": "New space",
       "select": "Select space",
       "delete": "Delete space",
       "edit": "Edit space",
       "save": "Save space",
       "switch": "Switch space"
     },
-    "createNewSpace": "Create new space",
     "saveChanges": "Save Changes",
     "close": "Close",
+    "back": "Back",
     "add": "Add",
     "remove": "Remove",
     "edit": "Edit",
@@ -1126,9 +1207,6 @@
     "createFolder": "Create Folder",
     "copy": "Copy",
     "delete": "Delete",
-    "create": "Create",
-    "creating": "Creating...",
-    "cancel": "Cancel",
     "send": "Send",
     "invite": "Invite",
     "login": "Login",
@@ -1139,6 +1217,193 @@
     "ok": "OK",
     "cancel": "Cancel",
     "confirm": "Confirm"
+  },
+  "composables": {
+    "assetFolders": {
+      "createSuccess": "Folder \"{name}\" created successfully",
+      "createError": "Failed to create folder: {error}",
+      "updateSuccess": "Folder \"{name}\" updated successfully",
+      "updateError": "Failed to update folder: {error}",
+      "deleteSuccess": "Folder deleted successfully",
+      "deleteError": "Failed to delete folder: {error}"
+    },
+    "assetTags": {
+      "createSuccess": "Tag \"{name}\" created successfully",
+      "createError": "Failed to create tag: {error}",
+      "updateSuccess": "Tag \"{name}\" updated successfully",
+      "updateError": "Failed to update tag: {error}",
+      "deleteSuccess": "Tag deleted successfully",
+      "deleteError": "Failed to delete tag: {error}"
+    },
+    "assets": {
+      "uploadSuccess": "Assets uploaded successfully",
+      "updateSuccess": "Asset updated successfully",
+      "updateError": "Failed to update asset: {error}",
+      "deleteSuccess": "Asset deleted successfully",
+      "deleteError": "Failed to delete asset: {error}",
+      "exportError": "Failed to export assets: {error}",
+      "importSuccess": "Assets imported successfully",
+      "importError": "Failed to import assets: {error}",
+      "uploadError": "Failed to upload asset"
+    },
+    "blockFolders": {
+      "createSuccess": "Folder \"{name}\" created successfully",
+      "createError": "Failed to create folder: {error}",
+      "updateSuccess": "Folder \"{name}\" updated successfully",
+      "updateError": "Failed to update folder: {error}",
+      "deleteSuccess": "Folder deleted successfully",
+      "deleteError": "Failed to delete folder: {error}"
+    },
+    "blockTags": {
+      "createSuccess": "Tag \"{name}\" created successfully",
+      "createError": "Failed to create tag: {error}",
+      "updateSuccess": "Tag \"{name}\" updated successfully",
+      "updateError": "Failed to update tag: {error}",
+      "deleteSuccess": "Tag deleted successfully",
+      "deleteError": "Failed to delete tag: {error}"
+    },
+    "blockTemplates": {
+      "createSuccess": "Template \"{name}\" created successfully",
+      "createError": "Failed to create template: {error}",
+      "updateSuccess": "Template \"{name}\" updated successfully",
+      "updateError": "Failed to update template: {error}",
+      "deleteSuccess": "Template deleted successfully",
+      "deleteError": "Failed to delete template: {error}"
+    },
+    "blockVersions": {
+      "updateSuccess": "Version updated successfully",
+      "updateError": "Failed to update version: {error}",
+      "restoreSuccess": "Version restored successfully",
+      "restoreError": "Failed to restore version: {error}",
+      "deleteSuccess": "Version deleted successfully",
+      "deleteError": "Failed to delete version: {error}"
+    },
+    "blocks": {
+      "createSuccess": "Block \"{slug}\" created successfully",
+      "createError": "Failed to create block: {error}",
+      "updateSuccess": "Block \"{slug}\" updated successfully",
+      "updateError": "Failed to update block: {error}",
+      "deleteSuccess": "Block deleted successfully",
+      "deleteError": "Failed to delete block: {error}"
+    },
+    "comments": {
+      "addSuccess": "Comment added successfully",
+      "addError": "Failed to add comment: {error}",
+      "updateSuccess": "Comment updated successfully",
+      "updateError": "Failed to update comment: {error}",
+      "deleteSuccess": "Comment deleted successfully",
+      "deleteError": "Failed to delete comment: {error}",
+      "resolveSuccess": "Comment resolved",
+      "resolveError": "Failed to resolve comment: {error}",
+      "unresolveSuccess": "Comment unresolved",
+      "unresolveError": "Failed to unresolve comment: {error}",
+      "addReactionError": "Failed to add reaction: {error}",
+      "removeReactionError": "Failed to remove reaction: {error}"
+    },
+    "content": {
+      "createSuccess": "Content \"{name}\" created successfully",
+      "createError": "Failed to create content: {error}",
+      "updateSuccess": "Content \"{name}\" updated successfully",
+      "updateError": "Failed to update content: {error}",
+      "publishSuccess": "Content \"{name}\" published successfully",
+      "publishError": "Failed to publish content: {error}",
+      "scheduleSuccess": "Content \"{name}\" scheduled successfully",
+      "scheduleError": "Failed to schedule content: {error}",
+      "unpublishSuccess": "Content \"{name}\" unpublished successfully",
+      "unpublishError": "Failed to unpublish content: {error}",
+      "duplicateSuccess": "Content duplicated successfully as \"{name}\"",
+      "duplicateError": "Failed to duplicate content: {error}",
+      "deleteSuccess": "Content deleted successfully",
+      "deleteError": "Failed to delete content: {error}"
+    },
+    "contentVersions": {
+      "setCurrentSuccess": "Version set as current successfully",
+      "setCurrentError": "Failed to set version as current: {error}",
+      "publishSuccess": "Version published successfully",
+      "publishError": "Failed to publish version: {error}"
+    },
+    "dataEntries": {
+      "createSuccess": "Data entry \"{key}\" created successfully",
+      "createError": "Failed to create data entry: {error}",
+      "updateSuccess": "Data entry \"{key}\" updated successfully",
+      "updateError": "Failed to update data entry: {error}",
+      "deleteSuccess": "Data entry deleted successfully",
+      "deleteError": "Failed to delete data entry: {error}",
+      "batchUpdateSuccess": "Batch update completed successfully",
+      "batchUpdateError": "Failed to batch update entries: {error}"
+    },
+    "dataSources": {
+      "createSuccess": "Data source \"{name}\" created successfully",
+      "createError": "Failed to create data source: {error}",
+      "updateSuccess": "Data source \"{name}\" updated successfully",
+      "updateError": "Failed to update data source: {error}",
+      "deleteSuccess": "Data source deleted successfully",
+      "deleteError": "Failed to delete data source: {error}"
+    },
+    "redirects": {
+      "createSuccess": "Redirect \"{source}\" created successfully",
+      "createError": "Failed to create redirect: {error}",
+      "updateSuccess": "Redirect \"{source}\" updated successfully",
+      "updateError": "Failed to update redirect: {error}",
+      "deleteSuccess": "Redirect deleted successfully",
+      "deleteError": "Failed to delete redirect: {error}",
+      "resetStatsSuccess": "Statistics for redirect \"{source}\" reset successfully",
+      "resetStatsError": "Failed to reset redirect statistics: {error}"
+    },
+    "releases": {
+      "createSuccess": "Release \"{name}\" created successfully",
+      "createError": "Failed to create release: {error}",
+      "updateSuccess": "Release \"{name}\" updated successfully",
+      "updateError": "Failed to update release: {error}",
+      "commitSuccess": "Release \"{name}\" committed successfully",
+      "commitError": "Failed to commit release: {error}",
+      "cancelSuccess": "Release \"{name}\" cancelled successfully",
+      "cancelError": "Failed to cancel release: {error}",
+      "publishSuccess": "Release \"{name}\" published successfully",
+      "publishError": "Failed to publish release: {error}",
+      "deleteSuccess": "Release deleted successfully",
+      "deleteError": "Failed to delete release: {error}",
+      "assignVersionsSuccess": "{count} version(s) added to release \"{name}\"",
+      "assignVersionsError": "Failed to assign versions: {error}",
+      "removeVersionsSuccess": "Version(s) removed from release \"{name}\"",
+      "removeVersionsError": "Failed to remove versions: {error}"
+    },
+    "spaces": {
+      "createSuccess": "Space \"{name}\" created successfully",
+      "createError": "Failed to create space: {error}",
+      "updateSuccess": "Space \"{name}\" updated successfully",
+      "updateError": "Failed to update space: {error}",
+      "deleteSuccess": "Space deleted successfully",
+      "deleteError": "Failed to delete space: {error}",
+      "archiveSuccess": "Space archived successfully",
+      "archiveError": "Failed to archive space: {error}"
+    },
+    "teams": {
+      "createSuccess": "Team \"{name}\" created successfully",
+      "createError": "Failed to create team: {error}",
+      "updateSuccess": "Team \"{name}\" updated successfully",
+      "updateError": "Failed to update team: {error}",
+      "deleteSuccess": "Team deleted successfully",
+      "deleteError": "Failed to delete team: {error}",
+      "addUserSuccess": "User \"{firstname} {lastname}\" added to team",
+      "addUserError": "Failed to add user to team: {error}",
+      "updateUserSuccess": "User role updated to {role}",
+      "updateUserError": "Failed to update user role: {error}",
+      "removeUserSuccess": "User removed from team",
+      "removeUserError": "Failed to remove user from team: {error}"
+    },
+    "tokens": {
+      "createSuccess": "Token \"{name}\" created successfully",
+      "createError": "Failed to create token: {error}",
+      "deleteSuccess": "Token deleted successfully",
+      "deleteError": "Failed to delete token: {error}"
+    },
+    "auth": {
+      "invalidResponse": "Something went wrong. Try again?",
+      "tokenRefreshFailed": "Session expired. Please log in again.",
+      "sessionExpired": "Your session timed out. Let's log you back in.",
+      "failedToLoadUser": "Couldn't load your profile. Refresh the page?"
+    }
   },
   "messages": {
     "preview": {

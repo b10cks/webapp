@@ -12,6 +12,8 @@ import AddDropdown from '~/components/editor/AddDropdown.vue'
 import { Button } from '~/components/ui/button'
 import BlockHeader from '~/components/editor/BlockHeader.vue'
 
+const { $t } = useI18n()
+
 const props = defineProps<{
   item: BlocksSchema & { key: string }
   modelValue?: Array<Record<string, unknown>> | null
@@ -34,6 +36,7 @@ const {
 
 const emit = defineEmits<{
   'update:modelValue': [value: Array<Record<string, unknown>>]
+  createTemplate: [blockId: string, content: Record<string, unknown>]
 }>()
 
 const blockItems = computed({
@@ -93,6 +96,11 @@ const pasteItem = async (event?: ClipboardEvent, insertIndex?: number) => {
     updatedItems.splice(index, 0, pastedItem)
     emit('update:modelValue', updatedItems)
   }
+}
+
+const handleTemplateTrigger = (content: Record<string, unknown>) => {
+  const block = getBlockBySlug(blocks, content.block as string)
+  emit('createTemplate', block.id, content)
 }
 
 const setupSortable = () => {
@@ -165,7 +173,16 @@ const navigateToItem = (itemId: string) => {
                 <button
                   v-if="content.id"
                   type="button"
-                  title="Edit nested content"
+                  :title="$t('actions.blocks.tooltips.createTemplate')"
+                  class="flex transform cursor-pointer items-center hover:text-primary"
+                  @click.stop="handleTemplateTrigger(content)"
+                >
+                  <Icon name="lucide:notepad-text-dashed" />
+                </button>
+                <button
+                  v-if="content.id"
+                  type="button"
+                  :title="$t('actions.blocks.tooltips.editNested')"
                   class="flex transform cursor-pointer items-center hover:text-primary"
                   @click.stop="navigateToItem(content.id as string)"
                 >
@@ -173,7 +190,7 @@ const navigateToItem = (itemId: string) => {
                 </button>
                 <button
                   type="button"
-                  title="Copy item"
+                  :title="$t('actions.blocks.tooltips.copy')"
                   class="flex transform cursor-pointer items-center hover:text-primary"
                   @click.stop="copyItem(i)"
                 >
@@ -181,7 +198,7 @@ const navigateToItem = (itemId: string) => {
                 </button>
                 <button
                   type="button"
-                  title="Cut item"
+                  :title="$t('actions.blocks.tooltips.cut')"
                   class="flex transform cursor-pointer items-center hover:text-primary"
                   @click.stop="cutItem(i)"
                 >
@@ -189,7 +206,7 @@ const navigateToItem = (itemId: string) => {
                 </button>
                 <button
                   type="button"
-                  title="Delete item"
+                  :title="$t('actions.blocks.tooltips.delete')"
                   class="flex transform cursor-pointer items-center hover:text-red-500"
                   @click.stop="deleteItem(i)"
                 >
@@ -223,7 +240,7 @@ const navigateToItem = (itemId: string) => {
         >
           <Button
             type="button"
-            title="Paste item"
+            :title="$t('actions.blocks.tooltips.paste')"
             variant="ghost"
             size="xs"
             class="relative z-10"
@@ -233,7 +250,7 @@ const navigateToItem = (itemId: string) => {
               name="lucide:clipboard-paste"
               size="0.75rem"
             />
-            <span>Paste</span>
+            <span>{{ $t('actions.paste') }}</span>
           </Button>
         </div>
       </AccordionRoot>

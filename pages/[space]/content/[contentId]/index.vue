@@ -12,6 +12,7 @@ import { ScrollArea } from '~/components/ui/scroll-area'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import { useGlobalClipboard } from '~/composables/useGlobalClipboard'
 import type { ContentResource } from '~/types/contents'
+import BlockTemplateCreateDialog from '~/components/blocks/BlockTemplateCreateDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -112,6 +113,19 @@ const updateField = (update: { itemId: string; field: string; value: unknown }) 
   }
 }
 
+const template = reactive({
+  isOpen: false,
+  blockId: '',
+  content: {},
+})
+
+const handleTemplateTrigger = (blockId: string, content: object) => {
+  console.log('Creating template for block:', blockId, 'with content:', content)
+  template.blockId = blockId
+  template.content = content
+  template.isOpen = true
+}
+
 provide('content', content)
 provide('rootBlock', rootBlock)
 provide('spaceId', spaceId.value)
@@ -161,6 +175,7 @@ provide('updateHoverItem', (id: string) => {
             :space-id="spaceId"
             :item-id="selectedItemId"
             @navigate="handleNavigate"
+            @create-template="handleTemplateTrigger"
           />
           <Button
             v-if="hasClipboardItem"
@@ -224,6 +239,13 @@ provide('updateHoverItem', (id: string) => {
         </div>
       </TabsList>
     </TabsRoot>
+
+    <BlockTemplateCreateDialog
+      :space-id="spaceId"
+      :block-id="template.blockId"
+      :content="template.content"
+      v-model:open="template.isOpen"
+    />
 
     <Teleport to="#appHeader">
       <ContentHeader

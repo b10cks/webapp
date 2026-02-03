@@ -11,6 +11,8 @@ const props = defineProps<{
     color?: string
     name?: string
   }
+  disabled?: boolean
+  placeholder?: string | CleanTranslation
   label?: string | CleanTranslation
   name?: string | CleanTranslation
 }>()
@@ -47,14 +49,18 @@ const update = (key: keyof typeof localValue.value, value: unknown) => {
     <div class="flex gap-2">
       <IconGrid
         :model-value="localValue.icon"
+        :disabled="disabled"
         @update:model-value="update('icon', $event)"
       />
       <ColorSelect
         :model-value="localValue.color"
+        :disabled="disabled"
         @update:model-value="update('color', $event)"
       />
       <Input
         :model-value="localValue.name"
+        :disabled="disabled"
+        :placeholder="placeholder"
         @update:model-value="update('name', $event)"
       />
     </div>

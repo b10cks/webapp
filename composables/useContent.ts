@@ -8,53 +8,44 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useContent(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
-  const spaceId = computed(() => unref(spaceIdRef))
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
-  const useContentsQuery = (paramsRef: MaybeRefOrComputed<ContentsQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useContentsQuery = (params: MaybeRef<ContentsQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.contents(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.contents(spaceId).list(params)),
       queryFn: async () => {
-        const response = await spaceAPI.value.contents.index(params.value)
+        const response = await spaceAPI.value.contents.index(toValue(params))
         return response
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
   // Query to fetch a single content item
-  const useContentQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useContentQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.contents(spaceId.value).detail(id.value)),
+      queryKey: computed(() => queryKeys.contents(spaceId).detail(id)),
       queryFn: async () => {
-        const response = await spaceAPI.value.contents.get(id.value)
+        const response = await spaceAPI.value.contents.get(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!id.value),
     })
   }
 
   // Query to fetch children of a specific content item
-  const useContentChildrenQuery = (parentIdRef: MaybeRefOrComputed<string | null>) => {
-    const parentId = computed(() => unref(parentIdRef))
-
+  const useContentChildrenQuery = (parentId: MaybeRef<string | null>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.contents(spaceId.value).list({ parent: parentId.value })),
+      queryKey: computed(() => queryKeys.contents(spaceId).list({ parent: parentId })),
       queryFn: async () => {
         const response = await spaceAPI.value.contents.index({
           filter: {
-            parent_id: parentId.value,
+            parent_id: toValue(parentId),
           },
         })
         return response.data
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
@@ -65,13 +56,17 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId).all() })
 
-        toast.success(`Content "${data.name}" created successfully`)
+        toast.success(t('composables.content.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create content: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.content.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -83,19 +78,23 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+          queryKey: queryKeys.contents(spaceId).detail(data.id),
         })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId).all() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+          queryKey: queryKeys.contentVersions(spaceId, data.id).lists(),
         })
 
-        toast.success(`Content "${data.name}" updated successfully`)
+        toast.success(t('composables.content.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update content: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.content.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -107,19 +106,23 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+          queryKey: queryKeys.contents(spaceId).detail(data.id),
         })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId).all() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+          queryKey: queryKeys.contentVersions(spaceId, data.id).lists(),
         })
 
-        toast.success(`Content "${data.name}" published successfully`)
+        toast.success(t('composables.content.publishSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to publish content: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.content.publishError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -131,19 +134,23 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+          queryKey: queryKeys.contents(spaceId).detail(data.id),
         })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId).all() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+          queryKey: queryKeys.contentVersions(spaceId, data.id).lists(),
         })
 
-        toast.success(`Content "${data.name}" scheduled successfully`)
+        toast.success(t('composables.content.scheduleSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to schedule content: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.content.scheduleError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -155,37 +162,51 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contents(spaceId.value).detail(data.id),
+          queryKey: queryKeys.contents(spaceId).detail(data.id),
         })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId).all() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.contentVersions(spaceId.value, data.id).lists(),
+          queryKey: queryKeys.contentVersions(spaceId, data.id).lists(),
         })
 
-        toast.success(`Content "${data.name}" unpublished successfully`)
+        toast.success(t('composables.content.unpublishSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to unpublish content: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.content.unpublishError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
 
   const useDuplicateContentMutation = () => {
     return useMutation({
-      mutationFn: async ({ id, options }: { id: string; options?: { name?: string; parent_id?: string | null } }) => {
+      mutationFn: async ({
+        id,
+        options,
+      }: {
+        id: string
+        options?: { name?: string; parent_id?: string | null }
+      }) => {
         const response = await spaceAPI.value.contents.duplicate(id, options)
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId).all() })
 
-        toast.success(`Content duplicated successfully as "${data.name}"`)
+        toast.success(t('composables.content.duplicateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to duplicate content: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.content.duplicateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -197,14 +218,18 @@ export function useContent(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: (id) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId.value).lists() })
-        queryClient.removeQueries({ queryKey: queryKeys.contents(spaceId.value).detail(id) })
-        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId.value).all() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contents(spaceId).lists() })
+        queryClient.removeQueries({ queryKey: queryKeys.contents(spaceId).detail(id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.contentMenu(spaceId).all() })
 
-        toast.success(`Content deleted successfully`)
+        toast.success(t('composables.content.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete content: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.content.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

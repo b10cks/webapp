@@ -9,6 +9,10 @@ import { ListboxContent, ListboxGroup, ListboxGroupLabel, ListboxItem, ListboxRo
 import { Button } from '~/components/ui/button'
 import iconList from './iconlist.json'
 
+defineProps<{
+  disabled?: boolean
+}>()
+
 const selectedIcon = defineModel<string | null>()
 const isDialogOpen = ref(false)
 
@@ -24,6 +28,7 @@ function selectIcon(icon: string) {
       <Button
         variant="outline"
         type="button"
+        :disabled="disabled"
       >
         <Icon
           v-if="selectedIcon"

@@ -25,7 +25,7 @@ const handleCreate = async (folder: BlockFolderResource) => {
     @update:open="open = $event"
   >
     <DialogContent>
-      <DialogHeaderCombined :title="$t('labels.blocks.createBlock')" />
+      <DialogHeaderCombined :title="$t('labels.blockFolders.createFolder')" />
       <BlockFolderEdit
         v-slot="{ folder }"
         :folder="{}"

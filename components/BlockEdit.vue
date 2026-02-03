@@ -12,11 +12,13 @@ const props = withDefaults(
     showSchema?: boolean
     slugEditable?: boolean
     isCreate?: boolean
+    readonly?: boolean
   }>(),
   {
     slugEditable: false,
     showSchema: false,
     isCreate: false,
+    readonly: false,
   }
 )
 
@@ -57,6 +59,12 @@ const enforceSlugFormat = () => {
   if (!editableBlock.value.slug) return
   editableBlock.value.slug = editableBlock.value.slug.replace(/[^a-zA-Z0-9_]/g, '')
 }
+
+const handleTypeChange = (type) => {
+  if (!props.readonly) {
+    editableBlock.value.type = type as 'root' | 'nestable' | 'single' | 'universal'
+  }
+}
 </script>
 
 <template>
@@ -65,6 +73,7 @@ const enforceSlugFormat = () => {
       :model-value="editableBlock as { icon: string; color: string; name: string }"
       :label="$t('labels.blocks.fields.name')"
       name="name"
+      :disabled="readonly"
       @update:name="createSlug"
       @update:model-value="Object.assign(editableBlock, $event)"
     />
@@ -73,12 +82,14 @@ const enforceSlugFormat = () => {
       :label="$t('labels.blocks.fields.slug')"
       name="slug"
       :disabled="!slugEditable"
+      :readonly="readonly"
       @blur="enforceSlugFormat"
     />
     <InputField
       v-model="editableBlock.description"
       :label="$t('labels.blocks.fields.description')"
       name="description"
+      :disabled="readonly"
     />
     <FormField
       name="type"
@@ -88,23 +99,22 @@ const enforceSlugFormat = () => {
         <RadioGroup
           :id="id"
           v-model="editableBlock.type"
+          :disabled="readonly"
           name="type"
         >
           <div
-            v-for="type in ['nestable', 'universal', 'root', 'single']"
+            v-for="type in ['nestable', 'root', 'universal', 'single']"
             :key="type"
             :class="[
               'flex cursor-pointer gap-3 rounded-lg border px-3 py-2 text-left',
               editableBlock.type === type ? 'border-border bg-input' : 'border-border',
             ]"
             tabindex="-1"
-            @click="editableBlock.type = type as 'root' | 'nestable' | 'single' | 'universal'"
-            @keydown.enter="
-              editableBlock.type = type as 'root' | 'nestable' | 'single' | 'universal'
-            "
+            @click="handleTypeChange(type)"
           >
             <RadioGroupItem
               :value="type"
+              :disabled="readonly"
               class="mt-0.5"
             />
             <div>
@@ -127,12 +137,14 @@ const enforceSlugFormat = () => {
       :options="possibleTags"
       multiple
       searchable
+      :readonly="readonly"
       :empty-text="$t('labels.blocks.fields.tagsEmpty')"
     />
 
     <TextField
       v-if="!isCreate && ['universal', 'nestable'].includes(editableBlock.type)"
       v-model="editableBlock.preview_template"
+      :disabled="readonly"
       :label="$t('labels.blocks.fields.previewTemplate')"
       :description="$t('labels.blocks.fields.previewTemplateDescription')"
       name="preview_template"
@@ -140,6 +152,7 @@ const enforceSlugFormat = () => {
 
     <SchemaEditor
       v-if="showSchema"
+      :readonly="readonly"
       v-model:schema="editableBlock.schema"
       v-model:editor="editableBlock.editor"
     />

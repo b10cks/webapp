@@ -166,7 +166,7 @@ const formatLastUpdated = (space: SpaceResource) => {
                 variant="primary"
                 :to="{ name: 'spaces-new' }"
               >
-                {{ $t('actions.createNewSpace') }}
+                {{ $t('actions.spaces.add') }}
               </Button>
             </template>
           </div>

@@ -13,34 +13,28 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useReleases(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
-  const spaceId = computed(() => unref(spaceIdRef))
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
-  const useReleasesQuery = (paramsRef: MaybeRefOrComputed<any> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useReleasesQuery = (params: MaybeRef<any> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.releases(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.releases(spaceId).list(params)),
       queryFn: async () => {
-        const response = await spaceAPI.value.releases.index(params.value)
+        const response = await spaceAPI.value.releases.index(toValue(params))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
-  const useReleaseQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useReleaseQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.releases(spaceId.value).detail(id.value)),
+      queryKey: computed(() => queryKeys.releases(spaceId).detail(id)),
       queryFn: async () => {
-        const response = await spaceAPI.value.releases.getDetail(id.value)
+        const response = await spaceAPI.value.releases.getDetail(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!id.value),
     })
   }
 
@@ -51,12 +45,16 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
 
-        toast.success(`Release "${data.name}" created successfully`)
+        toast.success(t('composables.releases.createSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -68,15 +66,19 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" updated successfully`)
+        toast.success(t('composables.releases.updateSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -88,15 +90,19 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" committed successfully`)
+        toast.success(t('composables.releases.commitSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to commit release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.commitError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -108,15 +114,19 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" cancelled successfully`)
+        toast.success(t('composables.releases.cancelSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to cancel release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.cancelError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -128,15 +138,19 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Release "${data.name}" published successfully`)
+        toast.success(t('composables.releases.publishSuccess', { name: data.name }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to publish release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.publishError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -148,13 +162,17 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: (id) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
-        queryClient.removeQueries({ queryKey: queryKeys.releases(spaceId.value).detail(id) })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
+        queryClient.removeQueries({ queryKey: queryKeys.releases(spaceId).detail(id) })
 
-        toast.success(`Release deleted successfully`)
+        toast.success(t('composables.releases.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete release: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -172,16 +190,25 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
         const versionCount = (data as any).versions?.length || 1
-        toast.success(`${versionCount} version(s) added to release "${data.name}"`)
+        toast.success(
+          t('composables.releases.assignVersionsSuccess', {
+            count: versionCount,
+            name: data.name,
+          }) as string
+        )
       },
       onError: (error: Error) => {
-        toast.error(`Failed to assign versions: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.assignVersionsError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -199,15 +226,21 @@ export function useReleases(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.releases(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.releases(spaceId.value).detail(data.id),
+          queryKey: queryKeys.releases(spaceId).detail(data.id),
         })
 
-        toast.success(`Version(s) removed from release "${data.name}"`)
+        toast.success(
+          t('composables.releases.removeVersionsSuccess', { name: data.name }) as string
+        )
       },
       onError: (error: Error) => {
-        toast.error(`Failed to remove versions: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.releases.removeVersionsError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

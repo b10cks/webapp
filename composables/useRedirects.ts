@@ -1,5 +1,3 @@
-import type { ComputedRef, MaybeRef } from 'vue'
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
 
@@ -9,40 +7,32 @@ import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 
-export type MaybeRefOrComputed<T> = MaybeRef<T> | ComputedRef<T>
-
-export function useRedirects(spaceIdRef: MaybeRefOrComputed<string>) {
+export function useRedirects(spaceId: MaybeRef<string>) {
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
-  const spaceId = computed(() => unref(spaceIdRef))
-  const spaceAPI = computed(() => api.forSpace(spaceId.value))
+  const spaceAPI = computed(() => api.forSpace(toValue(spaceId)))
 
-  const useRedirectsQuery = (paramsRef: MaybeRefOrComputed<RedirectsQueryParams> = {}) => {
-    const params = computed(() => unref(paramsRef))
-
+  const useRedirectsQuery = (params: MaybeRef<RedirectsQueryParams> = {}) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.redirects(spaceId.value).list(params.value)),
+      queryKey: computed(() => queryKeys.redirects(spaceId).list(params)),
       queryFn: async () => {
         const response = await spaceAPI.value.redirects.index({
           sort: 'source',
-          ...params.value,
+          ...toValue(params),
         })
         return response
       },
-      enabled: computed(() => !!spaceId.value),
     })
   }
 
-  const useRedirectQuery = (idRef: MaybeRefOrComputed<string>) => {
-    const id = computed(() => unref(idRef))
-
+  const useRedirectQuery = (id: MaybeRef<string>) => {
     return useQuery({
-      queryKey: computed(() => queryKeys.redirects(spaceId.value).detail(id.value)),
+      queryKey: computed(() => queryKeys.redirects(spaceId).detail(id)),
       queryFn: async () => {
-        const response = await spaceAPI.value.redirects.get(id.value)
+        const response = await spaceAPI.value.redirects.get(toValue(id))
         return response.data
       },
-      enabled: computed(() => !!spaceId.value && !!id.value),
     })
   }
 
@@ -53,11 +43,15 @@ export function useRedirects(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId.value).lists() })
-        toast.success(`Redirect "${data.source}" created successfully`)
+        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId).lists() })
+        toast.success(t('composables.redirects.createSuccess', { source: data.source }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to create redirect: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.createError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -69,14 +63,18 @@ export function useRedirects(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.redirects(spaceId.value).detail(data.id),
+          queryKey: queryKeys.redirects(spaceId).detail(data.id),
         })
-        toast.success(`Redirect "${data.source}" updated successfully`)
+        toast.success(t('composables.redirects.updateSuccess', { source: data.source }) as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to update redirect: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.updateError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -88,12 +86,16 @@ export function useRedirects(spaceIdRef: MaybeRefOrComputed<string>) {
         return id
       },
       onSuccess: (id) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId.value).lists() })
-        queryClient.removeQueries({ queryKey: queryKeys.redirects(spaceId.value).detail(id) })
-        toast.success(`Redirect deleted successfully`)
+        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId).lists() })
+        queryClient.removeQueries({ queryKey: queryKeys.redirects(spaceId).detail(id) })
+        toast.success(t('composables.redirects.deleteSuccess') as string)
       },
       onError: (error: Error) => {
-        toast.error(`Failed to delete redirect: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.deleteError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }
@@ -105,14 +107,20 @@ export function useRedirects(spaceIdRef: MaybeRefOrComputed<string>) {
         return response.data
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId.value).lists() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.redirects(spaceId).lists() })
         queryClient.invalidateQueries({
-          queryKey: queryKeys.redirects(spaceId.value).detail(data.id),
+          queryKey: queryKeys.redirects(spaceId).detail(data.id),
         })
-        toast.success(`Statistics for redirect "${data.source}" reset successfully`)
+        toast.success(
+          t('composables.redirects.resetStatsSuccess', { source: data.source }) as string
+        )
       },
       onError: (error: Error) => {
-        toast.error(`Failed to reset redirect statistics: ${error.message || 'Unknown error'}`)
+        toast.error(
+          t('composables.redirects.resetStatsError', {
+            error: error.message || 'Unknown error',
+          }) as string
+        )
       },
     })
   }

@@ -76,6 +76,7 @@ export function useAuth() {
   const router = useRouter()
   const route = useRoute()
   const { $posthog } = useNuxtApp()
+  const { t } = useI18n()
 
   const user = useState<User>('auth_user', () => null)
   const isAuthenticated = computed(() => !!TokenManager.getAccessToken())
@@ -131,14 +132,14 @@ export function useAuth() {
         })
       }
     } catch (err: any) {
-      console.error('Failed to load user:', err)
+      console.error(t('composables.auth.failedToLoadUser') as string, err)
       await logout()
     }
   }
 
   const handleAuthResponse = async (api: Api, response: AuthResponse, cb: CallableFunction) => {
     if (!response.access_token) {
-      throw new Error('Invalid response from server')
+      throw new Error(t('composables.auth.invalidResponse') as string)
     }
     TokenManager.setTokens(response.access_token, response.refresh_token, response.expires_in)
 
@@ -290,8 +291,8 @@ export function useAuth() {
     } catch (err: any) {
       processRequestQueue(false)
 
-      error.value = 'Your session has expired. Please log in again.'
-      console.error('Token refresh failed: Error: Authentication failed', err)
+      error.value = t('composables.auth.sessionExpired') as string
+      console.error(t('composables.auth.tokenRefreshFailed') as string, err)
       await logout()
 
       return false
@@ -302,9 +303,9 @@ export function useAuth() {
 
   const handleUnauthorized = async (endpoint: string, options: any): Promise<any> => {
     if (endpoint.includes('/auth/v1/token')) {
-      error.value = 'Your session has expired. Please log in again.'
+      error.value = t('composables.auth.sessionExpired') as string
       await logout()
-      throw new Error('Token refresh failed: Error: Authentication failed')
+      throw new Error(t('composables.auth.tokenRefreshFailed') as string)
     }
 
     if (isRefreshing.value) {
@@ -318,7 +319,7 @@ export function useAuth() {
       return { endpoint, options, token: TokenManager.getAccessToken() }
     }
 
-    throw new Error('Token refresh failed: Error: Authentication failed')
+    throw new Error(t('composables.auth.tokenRefreshFailed') as string)
   }
 
   const logout = async (returnPath?: string): Promise<void> => {

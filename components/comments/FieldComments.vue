@@ -7,7 +7,7 @@ import type { CommentResource, CreateCommentRequest } from '~/types/comments'
 import CommentsList from './CommentsList.vue'
 
 const props = defineProps<{
-  itemId: string
+  itemId?: string
   field?: string
 }>()
 
@@ -50,6 +50,10 @@ const fieldComments = computed(() => {
 
 const unresolvedCount = computed(() => {
   return fieldComments.value.filter((c) => !c.is_resolved).length
+})
+
+const totalComments = computed(() => {
+  return fieldComments.value.length
 })
 
 const handleCreateComment = () => {
@@ -108,16 +112,18 @@ const handleRemoveReaction = (commentId: string, emoji: string) => {
 <template>
   <Popover v-model:open="isOpen">
     <PopoverTrigger class="absolute -top-1 right-0 z-0 flex w-full justify-end">
-      <Button
-        variant="link"
-        size="xs"
-        :class="{ 'text-primary': unresolvedCount > 0 }"
+      <button
+        :class="[unresolvedCount > 0 ? 'text-warning' : 'text-muted']"
+        class="inline-flex items-center gap-1 rounded-sm p-1 text-xs font-semibold hover:bg-secondary/80"
       >
-        <Icon name="lucide:message-square" />
-        <span v-if="unresolvedCount > 0">
-          {{ unresolvedCount }}
+        <Icon
+          name="lucide:message-square"
+          size="14"
+        />
+        <span v-if="totalComments > 0">
+          {{ totalComments }}
         </span>
-      </Button>
+      </button>
     </PopoverTrigger>
     <PopoverContent
       class="w-md max-w-full"

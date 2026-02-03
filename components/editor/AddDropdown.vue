@@ -6,9 +6,11 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
+import BlockWithTemplatesSubmenu from './BlockWithTemplatesSubmenu.vue'
+import IconName from '~/components/ui/IconName.vue'
 
 const emit = defineEmits<{
-  (e: 'select', blockSlug: string): void
+  (e: 'select', blockSlug: string, templateId?: string | null): void
   (e: 'paste'): void
 }>()
 
@@ -29,27 +31,28 @@ const possibleBlocks = computed(() => {
     const isValidType = ['nestable', 'universal'].includes(block.type)
     const hasValidTag =
       !props.item.restrict_blocks ||
-      props.item.tag_whitelist?.length == 0 ||
+      props.item.tag_whitelist?.length === 0 ||
       !block.tags?.length ||
       block.tags.some((t) => props.item.tag_whitelist.includes(t))
     const isWhitelisted =
       !props.item.restrict_blocks ||
-      props.item.block_whitelist?.length == 0 ||
+      props.item.block_whitelist?.length === 0 ||
       props.item.block_whitelist?.includes(block.slug)
 
     return isValidType && hasValidTag && isWhitelisted
   })
 })
 
-const select = (blockSlug: string) => {
-  emit('select', blockSlug)
+const select = (blockSlug: string, templateId?: string | null) => {
+  emit('select', blockSlug, templateId)
+  isOpen.value = false
 }
 
-const autofill = (newIsOpen) => {
+const autofill = (newIsOpen: boolean) => {
   if (newIsOpen && possibleBlocks.value.length === 1) {
-    type.value = possibleBlocks.value[0].slug
-    select(type.value)
-    isOpen.value = false
+    const block = possibleBlocks.value[0]
+    type.value = block.slug
+    select(block.slug)
   }
 }
 </script>
@@ -80,21 +83,28 @@ const autofill = (newIsOpen) => {
     </div>
     <DropdownMenuContent>
       <DropdownMenuRadioGroup v-model="type">
-        <DropdownMenuItem
+        <template
           v-for="block in possibleBlocks"
           :key="block.slug"
-          :value="block.slug"
-          @select="select(block.slug)"
         >
-          <Icon
-            v-if="block.icon"
-            :name="`lucide:${block.icon}`"
-            :style="{ color: block.color }"
+          <BlockWithTemplatesSubmenu
+            v-if="block.templates_count && block.templates_count > 0"
+            :block="block"
+            :space-id="spaceId"
+            @select="select(block.slug, $event)"
           />
-          <div class="truncate pl-2">
-            {{ block.name }}
-          </div>
-        </DropdownMenuItem>
+          <DropdownMenuItem
+            v-else
+            :value="block.slug"
+            @select="select(block.slug)"
+          >
+            <IconName
+              :icon="block.icon"
+              :color="block.color"
+              :name="block.name"
+            />
+          </DropdownMenuItem>
+        </template>
       </DropdownMenuRadioGroup>
     </DropdownMenuContent>
   </DropdownMenu>

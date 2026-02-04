@@ -28,6 +28,7 @@ function selectIcon(icon: string) {
       <Button
         variant="outline"
         type="button"
+        class="px-3!"
         :disabled="disabled"
       >
         <Icon
@@ -54,12 +55,12 @@ function selectIcon(icon: string) {
               class="py-1.5 text-xs font-semibold tracking-widest text-muted uppercase select-none"
               >{{ group.title }}
             </ListboxGroupLabel>
-            <div class="grid grid-cols-8">
+            <div class="grid grid-cols-9">
               <ListboxItem
                 v-for="option in group.items"
                 :key="option"
                 :value="option"
-                class="p-1.5"
+                class="rounded-md p-1.5 hover:bg-background"
                 :title="option"
               >
                 <Icon :name="`lucide:${option}`" />

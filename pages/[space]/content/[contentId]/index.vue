@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core'
+import { useRouteQuery } from '@vueuse/router'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import BlockTemplateCreateDialog from '~/components/blocks/BlockTemplateCreateDialog.vue'
 import ContentInfo from '~/components/ContentInfo.vue'
@@ -67,6 +68,8 @@ const tabs = [
   { value: 'info', icon: 'lucide:badge-info', label: t('labels.content.tabs.info') },
   { value: 'comments', icon: 'lucide:message-square', label: t('labels.content.tabs.comments') },
 ]
+
+const mode = useRouteQuery('mode', 'edit') as Ref<'edit' | 'config' | 'info' | 'comments'>
 
 useSeoMeta({
   title: computed(() => {
@@ -177,8 +180,8 @@ provide('updateHoverItem', (id: string) => {
       @update-field="updateField"
     />
     <TabsRoot
+      v-model="mode"
       :class="['flex', showPreview ? 'w-2xl' : 'w-full']"
-      default-value="edit"
       orientation="vertical"
     >
       <ScrollArea

@@ -14,12 +14,12 @@ import { SimpleTooltip } from '../ui/tooltip'
 
 const props = defineProps<{
   content: ContentResource
-  showPreviewToggle: boolean
+  showPreviewToggle?: boolean
 }>()
 
 const spaceId = inject('spaceId')
 
-const { useContentMenuQuery, buildBreadcrumbs } = useContentMenu(spaceId.value)
+const { useContentMenuQuery, buildBreadcrumbs } = useContentMenu(spaceId)
 const { data: contentMenu } = useContentMenuQuery()
 const { settings } = useSpaceSettings(spaceId)
 const breadcrumbs = computed(

@@ -74,7 +74,6 @@ useSeoMeta({
     </div>
   </div>
 
-  <!-- Teleport content header to AppHeader slot -->
   <Teleport to="#appHeader">
     <ContentHeader
       v-if="content"
@@ -82,7 +81,6 @@ useSeoMeta({
     />
   </Teleport>
 
-  <!-- Teleport actions to appHeaderActions slot -->
   <Teleport to="#appHeaderActions">
     <div
       v-if="content"

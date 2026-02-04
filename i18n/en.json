@@ -644,7 +644,17 @@
       "editRelease": "Edit Release",
       "deleteConfirmTitle": "Delete Release",
       "deleteConfirmMessage": "Are you sure you want to delete the release \"{name}\"?",
-      "noReleases": "No releases yet. Create your first release to get started."
+      "noReleases": "No releases yet. Create your first release to get started.",
+      "fields": {
+        "name": "Release Name",
+        "state": "State",
+        "publishAt": "Scheduled at",
+        "createdAt": "Created",
+        "updatedAt": "Updated",
+        "versionsCount": "No items|1 item|{count} items"
+      },
+      "scheduled": "Scheduled",
+      "unscheduledReleases": "Unscheduled Releases"
     },
     "redirects": {
       "title": "Redirects",
@@ -1019,6 +1029,21 @@
     "system": "System",
     "yes": "Yes",
     "no": "No",
+    "filters": {
+      "operators": {
+        "like": "Contains",
+        "^like": "Starts with",
+        "like$": "Ends with",
+        "eq": "Equals",
+        "ne": "Not equals",
+        "gt": "Greater than",
+        "gte": "Greater than or equal to",
+        "lt": "Less than",
+        "lte": "Less than or equal to",
+        "in": "In",
+        "nin": "Not in"
+      }
+    },
     "emojis": {
       "groups": {
         "favorites": "Frequently used",
@@ -1213,6 +1238,7 @@
     "add": "Add",
     "remove": "Remove",
     "edit": "Edit",
+    "commit": "Commit",
     "view": "View",
     "createFolder": "Create Folder",
     "copy": "Copy",

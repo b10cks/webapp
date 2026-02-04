@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CreateReleaseDialog from '~/components/releases/CreateReleaseDialog.vue'
-import ReleasesTable from '~/components/releases/ReleasesTable.vue'
+import ReleaseList from '~/components/releases/ReleaseList.vue'
 import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import type { CreateReleaseRequest, Release } from '~/types/releases'
@@ -130,7 +130,7 @@ const isLoading = computed(
             </div>
           </div>
 
-          <ReleasesTable
+          <ReleaseList
             :is-loading="isLoading"
             @commit="(release) => handleCommit(release.id)"
             @cancel="handleCancelClick"

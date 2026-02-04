@@ -55,7 +55,7 @@ const releaseStates = computed(() => [
 const releaseFilters = computed(() => [
   {
     id: 'name',
-    label: 'Release Name',
+    label: $t('labels.releases.fields.name'),
     operators: [
       { value: 'like', label: 'Contains' },
       { value: '^like', label: 'Starts with' },
@@ -65,7 +65,7 @@ const releaseFilters = computed(() => [
   },
   {
     id: 'scheduled',
-    label: 'Scheduled',
+    label: $t('labels.releases.fields.publishAt'),
     items: [
       { value: 'true', label: 'Yes' },
       { value: 'false', label: 'No' },
@@ -73,7 +73,7 @@ const releaseFilters = computed(() => [
   },
   {
     id: 'state',
-    label: 'State',
+    label: $t('labels.releases.fields.state'),
     operators: [{ value: 'eq', label: 'Equals' }],
     items: releaseStates.value,
   },
@@ -81,9 +81,9 @@ const releaseFilters = computed(() => [
 
 const sortOptions = [
   { value: 'name', label: 'Name' },
-  { value: 'publish_at', label: 'Publish Date' },
-  { value: 'created_at', label: 'Created' },
-  { value: 'updated_at', label: 'Updated' },
+  { value: 'publish_at', label: $t('labels.releases.fields.publishAt') },
+  { value: 'created_at', label: $t('labels.releases.fields.createdAt') },
+  { value: 'updated_at', label: $t('labels.releases.fields.updatedAt') },
 ]
 
 const filters = ref<Record<string, unknown>>({})

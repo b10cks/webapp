@@ -11,6 +11,7 @@ const spaceId = computed(() => route.params.space as string)
 const {
   useReleasesQuery,
   useCreateReleaseMutation,
+  useUpdateReleaseMutation,
   useCommitReleaseMutation,
   useCancelReleaseMutation,
   useDeleteReleaseMutation,
@@ -19,6 +20,7 @@ const {
 
 const { data: releases, isLoading: isLoadingReleases } = useReleasesQuery()
 const { mutate: createRelease, isPending: isCreating } = useCreateReleaseMutation()
+const { mutate: updateRelease, isPending: isUpdating } = useUpdateReleaseMutation()
 const { mutate: commitRelease, isPending: isCommitting } = useCommitReleaseMutation()
 const { mutate: cancelRelease, isPending: isCancelling } = useCancelReleaseMutation()
 const { mutate: deleteRelease, isPending: isDeleting } = useDeleteReleaseMutation()
@@ -27,6 +29,9 @@ const { mutate: publishRelease, isPending: isPublishing } = usePublishReleaseMut
 const { alert } = useAlertDialog()
 
 const createDialogOpen = ref(false)
+const editDialogOpen = ref(false)
+const releaseToEdit = ref<Release | null>(null)
+const isUpdatingRelease = ref(false)
 
 const handleCreateRelease = (payload: CreateReleaseRequest) => {
   createRelease(payload, {
@@ -34,6 +39,23 @@ const handleCreateRelease = (payload: CreateReleaseRequest) => {
       createDialogOpen.value = false
     },
   })
+}
+
+const handleUpdateRelease = (id: string, payload: CreateReleaseRequest) => {
+  isUpdatingRelease.value = true
+  updateRelease(
+    { id, payload },
+    {
+      onSuccess: () => {
+        isUpdatingRelease.value = false
+        editDialogOpen.value = false
+        releaseToEdit.value = null
+      },
+      onError: () => {
+        isUpdatingRelease.value = false
+      },
+    }
+  )
 }
 
 const handleCommit = (releaseId: string) => {
@@ -76,6 +98,7 @@ const isLoading = computed(
   () =>
     isLoadingReleases.value ||
     isCreating.value ||
+    isUpdating.value ||
     isCommitting.value ||
     isCancelling.value ||
     isDeleting.value ||
@@ -97,26 +120,27 @@ const isLoading = computed(
             </div>
             <div>
               <Button
-                variant="accent"
+                variant="primary"
                 @click="createDialogOpen = true"
                 :disabled="isLoading"
               >
-                <Icon
-                  name="lucide:plus"
-                  class="mr-2"
-                />
-                Create Release
+                <Icon name="lucide:plus" />
+                {{ $t('labels.releases.createRelease') }}
               </Button>
             </div>
           </div>
 
           <ReleasesTable
-            :releases="releases || []"
             :is-loading="isLoading"
             @commit="(release) => handleCommit(release.id)"
             @cancel="handleCancelClick"
             @delete="handleDeleteClick"
-            @edit="(release) => {}"
+            @edit="
+              (release) => {
+                releaseToEdit.value = release
+                editDialogOpen.value = true
+              }
+            "
           />
         </div>
       </div>
@@ -127,6 +151,21 @@ const isLoading = computed(
       :loading="isCreating"
       @update:open="createDialogOpen = $event"
       @create="handleCreateRelease"
+    />
+
+    <CreateReleaseDialog
+      :open="editDialogOpen"
+      :loading="isUpdatingRelease"
+      :release-to-edit="releaseToEdit"
+      @update:open="
+        (newOpen) => {
+          editDialogOpen.value = newOpen
+          if (!newOpen) {
+            releaseToEdit.value = null
+          }
+        }
+      "
+      @update="handleUpdateRelease"
     />
   </div>
 </template>

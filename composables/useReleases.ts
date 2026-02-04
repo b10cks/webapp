@@ -22,8 +22,7 @@ export function useReleases(spaceId: MaybeRef<string>) {
     return useQuery({
       queryKey: computed(() => queryKeys.releases(spaceId).list(params)),
       queryFn: async () => {
-        const response = await spaceAPI.value.releases.index(toValue(params))
-        return response.data
+        return await spaceAPI.value.releases.index(toValue(params))
       },
     })
   }

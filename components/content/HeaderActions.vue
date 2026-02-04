@@ -121,7 +121,7 @@ const switchVersions = () => {
 }
 
 const assignedRelease = computed(() =>
-  (releases.value || []).find((release) => release.id === contentModel.value.releaseId)
+  (releases.value.data || []).find((release) => release.id === contentModel.value.releaseId)
 )
 
 const isInScheduledRelease = computed(
@@ -131,7 +131,7 @@ const isInScheduledRelease = computed(
 const hasLocalization = computed(() => space.value?.settings?.languages?.length > 0)
 
 const draftReleases = computed(() =>
-  (releases.value || []).filter((release) => getReleaseState(release) === 'draft')
+  (releases.value.data || []).filter((release) => getReleaseState(release) === 'draft')
 )
 
 const canPublishToRelease = computed(

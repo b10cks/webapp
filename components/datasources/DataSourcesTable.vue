@@ -125,7 +125,7 @@ const confirmDelete = async () => {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-2">
     <div class="ml-auto flex items-center gap-2">
       <SearchFilter
         v-model="filters"

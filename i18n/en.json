@@ -644,7 +644,7 @@
       "editRelease": "Edit Release",
       "deleteConfirmTitle": "Delete Release",
       "deleteConfirmMessage": "Are you sure you want to delete the release \"{name}\"?",
-      "noReleases": "No releases found"
+      "noReleases": "No releases yet. Create your first release to get started."
     },
     "redirects": {
       "title": "Redirects",

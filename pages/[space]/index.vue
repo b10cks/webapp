@@ -3,8 +3,13 @@ import SpaceDashboard from '~/components/SpaceDashboard.vue'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 
 const { useCurrentSpaceQuery } = useSpaces()
+const { t } = useI18n()
 const { data: currentSpace } = useCurrentSpaceQuery()
 const { formatDateTime } = useFormat()
+
+useSeoMeta({
+  title: computed(() => t('dashboard.title')),
+})
 </script>
 
 <template>

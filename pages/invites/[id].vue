@@ -6,12 +6,17 @@ import { InviteStatus } from '~/types/invites.d'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const inviteId = computed(() => route.params.id as string)
 
 const { selectTeam } = useGlobalTeam()
 const { usePublicInviteQuery, useAcceptInviteMutation } = useInvites()
 const { data: invite, isPending, error } = usePublicInviteQuery(inviteId)
 const { mutate: acceptInvite, isPending: isAccepting } = useAcceptInviteMutation()
+
+useSeoMeta({
+  title: computed(() => t('labels.invites.page.title')),
+})
 
 const token = computed(() => route.query.token as string)
 

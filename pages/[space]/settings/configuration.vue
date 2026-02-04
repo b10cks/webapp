@@ -7,10 +7,15 @@ import I18nSettings from '~/components/space-settings/I18nSettings.vue'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 
 const route = useRoute()
+const { t } = useI18n()
 const spaceId = route.params.space as string
 
 const { useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(spaceId)
+
+useSeoMeta({
+  title: computed(() => t('labels.settings.configuration.title')),
+})
 </script>
 
 <template>

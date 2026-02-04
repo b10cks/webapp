@@ -4,6 +4,11 @@ import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 
 const { useMyInvitesQuery } = useInvites()
+const { t } = useI18n()
+
+useSeoMeta({
+  title: computed(() => t('labels.account.invites.title')),
+})
 
 const currentPage = ref(1)
 const perPage = ref(25)

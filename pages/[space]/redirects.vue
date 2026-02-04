@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import ContentHeader from '~/components/ui/ContentHeader.vue'
 // import RedirectDialog from '~/components/redirects/RedirectDialog.vue'
 import RedirectsTable from '~/components/redirects/RedirectsTable.vue'
 import { Button } from '~/components/ui/button'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
 
 const route = useRoute()
+const { t } = useI18n()
 const spaceId = computed(() => route.params.space as string)
+
+useSeoMeta({
+  title: computed(() => t('labels.redirects.title')),
+})
 </script>
 
 <template>

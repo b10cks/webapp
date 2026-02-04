@@ -6,7 +6,12 @@ import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
 const { login, error, requiresTwoFactor, verifyTwoFactorAndLogin, cancelTwoFactorLogin } = useAuth()
+const { t } = useI18n()
 const route = useRoute()
+
+useSeoMeta({
+  title: computed(() => t('labels.login.pageTitle')),
+})
 
 const formData = ref<{
   email: string

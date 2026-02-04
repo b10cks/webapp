@@ -4,8 +4,8 @@ import BackupCodesDisplay from '~/components/BackupCodesDisplay.vue'
 import TwoFactorSetupDialog from '~/components/TwoFactorSetupDialog.vue'
 import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
+import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { InputField } from '~/components/ui/form'
 import { useAlertDialog } from '~/composables/useAlertDialog'
@@ -15,6 +15,11 @@ const { mutate: changePassword, isPending: isChanging } = useChangePasswordMutat
 const { useTwoFactorStatusQuery, useTwoFactorDisableMutation, useRegenerateBackupCodesMutation } =
   useTwoFactor()
 const { alert } = useAlertDialog()
+const { t } = useI18n()
+
+useSeoMeta({
+  title: computed(() => t('labels.account.security.title')),
+})
 
 const { data: twoFactorStatus } = useTwoFactorStatusQuery()
 const { mutate: disable2FA, isPending: isDisabling } = useTwoFactorDisableMutation()

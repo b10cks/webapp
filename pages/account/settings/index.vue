@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
+import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
 import { FormField, InputField } from '~/components/ui/form'
 import { useFileUpload } from '~/composables/useFileUpload'
 
 const { useUserQuery, useUpdateUserMutation, useUploadAvatarMutation } = useUser()
+const { t } = useI18n()
 const { data: user } = useUserQuery()
 const { mutate: updateUser, isPending: isUpdating } = useUpdateUserMutation()
 const { mutate: uploadAvatar, isPending: isUploadingAvatar } = useUploadAvatarMutation()
+
+useSeoMeta({
+  title: computed(() => t('labels.account.profile.title')),
+})
 
 const firstname = ref('')
 const lastname = ref('')

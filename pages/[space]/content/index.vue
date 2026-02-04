@@ -2,9 +2,14 @@
 import ContentsIcon from '~/assets/images/contents.svg?component'
 
 const route = useRoute()
+const { t } = useI18n()
 
 const { useContentMenuQuery, getRootItems } = useContentMenu(route.params.space as string)
 const { data } = useContentMenuQuery()
+
+useSeoMeta({
+  title: computed(() => t('labels.contents.title')),
+})
 
 const rootItems = computed(() => getRootItems(data.value) || [])
 </script>

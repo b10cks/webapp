@@ -8,6 +8,8 @@ import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Input } from '~/components/ui/input'
 import SortSelect from '~/components/ui/SortSelect.vue'
 import { Switch } from '~/components/ui/switch'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import {
   Table,
   TableBody,
@@ -17,8 +19,6 @@ import {
   TableRow,
   TableSortableHead,
 } from '~/components/ui/table'
-import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Textarea } from '~/components/ui/textarea'
 import { useDataEntries } from '~/composables/useDataEntries'
@@ -31,12 +31,16 @@ import type {
 
 const route = useRoute()
 const { alert } = useAlertDialog()
-const { $t } = useI18n()
+const { $t, t } = useI18n()
 const spaceId = computed(() => route.params.space as string)
 const dataSourceId = computed(() => route.params.dataSourceId as string)
 
 const { useDataSourceQuery } = useDataSources(spaceId)
 const { data: dataSource, isLoading: isLoadingDataSource } = useDataSourceQuery(dataSourceId)
+
+useSeoMeta({
+  title: computed(() => dataSource.value?.name || $t('labels.datasets.title')),
+})
 
 const {
   useDataEntriesQuery,

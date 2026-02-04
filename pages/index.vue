@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { NuxtLink } from '#components'
 import { useClipboard } from '@vueuse/core'
 import type { Translation } from 'nuxt-i18n-micro-types/src'
 import { SelectTrigger } from 'reka-ui'
+import { NuxtLink } from '#components'
 import type { SpaceQueryParams } from '~/api/resources/spaces'
 import AppHeader from '~/components/AppHeader.vue'
 import TeamSelector from '~/components/TeamSelector.vue'
@@ -19,13 +19,21 @@ import {
 import { Select, SelectContent, SelectItem } from '~/components/ui/select'
 import { useAlertDialog } from '~/composables/useAlertDialog'
 
-const { $t } = useI18n()
+const { $t, t } = useI18n()
 const { useSpacesQuery, useArchiveSpaceMutation } = useSpaces()
 const { formatRelativeTime } = useFormat()
 const route = useRoute()
 const router = useRouter()
-
 const { selectedTeam } = useGlobalTeam()
+
+useSeoMeta({
+  title: computed(() => {
+    const title = t('labels.spaces.title')
+    const team = selectedTeam.value?.name
+    return team ? `${team}: ${title}` : title
+  }),
+})
+
 const sort = computed({
   get() {
     return (route.query.sort as string) || '-updated_at'

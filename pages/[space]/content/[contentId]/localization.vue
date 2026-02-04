@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { ContentResource } from '~/types/contents'
 import HeaderActions from '~/components/content/HeaderActions.vue'
+import FlattenedLocalization from '~/components/localization/FlattendeLocalization.vue'
+import { Input } from '~/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -8,32 +9,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import FlattenedLocalization from '~/components/localization/FlattendeLocalization.vue'
-import { Input } from '~/components/ui/input'
+import type { ContentResource } from '~/types/contents'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const spaceId = computed<string>(() => route.params.space as string)
 const contentId = computed<string>(() => route.params.contentId as string)
 
 const { useSpaceQuery } = useSpaces()
 const { data: currentSpace } = useSpaceQuery(spaceId.value)
-
-const availableLanguages = computed(() => currentSpace.value?.settings?.languages ?? [])
-
-const language = computed({
-  get: () => (route.hash ? route.hash.substring(1) : availableLanguages.value[0]?.code),
-  set: (l) => {
-    if (l) {
-      router.replace({ ...route, hash: `#${l}` })
-    } else {
-      router.replace({ ...route, hash: '' })
-    }
-  },
-})
-
 const { useContentQuery } = useContent(spaceId)
 const { data: originalContent } = useContentQuery(contentId)
+
+useSeoMeta({
+  title: computed(() => originalContent.value?.name || t('labels.contents.localization.pageTitle')),
+})
 
 const translatableId = computed(() => {
   return originalContent.value?.i18n_translations?.find(

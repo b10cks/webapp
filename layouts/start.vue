@@ -10,6 +10,12 @@ if (import.meta.client) {
     })
   }
 }
+
+useSeoMeta({
+  titleTemplate: (title) => {
+    return [title, 'b10cks'].filter((e) => e).join(' – ')
+  },
+})
 </script>
 
 <template>

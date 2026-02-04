@@ -6,7 +6,12 @@ import ContentHeader from '~/components/ui/ContentHeader.vue'
 import type { CreateReleaseRequest, Release } from '~/types/releases'
 
 const route = useRoute()
+const { t } = useI18n()
 const spaceId = computed(() => route.params.space as string)
+
+useSeoMeta({
+  title: computed(() => t('labels.releases.title')),
+})
 
 const {
   useReleasesQuery,

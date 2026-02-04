@@ -12,8 +12,12 @@ const spaceId = computed(() => route.params.space as string)
 const createDialogOpen = ref(false)
 const editingDataSource = ref<DataSourceResource | null>(null)
 
-const { $t } = useI18n()
+const { $t, t } = useI18n()
 const { alert } = useAlertDialog()
+
+useSeoMeta({
+  title: computed(() => t('labels.datasets.title')),
+})
 
 const { useDeleteDataSourceMutation } = useDataSources(spaceId)
 const { mutate: deleteDataSource } = useDeleteDataSourceMutation()

@@ -5,11 +5,16 @@ import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 
 const route = useRoute()
+const { t } = useI18n()
 const spaceId = route.params.space as string
 
 const { useBackupsQuery, useCreateBackupMutation } = useBackups(spaceId)
 const { data: backups } = useBackupsQuery()
 const { mutate: createBackup, isPending: isCreating } = useCreateBackupMutation()
+
+useSeoMeta({
+  title: computed(() => t('labels.settings.backups.title')),
+})
 
 const isCreateDialogOpen = ref(false)
 

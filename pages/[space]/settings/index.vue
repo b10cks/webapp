@@ -1,21 +1,33 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
-import DangerZone from '~/components/space-settings/DangerZone.vue'
-import ContentSettings from '~/components/space-settings/ContentSettings.vue'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
-import { FormField, InputField } from '~/components/ui/form'
-import { Button } from '~/components/ui/button'
 import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
+import ContentSettings from '~/components/space-settings/ContentSettings.vue'
+import DangerZone from '~/components/space-settings/DangerZone.vue'
+import { Button } from '~/components/ui/button'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
+import { FormField, InputField } from '~/components/ui/form'
 import { useFileUpload } from '~/composables/useFileUpload'
 
 const route = useRoute()
+const { t } = useI18n()
 const spaceId = route.params.space as string
 
 const { useUpdateSpaceMutation, useSpaceQuery } = useSpaces()
 const { data: space } = useSpaceQuery(spaceId)
 const { mutate: updateSpace, isPending: isUpdating } = useUpdateSpaceMutation()
+
+useSeoMeta({
+  title: computed(() => t('labels.settings.general.title')),
+})
 
 const spaceName = ref('')
 const spaceIcon = ref<string | null>(null)
@@ -24,20 +36,24 @@ const uploadProgress = ref(0)
 const { upload, isUploading: fileUploadIsUploading, error } = useFileUpload()
 
 // Set initial values when space data is loaded
-watch(() => space.value, (newSpace) => {
-  if (newSpace) {
-    spaceName.value = newSpace.name
-    spaceIcon.value = newSpace.icon || null
-  }
-}, { immediate: true })
+watch(
+  () => space.value,
+  (newSpace) => {
+    if (newSpace) {
+      spaceName.value = newSpace.name
+      spaceIcon.value = newSpace.icon || null
+    }
+  },
+  { immediate: true }
+)
 
 const handleSave = async () => {
   try {
     await updateSpace({
       id: spaceId,
       payload: {
-        name: spaceName.value
-      }
+        name: spaceName.value,
+      },
     })
     toast.success('Space settings saved successfully')
   } catch (_) {
@@ -133,7 +149,7 @@ const onDragOverIcon = (e: DragEvent) => {
             >
               <div
                 v-if="space?.icon"
-                class="h-16 w-16 rounded-sm flex items-center justify-center bg-surface cursor-pointer"
+                class="flex h-16 w-16 cursor-pointer items-center justify-center rounded-sm bg-surface"
                 @click="handleUploadIcon"
               >
                 <NuxtImg
@@ -144,7 +160,7 @@ const onDragOverIcon = (e: DragEvent) => {
               </div>
               <div
                 v-else
-                class="h-16 w-16 rounded-md border border-dashed border-muted flex items-center justify-center bg-surface cursor-pointer"
+                class="flex h-16 w-16 cursor-pointer items-center justify-center rounded-md border border-dashed border-muted bg-surface"
                 @click="handleUploadIcon"
               >
                 <Icon
@@ -158,11 +174,12 @@ const onDragOverIcon = (e: DragEvent) => {
                 accept="image/*"
                 class="hidden"
                 @change="onIconInputChange"
-              >
+              />
               <span
                 v-if="fileUploadIsUploading"
-                class="ml-2 text-muted text-xs"
-              >{{ uploadProgress }}%</span>
+                class="ml-2 text-xs text-muted"
+                >{{ uploadProgress }}%</span
+              >
             </div>
           </FormField>
         </div>

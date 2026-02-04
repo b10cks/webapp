@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { Badge, type BadgeVariants } from '~/components/ui/badge'
 import { Label } from 'reka-ui'
+import AppHeader from '~/components/AppHeader.vue'
+import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
+import { Badge, type BadgeVariants } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
 import {
   Card,
   CardContent,
@@ -9,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import { InputField } from '~/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import {
   Stepper,
@@ -19,14 +24,14 @@ import {
   StepperTitle,
   StepperTrigger,
 } from '~/components/ui/stepper'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
-import { Button } from '~/components/ui/button'
-import { InputField } from '~/components/ui/form'
-import AppHeader from '~/components/AppHeader.vue'
-import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
 
 const { useCreateSpaceMutation } = useSpaces()
 const { mutate: createSpace, isPending } = useCreateSpaceMutation()
+const { t } = useI18n()
+
+useSeoMeta({
+  title: computed(() => t('labels.spaces.newPageTitle')),
+})
 
 type Plan = {
   id: string

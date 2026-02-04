@@ -5,7 +5,12 @@ import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 
 const route = useRoute()
+const { t } = useI18n()
 const spaceId = computed(() => route.params.space as string)
+
+useSeoMeta({
+  title: computed(() => t('labels.settings.people.title')),
+})
 
 const { useSpaceInvitesQuery, useDeleteSpaceInviteMutation, useResendSpaceInviteMutation } =
   useInvites()

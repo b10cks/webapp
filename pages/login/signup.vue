@@ -10,6 +10,11 @@ const route = useRoute()
 const router = useRouter()
 const { register } = useAuth()
 const { usePublicInviteQuery } = useInvites()
+const { t } = useI18n()
+
+useSeoMeta({
+  title: computed(() => t('labels.login.signupPageTitle')),
+})
 
 const inviteId = computed(() => route.query.invite_id as string | undefined)
 const inviteToken = computed(() => route.query.invite_token as string | undefined)

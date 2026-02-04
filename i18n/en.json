@@ -2,6 +2,9 @@
   "labels": {
     "loading": "Just a moment...",
     "login": {
+      "pageTitle": "Sign in to b10cks",
+      "signupPageTitle": "Create your b10cks account",
+      "passwordPageTitle": "Reset your password",
       "header": "Welcome back to b10cks",
       "fields": {
         "firstnameLabel": "First Name",
@@ -282,6 +285,7 @@
       "liveEdit": "Live Edit available"
     },
     "assets": {
+      "pageTitle": "Asset Library",
       "addAsset": "Add Asset",
       "addAssetDescription": "Select an asset from your library",
       "allAssets": "All Assets",
@@ -371,6 +375,7 @@
         }
       },
       "localization": {
+        "pageTitle": "Localization",
         "label": "Localization",
         "language": "Language",
         "notAvailable": "This space has no localization configured.",
@@ -627,7 +632,8 @@
       }
     },
     "spaces": {
-      "title": "Spaces"
+      "title": "Spaces",
+      "newPageTitle": "Create a new space"
     },
     "sort": {
       "nameAsc": "Name (A-Z)",

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,16 +10,18 @@ import {
 } from '~/components/ui/breadcrumb'
 import type { ContentResource } from '~/types/contents'
 import { NuxtLink } from '#components'
+import { SimpleTooltip } from '../ui/tooltip'
 
 const props = defineProps<{
   content: ContentResource
+  showPreviewToggle: boolean
 }>()
 
 const spaceId = inject('spaceId')
 
 const { useContentMenuQuery, buildBreadcrumbs } = useContentMenu(spaceId.value)
 const { data: contentMenu } = useContentMenuQuery()
-const { settings } = useSpaceSettings(spaceId.value)
+const { settings } = useSpaceSettings(spaceId)
 const breadcrumbs = computed(
   () => props.content && buildBreadcrumbs(contentMenu.value, props.content.id)
 )
@@ -41,6 +44,10 @@ const status = computed<{ color: string; label: string }>(() => {
     label: 'draft',
   }
 })
+
+const togglePreview = () => {
+  settings.value.content.showPreview = !settings.value.content.showPreview
+}
 </script>
 
 <template>
@@ -84,5 +91,22 @@ const status = computed<{ color: string; label: string }>(() => {
         </Breadcrumb>
       </div>
     </div>
+
+    <SimpleTooltip
+      :tooltip="
+        settings.content.showPreview
+          ? $t('actions.content.modes.toField')
+          : $t('actions.content.modes.toVisual')
+      "
+    >
+      <Button
+        v-if="showPreviewToggle"
+        variant="ghost"
+        size="toolbar"
+        @click="togglePreview()"
+      >
+        <Icon :name="settings.content.showPreview ? 'lucide:eye' : 'lucide:eye-off'" />
+      </Button>
+    </SimpleTooltip>
   </div>
 </template>

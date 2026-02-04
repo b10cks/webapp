@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { useStorage } from '@vueuse/core'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
+import BlockTemplateCreateDialog from '~/components/blocks/BlockTemplateCreateDialog.vue'
+import ContentInfo from '~/components/ContentInfo.vue'
+import ContentSettings from '~/components/ContentSettings.vue'
 import CommentsSidebar from '~/components/comments/CommentsSidebar.vue'
 import ContentHeader from '~/components/content/ContentHeader.vue'
 import HeaderActions from '~/components/content/HeaderActions.vue'
-import ContentInfo from '~/components/ContentInfo.vue'
-import ContentSettings from '~/components/ContentSettings.vue'
 import EditorComponent from '~/components/editor/EditorComponent.vue'
 import Preview from '~/components/Preview.vue'
 import { Button } from '~/components/ui/button'
@@ -12,13 +14,14 @@ import { ScrollArea } from '~/components/ui/scroll-area'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 import { useGlobalClipboard } from '~/composables/useGlobalClipboard'
 import type { ContentResource } from '~/types/contents'
-import BlockTemplateCreateDialog from '~/components/blocks/BlockTemplateCreateDialog.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const spaceId = computed<string>(() => route.params.space as string)
 const contentId = computed<string>(() => route.params.contentId as string)
 
+const { settings } = useSpaceSettings(spaceId.value)
 const { hasClipboardItem, clearClipboard } = useGlobalClipboard()
 
 const { useContentQuery } = useContent(spaceId)
@@ -26,6 +29,9 @@ const { data: originalContent } = useContentQuery(contentId)
 
 const { useCommentsQuery } = useComments(spaceId, contentId)
 const { data: comments } = useCommentsQuery()
+
+const { useSpaceQuery } = useSpaces()
+const { data: spaceData } = useSpaceQuery(spaceId.value)
 
 const content = ref<ContentResource | null>(null)
 watch(
@@ -56,13 +62,12 @@ const handleNavigate = (itemId: string | null) => {
 const previewRef = useTemplateRef('previewRef')
 
 const tabs = [
-  { value: 'edit', icon: 'lucide:pencil', label: 'Edit' },
-  { value: 'config', icon: 'lucide:wrench', label: 'Config' },
-  { value: 'info', icon: 'lucide:badge-info', label: 'Info' },
-  { value: 'comments', icon: 'lucide:message-square', label: 'Comments' },
+  { value: 'edit', icon: 'lucide:pencil', label: t('labels.content.tabs.edit') },
+  { value: 'config', icon: 'lucide:wrench', label: t('labels.content.tabs.config') },
+  { value: 'info', icon: 'lucide:badge-info', label: t('labels.content.tabs.info') },
+  { value: 'comments', icon: 'lucide:message-square', label: t('labels.content.tabs.comments') },
 ]
 
-// Update page title
 useSeoMeta({
   title: computed(() => {
     return content.value?.name
@@ -80,6 +85,23 @@ const rootBlock = computed(() => {
   return null
 })
 
+const isPreviewDisabled = computed(() => {
+  if (!spaceData.value) return false
+
+  return (
+    spaceData.value.settings?.visual_editor === false || content.value?.settings?.disablePreview
+  )
+})
+
+const showPreview = computed(() => {
+  return !isPreviewDisabled.value && settings.value.content.showPreview
+})
+
+const isVisualEditorAvailable = computed(() => {
+  if (!spaceData.value) return false
+  return spaceData.value.settings?.visual_editor !== false
+})
+
 const updatePreviewItem = (item: Record<string, unknown>) => {
   if (previewRef.value) {
     previewRef.value.updateItem({ ...item })
@@ -92,7 +114,6 @@ const findNestedObjectById = (data: unknown[], id: string): Record<string, unkno
       const obj = item as Record<string, unknown>
       if (obj.id === id) return obj
 
-      // Search in nested arrays
       for (const key in obj) {
         if (Object.hasOwn(obj, key) && Array.isArray(obj[key])) {
           const result = findNestedObjectById(obj[key] as unknown[], id)
@@ -120,7 +141,6 @@ const template = reactive({
 })
 
 const handleTemplateTrigger = (blockId: string, content: object) => {
-  console.log('Creating template for block:', blockId, 'with content:', content)
   template.blockId = blockId
   template.content = content
   template.isOpen = true
@@ -146,6 +166,7 @@ provide('updateHoverItem', (id: string) => {
 <template>
   <div class="flex grow">
     <Preview
+      v-if="showPreview"
       ref="previewRef"
       :full-slug="content?.full_slug"
       :content-id="content?.id"
@@ -156,17 +177,20 @@ provide('updateHoverItem', (id: string) => {
       @update-field="updateField"
     />
     <TabsRoot
-      class="flex w-2xl"
+      :class="['flex', showPreview ? 'w-2xl' : 'w-full']"
       default-value="edit"
       orientation="vertical"
     >
       <ScrollArea
         v-if="content"
-        class="max-h-[calc(100svh-3.5rem)] grow overflow-y-scroll"
+        :class="[
+          'grow overflow-y-auto',
+          showPreview ? 'max-h-[calc(100svh-3.5rem)]' : 'h-[calc(100svh-3.5rem)] bg-background',
+        ]"
       >
         <TabsContent
           value="edit"
-          class="p-4 select-none"
+          :class="['p-4', showPreview ? '' : 'mx-auto max-w-3xl']"
         >
           <EditorComponent
             v-model="content.content"
@@ -186,24 +210,24 @@ provide('updateHoverItem', (id: string) => {
             @click="clearClipboard"
           >
             <Icon name="lucide:trash-2" />
-            <span>Clear Clipboard</span>
+            <span>{{ t('actions.clearClipboard') }}</span>
           </Button>
         </TabsContent>
         <TabsContent
           value="info"
-          class="p-4"
+          :class="['p-4', showPreview ? '' : 'mx-auto max-w-3xl']"
         >
           <ContentInfo :content="content" />
         </TabsContent>
         <TabsContent
           value="config"
-          class="p-4"
+          :class="['p-4', showPreview ? '' : 'mx-auto max-w-3xl']"
         >
           <ContentSettings v-model="content" />
         </TabsContent>
         <TabsContent
           value="comments"
-          class="p-4"
+          :class="['p-4', showPreview ? '' : 'mx-auto max-w-3xl']"
         >
           <CommentsSidebar
             :content-id="content.id"
@@ -251,6 +275,7 @@ provide('updateHoverItem', (id: string) => {
       <ContentHeader
         v-if="content"
         :content="content"
+        :show-preview-toggle="!isPreviewDisabled"
       />
     </Teleport>
 

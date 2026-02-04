@@ -387,6 +387,12 @@
       "settings": {
         "disablePreview": "Disable Preview",
         "disablePreviewDescription": "Disable the preview panel for this content"
+      },
+      "tabs": {
+        "edit": "Edit",
+        "config": "Config",
+        "info": "Info",
+        "comments": "Comments"
       }
     },
     "blocks": {
@@ -1131,7 +1137,11 @@
       "unpublish": "Unpublish",
       "publishWithMessage": "Publish with Message",
       "schedule": "Schedule",
-      "schedulePublish": "Schedule Publish"
+      "schedulePublish": "Schedule Publish",
+      "modes": {
+        "toVisual": "Switch to Visual Editor with Preview",
+        "toField": "Switch to Field Editor"
+      }
     },
     "backups": {
       "create": "Create Backup",
@@ -1211,7 +1221,8 @@
     "invite": "Invite",
     "login": "Login",
     "logout": "Logout",
-    "retry": "Retry"
+    "retry": "Retry",
+    "clearClipboard": "Clear Clipboard"
   },
   "alertDialog": {
     "ok": "OK",

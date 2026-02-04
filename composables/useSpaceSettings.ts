@@ -5,6 +5,7 @@ export default function useSpaceSettings(spaceId: string) {
     content: {
       environment: null,
       treeWidth: 20,
+      showPreview: true,
       history: {
         mode: 'changes',
         panelHeight: 60,

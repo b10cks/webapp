@@ -633,7 +633,29 @@
     },
     "spaces": {
       "title": "Spaces",
-      "newPageTitle": "Create a new space"
+      "newPageTitle": "Create a new space",
+      "newPageDescription": "Create a new content space to organize your content.",
+      "steps": {
+        "plan": {
+          "title": "Plan",
+          "description": "Choose the right plan for the space"
+        },
+        "details": {
+          "title": "Details",
+          "description": "Provide additional details for your space"
+        }
+      },
+      "fields": {
+        "name": "Space Name",
+        "nameDescription": "A friendly name for your content space.",
+        "namePlaceholder": "My awesome space",
+        "slug": "Technical Name (Slug)",
+        "slugDescription": "A unique identifier for your content space.",
+        "slugPlaceholder": "my-awesome-space",
+        "location": "Server Location",
+        "locationDescription": "Where your content space will be hosted. Can be changed later.",
+        "locationPlaceholder": "Choose a location"
+      }
     },
     "sort": {
       "nameAsc": "Name (A-Z)",
@@ -1036,7 +1058,148 @@
       "disableError": "Couldn't disable 2FA. {error}"
     },
     "teams": {
-      "selectPlaceholder": "Select a team..."
+      "selectPlaceholder": "Select a team...",
+      "pageTitle": "Teams",
+      "pageDescription": "Manage your teams and their members",
+      "listTitle": "All Teams",
+      "hierarchyTitle": "Team Hierarchy",
+      "detailTitle": "{name}",
+      "invitesTitle": "Pending Invites",
+      "create": "Create Team",
+      "createTitle": "Create New Team",
+      "createDescription": "Set up a new team to organize your users and spaces",
+      "createButton": "Create Team",
+      "editTitle": "Edit Team",
+      "editDescription": "Update team details and settings",
+      "saveButton": "Save Changes",
+      "backToList": "Back to Teams",
+      "memberCount": "{count} members | {count} member | {count} members",
+      "spaceCount": "{count} spaces | {count} member | {count} members",
+      "notFound": "Team not found",
+      "notFoundDescription": "The team you're looking for doesn't exist or you don't have access to it.",
+      "empty": "No teams found. Create your first team to get started.",
+      "noType": "No type",
+      "noParent": "No parent team",
+      "tabs": {
+        "members": "Members",
+        "invites": "Invites"
+      },
+      "types": {
+        "partner": "Partner",
+        "reseller": "Reseller",
+        "affiliate": "Affiliate"
+      },
+      "fields": {
+        "name": "Team Name",
+        "namePlaceholder": "Enter team name",
+        "description": "Description",
+        "descriptionPlaceholder": "What's this team for?",
+        "type": "Team Type",
+        "typePlaceholder": "Select a type",
+        "parent": "Parent Team",
+        "parentPlaceholder": "Select a parent team",
+        "color": "Team Color",
+        "colorPlaceholder": "#RRGGBB"
+      },
+      "columns": {
+        "name": "Name",
+        "type": "Type",
+        "parent": "Parent",
+        "members": "Members",
+        "spaces": "Spaces",
+        "updated": "Last Updated"
+      },
+      "filters": {
+        "name": "Name",
+        "type": "Type"
+      },
+      "operators": {
+        "contains": "Contains",
+        "startsWith": "Starts with",
+        "endsWith": "Ends with",
+        "equals": "Equals"
+      },
+      "sort": {
+        "name": "Name",
+        "created_at": "Created At",
+        "updated_at": "Updated At"
+      },
+      "deleteConfirm": {
+        "title": "Delete Team",
+        "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+        "confirmLabel": "Delete",
+        "bulkTitle": "Delete Multiple Teams",
+        "bulkMessage": "Are you sure you want to delete {count} teams? This action cannot be undone.",
+        "bulkConfirmLabel": "Delete ({count})"
+      },
+      "selection": {
+        "selected": "{count} selected",
+        "clear": "Clear selection"
+      },
+      "actions": {
+        "delete": "Delete ({count})"
+      },
+      "tooltip": {
+        "edit": "Edit team",
+        "delete": "Delete team"
+      }
+    },
+    "teamMembers": {
+      "title": "Team Members",
+      "add": "Add Member",
+      "addTitle": "Add Team Member",
+      "addDescription": "Add an existing user to this team",
+      "addButton": "Add Member",
+      "empty": "No members found. Add members to get started.",
+      "columns": {
+        "member": "Member",
+        "email": "Email",
+        "role": "Role",
+        "joined": "Joined"
+      },
+      "filters": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role"
+      },
+      "operators": {
+        "contains": "Contains",
+        "startsWith": "Starts with",
+        "endsWith": "Ends with",
+        "equals": "Equals"
+      },
+      "sort": {
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "email": "Email",
+        "created_at": "Joined At",
+        "last_login_at": "Last Login"
+      },
+      "fields": {
+        "userId": "User ID",
+        "userIdPlaceholder": "Enter user ID",
+        "role": "Role",
+        "rolePlaceholder": "Select a role"
+      },
+      "removeConfirm": {
+        "title": "Remove Member",
+        "message": "Are you sure you want to remove {firstname} {lastname} from this team?",
+        "confirmLabel": "Remove",
+        "bulkTitle": "Remove Multiple Members",
+        "bulkMessage": "Are you sure you want to remove {count} members from this team?",
+        "bulkConfirmLabel": "Remove ({count})"
+      },
+      "selection": {
+        "selected": "{count} selected",
+        "clear": "Clear selection"
+      },
+      "actions": {
+        "remove": "Remove ({count})"
+      },
+      "tooltip": {
+        "editRole": "Change role",
+        "remove": "Remove from team"
+      }
     },
     "fields": {
       "createdAt": "Created at",
@@ -1251,7 +1414,11 @@
       "delete": "Delete space",
       "edit": "Edit space",
       "save": "Save space",
-      "switch": "Switch space"
+      "switch": "Switch space",
+      "new": {
+        "select": "select {name}",
+        "continueWith": "Continue with {name}"
+      }
     },
     "saveChanges": "Save Changes",
     "close": "Close",
@@ -1264,6 +1431,8 @@
     "createFolder": "Create Folder",
     "copy": "Copy",
     "delete": "Delete",
+    "next": "Next",
+    "continue": "Continue",
     "send": "Send",
     "invite": "Invite",
     "login": "Login",

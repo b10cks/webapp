@@ -23,8 +23,8 @@ const selectedLocation = computed(() =>
 <template>
   <FormField
     name="location"
-    label="Server Location"
-    description="Where your content will be hosted. Can't be changed later."
+    :label="$t('labels.spaces.fields.location')"
+    :description="$t('labels.spaces.fields.locationDescription')"
   >
     <Select
       v-model="selectedLocationId"
@@ -34,7 +34,7 @@ const selectedLocation = computed(() =>
         id="server-location"
         class="w-full"
       >
-        <SelectValue placeholder="Select a location">
+        <SelectValue :placeholder="$t('labels.spaces.fields.locationPlaceholder')">
           <div class="flex items-center gap-2">
             <Icon :name="selectedLocation?.icon" />
             <span>{{ selectedLocation?.name }}</span>

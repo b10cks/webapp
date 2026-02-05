@@ -158,7 +158,11 @@ const formatLastUpdated = (space: SpaceResource) => {
         <template #headerActions>
           <div class="flex items-center gap-3">
             <template v-if="selectedTeam">
-              <Button size="sm">
+              <Button
+                size="sm"
+                :as="NuxtLink"
+                :to="`/teams/${selectedTeam.id}`"
+              >
                 <Icon name="lucide:users" />
                 <span>{{ selectedTeam.user_count }}</span>
               </Button>
@@ -208,7 +212,7 @@ const formatLastUpdated = (space: SpaceResource) => {
             </div>
           </div>
         </aside>
-        <main class="content-grid">
+        <main class="content-grid mx-auto">
           <div class="flex flex-col gap-8">
             <ContentHeader :header="(selectedTeam?.name ?? '') + ' ' + $t('labels.spaces.title')">
               <Select v-model="sort">

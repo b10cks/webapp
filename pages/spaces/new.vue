@@ -158,12 +158,10 @@ const spaceSlug = ref('')
 const serverLocation = ref('eu')
 
 const steps = computed(() => [
-  { step: 1, title: 'Plan', icon: 'lucide:land-plot', description: 'Select a plan for the space' },
+  { step: 'plan', icon: 'lucide:land-plot' },
   {
-    step: 2,
-    title: 'Details',
+    step: 'details',
     icon: 'lucide:settings-2',
-    description: 'Enter details of your space',
     disabled: !selectedPlan.value,
   },
 ])
@@ -220,17 +218,17 @@ const handleBack = () => {
         <main class="content-grid py-6">
           <div class="content-narrow grid gap-6">
             <ContentHeader
-              header="Create a new space"
-              description="Set up your content management space in just a few steps"
+              :header="$t('labels.spaces.newPageTitle')"
+              :description="$t('labels.spaces.newPageDescription')"
             />
             <Stepper
               v-model="step"
               class="flex w-full items-start justify-center"
             >
               <StepperItem
-                v-for="item in steps"
+                v-for="(item, i) in steps"
                 :key="item.step"
-                :step="item.step"
+                :step="i + 1"
                 :disabled="item?.disabled"
               >
                 <StepperTrigger>
@@ -238,8 +236,10 @@ const handleBack = () => {
                     <Icon :name="item.icon" />
                   </StepperIndicator>
                   <div class="flex flex-col">
-                    <StepperTitle>{{ item.title }}</StepperTitle>
-                    <StepperDescription>{{ item.description }}</StepperDescription>
+                    <StepperTitle>{{ $t(`labels.spaces.steps.${item.step}.title`) }}</StepperTitle>
+                    <StepperDescription>{{
+                      $t(`labels.spaces.steps.${item.step}.description`)
+                    }}</StepperDescription>
                   </div>
                 </StepperTrigger>
                 <StepperSeparator
@@ -325,9 +325,12 @@ const handleBack = () => {
                         ]"
                       >
                         {{
-                          selectedPlan === plan.id
-                            ? `Continue with ${plan.name}`
-                            : plan.buttonText || `Select ${plan.name}`
+                          $t(
+                            selectedPlan === plan.id
+                              ? 'actions.spaces.new.continueWith'
+                              : 'actions.spaces.new.select',
+                            plan
+                          )
                         }}
                       </Label>
                     </CardFooter>
@@ -344,20 +347,20 @@ const handleBack = () => {
                 <InputField
                   v-model="spaceName"
                   name="name"
-                  label="Space Name"
-                  placeholder="My Awesome Space"
+                  :label="$t('labels.spaces.fields.name')"
+                  :placeholder="$t('labels.spaces.fields.namePlaceholder')"
                   required
-                  description="A friendly name for your content space"
+                  :description="$t('labels.spaces.fields.nameDescription')"
                   :autofocus="true"
                   @input="handleNameChange"
                 />
                 <InputField
                   v-model="spaceSlug"
                   name="slug"
-                  label="Space Slug"
+                  :label="$t('labels.spaces.fields.slug')"
                   placeholder="my-awesome-space"
                   required
-                  :description="`Used in URLs and API calls (e.g., api.cms.com/${spaceSlug || 'my-awesome-space'})`"
+                  :description="$t('labels.spaces.fields.slugDescription')"
                 />
                 <ServerLocationSelect
                   v-model="serverLocation"
@@ -371,7 +374,7 @@ const handleBack = () => {
                 :disabled="step === 1"
                 @click="handleBack"
               >
-                Back
+                {{ $t('actions.back') }}
               </Button>
               <Button
                 variant="primary"
@@ -382,11 +385,8 @@ const handleBack = () => {
                 @click="handleNext"
               >
                 <template v-if="step < 2">
-                  Next
-                  <Icon
-                    name="lucide:chevron-right"
-                    class="ml-2 h-4 w-4"
-                  />
+                  {{ $t('actions.next') }}
+                  <Icon name="lucide:chevron-right" />
                 </template>
                 <template v-else>
                   <Icon

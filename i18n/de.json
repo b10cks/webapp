@@ -631,7 +631,29 @@
     },
     "spaces": {
       "title": "Spaces",
-      "newPageTitle": "Erstelle einen neuen Space"
+      "newPageTitle": "Erstelle einen neuen Space",
+      "newPageDescription": "Erstelle einen neuen Content Space, um deine Inhalte zu organisieren.",
+      "steps": {
+        "plan": {
+          "title": "Plan",
+          "description": "Wähle den richtigen Plan für den Space"
+        },
+        "details": {
+          "title": "Details",
+          "description": "Weitere Details für deinen Space"
+        }
+      },
+      "fields": {
+        "name": "Space Name",
+        "nameDescription": "Ein netter Name für deinen Content Space.",
+        "namePlaceholder": "Mein space",
+        "slug": "Technischer Name (Slug)",
+        "slugDescription": "Ein eindeutiger Name für deinen Content Space.",
+        "slugPlaceholder": "my-awesome-space",
+        "location": "Server Location",
+        "locationDescription": "Wo dein Content Space gehostet wird. Kann später geändert werden.",
+        "locationPlaceholder": "us-east-1"
+      }
     },
     "sort": {
       "nameAsc": "Name (A-Z)",
@@ -1034,7 +1056,148 @@
       "disableError": "Konnte 2FA nicht deaktivieren. {error}"
     },
     "teams": {
-      "selectPlaceholder": "Wähle ein Team..."
+      "selectPlaceholder": "Wähle ein Team...",
+      "pageTitle": "Teams",
+      "pageDescription": "Verwalte deine Teams und deren Mitglieder",
+      "listTitle": "Alle Teams",
+      "hierarchyTitle": "Team-Hierarchie",
+      "detailTitle": "{name}",
+      "invitesTitle": "Ausstehende Einladungen",
+      "create": "Team erstellen",
+      "createTitle": "Neues Team erstellen",
+      "createDescription": "Richte ein neues Team ein, um deine Benutzer und Spaces zu organisieren",
+      "createButton": "Team erstellen",
+      "editTitle": "Team bearbeiten",
+      "editDescription": "Aktualisiere Team-Details und Einstellungen",
+      "saveButton": "Änderungen speichern",
+      "backToList": "Zurück zu Teams",
+      "memberCount": "{count} Mitglieder | {count} Mitglied | {count} Mitglieder",
+      "spaceCount": "{count} Spaces | {count} Space | {count} Spaces",
+      "notFound": "Team nicht gefunden",
+      "notFoundDescription": "Das gesuchte Team existiert nicht oder du hast keinen Zugriff darauf.",
+      "empty": "Keine Teams gefunden. Erstelle dein erstes Team, um loszulegen.",
+      "noType": "Kein Typ",
+      "noParent": "Kein übergeordnetes Team",
+      "tabs": {
+        "members": "Mitglieder",
+        "invites": "Einladungen"
+      },
+      "types": {
+        "partner": "Partner",
+        "reseller": "Reseller",
+        "affiliate": "Affiliate"
+      },
+      "fields": {
+        "name": "Team-Name",
+        "namePlaceholder": "Gib einen Team-Namen ein",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Wofür ist dieses Team?",
+        "type": "Team-Typ",
+        "typePlaceholder": "Wähle einen Typ",
+        "parent": "Übergeordnetes Team",
+        "parentPlaceholder": "Wähle ein übergeordnetes Team",
+        "color": "Team-Farbe",
+        "colorPlaceholder": "#RRGGBB"
+      },
+      "columns": {
+        "name": "Name",
+        "type": "Typ",
+        "parent": "Übergeordnet",
+        "members": "Mitglieder",
+        "spaces": "Spaces",
+        "updated": "Zuletzt aktualisiert"
+      },
+      "filters": {
+        "name": "Name",
+        "type": "Typ"
+      },
+      "operators": {
+        "contains": "Enthält",
+        "startsWith": "Beginnt mit",
+        "endsWith": "Endet mit",
+        "equals": "Ist gleich"
+      },
+      "sort": {
+        "name": "Name",
+        "created_at": "Erstellt am",
+        "updated_at": "Aktualisiert am"
+      },
+      "deleteConfirm": {
+        "title": "Team löschen",
+        "message": "Bist du sicher, dass du \"{name}\" löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "confirmLabel": "Löschen",
+        "bulkTitle": "Mehrere Teams löschen",
+        "bulkMessage": "Bist du sicher, dass du {count} Teams löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "bulkConfirmLabel": "Löschen ({count})"
+      },
+      "selection": {
+        "selected": "{count} ausgewählt",
+        "clear": "Auswahl aufheben"
+      },
+      "actions": {
+        "delete": "Löschen ({count})"
+      },
+      "tooltip": {
+        "edit": "Team bearbeiten",
+        "delete": "Team löschen"
+      }
+    },
+    "teamMembers": {
+      "title": "Team-Mitglieder",
+      "add": "Mitglied hinzufügen",
+      "addTitle": "Team-Mitglied hinzufügen",
+      "addDescription": "Füge einen bestehenden Benutzer diesem Team hinzu",
+      "addButton": "Mitglied hinzufügen",
+      "empty": "Keine Mitglieder gefunden. Füge Mitglieder hinzu, um loszulegen.",
+      "columns": {
+        "member": "Mitglied",
+        "email": "E-Mail",
+        "role": "Rolle",
+        "joined": "Beigetreten"
+      },
+      "filters": {
+        "name": "Name",
+        "email": "E-Mail",
+        "role": "Rolle"
+      },
+      "operators": {
+        "contains": "Enthält",
+        "startsWith": "Beginnt mit",
+        "endsWith": "Endet mit",
+        "equals": "Ist gleich"
+      },
+      "sort": {
+        "firstname": "Vorname",
+        "lastname": "Nachname",
+        "email": "E-Mail",
+        "created_at": "Beitrittsdatum",
+        "last_login_at": "Letzter Login"
+      },
+      "fields": {
+        "userId": "Benutzer-ID",
+        "userIdPlaceholder": "Gib die Benutzer-ID ein",
+        "role": "Rolle",
+        "rolePlaceholder": "Wähle eine Rolle"
+      },
+      "removeConfirm": {
+        "title": "Mitglied entfernen",
+        "message": "Bist du sicher, dass du {firstname} {lastname} aus diesem Team entfernen möchtest?",
+        "confirmLabel": "Entfernen",
+        "bulkTitle": "Mehrere Mitglieder entfernen",
+        "bulkMessage": "Bist du sicher, dass du {count} Mitglieder aus diesem Team entfernen möchtest?",
+        "bulkConfirmLabel": "Entfernen ({count})"
+      },
+      "selection": {
+        "selected": "{count} ausgewählt",
+        "clear": "Auswahl aufheben"
+      },
+      "actions": {
+        "remove": "Entfernen ({count})"
+      },
+      "tooltip": {
+        "editRole": "Rolle ändern",
+        "remove": "Aus Team entfernen"
+      }
     },
     "fields": {
       "createdAt": "Erstellt am",
@@ -1249,7 +1412,11 @@
       "delete": "Space löschen",
       "edit": "Space bearbeiten",
       "save": "Space speichern",
-      "switch": "Space wechseln"
+      "switch": "Space wechseln",
+      "new": {
+        "select": "{name} auswählen",
+        "continueWith": "Fortsetzen mit {name}"
+      }
     },
     "saveChanges": "Änderungen speichern",
     "close": "Schließen",
@@ -1262,6 +1429,8 @@
     "createFolder": "Ordner erstellen",
     "copy": "Kopieren",
     "delete": "Löschen",
+    "next": "Weiter",
+    "continue": "Fortsetzen",
     "send": "Senden",
     "invite": "Einladen",
     "login": "Anmelden",

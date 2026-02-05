@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import Markdown from '~/components/Markdown.vue'
 import GradientText from '~/components/ui/GradientText.vue'
+
+import GithubLogo from '~/assets/images/partners/github.svg?component'
+import YoutubeLogo from '~/assets/images/partners/youtube.svg?component'
 </script>
 
 <template>
@@ -22,10 +25,16 @@ import GradientText from '~/components/ui/GradientText.vue'
           class="prose ul-checked text-foreground"
           :content="$t('labels.login.marketing.description')"
         />
-        <Markdown
-          class="text-sm text-foreground"
-          :content="$t('labels.login.marketing.asFeatured')"
-        />
+        <div class="space-y-4">
+          <Markdown
+            class="mt-8 text-sm font-medium text-foreground"
+            :content="$t('labels.login.marketing.asFeatured')"
+          />
+          <div class="flex items-center gap-4 text-muted/50">
+            <GithubLogo class="h-5 w-auto" />
+            <YoutubeLogo class="h-5 w-auto" />
+          </div>
+        </div>
       </div>
       <div />
     </div>

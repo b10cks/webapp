@@ -958,6 +958,21 @@
           "passwordChanged": "Password changed successfully",
           "passwordChangeFailed": "Failed to change password: {error}"
         }
+      },
+      "themes": {
+        "title": "Themes",
+        "description": "Manage your preferred theme.",
+        "darkMode": "Dark Mode",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "settings": {
+        "localization": "Localization",
+        "localizationDescription": "Manage your language preference.",
+        "language": "Language",
+        "languageDescription": "Select your preferred language for the interface.",
+        "selectLanguage": "Select a language"
       }
     },
     "twoFactor": {

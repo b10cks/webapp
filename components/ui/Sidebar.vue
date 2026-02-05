@@ -6,6 +6,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { Switch } from '~/components/ui/switch'
@@ -13,6 +18,7 @@ import { SimpleTooltip } from '~/components/ui/tooltip'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
+const { handleUpdateLanguage } = useUserSettings()
 
 const { user, logout } = useAuth()
 
@@ -35,6 +41,10 @@ const buildLink = (name: string) => ({
     space: spaceId.value,
   },
 })
+
+const handleLanguageChange = (lang: string) => {
+  handleUpdateLanguage(lang)
+}
 </script>
 
 <template>
@@ -78,7 +88,7 @@ const buildLink = (name: string) => ({
             <DropdownMenuItem disabled>{{ user.email }}</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem @select="toggleDark()">
-              <span>{{ 'Dark mode' }}</span>
+              <span>{{ $t('labels.account.themes.darkMode') }}</span>
               <Switch
                 :model-value="isDark"
                 class="ml-auto"
@@ -97,20 +107,36 @@ const buildLink = (name: string) => ({
                 </template>
               </Switch>
             </DropdownMenuItem>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Icon name="lucide:languages" />
+                <span>{{ $t('labels.account.settings.language') }}</span>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent
+                side="right"
+                align="start"
+                class="min-w-40"
+              >
+                <DropdownMenuRadioGroup :model-value="$getLocale()">
+                  <DropdownMenuRadioItem
+                    v-for="loc in $getLocales()"
+                    :key="loc.code"
+                    :value="loc.code"
+                    @select="handleLanguageChange(loc.code)"
+                  >
+                    <span>{{ loc.name }}</span>
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
             <DropdownMenuItem @click="navigateTo('/account/settings')">
-              <span>Settings</span>
-              <Icon
-                class="ml-auto"
-                name="lucide:cog"
-              />
+              <Icon name="lucide:cog" />
+              <span>{{ $t('actions.user.account') }}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem @select="logout()">
-              <span>Logout</span>
-              <Icon
-                class="ml-auto"
-                name="lucide:log-out"
-              />
+              <Icon name="lucide:log-out" />
+              <span>{{ $t('actions.logout') }}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

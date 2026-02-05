@@ -1,17 +1,21 @@
 import dayjs from 'dayjs'
+import 'dayjs/locale/de'
 import Calendar from 'dayjs/plugin/calendar'
 import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import UpdateLocale from 'dayjs/plugin/updateLocale'
 
 export default function useFormat() {
+  const { getLocale } = useI18n()
+  const locale = ref(getLocale())
+
   dayjs.extend(LocalizedFormat)
   dayjs.extend(RelativeTime)
   dayjs.extend(Calendar)
   dayjs.extend(UpdateLocale)
 
   // Configure calendar display options
-  dayjs.updateLocale('en', {
+  dayjs.updateLocale(locale.value, {
     calendar: {
       lastDay: '[Yesterday at] LT',
       sameDay: '[Today at] LT',
@@ -21,9 +25,6 @@ export default function useFormat() {
       sameElse: 'LL',
     },
   })
-
-  const { getLocale } = useI18n()
-  const locale = ref(getLocale())
 
   function formatDateTime(date: string | Date | number, format: string = 'LLL') {
     return dayjs(date).locale(locale.value).format(format)

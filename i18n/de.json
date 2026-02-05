@@ -100,7 +100,7 @@
         "active": "Aktiv",
         "activeDescription": "Stelle diesen Datensatz über die API zur Verfügung.",
         "createdAt": "Erstellt",
-        "updatedAt": "Zuletzt geändert",
+        "updatedAt": "Geändert",
         "actions": "Aktionen"
       },
       "status": {
@@ -338,7 +338,7 @@
       "addDetailedDescription": "Füge eine detaillierte Beschreibung hinzu",
       "size": "Größe",
       "createdAt": "Hochgeladen am",
-      "updatedAt": "Zuletzt geändert",
+      "updatedAt": "Geändert",
       "unknown": "Unbekannt",
       "replaceMedia": "Medien ersetzen",
       "finish": "Fertig"
@@ -350,7 +350,7 @@
         "type": "Typ",
         "firstPublishedAt": "Erstmals veröffentlicht am",
         "publishedAt": "Veröffentlicht am",
-        "updatedAt": "Zuletzt aktualisiert",
+        "updatedAt": "Geändert",
         "createdAt": "Erstellt am",
         "slug": "Slug",
         "block": "Block",
@@ -443,7 +443,7 @@
         "maxPlaceholder": "z.B. 5",
         "maxDescription": "Leer lassen für unbegrenzt.",
         "createdAt": "Erstellt am",
-        "updatedAt": "Zuletzt aktualisiert",
+        "updatedAt": "Geändert",
         "date": {
           "format": "Datumsformat",
           "formatDescription": "Wie sollen Daten angezeigt und gespeichert werden?",
@@ -554,7 +554,7 @@
       "deleteTitle": "Diesen Tag löschen?",
       "deleteConfirmation": "Lösche \"{name}\"? Das betrifft die Blocks nicht – entfernt nur den Tag.",
       "noTags": "Noch keine Tags. Erstelle einen, um deine Blocks zu organisieren.",
-      "updatedAt": "Zuletzt aktualisiert",
+      "updatedAt": "Geändert",
       "blocks_count": "Blocks",
       "fields": {
         "name": "Tag-Name",
@@ -956,6 +956,21 @@
           "passwordChanged": "Passwort erfolgreich geändert",
           "passwordChangeFailed": "Fehler beim Ändern des Passworts: {error}"
         }
+      },
+      "themes": {
+        "title": "Themes",
+        "description": "Manage your preferred theme.",
+        "darkMode": "Dark Mode",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "settings": {
+        "localization": "Lokalisierung",
+        "localizationDescription": "Verwalte deine Spracheinstellung.",
+        "language": "Sprache",
+        "languageDescription": "Wähle deine bevorzugte Sprache für die Benutzeroberfläche.",
+        "selectLanguage": "Wähle eine Sprache"
       }
     },
     "twoFactor": {
@@ -1023,8 +1038,8 @@
     },
     "fields": {
       "createdAt": "Erstellt am",
-      "updatedAt": "Zuletzt aktualisiert am",
-      "lastUpdated": "Zuletzt aktualisiert {timeAgo}"
+      "updatedAt": "Aktualisiert am",
+      "lastUpdated": "Aktualisiert {timeAgo}"
     },
     "sortBy": "Sortiere nach",
     "selectionCount": "Habe {count} Elemente ausgewählt",

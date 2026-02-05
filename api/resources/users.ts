@@ -6,6 +6,9 @@ import { BaseResource } from './base-resource'
 export interface UpdateUserPayload {
   firstname?: string
   lastname?: string
+  settings?: {
+    languageIso?: string
+  }
 }
 
 export interface ChangePasswordPayload {
@@ -36,10 +39,14 @@ export class Users extends BaseResource<User, never, UpdateUserPayload, never> {
     const formData = new FormData()
     formData.append('avatar', file)
 
-    return this.client.post<ApiResponse<UploadAvatarResponse>>(`${this.basePath}/me/avatar`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+    return this.client.post<ApiResponse<UploadAvatarResponse>>(
+      `${this.basePath}/me/avatar`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
   }
 }

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
-import { FormField, InputField } from '~/components/ui/form'
+import { SelectField, FormField, InputField } from '~/components/ui/form'
 import { useFileUpload } from '~/composables/useFileUpload'
 
 const { useUserQuery, useUpdateUserMutation, useUploadAvatarMutation } = useUser()
-const { t } = useI18n()
+const { t, locales } = useI18n()
 const { data: user } = useUserQuery()
 const { mutate: updateUser, isPending: isUpdating } = useUpdateUserMutation()
 const { mutate: uploadAvatar, isPending: isUploadingAvatar } = useUploadAvatarMutation()
+const { isUpdating: isUpdatingSettings, handleUpdateLanguage } = useUserSettings(user)
 
 useSeoMeta({
   title: computed(() => t('labels.account.profile.title')),
@@ -40,6 +40,10 @@ const handleSave = async () => {
     firstname: firstname.value,
     lastname: lastname.value,
   })
+}
+
+const onLanguageChange = async (value: string) => {
+  await handleUpdateLanguage(value)
 }
 
 const handleAvatarFile = async (file: File) => {
@@ -204,6 +208,25 @@ const onDragOverAvatar = (e: DragEvent) => {
         />
       </CardContent>
     </Card>
-    <Card> </Card>
+    <Card
+      v-if="user"
+      variant="outline"
+    >
+      <CardHeaderCombined
+        :title="$t('labels.account.settings.localization')"
+        :description="$t('labels.account.settings.localizationDescription')"
+      />
+      <CardContent class="grid gap-6">
+        <SelectField
+          :label="$t('labels.account.settings.language')"
+          name="language"
+          :description="$t('labels.account.settings.languageDescription')"
+          :placeholder="$t('labels.account.settings.selectLanguage')"
+          :model-value="$getLocale()"
+          @update:model-value="onLanguageChange"
+          :options="$getLocales().map((locale) => ({ label: locale.name, value: locale.code }))"
+        />
+      </CardContent>
+    </Card>
   </div>
 </template>

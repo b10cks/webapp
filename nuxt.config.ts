@@ -155,8 +155,8 @@ export default defineNuxtConfig({
     define: false,
     disablePageLocales: true,
     locales: [
-      { code: 'de', name: 'Deutsch', iso: 'de', file: 'de.json' },
-      { code: 'en', name: 'English', iso: 'en', file: 'en.json' },
+      { code: 'de', name: 'Deutsch', iso: 'de', flag: '🇦🇹', file: 'de.json' },
+      { code: 'en', name: 'English', iso: 'en', flag: '🇺🇸', file: 'en.json' },
     ],
   },
 

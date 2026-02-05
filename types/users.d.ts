@@ -6,4 +6,7 @@ export interface User {
   avatar?: string
   created_at: string
   updated_at: string
+  settings?: {
+    languageIso?: string
+  }
 }

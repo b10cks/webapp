@@ -27,7 +27,7 @@ const forwardedProps = useForwardProps(delegatedProps)
     "
   >
     <RadioGroupIndicator class="flex items-center justify-center">
-      <Icon name="lucide:circle-check" />
+      <Icon name="lucide:check" />
     </RadioGroupIndicator>
   </RadioGroupItem>
 </template>

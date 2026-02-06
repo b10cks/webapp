@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
+import type { HTMLAttributes } from 'vue'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <thead :class="cn('bg-input [&_tr]:border-b [&_tr]:border-b-border', props.class)">
+  <thead :class="cn('bg-elevated [&_tr]:border-b [&_tr]:border-b-secondary', props.class)">
     <slot />
   </thead>
 </template>

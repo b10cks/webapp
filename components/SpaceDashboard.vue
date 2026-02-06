@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
+import { api } from '~/api'
 import StatsCard from '~/components/stats/StatsCard.vue'
-import StatsPieChart from '~/components/stats/StatsPieChart.vue'
 import StatsLineChart from '~/components/stats/StatsLineChart.vue'
 import StatsMultiLineChart from '~/components/stats/StatsMultiLineChart.vue'
-import StatsMultiBarChart from '~/components/stats/StatsMultiBarChart.vue'
-import { api } from '~/api'
+import StatsPieChart from '~/components/stats/StatsPieChart.vue'
+import { SelectField } from './ui/form'
 
 const { formatDuration, formatNumber, formatTrafficSize, formatFileSize } = useFormat()
 const { t } = useI18n()
@@ -187,29 +180,29 @@ onMounted(() => {
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <div class="ml-auto flex space-x-4">
-        <Select v-model="dateRange">
-          <SelectTrigger class="w-36">
-            <SelectValue :placeholder="t('dashboard.filters.date_range') as string" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="last7">{{ t('dashboard.filters.last_7_days') }}</SelectItem>
-            <SelectItem value="last30">{{ t('dashboard.filters.last_30_days') }}</SelectItem>
-            <SelectItem value="last90">{{ t('dashboard.filters.last_90_days') }}</SelectItem>
-            <SelectItem value="thisMonth">{{ t('dashboard.filters.this_month') }}</SelectItem>
-            <SelectItem value="thisYear">{{ t('dashboard.filters.this_year') }}</SelectItem>
-          </SelectContent>
-        </Select>
+        <SelectField
+          name="dateRange"
+          v-model="dateRange"
+          :placeholder="t('dashboard.filters.date_range')"
+          :options="[
+            { value: 'last7', label: t('dashboard.filters.last_7_days') },
+            { value: 'last30', label: t('dashboard.filters.last_30_days') },
+            { value: 'last90', label: t('dashboard.filters.last_90_days') },
+            { value: 'thisMonth', label: t('dashboard.filters.this_month') },
+            { value: 'thisYear', label: t('dashboard.filters.this_year') },
+          ]"
+        />
 
-        <Select v-model="period">
-          <SelectTrigger class="w-36">
-            <SelectValue :placeholder="t('dashboard.filters.period') as string" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="daily">{{ t('dashboard.filters.daily') }}</SelectItem>
-            <SelectItem value="weekly">{{ t('dashboard.filters.weekly') }}</SelectItem>
-            <SelectItem value="monthly">{{ t('dashboard.filters.monthly') }}</SelectItem>
-          </SelectContent>
-        </Select>
+        <SelectField
+          name="period"
+          v-model="period"
+          :placeholder="t('dashboard.filters.period')"
+          :options="[
+            { value: 'daily', label: t('dashboard.filters.daily') },
+            { value: 'weekly', label: t('dashboard.filters.weekly') },
+            { value: 'monthly', label: t('dashboard.filters.monthly') },
+          ]"
+        />
       </div>
     </div>
 
@@ -240,13 +233,15 @@ onMounted(() => {
     </div>
 
     <template v-else>
-      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.content_stats') }}</h2>
+      <h2 class="text-lg font-semibold text-primary">
+        {{ t('dashboard.sections.content_stats') }}
+      </h2>
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           icon="lucide:book-open"
           :title="t('dashboard.cards.total_content')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatNumber(stats.content.count.total) }}
           </div>
           <p class="text-sm text-muted">
@@ -259,7 +254,7 @@ onMounted(() => {
           icon="lucide:images"
           :title="t('dashboard.cards.assets')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatFileSize(stats.assets.storage.total_size) }}
           </div>
           <p class="text-sm text-muted">
@@ -271,7 +266,7 @@ onMounted(() => {
           icon="lucide:blocks"
           :title="t('dashboard.cards.blocks')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatNumber(stats.content.count.blocks) }}
           </div>
         </StatsCard>
@@ -280,7 +275,7 @@ onMounted(() => {
           icon="lucide:database-zap"
           :title="t('dashboard.cards.data_sources')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatNumber(stats.data_sources.data_sources.count.total) }}
           </div>
         </StatsCard>
@@ -289,13 +284,15 @@ onMounted(() => {
           icon="lucide:split"
           :title="t('dashboard.cards.redirects')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatNumber(stats.redirects.count.total) }}
           </div>
         </StatsCard>
       </div>
 
-      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.content_distribution') }}</h2>
+      <h2 class="text-lg font-semibold text-primary">
+        {{ t('dashboard.sections.content_distribution') }}
+      </h2>
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatsPieChart
           :title="t('dashboard.charts.content_by_type')"
@@ -309,13 +306,13 @@ onMounted(() => {
         />
       </div>
 
-      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.usage_stats') }}</h2>
+      <h2 class="text-lg font-semibold text-primary">{{ t('dashboard.sections.usage_stats') }}</h2>
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           icon="lucide:cloud-download"
           :title="t('dashboard.cards.traffic_usage')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatTrafficSize(stats.system.traffic.total_bytes, 'MB') }}
           </div>
           <p class="text-sm text-muted">
@@ -328,7 +325,7 @@ onMounted(() => {
           icon="lucide:server"
           :title="t('dashboard.cards.api_requests')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatNumber(stats.system.api.total_requests) }}
           </div>
           <p class="text-sm text-muted">
@@ -342,13 +339,13 @@ onMounted(() => {
           :title="t('dashboard.cards.avg_response_time')"
           :description="t('dashboard.cards.api_response_time')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatDuration(stats.system.api.avg_response_time_ms) }}
           </div>
         </StatsCard>
       </div>
 
-      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.trends') }}</h2>
+      <h2 class="text-lg font-semibold text-primary">{{ t('dashboard.sections.trends') }}</h2>
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatsLineChart
           :title="t('dashboard.charts.traffic_usage')"
@@ -381,14 +378,14 @@ onMounted(() => {
         />
       </div>
 
-      <h2 class="font-semibold text-primary">{{ t('dashboard.sections.space_stats') }}</h2>
+      <h2 class="text-lg font-semibold text-primary">{{ t('dashboard.sections.space_stats') }}</h2>
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           icon="lucide:users"
           :title="t('dashboard.cards.total_users')"
           :description="formatRoleDistribution(stats.user_activity.role_distribution)"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatNumber(stats.user_activity.total_users) }}
           </div>
         </StatsCard>
@@ -397,7 +394,7 @@ onMounted(() => {
           icon="lucide:globe"
           :title="t('dashboard.cards.languages')"
         >
-          <div class="text-2xl font-bold text-primary">
+          <div class="text-3xl font-bold text-primary">
             {{ formatNumber(Object.keys(stats.content.languages).length) }}
           </div>
         </StatsCard>

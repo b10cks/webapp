@@ -60,7 +60,7 @@ provide('spaceId', spaceId)
             </NuxtLink>
           </nav>
         </aside>
-        <div class="flex-1">
+        <div class="flex-1 pb-6">
           <NuxtPage />
         </div>
       </div>

@@ -116,14 +116,11 @@ const isLoading = computed(
     <NuxtLayout>
       <div class="w-full bg-background">
         <div class="content-grid">
-          <div class="mb-6 flex items-center justify-between">
-            <div>
-              <ContentHeader
-                :header="$t('labels.releases.title')"
-                :description="$t('labels.releases.description')"
-              />
-            </div>
-            <div>
+          <ContentHeader
+            :header="$t('labels.releases.title')"
+            :description="$t('labels.releases.description')"
+          >
+            <template #actions>
               <Button
                 variant="primary"
                 @click="createDialogOpen = true"
@@ -132,8 +129,8 @@ const isLoading = computed(
                 <Icon name="lucide:plus" />
                 {{ $t('labels.releases.createRelease') }}
               </Button>
-            </div>
-          </div>
+            </template>
+          </ContentHeader>
 
           <ReleaseList
             :is-loading="isLoading"

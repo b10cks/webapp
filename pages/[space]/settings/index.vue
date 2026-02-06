@@ -5,7 +5,6 @@ import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
 import ContentSettings from '~/components/space-settings/ContentSettings.vue'
 import DangerZone from '~/components/space-settings/DangerZone.vue'
 import { Button } from '~/components/ui/button'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
 import {
   Card,
   CardContent,
@@ -14,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { FormField, InputField } from '~/components/ui/form'
 import { useFileUpload } from '~/composables/useFileUpload'
 
@@ -112,7 +112,7 @@ const onDragOverIcon = (e: DragEvent) => {
 </script>
 
 <template>
-  <div class="content-grid gap-6 pb-6">
+  <div class="content-grid">
     <ContentHeader
       :header="$t('labels.settings.general.title')"
       :description="$t('labels.settings.general.description')"

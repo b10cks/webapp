@@ -166,7 +166,7 @@ const handleLoad = () => {
   <div class="flex w-full grow flex-col bg-elevated">
     <div
       :class="[
-        'flex grow flex-col bg-elevated',
+        'flex grow flex-col bg-secondary',
         mode === 'mobile' ? 'mx-auto my-4 w-sm overflow-hidden rounded-xl shadow-2xl' : 'w-full',
       ]"
     >

@@ -16,7 +16,7 @@ useSeoMeta({
   <div>
     <NuxtLayout>
       <div class="w-full bg-background">
-        <div class="content-grid">
+        <div class="content-grid pb-6">
           <div v-if="currentSpace">
             <ContentHeader
               :header="currentSpace.name"

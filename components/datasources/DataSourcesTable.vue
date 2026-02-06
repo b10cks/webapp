@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import type { DataSourceResource } from '~/types/data-sources'
-import { useRouter } from 'vue-router'
 import { useClipboard } from '@vueuse/core'
+import { useRouter } from 'vue-router'
+import type { DataSourcesQueryParams } from '~/api/resources/data-sources'
+import DataSourcesIcon from '~/assets/images/datasources.svg?component'
+import SearchFilter from '~/components/SearchFilter.vue'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import SortSelect from '~/components/ui/SortSelect.vue'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import { SimpleTooltip } from '~/components/ui/tooltip'
+import { useDataSources } from '~/composables/useDataSources'
+import type { DataSourceResource } from '~/types/data-sources'
 import {
   Table,
   TableBody,
@@ -11,17 +22,6 @@ import {
   TableRow,
   TableSortableHead,
 } from '/components/ui/table'
-import DataSourcesIcon from '~/assets/images/datasources.svg?component'
-import { Button } from '~/components/ui/button'
-import { Badge } from '~/components/ui/badge'
-import { SimpleTooltip } from '~/components/ui/tooltip'
-import { useDataSources } from '~/composables/useDataSources'
-import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
-import SortSelect from '~/components/ui/SortSelect.vue'
-import SearchFilter from '~/components/SearchFilter.vue'
-import type { DataSourcesQueryParams } from '~/api/resources/data-sources'
-import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
 
 const props = defineProps<{
   spaceId: string
@@ -141,7 +141,7 @@ const confirmDelete = async () => {
         :placeholder="String($t('labels.sortBy'))"
       />
     </div>
-    <div class="rounded-md border border-input">
+    <div class="overflow-hidden rounded-md border border-border">
       <Table>
         <TableHeader>
           <TableRow>

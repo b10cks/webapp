@@ -29,30 +29,27 @@ const handleResendInvite = (inviteId: string) => {
 </script>
 
 <template>
-  <div>
-    <div class="grow bg-background">
-      <div class="content-grid">
-        <ContentHeader header="Invites">
-          <template #actions>
-            <Button
-              variant="primary"
-              @click="inviteDialogOpen = true"
-            >
-              <Icon name="lucide:user-plus" />
-              {{ $t('actions.invite') }}
-            </Button>
-          </template>
-        </ContentHeader>
+  <div class="content-grid">
+    <ContentHeader
+      :header="$t('labels.settings.people.title')"
+      :description="$t('labels.settings.people.description')"
+    >
+      <template #actions>
+        <Button
+          variant="primary"
+          @click="inviteDialogOpen = true"
+        >
+          <Icon name="lucide:user-plus" />
+          {{ $t('actions.invite') }}
+        </Button>
+      </template>
+    </ContentHeader>
 
-        <div class="space-y-6">
-          <SpaceInvitesList
-            :space-id="spaceId"
-            @delete="handleDeleteInvite"
-            @resend="handleResendInvite"
-          />
-        </div>
-      </div>
-    </div>
+    <SpaceInvitesList
+      :space-id="spaceId"
+      @delete="handleDeleteInvite"
+      @resend="handleResendInvite"
+    />
 
     <CreateInviteDialog
       v-model:open="inviteDialogOpen"

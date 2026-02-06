@@ -25,7 +25,7 @@ const handleCreateBackup = (payload: CreateBackupPayload) => {
 </script>
 
 <template>
-  <div class="content-grid gap-6 pb-6">
+  <div class="content-grid">
     <ContentHeader
       :header="$t('labels.backups.title')"
       :description="$t('labels.backups.description')"

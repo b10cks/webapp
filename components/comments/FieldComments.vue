@@ -114,7 +114,7 @@ const handleRemoveReaction = (commentId: string, emoji: string) => {
     <PopoverTrigger class="absolute -top-1 right-0 z-0 flex w-full justify-end">
       <button
         :class="[unresolvedCount > 0 ? 'text-warning' : 'text-muted']"
-        class="inline-flex items-center gap-1 rounded-sm p-1 text-xs font-semibold hover:bg-secondary/80"
+        class="inline-flex cursor-pointer items-center gap-1 rounded-sm p-1 text-xs font-semibold hover:bg-secondary/80"
       >
         <Icon
           name="lucide:message-square"
@@ -133,7 +133,7 @@ const handleRemoveReaction = (commentId: string, emoji: string) => {
     >
       <div class="flex h-160 flex-col">
         <div class="flex items-center justify-between">
-          <h4 class="text-sm font-medium">Field Comments</h4>
+          <h4 class="font-medium">Field Comments</h4>
           <Button
             variant="ghost"
             size="toolbar"

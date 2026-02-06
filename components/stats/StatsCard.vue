@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 
 defineProps<{
   icon?: string
@@ -10,12 +10,12 @@ defineProps<{
 </script>
 
 <template>
-  <Card>
+  <Card class="relative">
     <CardHeader class="flex flex-row items-center justify-between">
       <CardTitle class="text-sm">{{ title }}</CardTitle>
       <Icon
         :name="icon"
-        size="1.25rem"
+        :size="18"
         class="shrink-0 text-muted"
       />
     </CardHeader>

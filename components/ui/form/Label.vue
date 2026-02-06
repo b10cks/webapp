@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <label :class="['text-sm font-semibold text-primary', hideLabel && 'sr-only']">
+  <label :class="['relative z-0 text-sm font-semibold text-primary', hideLabel && 'sr-only']">
     <slot>
       {{ label }}
     </slot>

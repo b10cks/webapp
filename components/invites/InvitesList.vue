@@ -214,8 +214,7 @@ const handleBulkResend = async () => {
 </script>
 
 <template>
-  <div class="space-y-4">
-    <!-- Filters and Sort Controls -->
+  <div class="space-y-2">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex flex-1 flex-col gap-2 sm:flex-row">
         <SearchFilter
@@ -230,8 +229,6 @@ const handleBulkResend = async () => {
         />
       </div>
     </div>
-
-    <!-- Selection and Bulk Actions -->
     <div
       v-if="selectionCount > 0"
       class="flex flex-col gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between"
@@ -273,8 +270,6 @@ const handleBulkResend = async () => {
         </Button>
       </div>
     </div>
-
-    <!-- Invites Table -->
     <div class="rounded-lg border border-input">
       <Table>
         <TableHeader>

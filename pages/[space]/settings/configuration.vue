@@ -19,7 +19,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="content-grid gap-6 pb-6">
+  <div class="content-grid">
     <ContentHeader
       :header="$t('labels.settings.configuration.title')"
       :description="$t('labels.settings.configuration.description')"

@@ -128,6 +128,7 @@ const unresolvedCount = computed(() => {
       <TextField
         name="comment"
         v-model="newCommentBody"
+        @keydown.enter.meta.prevent.stop="handleCreateComment"
         placeholder="Add a comment..."
         :auto-size="100"
       />

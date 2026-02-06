@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { useStorage } from '@vueuse/core'
 import { useRouteQuery } from '@vueuse/router'
+import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import BlockTemplateCreateDialog from '~/components/blocks/BlockTemplateCreateDialog.vue'
-import ContentInfo from '~/components/ContentInfo.vue'
-import ContentSettings from '~/components/ContentSettings.vue'
 import CommentsSidebar from '~/components/comments/CommentsSidebar.vue'
 import ContentHeader from '~/components/content/ContentHeader.vue'
 import HeaderActions from '~/components/content/HeaderActions.vue'
+import ContentInfo from '~/components/ContentInfo.vue'
+import ContentSettings from '~/components/ContentSettings.vue'
 import EditorComponent from '~/components/editor/EditorComponent.vue'
 import Preview from '~/components/Preview.vue'
+import { Badge, type BadgeVariants } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { SimpleTooltip } from '~/components/ui/tooltip'
@@ -62,12 +63,34 @@ const handleNavigate = (itemId: string | null) => {
 
 const previewRef = useTemplateRef('previewRef')
 
-const tabs = [
+type Tab = {
+  value: string
+  icon: string
+  label: string | CleanTranslation
+  badge?: { content: string | number; show: boolean; variant: BadgeVariants['variant'] }
+}
+
+const unresolvedCommentsCount = computed(() => {
+  if (!comments.value) return 0
+  return comments.value.filter((c) => !c.is_resolved).length
+})
+
+const tabs = computed((): Tab[] => [
   { value: 'edit', icon: 'lucide:pencil', label: t('labels.content.tabs.edit') },
   { value: 'config', icon: 'lucide:wrench', label: t('labels.content.tabs.config') },
   { value: 'info', icon: 'lucide:badge-info', label: t('labels.content.tabs.info') },
-  { value: 'comments', icon: 'lucide:message-square', label: t('labels.content.tabs.comments') },
-]
+  {
+    value: 'comments',
+
+    icon: 'lucide:message-square',
+    label: t('labels.content.tabs.comments'),
+    badge: {
+      content: comments.value?.length,
+      show: comments.value?.length > 0,
+      variant: unresolvedCommentsCount.value > 0 ? 'warning' : 'default',
+    },
+  },
+])
 
 const mode = useRouteQuery('mode', 'edit') as Ref<'edit' | 'config' | 'info' | 'comments'>
 
@@ -243,7 +266,7 @@ provide('updateHoverItem', (id: string) => {
         class="grow"
       />
       <TabsList class="flex h-full w-14 shrink-0 flex-col border-l border-l-border p-3 select-none">
-        <div class="flex min-h-0 flex-1 flex-col overflow-auto">
+        <div class="flex min-h-0 flex-1 flex-col">
           <div class="relative flex w-full min-w-0 flex-col gap-2">
             <SimpleTooltip
               v-for="tab in tabs"
@@ -254,12 +277,20 @@ provide('updateHoverItem', (id: string) => {
             >
               <TabsTrigger
                 :value="tab.value"
-                class="flex size-8 items-center justify-center rounded-lg transition-colors duration-200 ease-butter hover:bg-input data-[state=active]:bg-input data-[state=active]:text-primary data-[state=inactive]:cursor-pointer"
+                class="relative flex size-8 items-center justify-center rounded-lg transition-colors duration-200 ease-butter hover:bg-input data-[state=active]:bg-input data-[state=active]:text-primary data-[state=inactive]:cursor-pointer"
               >
                 <Icon
                   :name="tab.icon"
                   size="1.25rem"
                 />
+                <Badge
+                  v-if="tab.badge?.show"
+                  :variant="tab.badge.variant"
+                  size="dot"
+                  class="absolute -top-1 -right-1"
+                >
+                  {{ tab.badge.content }}
+                </Badge>
               </TabsTrigger>
             </SimpleTooltip>
           </div>

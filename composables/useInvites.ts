@@ -18,7 +18,7 @@ export function useInvites() {
         const response = await api.invites.getPublicInvite(toValue(token))
         return response.data
       },
-      enabled: !!token,
+      enabled: computed(() => !!toValue(token)),
     })
   }
 

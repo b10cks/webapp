@@ -11,6 +11,7 @@ import { queryKeys } from './useQueryClient'
 
 export function useSpaces() {
   const { t } = useI18n()
+  const { isAuthenticated } = useAuth()
   const queryClient = useQueryClient()
 
   const useSpacesQuery = (params: MaybeRefOrGetter<SpaceQueryParams>) => {
@@ -23,6 +24,7 @@ export function useSpaces() {
         })
         return response.data
       },
+      enabled: computed(() => !!toValue(isAuthenticated)),
     })
   }
 

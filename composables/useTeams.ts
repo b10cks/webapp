@@ -18,6 +18,7 @@ import { queryKeys } from './useQueryClient'
 export function useTeams() {
   const { t } = useI18n()
   const queryClient = useQueryClient()
+  const { isAuthenticated } = useAuth()
 
   // Teams Queries
   const useTeamsQuery = (params: MaybeRef<TeamsQueryParams> = {}) => {
@@ -30,6 +31,7 @@ export function useTeams() {
         })
         return response.data
       },
+      enabled: computed(() => !!toValue(isAuthenticated)),
     })
   }
 
@@ -40,6 +42,7 @@ export function useTeams() {
         const response = await api.teams.get(toValue(id))
         return response.data
       },
+      enabled: computed(() => !!toValue(isAuthenticated)),
     })
   }
 
@@ -50,6 +53,7 @@ export function useTeams() {
         const response = await api.teams.getHierarchy()
         return response.data
       },
+      enabled: computed(() => !!toValue(isAuthenticated)),
     })
   }
 

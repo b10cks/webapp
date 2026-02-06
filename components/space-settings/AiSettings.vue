@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
 import {
   Card,
   CardContent,
@@ -8,9 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
-import { Switch } from '~/components/ui/switch'
+import { FormField } from '~/components/ui/form'
 import { Progress } from '~/components/ui/progress'
-import { Button } from '~/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -18,8 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import { FormField } from '~/components/ui/form'
-import { Badge } from '~/components/ui/badge'
+import { Switch } from '~/components/ui/switch'
 
 // Types based on the Laravel resource
 interface AiModelResource {
@@ -394,6 +394,7 @@ const formatTags = (tags: string[]) => {
     </CardContent>
     <CardFooter>
       <Button
+        variant="primary"
         :disabled="isUpdating"
         @click="saveSettings"
       >

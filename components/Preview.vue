@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
+import Markdown from '~/components/Markdown.vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -238,9 +239,19 @@ const handleLoad = () => {
         v-else
         class="flex grow items-center justify-center"
       >
-        <p class="text-sm text-muted">
-          {{ $t('messages.preview.noContent') }}
-        </p>
+        <Markdown
+          class="text-sm text-muted"
+          :content="
+            currentSpace?.settings.environments?.length > 0
+              ? $t('messages.preview.noContent')
+              : $t('messages.preview.noEnvironments', {
+                  url: $router.resolve({
+                    name: 'space-settings-configuration',
+                    params: { id: currentSpace?.id },
+                  }).href,
+                })
+          "
+        />
       </div>
     </div>
   </div>

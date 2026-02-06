@@ -1634,7 +1634,8 @@
   },
   "messages": {
     "preview": {
-      "noContent": "No content selected. Select a content item to preview."
+      "noContent": "No content selected. Select a content item to preview.",
+      "noEnvironments": "No environments available. [Setup environments in space settings]({url}) to preview content."
     }
   }
 }

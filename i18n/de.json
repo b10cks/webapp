@@ -1632,7 +1632,8 @@
   },
   "messages": {
     "preview": {
-      "noContent": "Kein Inhalt ausgewählt. Wähle einen Inhalt zur Vorschau."
+      "noContent": "Kein Inhalt ausgewählt. Wähle einen Inhalt zur Vorschau.",
+      "noEnvironments": "Keine Umgebungen verfügbar. Erstelle eine Umgebung in den [Space Einstellungen]({url})."
     }
   }
 }

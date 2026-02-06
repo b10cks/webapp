@@ -1,6 +1,4 @@
-import type { ProviderGetImage } from '@nuxt/image'
-
-import { createOperationsGenerator } from '#image'
+import { createOperationsGenerator, defineProvider } from '@nuxt/image/runtime'
 
 interface IlumTransformations {
   width?: number
@@ -42,30 +40,30 @@ const operationsGenerator = createOperationsGenerator({
   },
 })
 
-export const getImage: ProviderGetImage = (
-  src: string,
-  { modifiers = {}, baseURL = '' }: { modifiers?: IlumModifiers; baseURL?: string } = {}
-) => {
-  const { format, quality, ...transformations } = modifiers
-  const operations = operationsGenerator(transformations as Record<string, never>)
-  let finalPath = src
+export default defineProvider({
+  getImage(
+    src: string,
+    { modifiers = {}, baseURL = '' }: { modifiers?: IlumModifiers; baseURL?: string } = {}
+  ) {
+    const { format, quality, ...transformations } = modifiers
+    const operations = operationsGenerator(transformations as Record<string, never>)
+    let finalPath = src
 
-  if (operations) {
-    finalPath += `/${operations}`
-  }
+    if (operations) {
+      finalPath += `/${operations}`
+    }
 
-  const searchParams = new URLSearchParams()
-  if (format) searchParams.set('format', format)
-  if (quality) searchParams.set('quality', quality.toString())
+    const searchParams = new URLSearchParams()
+    if (format) searchParams.set('format', format)
+    if (quality) searchParams.set('quality', quality.toString())
 
-  const queryString = searchParams.toString()
-  if (queryString) {
-    finalPath += `?${queryString}`
-  }
+    const queryString = searchParams.toString()
+    if (queryString) {
+      finalPath += `?${queryString}`
+    }
 
-  return {
-    url: baseURL + finalPath,
-  }
-}
-
-export default getImage
+    return {
+      url: baseURL + finalPath,
+    }
+  },
+})

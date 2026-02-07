@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import IconGrid from '~/components/ui/IconGrid.vue'
-import ColorSelect from '~/components/ui/ColorSelect.vue'
-import { Input } from '~/components/ui/input'
-import { FormField } from '~/components/ui/form'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+import ColorSelect from '~/components/ui/ColorSelect.vue'
+import { FormField } from '~/components/ui/form'
+import IconGrid from '~/components/ui/IconGrid.vue'
+import { Input } from '~/components/ui/input'
 
 const props = defineProps<{
   modelValue: {
@@ -45,6 +45,7 @@ const update = (key: keyof typeof localValue.value, value: unknown) => {
   <FormField
     :label="label"
     :name="name"
+    v-slot="{ id }"
   >
     <div class="flex gap-2">
       <IconGrid
@@ -58,6 +59,7 @@ const update = (key: keyof typeof localValue.value, value: unknown) => {
         @update:model-value="update('color', $event)"
       />
       <Input
+        :id="id"
         :model-value="localValue.name"
         :disabled="disabled"
         :placeholder="placeholder"

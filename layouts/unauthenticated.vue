@@ -43,7 +43,7 @@ import YoutubeLogo from '~/assets/images/partners/youtube.svg?component'
       <slot />
       <div>
         <Markdown
-          class="max-w-sm text-center text-sm text-balance text-foreground"
+          class="max-w-sm text-center text-xs text-balance text-foreground"
           :content="$t('labels.login.marketing.footer')"
         />
       </div>

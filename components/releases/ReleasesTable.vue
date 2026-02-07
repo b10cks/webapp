@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import ReleasesIcon from '~/assets/images/releases.svg?component'
 import ReleaseBadge from '~/components/releases/ReleaseBadge.vue'
 import SearchFilter from '~/components/SearchFilter.vue'
-import SortSelect from '~/components/ui/SortSelect.vue'
-import ReleasesIcon from '~/assets/images/releases.svg?component'
 import { Button } from '~/components/ui/button'
 import {
   DropdownMenu,
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
+import SortSelect from '~/components/ui/SortSelect.vue'
 import {
   Table,
   TableBody,
@@ -21,8 +21,8 @@ import {
   TableRow,
   TableSortableHead,
 } from '~/components/ui/table'
-import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
 import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
 import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import type { Release } from '~/types/releases'
 
@@ -253,10 +253,7 @@ const handleSort = (column: string) => {
                       variant="ghost"
                       size="icon"
                     >
-                      <Icon
-                        name="lucide:more-horizontal"
-                        class="h-4 w-4"
-                      />
+                      <Icon name="lucide:more-horizontal" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -268,7 +265,7 @@ const handleSort = (column: string) => {
                     >
                       <Icon
                         name="lucide:pencil"
-                        class="mr-2 h-4 w-4"
+                        class="mr-2"
                       />
                       <span>Edit</span>
                     </DropdownMenuItem>
@@ -279,7 +276,7 @@ const handleSort = (column: string) => {
                     >
                       <Icon
                         name="lucide:check"
-                        class="mr-2 h-4 w-4"
+                        class="mr-2"
                       />
                       <span>Commit</span>
                     </DropdownMenuItem>
@@ -290,7 +287,7 @@ const handleSort = (column: string) => {
                     >
                       <Icon
                         name="lucide:x"
-                        class="mr-2 h-4 w-4"
+                        class="mr-2"
                       />
                       <span>Cancel</span>
                     </DropdownMenuItem>

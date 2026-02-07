@@ -4,8 +4,8 @@ import BackupCodesDisplay from '~/components/BackupCodesDisplay.vue'
 import TwoFactorSetupDialog from '~/components/TwoFactorSetupDialog.vue'
 import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { InputField } from '~/components/ui/form'
 import { useAlertDialog } from '~/composables/useAlertDialog'
@@ -155,7 +155,7 @@ const handleRegenerateBackupCodes = async () => {
           <Icon
             v-if="isChanging"
             name="lucide:loader"
-            class="mr-2 h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{ $t('labels.account.security.changePasswordButton') }}
         </Button>
@@ -256,7 +256,7 @@ const handleRegenerateBackupCodes = async () => {
             <Icon
               v-if="isDisabling"
               name="lucide:loader"
-              class="mr-2 h-4 w-4 animate-spin"
+              class="animate-spin"
             />
             {{ $t('labels.twoFactor.disableConfirm') }}
           </Button>

@@ -240,7 +240,7 @@ const handleLoad = () => {
         class="flex grow items-center justify-center"
       >
         <Markdown
-          class="text-sm text-muted"
+          class="mx-auto text-center text-sm text-balance text-muted"
           :content="
             currentSpace?.settings.environments?.length > 0
               ? $t('messages.preview.noContent')

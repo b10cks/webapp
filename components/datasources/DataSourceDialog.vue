@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { Button } from '~/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
+import { CheckboxField, InputField, TextField } from '~/components/ui/form'
+import ArrayInputField from '~/components/ui/form/ArrayInputField.vue'
+import { useDataSources } from '~/composables/useDataSources'
 import type {
   CreateDataSourcePayload,
   DataSourceResource,
   UpdateDataSourcePayload,
 } from '~/types/data-sources'
-import { useDataSources } from '~/composables/useDataSources'
-import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
-import { CheckboxField, InputField, TextField } from '~/components/ui/form'
-import { Button } from '~/components/ui/button'
-import ArrayInputField from '~/components/ui/form/ArrayInputField.vue'
 
 interface DimensionItem {
   label: string
@@ -283,7 +283,7 @@ const handleDimensionAdd = (item: Record<string, unknown>) => {
             <Icon
               v-if="isProcessing"
               name="lucide:loader"
-              class="mr-2 h-4 w-4 animate-spin"
+              class="animate-spin"
             />
             {{
               isEditing ? $t('labels.datasets.saveChanges') : $t('labels.datasets.createDataSource')

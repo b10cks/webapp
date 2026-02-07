@@ -81,8 +81,12 @@ const handleSignup = async () => {
             class="h-8 w-8 text-primary"
           />
           <h1
-            class="font-script mb-6 text-2xl font-semibold text-primary"
+            class="font-script text-2xl font-semibold text-primary"
             v-text="$t('labels.login.signupHeader')"
+          />
+          <Markdown
+            class="text-sm text-muted"
+            :content="$t('labels.login.signupDescription')"
           />
           <Alert
             v-if="publicInvite"
@@ -107,10 +111,6 @@ const handleSignup = async () => {
           >
             {{ inviteError.data.message }}
           </Alert>
-          <Markdown
-            v-else
-            :content="$t('labels.login.signupDescription')"
-          />
         </div>
         <form
           class="grid gap-6"

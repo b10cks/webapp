@@ -118,7 +118,7 @@ const handleCancel = () => {
           <Icon
             v-if="isVerifying"
             name="lucide:loader"
-            class="mr-2 h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{ $t('labels.twoFactor.verify.button') }}
         </Button>

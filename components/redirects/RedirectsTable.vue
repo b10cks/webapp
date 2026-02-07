@@ -581,10 +581,7 @@ watch(
                     class="h-8 w-8"
                     @click="startEditing(redirect, 'source')"
                   >
-                    <Icon
-                      name="lucide:pencil"
-                      class="h-4 w-4"
-                    />
+                    <Icon name="lucide:pencil" />
                     <span class="sr-only">Edit</span>
                   </Button>
 

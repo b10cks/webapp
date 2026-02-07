@@ -3,22 +3,12 @@ import dayjs from 'dayjs'
 import { RadioGroupItem, RadioGroupRoot } from 'reka-ui'
 import BlockEdit from '~/components/BlockEdit.vue'
 import { Avatar } from '~/components/ui/avatar'
-import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import RenamableTitle from '~/components/ui/RenamableTitle.vue'
-import SchemaEditor from '~/components/blocks/SchemaEditor.vue'
 
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeaderCombined,
-  SheetTrigger,
-} from '~/components/ui/sheet'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { Sheet, SheetContent, SheetHeaderCombined } from '~/components/ui/sheet'
 import { SimpleTooltip } from '~/components/ui/tooltip'
 
 const open = defineModel<boolean>('open')
@@ -357,7 +347,7 @@ watch(
                             class="h-6! w-6!"
                             @click.stop="handleDelete(version)"
                           >
-                            <Icon name="lucide:trash" />
+                            <Icon name="lucide:trash-2" />
                           </Button>
                         </SimpleTooltip>
                       </div>

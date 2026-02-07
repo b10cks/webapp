@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
-import { InputField, TextField } from '~/components/ui/form'
+import { TextField } from '~/components/ui/form'
 import { ScrollArea } from '~/components/ui/scroll-area'
 
 import IconNameField from '~/components/ui/IconNameField.vue'
@@ -175,7 +175,7 @@ watch(open, (isOpen) => {
             <Icon
               v-if="isPending"
               name="lucide:loader"
-              class="mr-2 h-4 w-4 animate-spin"
+              class="animate-spin"
             />
             {{ $t('actions.create') }}
           </Button>

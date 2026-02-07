@@ -22,6 +22,19 @@ const { data: currentSpace } = useSpaceQuery(spaceId.value)
 const { useContentQuery } = useContent(spaceId)
 const { data: originalContent } = useContentQuery(contentId)
 
+const availableLanguages = computed(() => currentSpace.value?.settings?.languages ?? [])
+
+const language = computed({
+  get: () => (route.hash ? route.hash.substring(1) : availableLanguages.value[0]?.code),
+  set: (l) => {
+    if (l) {
+      router.replace({ ...route, hash: `#${l}` })
+    } else {
+      router.replace({ ...route, hash: '' })
+    }
+  },
+})
+
 useSeoMeta({
   title: computed(() => originalContent.value?.name || t('labels.contents.localization.pageTitle')),
 })

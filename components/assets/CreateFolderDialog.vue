@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Translation } from 'nuxt-i18n-micro-types/src'
-import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
+import { ref } from 'vue'
 import { Button } from '~/components/ui/button'
-import IconNameField from '~/components/ui/IconNameField.vue'
+import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { TextField } from '~/components/ui/form'
+import IconNameField from '~/components/ui/IconNameField.vue'
 
 const props = defineProps<{
   spaceId: string
@@ -118,7 +118,7 @@ watch(
             <Icon
               v-if="isLoading"
               name="lucide:loader"
-              class="mr-2 h-4 w-4 animate-spin"
+              class="animate-spin"
             />
             {{ $t('actions.create') }}
           </Button>

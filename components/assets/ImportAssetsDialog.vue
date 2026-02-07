@@ -171,7 +171,7 @@ const showSummary = computed(() => importResult.value !== null)
               <Icon
                 v-if="isImporting"
                 name="lucide:loader-2"
-                class="mr-2 h-4 w-4 animate-spin"
+                class="mr-2 animate-spin"
               />
               {{ isImporting ? 'Importing...' : 'Import' }}
             </Button>

@@ -2,17 +2,10 @@
 import dayjs from 'dayjs'
 import { Avatar } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeaderCombined,
-  SheetTrigger,
-} from '~/components/ui/sheet'
-import { InputField, TextField } from '~/components/ui/form'
+import { TextField } from '~/components/ui/form'
 import IconNameField from '~/components/ui/IconNameField.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
+import { Sheet, SheetContent, SheetHeaderCombined } from '~/components/ui/sheet'
 
 const open = defineModel<boolean>('open')
 const { $t } = useI18n()
@@ -282,7 +275,7 @@ watch(open, (isOpen) => {
                     :disabled="isDeleting"
                     @click="handleDelete(template)"
                   >
-                    <Icon name="lucide:trash" />
+                    <Icon name="lucide:trash-2" />
                   </Button>
                 </div>
               </div>

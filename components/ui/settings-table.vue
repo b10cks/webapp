@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useSortable } from '@vueuse/integrations/useSortable'
+import { Button } from '~/components/ui/button'
+import { Input } from '~/components/ui/input'
+import { Switch } from '~/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -8,10 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table'
-import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import { Switch } from '~/components/ui/switch'
-import { useSortable, moveArrayElement } from '@vueuse/integrations/useSortable'
 
 export interface ColumnDefinition {
   key: string
@@ -104,116 +104,118 @@ const removeItem = (index: number) => {
 </script>
 
 <template>
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead
-          v-if="allowSort"
-          class="w-4"
-        />
-        <TableHead
-          v-for="column in columns"
-          :key="column.key"
-          :class="column.width"
-        >
-          {{ column.label }}
-        </TableHead>
-        <TableHead class="w-12" />
-      </TableRow>
-    </TableHeader>
-    <TableBody ref="tableBodyRef">
-      <TableRow
-        v-for="(item, index) in localItems"
-        :key="index"
-      >
-        <TableCell
-          v-if="allowSort"
-          class="sort-handle w-4 cursor-ns-resize"
-        >
-          <Icon name="lucide:grip-vertical" />
-        </TableCell>
-        <TableCell
-          v-for="column in columns"
-          :key="column.key"
-        >
-          <slot
-            v-if="column.type === 'custom'"
-            :name="`cell-${column.key}`"
-            :item="item"
-            :index="index"
-            :column="column"
+  <div class="overflow-hidden rounded-md">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead
+            v-if="allowSort"
+            class="w-4"
           />
-          <Switch
-            v-else-if="column.type === 'switch'"
-            v-model="item[column.key] as boolean"
-            :disabled="column.readonly"
-          />
-          <Input
-            v-else
-            v-model="item[column.key] as string"
-            :name="column.key"
-            :placeholder="column.placeholder"
-            :disabled="column.readonly"
-          />
-        </TableCell>
-        <TableCell class="flex items-center gap-1">
-          <slot
-            name="actions"
-            :item="item"
-            :index="index"
-          />
-          <Button
-            variant="ghost"
-            size="icon"
-            @click="removeItem(index)"
+          <TableHead
+            v-for="column in columns"
+            :key="column.key"
+            :class="column.width"
           >
-            <Icon name="lucide:trash" />
-            <span class="sr-only">{{ $t(removeButtonLabel) }}</span>
-          </Button>
-        </TableCell>
-      </TableRow>
-    </TableBody>
-    <TableFooter>
-      <TableRow
-        v-if="showAddRow"
-        :id="`${id}-new-row`"
-        class="hover:bg-transparent"
-      >
-        <TableCell v-if="allowSort" />
-        <TableCell
-          v-for="column in columns"
-          :key="column.key"
+            {{ column.label }}
+          </TableHead>
+          <TableHead class="w-12" />
+        </TableRow>
+      </TableHeader>
+      <TableBody ref="tableBodyRef">
+        <TableRow
+          v-for="(item, index) in localItems"
+          :key="index"
         >
-          <slot
-            v-if="column.type === 'custom'"
-            :name="`new-cell-${column.key}`"
-            :item="newItem"
-            :column="column"
-          />
-          <Switch
-            v-else-if="column.type === 'switch'"
-            v-model="newItem[column.key] as boolean"
-            :disabled="column.readonly"
-          />
-          <Input
-            v-else
-            v-model="newItem[column.key] as string"
-            :placeholder="column.placeholder"
-            @keydown.enter="addItem"
-          />
-        </TableCell>
-        <TableCell class="text-right">
-          <Button
-            variant="ghost"
-            size="icon"
-            :disabled="!canAddItem"
-            @click="addItem"
+          <TableCell
+            v-if="allowSort"
+            class="sort-handle w-4 cursor-ns-resize"
           >
-            <Icon name="lucide:plus" />
-            <span class="sr-only">{{ $t(addButtonLabel) }}</span>
-          </Button>
-        </TableCell>
-      </TableRow>
-    </TableFooter>
-  </Table>
+            <Icon name="lucide:grip-vertical" />
+          </TableCell>
+          <TableCell
+            v-for="column in columns"
+            :key="column.key"
+          >
+            <slot
+              v-if="column.type === 'custom'"
+              :name="`cell-${column.key}`"
+              :item="item"
+              :index="index"
+              :column="column"
+            />
+            <Switch
+              v-else-if="column.type === 'switch'"
+              v-model="item[column.key] as boolean"
+              :disabled="column.readonly"
+            />
+            <Input
+              v-else
+              v-model="item[column.key] as string"
+              :name="column.key"
+              :placeholder="column.placeholder"
+              :disabled="column.readonly"
+            />
+          </TableCell>
+          <TableCell class="flex items-center gap-1">
+            <slot
+              name="actions"
+              :item="item"
+              :index="index"
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="removeItem(index)"
+            >
+              <Icon name="lucide:trash-2" />
+              <span class="sr-only">{{ $t(removeButtonLabel) }}</span>
+            </Button>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+      <TableFooter>
+        <TableRow
+          v-if="showAddRow"
+          :id="`${id}-new-row`"
+          class="hover:bg-transparent"
+        >
+          <TableCell v-if="allowSort" />
+          <TableCell
+            v-for="column in columns"
+            :key="column.key"
+          >
+            <slot
+              v-if="column.type === 'custom'"
+              :name="`new-cell-${column.key}`"
+              :item="newItem"
+              :column="column"
+            />
+            <Switch
+              v-else-if="column.type === 'switch'"
+              v-model="newItem[column.key] as boolean"
+              :disabled="column.readonly"
+            />
+            <Input
+              v-else
+              v-model="newItem[column.key] as string"
+              :placeholder="column.placeholder"
+              @keydown.enter="addItem"
+            />
+          </TableCell>
+          <TableCell class="text-right">
+            <Button
+              variant="ghost"
+              size="icon"
+              :disabled="!canAddItem"
+              @click="addItem"
+            >
+              <Icon name="lucide:plus" />
+              <span class="sr-only">{{ $t(addButtonLabel) }}</span>
+            </Button>
+          </TableCell>
+        </TableRow>
+      </TableFooter>
+    </Table>
+  </div>
 </template>

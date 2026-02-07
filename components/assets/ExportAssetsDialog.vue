@@ -115,7 +115,7 @@ const handleExport = async () => {
             <Icon
               v-if="isExporting"
               name="lucide:loader-2"
-              class="mr-2 h-4 w-4 animate-spin"
+              class="animate-spin"
             />
             {{ isExporting ? 'Exporting...' : 'Export' }}
           </Button>

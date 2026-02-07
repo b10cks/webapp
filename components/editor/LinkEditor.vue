@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
+import ContentPicker from '~/components/editor/ContentPicker.vue'
+import { FormField, InputField } from '~/components/ui/form'
 import {
   Select,
   SelectContent,
@@ -8,11 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import { FormField, InputField } from '~/components/ui/form'
-import { Button } from '~/components/ui/button'
-import { ScrollArea } from '~/components/ui/scroll-area'
-import { TreeItem, TreeRoot } from 'reka-ui'
-import ContentPicker from '~/components/editor/ContentPicker.vue'
 
 type LinkType = 'url' | 'email' | 'internal'
 
@@ -275,7 +271,7 @@ const getSelectedContentName = () => {
             </span>
             <Icon
               name="lucide:search"
-              class="ml-auto h-4 w-4"
+              class="ml-auto"
             />
           </button>
         </div>

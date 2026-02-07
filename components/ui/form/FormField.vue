@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
-import { TooltipIcon } from '~/components/ui/tooltip'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+import type { HTMLAttributes } from 'vue'
 import Label from '~/components/ui/form/Label.vue'
+import { TooltipIcon } from '~/components/ui/tooltip'
 
 const props = defineProps<{
   id?: string
@@ -33,18 +33,17 @@ const hasError = computed(() => !!props.error)
         :hide-label="hideLabel"
         :required="required"
         :for="uniqueId"
+        :has-error="hasError"
       />
       <TooltipIcon v-if="tooltip">{{ tooltip }}</TooltipIcon>
     </div>
-    <div :class="{ 'text-destructive ring-1 focus-within:ring-2': hasError, 'rounded-md': true }">
-      <slot
-        v-bind="{
-          id: uniqueId,
-          name: props.name,
-        }"
-        :has-error="hasError"
-      />
-    </div>
+    <slot
+      v-bind="{
+        id: uniqueId,
+        name: props.name,
+      }"
+      :has-error="hasError"
+    />
     <p
       v-if="hasError"
       class="mt-1 text-sm leading-tight whitespace-pre-line text-destructive"

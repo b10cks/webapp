@@ -4,7 +4,6 @@ import AppHeader from '~/components/AppHeader.vue'
 import ServerLocationSelect from '~/components/ServerLocationSelect.vue'
 import { Badge, type BadgeVariants } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { InputField } from '~/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import {
@@ -392,7 +392,7 @@ const handleBack = () => {
                   <Icon
                     v-if="isPending"
                     name="lucide:loader"
-                    class="mr-2 h-4 w-4 animate-spin"
+                    class="animate-spin"
                   />
                   Create Space
                 </template>

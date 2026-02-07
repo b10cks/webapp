@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import UploadDetailsDialog from './UploadDetailsDialog.vue'
-import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { Button } from '~/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { ScrollArea } from '~/components/ui/scroll-area'
+import UploadDetailsDialog from './UploadDetailsDialog.vue'
 
 const { formatFileSize } = useFormat()
 const { getFileType, getFileIcon } = useFileUtils()
@@ -463,7 +463,7 @@ const retryUpload = async (file: UploadFileWithProgress) => {
             <Icon
               v-if="isUploading"
               name="lucide:loader"
-              class="mr-2 h-4 w-4 animate-spin"
+              class="animate-spin"
             />
             {{
               isUploading ? 'Uploading...' : `Upload ${files.length > 0 ? `(${files.length})` : ''}`

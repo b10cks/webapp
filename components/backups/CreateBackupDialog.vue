@@ -163,7 +163,7 @@ const maxExpiresAt = computed(() => {
           <Icon
             v-if="loading"
             name="lucide:loader"
-            class="h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{ loading ? $t('actions.creating') : $t('actions.backups.create') }}
         </Button>

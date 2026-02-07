@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import {
   Dialog,
@@ -10,7 +11,6 @@ import {
   DialogHeaderCombined,
   DialogTrigger,
 } from '~/components/ui/dialog'
-import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
 const props = defineProps<{
@@ -84,7 +84,7 @@ const confirmDelete = async () => {
               <Icon
                 v-if="isDeleting"
                 name="lucide:loader"
-                class="mr-2 h-4 w-4 animate-spin"
+                class="animate-spin"
               />
               {{
                 isDeleting

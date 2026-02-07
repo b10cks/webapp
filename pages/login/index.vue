@@ -2,6 +2,7 @@
 import Logo from '~/assets/logo.svg'
 import Markdown from '~/components/Markdown.vue'
 import TwoFactorVerifyDialog from '~/components/TwoFactorVerifyDialog.vue'
+import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
@@ -41,43 +42,36 @@ onMounted(() => {
     error.value = 'Your session has expired. Please log in again.'
   }
 })
+
+const e = ref(null)
 </script>
 
 <template>
   <div>
     <NuxtLayout name="unauthenticated">
-      <div class="grid w-full max-w-md space-y-8">
-        <div class="grid gap-4">
+      <div class="grid w-full max-w-md space-y-8 select-none">
+        <div class="mb-6 grid gap-4">
           <Logo
             alt="b10cks logo"
             class="h-8 w-8 text-primary"
           />
           <h1
-            class="font-script mb-6 text-2xl font-semibold text-primary"
+            class="text-2xl font-semibold text-primary"
             v-text="$t('labels.login.header')"
           />
+          <p class="text-sm text-muted">{{ $t('labels.login.intro') }}</p>
         </div>
         <form
           class="grid gap-6"
           @submit.prevent="login(formData)"
         >
-          <TwoFactorVerifyDialog
-            v-model:open="twoFactorDialogOpen"
-            :on-verify="handleVerify"
-            :on-cancel="handleCancel"
-          />
-          <div
+          <Alert
             v-if="error && !requiresTwoFactor"
-            class="animate-in fade-in-0 slide-in-from-top-1 flex items-center gap-2 rounded-md border border-destructive bg-destructive-background p-2 text-destructive-foreground duration-300"
+            color="destructive"
+            icon="lucide:alert-circle"
           >
-            <Icon
-              name="lucide:alert-circle"
-              class="h-4 w-4"
-            />
-            <div>
-              {{ error }}
-            </div>
-          </div>
+            {{ error }}
+          </Alert>
           <InputField
             v-model="formData.email"
             type="email"
@@ -103,6 +97,11 @@ onMounted(() => {
           <Markdown :content="$t('labels.login.signup')" />
         </form>
       </div>
+      <TwoFactorVerifyDialog
+        v-model:open="twoFactorDialogOpen"
+        :on-verify="handleVerify"
+        :on-cancel="handleCancel"
+      />
     </NuxtLayout>
   </div>
 </template>

@@ -89,7 +89,6 @@ useSeoMeta({
       <Button @click="navigateToContent">
         <Icon
           name="lucide:arrow-left"
-          class="mr-2 h-4 w-4"
         />
         Back to Editor
       </Button>

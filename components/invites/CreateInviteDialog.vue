@@ -136,7 +136,7 @@ const roleOptions = computed(() =>
             <Icon
               v-if="isLoading"
               name="lucide:loader-2"
-              class="mr-2 h-4 w-4 animate-spin"
+              class="animate-spin"
             />
             {{ isLoading ? $t('labels.invites.sending') : $t('actions.send') }}
           </Button>

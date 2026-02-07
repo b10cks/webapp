@@ -54,7 +54,9 @@ const props = defineProps<{
   blockSchema: Record<string, SchemaType>
   spaceId: string
   targetLanguage: string
-  getBlockSchema?: (blockSlug: string) => { schema: Record<string, SchemaType>; name: string } | undefined
+  getBlockSchema?: (
+    blockSlug: string
+  ) => { schema: Record<string, SchemaType>; name: string } | undefined
 }>()
 
 const { useSpaceQuery } = useSpaces()
@@ -111,7 +113,8 @@ const traverseContent = (
       })
     } else if ('translatable' in schemaItem && schemaItem.translatable) {
       const translatedValue = translation?.[key]
-      const isTranslated = translatedValue !== undefined && translatedValue !== null && translatedValue !== ''
+      const isTranslated =
+        translatedValue !== undefined && translatedValue !== null && translatedValue !== ''
 
       result.push({
         key,
@@ -158,8 +161,8 @@ const filteredFields = computed(() => {
     if (searchQuery.value) {
       const searchLower = searchQuery.value.toLowerCase()
       return (
-        field.fieldName.toLowerCase().includes(searchLower)
-        || field.path.join(' > ').toLowerCase().includes(searchLower)
+        field.fieldName.toLowerCase().includes(searchLower) ||
+        field.path.join(' > ').toLowerCase().includes(searchLower)
       )
     }
 
@@ -236,7 +239,10 @@ const getUntranslatedFields = (): Record<string, string> => {
 
   translatableFields.value
     .filter(
-      (field) => !field.isTranslated && typeof field.originalValue === 'string' && field.originalValue.trim() !== ''
+      (field) =>
+        !field.isTranslated &&
+        typeof field.originalValue === 'string' &&
+        field.originalValue.trim() !== ''
     )
     .forEach((field) => {
       const fieldPath = [...field.path.slice(0, -1), field.key].join('-')
@@ -257,7 +263,9 @@ const translateWithAI = async (): Promise<void> => {
 
   try {
     isTranslating.value = true
-    toast.info(`Translating ${fieldCount} fields from ${sourceLanguage.value} to ${props.targetLanguage}...`)
+    toast.info(
+      `Translating ${fieldCount} fields from ${sourceLanguage.value} to ${props.targetLanguage}...`
+    )
     const requestData = {
       source: sourceLanguage.value,
       target: props.targetLanguage,
@@ -265,9 +273,13 @@ const translateWithAI = async (): Promise<void> => {
       fields: fieldsToTranslate,
     }
 
-    const response = await apiClient.post<ApiResponse<Record<string, string>>>('/mgmt/v1/ai/translate', requestData, {
-      query: { spaceId: props.spaceId },
-    })
+    const response = await apiClient.post<ApiResponse<Record<string, string>>>(
+      '/mgmt/v1/ai/translate',
+      requestData,
+      {
+        query: { spaceId: props.spaceId },
+      }
+    )
     updateTranslatedValues(response.data)
 
     toast.success(`Successfully translated ${Object.keys(response.data).length} fields`)
@@ -280,7 +292,9 @@ const translateWithAI = async (): Promise<void> => {
 }
 
 const translationStats = computed(() => {
-  const fieldItems = translatableFields.value.filter((field) => field.schemaItem.type !== 'block_header')
+  const fieldItems = translatableFields.value.filter(
+    (field) => field.schemaItem.type !== 'block_header'
+  )
 
   const total = fieldItems.length
   const translated = fieldItems.filter((f) => f.isTranslated).length
@@ -322,7 +336,6 @@ const translationStats = computed(() => {
         <Button
           size="sm"
           :disabled="isTranslating"
-          class="flex items-center gap-2"
           @click="translateWithAI"
         >
           <Icon
@@ -376,10 +389,10 @@ const translationStats = computed(() => {
             v-else
             class="grid grid-cols-2 gap-4 px-4 py-2 text-muted italic"
           >
-            <div class="bg-gray-850 rounded border border-elevated p-2">
+            <div class="rounded border border-elevated bg-gray-850 p-2">
               {{ field.originalValue }}
             </div>
-            <div class="bg-gray-850 rounded border border-elevated p-2">
+            <div class="rounded border border-elevated bg-gray-850 p-2">
               <Input
                 :value="field.translatedValue"
                 @input="
@@ -393,8 +406,6 @@ const translationStats = computed(() => {
           </div>
         </div>
       </div>
-
-      <!-- Empty state -->
       <div
         v-if="filteredFields.length === 0"
         class="p-8 text-center text-muted"

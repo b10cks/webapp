@@ -37,7 +37,8 @@ const updateValue = (key: keyof MetaValue, value: string | number) => {
     <InputField
       :name="`${item.key}-title-original`"
       :model-value="originalValue.title"
-      disabled
+      :actions="['copy']"
+      readonly
     />
     <InputField
       :name="`${item.key}-title-translation`"
@@ -50,7 +51,7 @@ const updateValue = (key: keyof MetaValue, value: string | number) => {
     <TextField
       :name="`${item.key}-description-original`"
       :model-value="originalValue.description"
-      disabled
+      readonly
     />
     <TextField
       :name="`${item.key}-description-translation`"
@@ -63,7 +64,7 @@ const updateValue = (key: keyof MetaValue, value: string | number) => {
       <TextField
         :name="`${item.key}-ogTitle-original`"
         :model-value="originalValue.ogTitle"
-        disabled
+        readonly
       />
       <TextField
         :name="`${item.key}-ogTitle-translation`"
@@ -75,7 +76,7 @@ const updateValue = (key: keyof MetaValue, value: string | number) => {
       <TextField
         :name="`${item.key}-ogDescription-original`"
         :model-value="originalValue.ogDescription"
-        disabled
+        readonly
       />
       <TextField
         :name="`${item.key}-ogDescription-translation`"

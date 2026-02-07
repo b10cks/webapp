@@ -38,6 +38,7 @@ const updateValue = (value: Record<string, unknown>) => {
           :model-value="originalValue"
           :html-classes="htmlClasses"
           :space-id="spaceId"
+          disabled
           @update:model-value="() => {}"
         />
       </div>
@@ -47,9 +48,7 @@ const updateValue = (value: Record<string, unknown>) => {
       :label="props.item.name || props.item.key"
       hide-label
     >
-      <div
-        :class="[isMachineTranslated && 'ring-1 ring-violet-500 rounded']"
-      >
+      <div :class="[isMachineTranslated && 'rounded ring-1 ring-violet-500']">
         <TiptapEditor
           :model-value="modelValue"
           :html-classes="htmlClasses"

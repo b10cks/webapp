@@ -244,10 +244,7 @@ const handleBulkResend = async () => {
           variant="outline"
           @click="handleBulkResend"
         >
-          <Icon
-            name="lucide:send"
-            class="mr-2 h-4 w-4"
-          />
+          <Icon name="lucide:send" />
           {{ $t('labels.invites.actions.resend', { count: selectionCount }) }}
         </Button>
         <Button
@@ -255,10 +252,7 @@ const handleBulkResend = async () => {
           variant="destructive"
           @click="handleBulkDelete"
         >
-          <Icon
-            name="lucide:trash-2"
-            class="mr-2 h-4 w-4"
-          />
+          <Icon name="lucide:trash-2" />
           {{ $t('labels.invites.actions.delete', { count: selectionCount }) }}
         </Button>
         <Button

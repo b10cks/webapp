@@ -79,10 +79,7 @@
                 :style="{ 'margin-left': `${(item.level + 1) * 1.5}rem` }"
               >
                 <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold text-primary">
-                  <Icon
-                    name="lucide:hash"
-                    class="h-4 w-4"
-                  />
+                  <Icon name="lucide:hash" />
                   {{ $t('labels.content.pageElements') }}
                 </h4>
                 <div class="grid gap-2">
@@ -95,13 +92,13 @@
                     <div class="flex items-center gap-2">
                       <Icon
                         name="lucide:bookmark"
-                        class="text-muted-foreground h-4 w-4"
+                        class="text-muted-foreground"
                       />
                       <span class="text-sm font-medium">{{ element.name }}</span>
                     </div>
                     <Icon
                       name="lucide:external-link"
-                      class="text-muted-foreground h-4 w-4"
+                      class="text-muted-foreground"
                     />
                   </div>
                 </div>
@@ -115,11 +112,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
-import { Button } from '~/components/ui/button'
-import { ScrollArea } from '~/components/ui/scroll-area'
 import { TreeItem, TreeRoot } from 'reka-ui'
+import { computed, ref } from 'vue'
+import { Button } from '~/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
+import { ScrollArea } from '~/components/ui/scroll-area'
 
 interface ContentElement {
   id: string

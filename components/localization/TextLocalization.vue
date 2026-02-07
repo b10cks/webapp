@@ -27,7 +27,8 @@ const updateValue = (e: Event) => {
       :name="`${item.key}-original`"
       :label="item.name || item.key"
       :model-value="originalValue"
-      disabled
+      :actions="['copy']"
+      readonly
       hide-label
     />
     <InputField

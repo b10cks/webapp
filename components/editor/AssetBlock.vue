@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
-import { useAlertDialog } from '~/composables/useAlertDialog'
-import Label from '~/components/ui/form/Label.vue'
-import AssetGrid from '~/components/assets/AssetGrid.vue'
-import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
-import { ScrollArea } from '~/components/ui/scroll-area'
 import AssetsIcon from '~/assets/images/assets.svg?component'
+import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
+import AssetGrid from '~/components/assets/AssetGrid.vue'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
+import Label from '~/components/ui/form/Label.vue'
+import { ScrollArea } from '~/components/ui/scroll-area'
+import { useAlertDialog } from '~/composables/useAlertDialog'
 
 const props = defineProps<{
   item: AssetSchema & { key: string }
@@ -82,7 +82,7 @@ const handleAssetDelete = async () => {
 </script>
 
 <template>
-  <div class="space-y-3">
+  <div class="grid gap-2">
     <Label :label="item.name || item.key" />
     <div
       v-if="!hasAsset"

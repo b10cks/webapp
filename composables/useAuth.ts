@@ -190,11 +190,6 @@ export function useAuth() {
     } catch (err: any) {
       const { status, errorCode, message } = parseErrorResponse(err)
 
-      // Debug logging for 2FA troubleshooting
-      if (import.meta.dev) {
-        console.log('Login error:', { status, errorCode, message, rawError: err })
-      }
-
       // Check for 2FA required (423 status with TOTP_VERIFICATION_REQUIRED)
       if (status === 423 && errorCode === 'TOTP_VERIFICATION_REQUIRED') {
         requiresTwoFactor.value = true
@@ -204,9 +199,7 @@ export function useAuth() {
       }
 
       // Handle specific error cases
-      if (status === 401) {
-        error.value = 'Invalid email or password'
-      } else if (status === 403 && errorCode === 'INVALID_TOTP_CODE') {
+      if (status === 403 && errorCode === 'INVALID_TOTP_CODE') {
         error.value = 'Invalid authentication code. Please try again.'
       } else if (status === 409 && errorCode === 'EMAIL_NOT_VERIFIED') {
         error.value = 'Please verify your email address before logging in.'
@@ -302,7 +295,7 @@ export function useAuth() {
   }
 
   const handleUnauthorized = async (endpoint: string, options: any): Promise<any> => {
-    if (endpoint.includes('/auth/v1/token')) {
+    if (endpoint.includes('/auth/v1/token/refresh')) {
       error.value = t('composables.auth.sessionExpired') as string
       await logout()
       throw new Error(t('composables.auth.tokenRefreshFailed') as string)

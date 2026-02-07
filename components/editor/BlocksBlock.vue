@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSortable } from '@vueuse/integrations/useSortable'
 import {
   AccordionContent,
   AccordionHeader,
@@ -6,11 +7,10 @@ import {
   AccordionRoot,
   AccordionTrigger,
 } from 'reka-ui'
-import EditorComponent from './EditorComponent.vue'
-import { useSortable } from '@vueuse/integrations/useSortable'
 import AddDropdown from '~/components/editor/AddDropdown.vue'
-import { Button } from '~/components/ui/button'
 import BlockHeader from '~/components/editor/BlockHeader.vue'
+import { Button } from '~/components/ui/button'
+import EditorComponent from './EditorComponent.vue'
 
 const { $t } = useI18n()
 
@@ -143,7 +143,9 @@ const navigateToItem = (itemId: string) => {
 
 <template>
   <div class="grid gap-2">
-    <div class="text-sm font-semibold text-primary">{{ item.name || item.key || 'Untitled' }}</div>
+    <div class="relative z-10 mr-8 text-sm font-semibold text-primary">
+      {{ item.name || item.key || 'Untitled' }}
+    </div>
     <div class="rounded-2xl border border-border bg-surface px-2">
       <AccordionRoot
         ref="accordionContainer"

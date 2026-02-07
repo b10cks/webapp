@@ -191,7 +191,7 @@ const handleClose = () => {
           <Icon
             v-if="isSettingUp"
             name="lucide:loader"
-            class="mr-2 h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{ $t('labels.twoFactor.setup.start') }}
         </Button>
@@ -212,7 +212,7 @@ const handleClose = () => {
           <Icon
             v-if="isConfirming"
             name="lucide:loader"
-            class="mr-2 h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{ $t('labels.twoFactor.setup.verify') }}
         </Button>

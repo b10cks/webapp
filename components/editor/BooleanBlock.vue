@@ -14,5 +14,6 @@ defineProps<{
     name="item.key"
     :label="item.name || item.key"
     :description="item.description"
+    class="relative z-10"
   />
 </template>

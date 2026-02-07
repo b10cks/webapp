@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { useClipboard } from '@vueuse/core'
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
-import { useClipboard } from '@vueuse/core'
 import { Button } from '~/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
+import { InputField } from '~/components/ui/form'
 import {
   Table,
   TableBody,
@@ -12,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table'
-import { InputField } from '~/components/ui/form'
 
 const props = defineProps<{ space: SpaceResource }>()
 
@@ -72,7 +72,7 @@ const copyToken = (token: string) => {
           <Icon
             v-if="isGenerating"
             name="lucide:loader"
-            class="mr-2 h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{
             isGenerating
@@ -84,74 +84,68 @@ const copyToken = (token: string) => {
 
       <div class="space-y-2">
         <h4 class="text-sm font-medium">{{ $t('labels.settings.accessTokens.existingTokens') }}</h4>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{{ $t('labels.settings.accessTokens.name') }}</TableHead>
-              <TableHead>{{ $t('labels.settings.accessTokens.token') }}</TableHead>
-              <TableHead class="text-right">{{
-                $t('labels.settings.accessTokens.executionCount')
-              }}</TableHead>
-              <TableHead>{{ $t('labels.settings.accessTokens.lastUsedAt') }}</TableHead>
-              <TableHead>{{ $t('labels.settings.accessTokens.createdAt') }}</TableHead>
-              <TableHead class="w-[100px]">{{
-                $t('labels.settings.accessTokens.actions')
-              }}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow
-              v-for="token in tokens"
-              :key="token.id"
-            >
-              <TableCell>{{ token.name }}</TableCell>
-              <TableCell class="font-mono text-xs">
-                {{ token.token.substring(0, 8) }}...{{
-                  token.token.substring(token.token.length - 4)
-                }}
-              </TableCell>
-              <TableCell class="text-right">{{ formatNumber(token.execution_count) }}</TableCell>
-              <TableCell>{{
-                token.last_used_at ? formatDateTime(token.last_used_at) : '–'
-              }}</TableCell>
-              <TableCell>{{ formatDateTime(token.created_at) }}</TableCell>
-              <TableCell>
-                <div class="flex space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    @click="copyToken(token.token)"
-                  >
-                    <Icon
-                      name="lucide:copy"
-                      class="h-4 w-4"
-                    />
-                    <span class="sr-only">{{ $t('actions.copy') }}</span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    @click="removeToken(token.id)"
-                  >
-                    <Icon
-                      name="lucide:trash"
-                      class="h-4 w-4"
-                    />
-                    <span class="sr-only">{{ $t('actions.delete') }}</span>
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow v-if="tokens?.length === 0">
-              <TableCell
-                colspan="3"
-                class="text-center text-gray-500"
+        <div class="overflow-hidden rounded-md">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{{ $t('labels.settings.accessTokens.name') }}</TableHead>
+                <TableHead>{{ $t('labels.settings.accessTokens.token') }}</TableHead>
+                <TableHead class="text-right">{{
+                  $t('labels.settings.accessTokens.executionCount')
+                }}</TableHead>
+                <TableHead>{{ $t('labels.settings.accessTokens.lastUsedAt') }}</TableHead>
+                <TableHead>{{ $t('labels.settings.accessTokens.createdAt') }}</TableHead>
+                <TableHead class="w-24" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow
+                v-for="token in tokens"
+                :key="token.id"
               >
-                {{ $t('labels.settings.accessTokens.noTokens') }}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+                <TableCell>{{ token.name }}</TableCell>
+                <TableCell class="font-mono text-xs">
+                  {{ token.token.substring(0, 8) }}...{{
+                    token.token.substring(token.token.length - 4)
+                  }}
+                </TableCell>
+                <TableCell class="text-right">{{ formatNumber(token.execution_count) }}</TableCell>
+                <TableCell>{{
+                  token.last_used_at ? formatDateTime(token.last_used_at) : '–'
+                }}</TableCell>
+                <TableCell>{{ formatDateTime(token.created_at) }}</TableCell>
+                <TableCell>
+                  <div class="flex space-x-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      @click="copyToken(token.token)"
+                    >
+                      <Icon name="lucide:copy" />
+                      <span class="sr-only">{{ $t('actions.copy') }}</span>
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      @click="removeToken(token.id)"
+                    >
+                      <Icon name="lucide:trash-2" />
+                      <span class="sr-only">{{ $t('actions.delete') }}</span>
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+              <TableRow v-if="tokens?.length === 0">
+                <TableCell
+                  colspan="3"
+                  class="text-center text-gray-500"
+                >
+                  {{ $t('labels.settings.accessTokens.noTokens') }}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </CardContent>
   </Card>

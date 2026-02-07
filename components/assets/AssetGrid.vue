@@ -643,10 +643,7 @@ const assetItemProps = computed(() => {
             variant="primary"
             @click="showUploadDialog = true"
           >
-            <Icon
-              name="lucide:upload"
-              class="mr-2 h-4 w-4"
-            />
+            <Icon name="lucide:upload" />
             {{ $t('labels.assets.uploadAssets') }}
           </Button>
         </div>

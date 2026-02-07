@@ -36,12 +36,15 @@
 
   --color-gray-50: oklch(95.82% 0.004 271.37);
   --color-gray-100: oklch(91.68% 0.008 278.63);
+  --color-gray-150: oklch(87.56% 0.01 279.37);
   --color-gray-200: oklch(82.89% 0.012 279);
+  --color-gray-250: oklch(78.21% 0.017 279.73);
   --color-gray-300: oklch(74.2% 0.024 278.9);
   --color-gray-400: oklch(65.24% 0.032 278.37);
   --color-gray-500: oklch(55.99% 0.04 277.73);
   --color-gray-600: oklch(47.78% 0.032 277.85);
   --color-gray-700: oklch(39.21% 0.024 278.04);
+  --color-gray-750: oklch(34.21% 0.024 277.8);
   --color-gray-800: oklch(30.43% 0.018 277.6);
   --color-gray-850: oklch(23.53% 0.012 277.72);
   --color-gray-900: oklch(20.63% 0.008 277.83);
@@ -61,14 +64,14 @@
   --checkerboard-dark: var(--color-gray-950);
   --checkerboard-size: 20px;
 
-  --surface: var(--color-gray-100);
-  --background: var(--color-gray-50);
-  --elevated: var(--color-gray-100);
+  --surface: var(--color-gray-50);
+  --background: var(--color-gray-100);
+  --elevated: var(--color-gray-150);
   --foreground: var(--color-gray-700);
 
   --primary: var(--color-gray-900);
   --primary-foreground: var(--color-gray-50);
-  --secondary: var(--color-gray-100);
+  --secondary: var(--color-gray-150);
 
   --card: var(--color-white);
   --accent: var(--color-blue-500);
@@ -123,7 +126,7 @@
   --muted: var(--color-gray-500);
 
   --input: var(--color-gray-800);
-  --input-border: transparent;
+  --input-border: var(--color-gray-750);
 
   --border: var(--color-gray-800);
   --ring: var(--color-blue-500);
@@ -270,6 +273,11 @@
     .content-grid > .content-narrow {
       grid-column: narrow !important;
     }
+  }
+
+  ::selection {
+    background-color: var(--color-blue-400);
+    color: var(--color-gray-800);
   }
 }
 

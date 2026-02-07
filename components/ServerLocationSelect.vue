@@ -51,7 +51,6 @@ const selectedLocation = computed(() =>
           <div class="flex items-center">
             <Icon
               :name="location.icon"
-              class="mr-2 h-4 w-4"
             />
             <span>{{ location.name }}</span>
           </div>

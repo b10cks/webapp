@@ -207,7 +207,7 @@ const onDragOverIcon = (e: DragEvent) => {
           <Icon
             v-if="isUpdating"
             name="lucide:loader"
-            class="mr-2 h-4 w-4 animate-spin"
+            class="animate-spin"
           />
           {{ $t('actions.saveChanges') }}
         </Button>

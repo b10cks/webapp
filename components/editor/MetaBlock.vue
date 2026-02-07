@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AssetBlock from '~/components/editor/AssetBlock.vue'
-import { InputField, TextField } from '~/components/ui/form'
-import { Button } from '~/components/ui/button'
 import { toast } from 'vue-sonner'
+import AssetBlock from '~/components/editor/AssetBlock.vue'
+import { Button } from '~/components/ui/button'
+import { InputField, TextField } from '~/components/ui/form'
 import type { ApiResponse } from '~/types'
 
 interface MetaSchema {
@@ -149,13 +149,16 @@ const hasContent = computed((): boolean => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-semibold text-primary">Meta Tags</h3>
+  <div class="flex flex-col gap-4">
+    <h3 class="text-sm font-semibold text-primary">Meta Tags</h3>
+    <div class="relative rounded-lg border border-input bg-background p-3">
+      <div class="mb-2 text-sm text-muted">
+        {{ serpUrl }}
+      </div>
       <Button
         size="sm"
         :disabled="isGenerating || !hasContent"
-        class="flex items-center gap-2"
+        class="absolute top-1 right-1 flex items-center gap-2"
         @click="generateMetaWithAI"
       >
         <Icon
@@ -170,6 +173,20 @@ const hasContent = computed((): boolean => {
         />
         <span>{{ isGenerating ? 'Generating...' : 'AI Generate' }}</span>
       </Button>
+      <h3 class="mb-1 cursor-pointer text-lg leading-tight font-semibold text-info">
+        {{ truncatedTitle }}
+      </h3>
+      <p class="text-sm leading-relaxed text-muted">
+        {{ truncatedDescription }}
+      </p>
+      <div class="mt-3 flex gap-4 border-t border-border pt-3 text-xs text-muted">
+        <span :class="{ 'text-destructive': serpTitle.length > 60 }">
+          Title: {{ serpTitle.length }}/60 chars
+        </span>
+        <span :class="{ 'text-destructive': serpDescription.length > 155 }">
+          Description: {{ serpDescription.length }}/155 chars
+        </span>
+      </div>
     </div>
 
     <InputField
@@ -205,25 +222,6 @@ const hasContent = computed((): boolean => {
       :disabled="isGenerating"
       @update:model-value="updateValue('robots', $event)"
     />
-    <div class="rounded-lg border border-input bg-background p-3">
-      <div class="mb-1 text-sm text-muted">
-        {{ serpUrl }}
-      </div>
-      <h3 class="mb-1 cursor-pointer text-lg leading-tight font-semibold text-info">
-        {{ truncatedTitle }}
-      </h3>
-      <p class="text-sm leading-relaxed text-muted">
-        {{ truncatedDescription }}
-      </p>
-      <div class="mt-3 flex gap-4 border-t border-border pt-3 text-xs text-muted">
-        <span :class="{ 'text-destructive': serpTitle.length > 60 }">
-          Title: {{ serpTitle.length }}/60 chars
-        </span>
-        <span :class="{ 'text-destructive': serpDescription.length > 155 }">
-          Description: {{ serpDescription.length }}/155 chars
-        </span>
-      </div>
-    </div>
     <template v-if="item.has_og_tags">
       <AssetBlock
         :model-value="localValue.ogImage"

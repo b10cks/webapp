@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { Translation } from 'nuxt-i18n-micro-types/src'
+import type { HTMLAttributes } from 'vue'
 import { Checkbox } from '~/components/ui/checkbox'
 import { TooltipIcon } from '~/components/ui/tooltip'
 
@@ -46,13 +46,13 @@ const hasError = computed(() => !!props.error)
       <Checkbox
         :id="uniqueId"
         v-model="modelValue"
-        :class="['cursor-pointer', hasError && 'border border-destructive']"
+        :class="['relative z-10 cursor-pointer', hasError && 'border border-destructive']"
         name="translatable"
       />
       <div class="flex items-center gap-2">
         <label
           :for="uniqueId"
-          class="font-semibold text-primary"
+          class="relative z-10 cursor-pointer font-semibold text-primary"
         >
           {{ label }}
         </label>

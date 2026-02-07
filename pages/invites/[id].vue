@@ -132,7 +132,7 @@ const handleAccept = () => {
                 <Icon
                   v-if="isAccepting"
                   name="lucide:loader-2"
-                  class="mr-2 h-4 w-4 animate-spin"
+                  class="animate-spin"
                 />
                 {{
                   isAccepting

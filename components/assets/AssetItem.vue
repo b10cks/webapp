@@ -169,7 +169,7 @@ function onDragStart(event: DragEvent) {
             @select="$emit('delete', asset)"
           >
             <Icon name="lucide:trash-2" />
-            <span>Delete</span>
+            <span>{{ $t('actions.delete') }}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -1,20 +1,13 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
 import { useClipboard } from '@vueuse/core'
+import dayjs from 'dayjs'
 import { toast } from 'vue-sonner'
 
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
-import { InputField } from '~/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select'
+import { InputField, SelectField } from '~/components/ui/form'
 import {
   Table,
   TableBody,
@@ -24,9 +17,11 @@ import {
   TableRow,
 } from '~/components/ui/table'
 import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import { useAlertDialog } from '~/composables/useAlertDialog'
 
 const { t } = useI18n()
 const { formatDateTime } = useFormat()
+const { alert } = useAlertDialog()
 const { useTokensQuery, useCreateTokenMutation, useDeleteTokenMutation } = usePersonalAccessTokens()
 
 const { data: tokensResponse, isLoading } = useTokensQuery()
@@ -77,9 +72,18 @@ const handleCopyToken = async () => {
   toast.success(t('labels.account.apiTokens.copied') as string)
 }
 
-const handleDeleteToken = (id: number) => {
+const handleDeleteToken = async (id: number, tokenName: string) => {
   if (isDeleting.value) return
-  deleteToken(id)
+
+  const confirmed = await alert.confirm(t('messages.deleteTokenConfirm', { name: tokenName }), {
+    title: t('labels.account.apiTokens.deleteConfirmTitle'),
+    confirmLabel: t('actions.delete'),
+    variant: 'destructive',
+  })
+
+  if (confirmed) {
+    deleteToken(id)
+  }
 }
 </script>
 
@@ -98,25 +102,12 @@ const handleDeleteToken = (id: number) => {
           :placeholder="$t('labels.account.apiTokens.namePlaceholder')"
         />
 
-        <div class="space-y-2">
-          <label class="text-sm font-medium text-foreground">
-            {{ $t('labels.account.apiTokens.expiresLabel') }}
-          </label>
-          <Select v-model="expiresIn">
-            <SelectTrigger>
-              <SelectValue :placeholder="$t('labels.account.apiTokens.expiresPlaceholder')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-for="option in expiryOptions"
-                :key="option.value"
-                :value="option.value"
-              >
-                {{ option.label }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <SelectField
+          v-model="expiresIn"
+          :label="$t('labels.account.apiTokens.expiresLabel')"
+          :placeholder="$t('labels.account.apiTokens.expiresPlaceholder')"
+          :options="expiryOptions"
+        />
 
         <div class="flex items-end">
           <Button
@@ -149,6 +140,7 @@ const handleDeleteToken = (id: number) => {
                 <TableHead>{{ $t('labels.account.apiTokens.table.name') }}</TableHead>
                 <TableHead>{{ $t('labels.account.apiTokens.table.createdAt') }}</TableHead>
                 <TableHead>{{ $t('labels.account.apiTokens.table.expiresAt') }}</TableHead>
+                <TableHead>{{ $t('labels.account.apiTokens.table.lastUsedAt') }}</TableHead>
                 <TableHead>{{ $t('labels.account.apiTokens.table.status') }}</TableHead>
                 <TableHead class="w-24" />
               </TableRow>
@@ -165,6 +157,9 @@ const handleDeleteToken = (id: number) => {
                 <TableCell>{{ formatDateTime(token.created_at) }}</TableCell>
                 <TableCell>
                   {{ token.expires_at ? formatDateTime(token.expires_at) : $t('labels.never') }}
+                </TableCell>
+                <TableCell>
+                  {{ token.last_used_at ? formatDateTime(token.last_used_at) : $t('labels.never') }}
                 </TableCell>
                 <TableCell>
                   <Badge
@@ -187,7 +182,7 @@ const handleDeleteToken = (id: number) => {
                     <Button
                       variant="destructive"
                       size="icon"
-                      @click="handleDeleteToken(token.id)"
+                      @click="handleDeleteToken(token.id, token.name)"
                     >
                       <Icon name="lucide:trash-2" />
                       <span class="sr-only">{{ $t('actions.delete') }}</span>
@@ -197,7 +192,7 @@ const handleDeleteToken = (id: number) => {
               </TableRow>
               <TableEmptyRow
                 v-if="!isLoading && tokens.length === 0"
-                :colspan="5"
+                :colspan="6"
                 :label="$t('labels.account.apiTokens.empty')"
               />
             </TableBody>
@@ -215,7 +210,7 @@ const handleDeleteToken = (id: number) => {
       />
       <div class="space-y-4">
         <div class="rounded-lg border border-border bg-surface px-4 py-3">
-          <div class="text-xs tracking-wide text-muted uppercase">
+          <div class="text-xs font-semibold tracking-wide text-muted uppercase">
             {{ $t('labels.account.apiTokens.newTokenLabel') }}
           </div>
           <div class="mt-2 font-mono text-sm break-all text-foreground">

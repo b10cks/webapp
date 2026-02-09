@@ -3,7 +3,10 @@ type PersonalAccessToken = {
   name: string
   created_at: string
   expires_at: string | null
+  last_used_at: string | null
 }
+</text>
+
 
 type PersonalAccessTokenListResponse = {
   data: PersonalAccessToken[]

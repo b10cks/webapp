@@ -1003,8 +1003,10 @@
           "name": "Name",
           "createdAt": "Erstellt",
           "expiresAt": "Läuft ab",
+          "lastUsedAt": "Zuletzt verwendet",
           "status": "Status"
-        }
+        },
+        "deleteConfirmTitle": "Token löschen"
       },
       "themes": {
         "title": "Themes",
@@ -1671,8 +1673,9 @@
   },
   "messages": {
     "preview": {
-      "noContent": "Kein Inhalt ausgewählt. Wähle einen Inhalt zur Vorschau.",
-      "noEnvironments": "Keine Umgebungen verfügbar. Erstelle eine Umgebung in den [Space Einstellungen]({url})."
-    }
+      "noContent": "Kein Inhalt ausgewählt. Wähle einen Inhalt zum Anzeigen aus.",
+      "noEnvironments": "Keine Umgebungen verfügbar. [Konfiguriere Umgebungen in den Space-Einstellungen]({url}) um Inhalte anzuzeigen."
+    },
+    "deleteTokenConfirm": "Bist du sicher, dass du den Token '{name}' löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
   }
 }

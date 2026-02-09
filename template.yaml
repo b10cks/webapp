@@ -231,7 +231,7 @@ Resources:
             HeaderBehavior: whitelist
             Headers:
               - 'Authorization'
-              - 'Accept-Encoding'
+              - 'Accept-Language'
               - 'CloudFront-Viewer-Country'
               - 'Host'
           QueryStringsConfig:

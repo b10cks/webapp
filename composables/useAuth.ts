@@ -174,16 +174,6 @@ export function useAuth() {
   }
 
   const logout = async (returnPath?: string): Promise<void> => {
-    try {
-      const { api } = await import('~/api')
-      await ensureCsrfCookie()
-      await api.client.post('/auth/v1/logout').catch(() => {
-        /** ignore */
-      })
-    } catch {
-      /** ignore */
-    }
-
     user.value = null
     error.value = null
     requiresTwoFactor.value = false

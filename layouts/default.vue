@@ -7,7 +7,7 @@ const { data: currentSpace } = useCurrentSpaceQuery()
 
 const route = useRoute()
 const spaceId = computed(() => (route.params?.space as string) || null)
-const { isAuthenticated } = useAuth()
+const { isAuthenticated, isReady } = useAuth()
 
 useSeoMeta({
   titleTemplate: (title) => {
@@ -16,12 +16,17 @@ useSeoMeta({
 })
 
 if (import.meta.client) {
-  if (!isAuthenticated.value) {
-    navigateTo({
-      name: 'login',
-      query: { return: route.fullPath },
-    })
-  }
+  watch(
+    [isReady, isAuthenticated],
+    ([ready, authenticated]) => {
+      if (!ready || authenticated) return
+      navigateTo({
+        name: 'login',
+        query: { return: route.fullPath },
+      })
+    },
+    { immediate: true }
+  )
 }
 
 provide('spaceId', spaceId)

@@ -1,14 +1,19 @@
 <script setup lang="ts">
 const route = useRoute()
-const { isAuthenticated } = useAuth()
+const { isAuthenticated, isReady } = useAuth()
 
 if (import.meta.client) {
-  if (!isAuthenticated.value) {
-    navigateTo({
-      name: 'login',
-      query: { return: route.fullPath },
-    })
-  }
+  watch(
+    [isReady, isAuthenticated],
+    ([ready, authenticated]) => {
+      if (!ready || authenticated) return
+      navigateTo({
+        name: 'login',
+        query: { return: route.fullPath },
+      })
+    },
+    { immediate: true }
+  )
 }
 
 useSeoMeta({

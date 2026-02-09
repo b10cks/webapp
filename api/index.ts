@@ -3,6 +3,7 @@ import { BlockTemplates } from '~/api/resources/block-templates'
 import { BlockVersions } from '~/api/resources/block-versions'
 import { Comments } from '~/api/resources/comments'
 import { DataSources } from '~/api/resources/data-sources'
+import { PersonalAccessTokens } from '~/api/resources/personal-access-tokens'
 import { Redirects } from '~/api/resources/redirects'
 import { Releases } from '~/api/resources/releases'
 import { Tokens } from '~/api/resources/tokens'
@@ -31,6 +32,7 @@ export class API {
   private readonly _invites: Invites
   private readonly _users: Users
   private readonly _twoFactor: TwoFactorAuth
+  private readonly _personalAccessTokens: PersonalAccessTokens
 
   constructor(
     options: {
@@ -44,6 +46,7 @@ export class API {
     this._invites = new Invites(this.client)
     this._users = new Users(this.client)
     this._twoFactor = new TwoFactorAuth(this.client)
+    this._personalAccessTokens = new PersonalAccessTokens(this.client)
   }
 
   public setAuthToken(token?: string): void {
@@ -72,6 +75,10 @@ export class API {
 
   public get twoFactor(): TwoFactorAuth {
     return this._twoFactor
+  }
+
+  public get personalAccessTokens(): PersonalAccessTokens {
+    return this._personalAccessTokens
   }
 
   public forSpace(spaceId: string) {

@@ -173,6 +173,11 @@ export const queryKeys = {
     all: () => ['users'] as const,
     me: () => [...queryKeys.users.all(), 'me'] as const,
   },
+  personalAccessTokens: {
+    all: () => ['users', 'me', 'tokens'] as const,
+    lists: () => [...queryKeys.personalAccessTokens.all(), 'list'] as const,
+    list: (filters: any = {}) => [...queryKeys.personalAccessTokens.lists(), filters] as const,
+  },
   twoFactor: {
     all: () => ['two-factor'] as const,
     status: () => [...queryKeys.twoFactor.all(), 'status'] as const,

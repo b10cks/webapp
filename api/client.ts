@@ -1,7 +1,9 @@
 import type { NitroFetchOptions } from 'nitropack'
 
+import { getXsrfHeaders } from '~/lib/csrf'
+
 interface AuthHandler {
-  handleUnauthorized: (endpoint: string, options: any) => Promise<any>
+  handleUnauthorized: (endpoint: string, options: any) => Promise<{ retry?: boolean } | void>
 }
 
 export class ApiClient {
@@ -9,6 +11,7 @@ export class ApiClient {
   private readonly defaultHeaders: Record<string, string>
   private authToken?: string
   private authHandler?: AuthHandler
+  private csrfReady: boolean = false
 
   constructor(
     options: {
@@ -34,23 +37,40 @@ export class ApiClient {
     this.authHandler = handler
   }
 
-  private get headers(): Record<string, string> {
-    return {
-      ...this.defaultHeaders,
-      ...(this.authToken ? { Authorization: `Bearer ${this.authToken}` } : {}),
-    }
-  }
-
   public getAuthHeaders(): Record<string, string> {
     return this.authToken ? { Authorization: `Bearer ${this.authToken}` } : {}
   }
 
+  private resolveUrl(endpoint: string): string {
+    return endpoint.startsWith('http') ? endpoint : `${this.baseURL}${endpoint}`
+  }
+
+  public async ensureCsrfCookie(): Promise<void> {
+    if (!import.meta.client || this.csrfReady) return
+
+    const url = this.resolveUrl('/auth/v1/csrf-cookie')
+    await $fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    this.csrfReady = true
+  }
+
   public async request<T>(endpoint: string, options: NitroFetchOptions<any> = {}): Promise<T> {
-    const url = endpoint.startsWith('http') ? endpoint : `${this.baseURL}${endpoint}`
+    const url = this.resolveUrl(endpoint)
+    const method = (options.method || 'GET').toString().toUpperCase()
+
+    if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
+      await this.ensureCsrfCookie()
+    }
 
     const makeRequest = async (headers: Record<string, string>) => {
       return $fetch<T>(url, {
         ...options,
+        credentials: options.credentials || 'include',
         headers: {
           ...headers,
           ...options.headers,
@@ -59,36 +79,24 @@ export class ApiClient {
     }
 
     try {
-      return await makeRequest(this.headers)
+      const csrfHeaders =
+        method === 'GET' || method === 'HEAD' || method === 'OPTIONS' ? {} : getXsrfHeaders()
+      return await makeRequest({
+        ...this.defaultHeaders,
+        ...csrfHeaders,
+      })
     } catch (error: any) {
       if (error?.response?.status === 401 && this.authHandler) {
-        try {
-          const retryInfo = await this.authHandler.handleUnauthorized(endpoint, options)
+        const retryInfo = await this.authHandler.handleUnauthorized(endpoint, options)
 
-          if (retryInfo.token) {
-            const authHeaders: Record<string, string> = {
-              ...this.defaultHeaders,
-              Authorization: `Bearer ${retryInfo.token}`,
-            }
-            if (options.headers) {
-              Object.assign(authHeaders, options.headers)
-            }
-            return await makeRequest(authHeaders)
-          }
-
-          // If no token is returned, authentication handler failed
-          console.error(
-            'Token refresh failed: Error: Authentication failed - No token returned from auth handler'
-          )
-          throw new Error('Token refresh failed: Error: Authentication failed')
-        } catch (authError: any) {
-          // Re-throw authentication errors with context
-          console.error(
-            'Token refresh failed: Error: Authentication failed',
-            authError?.message || authError
-          )
-          throw authError
+        if (retryInfo?.retry) {
+          return await makeRequest({
+            ...this.defaultHeaders,
+            ...getXsrfHeaders(),
+          })
         }
+
+        throw error
       }
 
       throw error

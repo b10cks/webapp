@@ -1,6 +1,7 @@
 {
   "labels": {
     "loading": "Einen Moment bitte...",
+    "never": "Nie",
     "login": {
       "pageTitle": "Bei b10cks anmelden",
       "signupPageTitle": "Erstelle dein b10cks-Konto",
@@ -980,6 +981,31 @@
           "passwordChangeFailed": "Fehler beim Ändern des Passworts: {error}"
         }
       },
+      "apiTokens": {
+        "title": "API-Token",
+        "description": "Erstelle persönliche Tokens für Integrationen, Skripte und Automatisierungen.",
+        "nameLabel": "Token-Name",
+        "namePlaceholder": "z.B. Analytics-Sync",
+        "expiresLabel": "Läuft ab",
+        "expiresPlaceholder": "Gültigkeit auswählen",
+        "expiresIn": "Läuft in {days} Tagen ab",
+        "generate": "Token erstellen",
+        "generating": "Wird erstellt...",
+        "existingTokens": "Vorhandene Tokens",
+        "tokenGenerated": "Token erstellt",
+        "tokenWarning": "Kopiere den Token jetzt. Du kannst ihn später nicht mehr sehen.",
+        "newTokenLabel": "Dein neuer Token",
+        "copied": "Token in die Zwischenablage kopiert",
+        "expired": "Abgelaufen",
+        "active": "Aktiv",
+        "empty": "Noch keine Tokens",
+        "table": {
+          "name": "Name",
+          "createdAt": "Erstellt",
+          "expiresAt": "Läuft ab",
+          "status": "Status"
+        }
+      },
       "themes": {
         "title": "Themes",
         "description": "Manage your preferred theme.",
@@ -1624,8 +1650,20 @@
       "deleteSuccess": "Token erfolgreich gelöscht",
       "deleteError": "Fehler beim Löschen des Tokens: {error}"
     },
+    "personalAccessTokens": {
+      "createSuccess": "Token \"{name}\" erfolgreich erstellt",
+      "createError": "Fehler beim Erstellen des Tokens: {error}",
+      "deleteSuccess": "Token erfolgreich gelöscht",
+      "deleteError": "Fehler beim Löschen des Tokens: {error}"
+    },
     "auth": {
       "invalidResponse": "Etwas ist schief gelaufen. Versuche es nochmal?",
+      "invalidTotpCode": "Der Code ist nicht korrekt. Bitte versuche es erneut.",
+      "emailNotVerified": "Bitte bestätige deine E-Mail, bevor du dich anmeldest.",
+      "loginFailed": "Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
+      "loginSessionExpired": "Die Anmeldesitzung ist abgelaufen. Bitte erneut versuchen.",
+      "emailExists": "Ein Konto mit dieser E-Mail existiert bereits.",
+      "registerFailed": "Registrierung fehlgeschlagen. Bitte erneut versuchen.",
       "tokenRefreshFailed": "Sitzung abgelaufen. Bitte melde dich erneut an.",
       "sessionExpired": "Deine Sitzung ist abgelaufen. Lass mich dich erneut anmelden.",
       "failedToLoadUser": "Konnte dein Profil nicht laden. Aktualisiere die Seite?"

@@ -11,6 +11,7 @@ import type {
 } from '~/types/assets'
 
 import { api } from '~/api'
+import { getXsrfHeaders } from '~/lib/csrf'
 
 import { queryKeys } from './useQueryClient'
 
@@ -57,6 +58,7 @@ export function useAssets(spaceId: MaybeRef<string>) {
     }, 300)
 
     try {
+      await apiClient.ensureCsrfCookie()
       const formData = new FormData()
       formData.append('file', payload.file)
 
@@ -93,7 +95,7 @@ export function useAssets(spaceId: MaybeRef<string>) {
               } else {
                 resolve(null)
               }
-            } catch (_) {
+            } catch {
               reject(new Error('Failed to parse server response'))
             }
           } else {
@@ -110,15 +112,15 @@ export function useAssets(spaceId: MaybeRef<string>) {
         })
 
         const apiBaseUrl = ''
-        const authToken = apiClient.getAuthHeaders()['Authorization']?.replace('Bearer ', '') || ''
-
         xhr.open('POST', `${apiBaseUrl}/mgmt/v1/spaces/${toValue(spaceId)}/assets`)
+        xhr.withCredentials = true
 
         // Set headers
-        if (authToken) {
-          xhr.setRequestHeader('Authorization', `Bearer ${authToken}`)
-          xhr.setRequestHeader('accept', 'application/json')
-        }
+        xhr.setRequestHeader('accept', 'application/json')
+        const xsrfHeaders = getXsrfHeaders()
+        Object.entries(xsrfHeaders).forEach(([key, value]) => {
+          xhr.setRequestHeader(key, value)
+        })
         xhr.send(formData)
       })
 

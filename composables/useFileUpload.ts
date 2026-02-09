@@ -1,6 +1,5 @@
-import { ref } from 'vue'
-
 import { useApiClient } from '~/composables/useApiClient'
+import { getXsrfHeaders } from '~/lib/csrf'
 
 interface UploadOptions {
   url: string
@@ -17,6 +16,7 @@ export function useFileUpload() {
   const upload = async (file: File, options: UploadOptions): Promise<any> => {
     isUploading.value = true
     error.value = null
+    await apiClient.ensureCsrfCookie()
     const formData = new FormData()
     formData.append(options.fieldName || 'file', file)
 
@@ -34,7 +34,7 @@ export function useFileUpload() {
           try {
             const response = JSON.parse(xhr.responseText)
             resolve(response)
-          } catch (e) {
+          } catch {
             error.value = 'Failed to parse server response'
             reject(error.value)
           }
@@ -54,12 +54,13 @@ export function useFileUpload() {
         reject(error.value)
       })
       xhr.open('POST', options.url)
+      xhr.withCredentials = true
       // Set headers
-      const authToken = apiClient.getAuthHeaders()['Authorization']?.replace('Bearer ', '') || ''
-      if (authToken) {
-        xhr.setRequestHeader('Authorization', `Bearer ${authToken}`)
-        xhr.setRequestHeader('accept', 'application/json')
-      }
+      xhr.setRequestHeader('accept', 'application/json')
+      const xsrfHeaders = getXsrfHeaders()
+      Object.entries(xsrfHeaders).forEach(([key, value]) => {
+        xhr.setRequestHeader(key, value)
+      })
       if (options.headers) {
         Object.entries(options.headers).forEach(([key, value]) => {
           xhr.setRequestHeader(key, value)

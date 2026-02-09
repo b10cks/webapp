@@ -105,6 +105,11 @@ export default defineNuxtConfig({
         changeOrigin: true,
         headers: { 'accept-encoding': 'identity' },
       },
+      '/sanctum': {
+        target: `${process.env.NUXT_API_PROXY_URL}sanctum`,
+        changeOrigin: true,
+        headers: { 'accept-encoding': 'identity' },
+      },
       '/api/v1': {
         target: `${process.env.NUXT_API_PROXY_URL}api/v1`,
         changeOrigin: true,

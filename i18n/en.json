@@ -1,6 +1,7 @@
 {
   "labels": {
     "loading": "Just a moment...",
+    "never": "Never",
     "login": {
       "pageTitle": "Sign in to b10cks",
       "signupPageTitle": "Create your b10cks account",
@@ -982,6 +983,31 @@
           "passwordChangeFailed": "Failed to change password: {error}"
         }
       },
+      "apiTokens": {
+        "title": "API Tokens",
+        "description": "Create personal tokens for integrations, scripts, and automation.",
+        "nameLabel": "Token name",
+        "namePlaceholder": "e.g., Analytics sync",
+        "expiresLabel": "Expires",
+        "expiresPlaceholder": "Select lifetime",
+        "expiresIn": "Expires in {days} days",
+        "generate": "Generate token",
+        "generating": "Generating...",
+        "existingTokens": "Existing tokens",
+        "tokenGenerated": "Token created",
+        "tokenWarning": "Copy this token now. You won't be able to see it again.",
+        "newTokenLabel": "Your new token",
+        "copied": "Token copied to clipboard",
+        "expired": "Expired",
+        "active": "Active",
+        "empty": "No tokens yet",
+        "table": {
+          "name": "Name",
+          "createdAt": "Created",
+          "expiresAt": "Expires",
+          "status": "Status"
+        }
+      },
       "themes": {
         "title": "Themes",
         "description": "Manage your preferred theme.",
@@ -1626,8 +1652,20 @@
       "deleteSuccess": "Token deleted successfully",
       "deleteError": "Failed to delete token: {error}"
     },
+    "personalAccessTokens": {
+      "createSuccess": "Token \"{name}\" created successfully",
+      "createError": "Failed to create token: {error}",
+      "deleteSuccess": "Token deleted successfully",
+      "deleteError": "Failed to delete token: {error}"
+    },
     "auth": {
       "invalidResponse": "Something went wrong. Try again?",
+      "invalidTotpCode": "That code doesn't look right. Try again?",
+      "emailNotVerified": "Please verify your email before signing in.",
+      "loginFailed": "Login failed. Please try again.",
+      "loginSessionExpired": "Login session expired. Please try again.",
+      "emailExists": "An account with this email already exists.",
+      "registerFailed": "Registration failed. Please try again.",
       "tokenRefreshFailed": "Session expired. Please log in again.",
       "sessionExpired": "Your session timed out. Let's log you back in.",
       "failedToLoadUser": "Couldn't load your profile. Refresh the page?"

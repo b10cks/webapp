@@ -1,6 +1,8 @@
 import type { ApiResponse, BaseQueryParams } from '~/types'
 import type { ExportTypes } from '~/types/assets'
 
+import { getXsrfHeaders } from '~/lib/csrf'
+
 import type { ApiClient } from '../client'
 
 import { BaseResource } from './base-resource'
@@ -65,7 +67,7 @@ export class Assets extends BaseResource<
             try {
               const response = JSON.parse(xhr.responseText)
               resolve(response)
-            } catch (_) {
+            } catch {
               reject(new Error('Failed to parse server response'))
             }
           } else {
@@ -80,11 +82,11 @@ export class Assets extends BaseResource<
         })
 
         xhr.open('POST', this.basePath)
-
-        const auth = this.client.getAuthHeaders()
-        if (auth.Authorization) {
-          xhr.setRequestHeader('Authorization', auth.Authorization)
-        }
+        xhr.withCredentials = true
+        const xsrfHeaders = getXsrfHeaders()
+        Object.entries(xsrfHeaders).forEach(([key, value]) => {
+          xhr.setRequestHeader(key, value)
+        })
 
         xhr.send(formData)
       })
@@ -113,12 +115,15 @@ export class Assets extends BaseResource<
     const baseURL = (this.client as any).baseURL || ''
     const url = `${baseURL}${this.basePath}/export`
 
+    await this.client.ensureCsrfCookie()
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         ...authHeaders,
+        ...getXsrfHeaders(),
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(params),
     })
 
@@ -147,9 +152,14 @@ export class Assets extends BaseResource<
     const baseURL = (this.client as any).baseURL || ''
     const url = `${baseURL}${this.basePath}/import`
 
+    await this.client.ensureCsrfCookie()
     const response = await fetch(url, {
       method: 'POST',
-      headers: authHeaders,
+      headers: {
+        ...authHeaders,
+        ...getXsrfHeaders(),
+      },
+      credentials: 'include',
       body: formData,
     })
 

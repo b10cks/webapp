@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import ApiTokenSettings from '~/components/account/ApiTokenSettings.vue'
 import BackupCodesDisplay from '~/components/BackupCodesDisplay.vue'
 import TwoFactorSetupDialog from '~/components/TwoFactorSetupDialog.vue'
 import { Alert } from '~/components/ui/alert'
@@ -161,6 +161,8 @@ const handleRegenerateBackupCodes = async () => {
         </Button>
       </CardFooter>
     </Card>
+
+    <ApiTokenSettings />
 
     <Card variant="outline">
       <CardHeaderCombined

@@ -10,6 +10,7 @@ defineProps<{
 
 <template>
   <SelectField
+    v-model="value"
     :name="item.key"
     :label="item.name || item.key"
     :options="

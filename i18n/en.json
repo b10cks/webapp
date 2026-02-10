@@ -836,7 +836,17 @@
         "code": "Code",
         "label": "Label",
         "codePlaceholder": "Code (e.g., de)",
-        "labelPlaceholder": "Label (e.g., German)"
+        "labelPlaceholder": "Label (e.g., German)",
+        "slugStrategy": {
+          "label": "Slug Strategy",
+          "placeholder": "Select slug strategy",
+          "description": "Choose how to handle slugs for translated content.",
+          "values": {
+            "never": "Never",
+            "prependTranslations": "Prepend Translations",
+            "alwaysPrepend": "Always Prepend"
+          }
+        }
       },
       "accessTokens": {
         "title": "Access Tokens",

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { deepClone } from '@vue/devtools-shared'
+import { Button } from '~/components/ui/button'
 import {
   Card,
   CardContent,
@@ -7,10 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
-import { FormField } from '~/components/ui/form'
+import { FormField, SelectField } from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
-import { deepClone } from '@vue/devtools-shared'
-import { Button } from '~/components/ui/button'
 import SettingsTable, { type ColumnDefinition } from '~/components/ui/settings-table'
 
 const { useUpdateSpaceMutation } = useSpaces()
@@ -20,6 +20,7 @@ const props = defineProps<{ space: SpaceResource }>()
 
 const languages = ref(deepClone(props.space.settings.languages || []))
 const defaultLanguage = ref(props.space.settings.default_language)
+const slugStrategy = ref(props.space.settings.slug_strategy || 'never')
 
 const columns: ColumnDefinition[] = [
   {
@@ -55,6 +56,15 @@ const addLanguage = (newLanguage: { code: string; name: string }) => {
   languages.value.push(newLanguage)
 }
 
+const slugStrategyOptions = [
+  { value: 'never', label: $t('labels.settings.i18n.slugStrategy.values.never') },
+  {
+    value: 'prepend_translations',
+    label: $t('labels.settings.i18n.slugStrategy.values.prependTranslations'),
+  },
+  { value: 'always_prepend', label: $t('labels.settings.i18n.slugStrategy.values.alwaysPrepend') },
+]
+
 const saveSettings = async () => {
   updateSpace({
     id: props.space.id,
@@ -63,6 +73,7 @@ const saveSettings = async () => {
         ...props.space.settings,
         languages: languages.value,
         default_language: defaultLanguage.value,
+        slug_strategy: slugStrategy.value,
       },
     },
   })
@@ -86,6 +97,14 @@ const saveSettings = async () => {
           :placeholder="$t('labels.settings.i18n.defaultLanguagePlaceholder')"
         />
       </FormField>
+      <SelectField
+        v-model="slugStrategy"
+        name="slugStrategy"
+        :label="$t('labels.settings.i18n.slugStrategy.label')"
+        :placeholder="$t('labels.settings.i18n.slugStrategy.placeholder')"
+        :description="$t('labels.settings.i18n.slugStrategy.description')"
+        :options="slugStrategyOptions"
+      />
       <div>
         <h4 class="mb-2 text-sm font-medium">{{ $t('labels.settings.i18n.languages') }}</h4>
         <p class="mb-4 text-xs text-muted">

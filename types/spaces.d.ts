@@ -20,6 +20,7 @@ interface SpaceSettings {
   environments?: SpaceEnvironment[]
   region?: 'eu' | 'us'
   default_language?: string
+  slug_strategy?: 'never' | 'prepend_translations' | 'always_prepend'
   asset_fields?: SpaceAssetField[]
   languages?: SpaceLanguage[]
 }

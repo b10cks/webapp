@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import ApiTokenSettings from '~/components/account/ApiTokenSettings.vue'
 import BackupCodesDisplay from '~/components/BackupCodesDisplay.vue'
 import TwoFactorSetupDialog from '~/components/TwoFactorSetupDialog.vue'

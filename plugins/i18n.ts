@@ -21,14 +21,21 @@ export function installI18n(app: App) {
   app.use(i18n)
 }
 
+export const locales = [
+  { code: 'de', name: 'Deutsch', iso: 'de', flag: '🇦🇹' },
+  { code: 'en', name: 'English', iso: 'en', flag: '🇺🇸' },
+] as const
+
 export function useI18n() {
   const global = i18n.global as any
   return {
     t: global.t.bind(global),
     $t: global.t.bind(global),
     locale: global.locale,
+    locales,
     setLocale: (locale: 'en' | 'de') => {
       global.locale.value = locale
+      document.querySelector('html').setAttribute('lang', locale)
     },
     getLocale: () => global.locale.value,
   }
@@ -41,10 +48,5 @@ export function setLocale(locale: 'en' | 'de') {
 export function getLocale() {
   return (i18n.global.locale as any).value
 }
-
-export const locales = [
-  { code: 'de', name: 'Deutsch', iso: 'de', flag: '🇦🇹' },
-  { code: 'en', name: 'English', iso: 'en', flag: '🇺🇸' },
-] as const
 
 export type LocaleCode = (typeof locales)[number]['code']

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import DataSourceDialog from '~/components/datasources/DataSourceDialog.vue'
 import DataSourcesTable from '~/components/datasources/DataSourcesTable.vue'
 import { Button } from '~/components/ui/button'

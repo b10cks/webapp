@@ -24,5 +24,3 @@ const content = defineModel<ContentResource>()
     />
   </div>
 </template>
-
-<style scoped></style>

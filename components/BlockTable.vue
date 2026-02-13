@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useRouteQuery } from '@vueuse/router'
 import BlocksIcon from '~/assets/images/blocks.svg?component'
 import CreateBlockDialog from '~/components/blocks/CreateBlockDialog.vue'
@@ -8,10 +10,18 @@ import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import IconName from '~/components/ui/IconName.vue'
 import SortSelect from '~/components/ui/SortSelect.vue'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableSortableHead,
+} from '~/components/ui/table'
 import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
 import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
 import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableSortableHead } from '~/components/ui/table'
 
 const props = defineProps<{
   spaceId: string
@@ -50,7 +60,9 @@ const { data: blockTags, isLoading: isLoadingTags } = useBlockTagsQuery({ per_pa
 const { useBlockFoldersQuery } = useBlockFolders(props.spaceId)
 const { data: blockFolders, isLoading: isLoadingFolders } = useBlockFoldersQuery({ per_page: 500 })
 
-const isLoading = computed(() => isLoadingBlocks.value || isLoadingTags.value || isLoadingFolders.value)
+const isLoading = computed(
+  () => isLoadingBlocks.value || isLoadingTags.value || isLoadingFolders.value
+)
 
 const pageSizeOptions = [25, 50, 100, 500, 1000]
 const sortOptions = [
@@ -96,11 +108,14 @@ const getBlockFolder = (folderId: string | null) => {
 }
 
 const handleDelete = async (block: BlockResource) => {
-  const confirmed = await alert.confirm($t('messages.blockTags.deleteConfirmation', { name: block.name }), {
-    title: $t('labels.blockTags.deleteTitle'),
-    confirmLabel: $t('actions.delete'),
-    cancelLabel: $t('actions.cancel'),
-  })
+  const confirmed = await alert.confirm(
+    $t('messages.blockTags.deleteConfirmation', { name: block.name }),
+    {
+      title: $t('labels.blockTags.deleteTitle'),
+      confirmLabel: $t('actions.delete'),
+      cancelLabel: $t('actions.cancel'),
+    }
+  )
 
   if (confirmed) {
     await deleteBlock(block.id)

@@ -1,17 +1,10 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useSortable } from '@vueuse/integrations/useSortable'
-import { FormField } from '~/components/ui/form'
-import {
-  Combobox,
-  ComboboxAnchor,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from '~/components/ui/combobox'
-import { Input } from '~/components/ui/input'
 import { Button } from '~/components/ui/button'
 import SelectField from '~/components/ui/form/SelectField.vue'
+import { Input } from '~/components/ui/input'
 
 const props = defineProps<{ value: OptionSchema; name: string }>()
 const list = ref<HTMLDivElement | null>(null)

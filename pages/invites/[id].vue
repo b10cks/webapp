@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+import TeamSelector from '~/components/TeamSelector.vue'
+
 import AppHeader from '~/components/AppHeader.vue'
 import { Alert } from '~/components/ui/alert'
 import { Button } from '~/components/ui/button'

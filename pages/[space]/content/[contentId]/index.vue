@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useRouteQuery } from '@vueuse/router'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'

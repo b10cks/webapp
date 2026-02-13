@@ -112,6 +112,8 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { TreeItem, TreeRoot } from 'reka-ui'
 import { computed, ref } from 'vue'
 import { Button } from '~/components/ui/button'

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+import NuxtImg from '~/components/NuxtImg.vue'
+
 import AssetsIcon from '~/assets/images/assets.svg?component'
 import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
 import AssetGrid from '~/components/assets/AssetGrid.vue'

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { TreeItem, TreeRoot } from 'reka-ui'
+import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import IconGrid from '~/components/ui/IconGrid.vue'
 import { Input } from '~/components/ui/input'
-import { Badge } from '~/components/ui/badge'
 
 const route = useRoute()
 const { useAssetTagsQuery } = useAssetTags(route.params.spaceId as string)

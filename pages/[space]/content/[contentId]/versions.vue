@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
+import ContentHeader from '~/components/content/ContentHeader.vue'
 import ContentVersionHistory from '~/components/content/VersionHistory.vue'
 import { Button } from '~/components/ui/button'
-import ContentHeader from '~/components/content/ContentHeader.vue'
 
 // Extract route parameters
 const route = useRoute()
@@ -87,9 +89,7 @@ useSeoMeta({
       class="flex items-center gap-3"
     >
       <Button @click="navigateToContent">
-        <Icon
-          name="lucide:arrow-left"
-        />
+        <Icon name="lucide:arrow-left" />
         Back to Editor
       </Button>
     </div>

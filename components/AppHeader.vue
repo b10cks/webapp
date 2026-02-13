@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +57,7 @@ const openQuickActions = () => {
 }
 
 const openAccountSettings = () => {
-  router.push('/account/settings')
+  router.push({ name: 'account-settings-index' })
 }
 
 const switchSpace = (spaceId: string) => {
@@ -95,15 +97,12 @@ const isSpaceSelected = computed(() => !!selectedSpace.value)
           class="min-w-56"
           align="start"
         >
-          <!-- Main Actions -->
           <DropdownMenuGroup>
             <DropdownMenuItem @select="toDashboard">
               {{ $t('actions.toDashboard') }}
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-
-          <!-- Current Space -->
           <DropdownMenuGroup>
             <DropdownMenuLabel v-if="selectedSpace">
               {{ selectedSpace.name }}
@@ -120,8 +119,6 @@ const isSpaceSelected = computed(() => !!selectedSpace.value)
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-
-          <!-- Space Switcher -->
           <DropdownMenuGroup>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
@@ -147,8 +144,6 @@ const isSpaceSelected = computed(() => !!selectedSpace.value)
             </DropdownMenuSub>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-
-          <!-- User Actions -->
           <DropdownMenuGroup>
             <DropdownMenuItem @click="openAccountSettings()">
               {{ $t('actions.user.account') }}

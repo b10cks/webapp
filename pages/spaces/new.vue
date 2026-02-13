@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { Label } from 'reka-ui'
 import AppHeader from '~/components/AppHeader.vue'
 import ServerLocationSelect from '~/components/ServerLocationSelect.vue'

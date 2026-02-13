@@ -1,21 +1,22 @@
 <script setup lang="ts">
-
 import type { BlockFolderResource } from '~/api/resources/block-folders'
 import IconNameField from '~/components/ui/IconNameField.vue'
 
-const props = withDefaults(defineProps<{
-  folder: BlockFolderResource
-  isCreate?: boolean
-}>(), {
-  isCreate: false,
-})
+const props = withDefaults(
+  defineProps<{
+    folder: BlockFolderResource
+    isCreate?: boolean
+  }>(),
+  {
+    isCreate: false,
+  }
+)
 
 const editableFolder = ref<BlockFolderResource>({
   ...props.folder,
   icon: props.folder.icon || 'folder',
-  color: props.folder.color
+  color: props.folder.color,
 })
-
 </script>
 
 <template>
@@ -26,6 +27,6 @@ const editableFolder = ref<BlockFolderResource>({
       name="name"
       @update:model-value="Object.assign(editableFolder, $event)"
     />
-    <slot :folder="editableFolder"/>
+    <slot :folder="editableFolder" />
   </div>
 </template>

@@ -1,6 +1,14 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { Button } from '~/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined, DialogTrigger } from '~/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeaderCombined,
+  DialogTrigger,
+} from '~/components/ui/dialog'
 import { InputField, SelectField } from '~/components/ui/form'
 import type { AddTeamUserPayload } from '~/types/teams'
 

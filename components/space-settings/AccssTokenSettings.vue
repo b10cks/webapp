@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useClipboard } from '@vueuse/core'
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'

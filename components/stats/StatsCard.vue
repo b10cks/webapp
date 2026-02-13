@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 

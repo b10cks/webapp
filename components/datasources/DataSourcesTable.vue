@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useClipboard } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import type { DataSourcesQueryParams } from '~/api/resources/data-sources'
@@ -7,12 +9,6 @@ import SearchFilter from '~/components/SearchFilter.vue'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import SortSelect from '~/components/ui/SortSelect.vue'
-import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
-import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
-import { SimpleTooltip } from '~/components/ui/tooltip'
-import { useDataSources } from '~/composables/useDataSources'
-import type { DataSourceResource } from '~/types/data-sources'
 import {
   Table,
   TableBody,
@@ -21,7 +17,13 @@ import {
   TableHeader,
   TableRow,
   TableSortableHead,
-} from '/components/ui/table'
+} from '~/components/ui/table'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import { SimpleTooltip } from '~/components/ui/tooltip'
+import { useDataSources } from '~/composables/useDataSources'
+import type { DataSourceResource } from '~/types/data-sources'
 
 const props = defineProps<{
   spaceId: string

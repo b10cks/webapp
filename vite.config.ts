@@ -2,7 +2,6 @@ import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'node:path'
 import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
 import { defineConfig, loadEnv } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import svgLoader from 'vite-svg-loader'
@@ -24,12 +23,6 @@ export default defineConfig(({ mode }) => {
         dts: 'auto-imports.d.ts',
         dirs: ['composables', 'plugins'],
         vueTemplate: true,
-      }),
-      Components({
-        dirs: ['components'],
-        dts: 'components.d.ts',
-        deep: true,
-        extensions: ['vue'],
       }),
       vue(),
       tailwindcss(),
@@ -65,7 +58,7 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         workbox: {
           navigateFallback: '/',
-          globPatterns: ['assets/**/*.{js,css}', '**/*.html', '**/*.png', '**/*.svg', '**/*.ico'],
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         },
         devOptions: {
           enabled: true,
@@ -120,11 +113,6 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           headers: { 'accept-encoding': 'identity' },
         },
-        '/sanctum': {
-          target: apiProxyUrl,
-          changeOrigin: true,
-          headers: { 'accept-encoding': 'identity' },
-        },
         '/api/v1': {
           target: apiProxyUrl,
           changeOrigin: true,
@@ -133,6 +121,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      assetsDir: '_assets',
       target: 'esnext',
       minify: 'esbuild',
     },

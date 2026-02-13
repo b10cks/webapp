@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Bar } from 'vue-chartjs'
 import {
   BarElement,
   CategoryScale,
@@ -10,8 +9,9 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
+import { Bar } from 'vue-chartjs'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+import NuxtImg from '~/components/NuxtImg.vue'
+
 import { Checkbox } from '~/components/ui/checkbox'
 import {
   DropdownMenu,

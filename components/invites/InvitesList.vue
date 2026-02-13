@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import UsersIcon from '~/assets/images/users.svg?component'
 import SearchFilter from '~/components/SearchFilter.vue'
 import { Badge } from '~/components/ui/badge'

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 // import RedirectDialog from '~/components/redirects/RedirectDialog.vue'
 import RedirectsTable from '~/components/redirects/RedirectsTable.vue'
 import { Button } from '~/components/ui/button'

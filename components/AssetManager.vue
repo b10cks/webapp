@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useRouteQuery } from '@vueuse/router'
 import { TabsContent, TabsRoot } from 'reka-ui'
 import AssetFolderTree from '~/components/assets/AssetFolderTree.vue'
@@ -129,20 +131,18 @@ watch(sidebarMode, (newMode) => {
       </TabsRoot>
     </div>
 
-    <ClientOnly>
-      <Teleport to="#appHeaderActions">
-        <div class="flex gap-2">
-          <Button @click="importDialogOpen = true">
-            <Icon name="lucide:upload" />
-            {{ $t('labels.assets.import') }}
-          </Button>
-          <Button @click="exportDialogOpen = true">
-            <Icon name="lucide:download" />
-            {{ $t('labels.assets.export') }}
-          </Button>
-        </div>
-      </Teleport>
-    </ClientOnly>
+    <Teleport to="#appHeaderActions">
+      <div class="flex gap-2">
+        <Button @click="importDialogOpen = true">
+          <Icon name="lucide:upload" />
+          {{ $t('labels.assets.import') }}
+        </Button>
+        <Button @click="exportDialogOpen = true">
+          <Icon name="lucide:download" />
+          {{ $t('labels.assets.export') }}
+        </Button>
+      </div>
+    </Teleport>
 
     <ExportAssetsDialog
       v-model:open="exportDialogOpen"

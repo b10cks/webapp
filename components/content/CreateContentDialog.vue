@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Badge } from '~/components/ui/badge'
+import Icon from '~/components/Icon.vue'
+
 import { Button } from '~/components/ui/button'
-import IconName from '~/components/ui/IconName.vue'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { FormField, InputField } from '~/components/ui/form'
-import { ScrollArea } from '~/components/ui/scroll-area'
+import IconName from '~/components/ui/IconName.vue'
 import {
   Select,
   SelectContent,

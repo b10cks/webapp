@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { CheckboxRootEmits, CheckboxRootProps } from 'reka-ui'
 import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from 'reka-ui'
 import { cn } from '@/lib/utils'

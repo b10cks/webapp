@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import ReleaseBadge from '~/components/releases/ReleaseBadge.vue'
 import { Button } from '~/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
@@ -85,7 +86,13 @@ const handleCancel = () => {
           :class="{ 'opacity-50': !release.versions_count }"
         >
           <Icon name="lucide:layers" />
-          <span>{{ $tc('labels.releases.fields.versionsCount', release.versions_count) }}</span>
+          <span>{{
+            $t(
+              'labels.releases.fields.versionsCount',
+              release.versions_count,
+              release.versions_count
+            )
+          }}</span>
         </div>
       </div>
       <div class="col-span-2 flex min-w-0 items-center gap-1">

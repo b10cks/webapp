@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import Icon from '~/components/Icon.vue'
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '~/components/ui/breadcrumb'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from '~/components/ui/breadcrumb'
 import { Button } from '~/components/ui/button'
 import type { ContentResource } from '~/types/contents'
 import { SimpleTooltip } from '../ui/tooltip'
@@ -17,7 +23,9 @@ const spaceId = inject('spaceId')
 const { useContentMenuQuery, buildBreadcrumbs } = useContentMenu(spaceId)
 const { data: contentMenu } = useContentMenuQuery()
 const { settings } = useSpaceSettings(spaceId)
-const breadcrumbs = computed(() => props.content && buildBreadcrumbs(contentMenu.value, props.content.id))
+const breadcrumbs = computed(
+  () => props.content && buildBreadcrumbs(contentMenu.value, props.content.id)
+)
 
 watch(breadcrumbs, (crumbs) => {
   const path = crumbs.map(({ id }) => id)

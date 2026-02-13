@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useElementHover } from '@vueuse/core'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import ContentBreadcrumbs from '~/components/editor/ContentBreadcrumbs.vue'

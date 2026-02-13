@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { deepClone } from '@vue/devtools-shared'
+import { Button } from '~/components/ui/button'
 import {
   Card,
   CardContent,
@@ -7,11 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
-import { Switch } from '~/components/ui/switch'
-import { deepClone } from '@vue/devtools-shared'
-import { Button } from '~/components/ui/button'
-import { SimpleTooltip } from '~/components/ui/tooltip'
-import { InputField } from '~/components/ui/form'
 import SettingsTable, {
   type ColumnDefinition,
   type TableItem,

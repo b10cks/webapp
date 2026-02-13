@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import dayjs from 'dayjs'
 import { Avatar } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'

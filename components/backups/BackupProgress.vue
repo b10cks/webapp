@@ -22,6 +22,6 @@ const displayProgress = computed(() => {
       :model-value="displayProgress"
       class="h-2 w-24"
     />
-    <span class="text-xs text-muted-foreground">{{ displayProgress }}%</span>
+    <span class="text-muted-foreground text-xs">{{ displayProgress }}%</span>
   </div>
 </template>

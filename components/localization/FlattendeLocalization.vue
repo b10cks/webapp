@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { computed, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
 import MetaLocalization from '~/components/localization/MetaLocalization.vue'

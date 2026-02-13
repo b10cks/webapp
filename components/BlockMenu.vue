@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { TabsList, TabsRoot, TabsTrigger, TreeItem, TreeRoot } from 'reka-ui'
-import { ScrollArea } from '~/components/ui/scroll-area'
-import { Button } from '~/components/ui/button'
-import { Badge } from '~/components/ui/badge'
-import CreateBlockFolderDialog from '~/components/blocks/CreateBlockFolderDialog.vue'
 import type { BlockFolderResource } from '~/api/resources/block-folders'
+import CreateBlockFolderDialog from '~/components/blocks/CreateBlockFolderDialog.vue'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
+import { ScrollArea } from '~/components/ui/scroll-area'
 
 const mode = defineModel<'list' | 'tags'>('mode', {
   default: 'list',

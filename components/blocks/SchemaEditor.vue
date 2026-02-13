@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { deepClone } from '@vue/devtools-shared'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import { AccordionRoot } from 'reka-ui'

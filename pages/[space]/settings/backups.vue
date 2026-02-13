@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import BackupsTable from '~/components/backups/BackupsTable.vue'
 import CreateBackupDialog from '~/components/backups/CreateBackupDialog.vue'
 import { Button } from '~/components/ui/button'

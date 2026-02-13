@@ -4,7 +4,10 @@ import StatsCard from '~/components/stats/StatsCard.vue'
 import StatsLineChart from '~/components/stats/StatsLineChart.vue'
 import StatsMultiLineChart from '~/components/stats/StatsMultiLineChart.vue'
 import StatsPieChart from '~/components/stats/StatsPieChart.vue'
+import { installChart } from '~/plugins/chart'
 import { SelectField } from './ui/form'
+
+installChart()
 
 const { formatDuration, formatNumber, formatTrafficSize, formatFileSize } = useFormat()
 const { t } = useI18n()

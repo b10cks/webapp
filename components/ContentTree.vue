@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { TreeItemToggleEvent } from 'reka-ui'
 import { TreeItem, TreeRoot } from 'reka-ui'
 import CreateContentDialog from '~/components/content/CreateContentDialog.vue'

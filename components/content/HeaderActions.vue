@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { ContentModel } from '~/api/resources/content-model'
 import AssignToReleaseDialog from '~/components/releases/AssignToReleaseDialog.vue'
 import { AvatarList } from '~/components/ui/avatar'
@@ -122,7 +124,9 @@ const assignedRelease = computed(() =>
   (releases.value.data || []).find((release) => release.id === contentModel.value.releaseId)
 )
 
-const isInScheduledRelease = computed(() => assignedRelease.value && getReleaseState(assignedRelease.value) !== 'draft')
+const isInScheduledRelease = computed(
+  () => assignedRelease.value && getReleaseState(assignedRelease.value) !== 'draft'
+)
 
 const hasLocalization = computed(() => space.value?.settings?.languages?.length > 0)
 
@@ -130,7 +134,9 @@ const draftReleases = computed(() =>
   (releases.value.data || []).filter((release) => getReleaseState(release) === 'draft')
 )
 
-const canPublishToRelease = computed(() => !isInScheduledRelease.value && !contentModel.value.isPublished)
+const canPublishToRelease = computed(
+  () => !isInScheduledRelease.value && !contentModel.value.isPublished
+)
 
 const handleAssignToRelease = (release: any) => {
   selectedReleaseForAssign.value = release

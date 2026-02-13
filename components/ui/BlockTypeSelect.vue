@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { SelectGroup, SelectTrigger } from 'reka-ui'
 import BlockType from '~/components/ui/BlockType.vue'
 import { Select, SelectContent, SelectItem } from '~/components/ui/select'

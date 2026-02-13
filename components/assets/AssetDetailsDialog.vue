@@ -1,8 +1,17 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+import NuxtImg from '~/components/NuxtImg.vue'
+
 import { deepClone } from '@vue/devtools-shared'
 import { toast } from 'vue-sonner'
 import { Button } from '~/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '~/components/ui/dialog'
 import { InputField } from '~/components/ui/form'
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { isClient } from '~/lib/env'

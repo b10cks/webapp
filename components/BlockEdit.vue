@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { FormField, InputField, TextField } from '~/components/ui/form'
 import SchemaEditor from '~/components/blocks/SchemaEditor.vue'
+import { FormField, InputField, TextField } from '~/components/ui/form'
+import IconNameField from '~/components/ui/IconNameField.vue'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import ComboboxField from './ui/form/ComboboxField.vue'
-import IconNameField from '~/components/ui/IconNameField.vue'
 
 const props = withDefaults(
   defineProps<{

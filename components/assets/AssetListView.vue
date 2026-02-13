@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { debounce } from 'perfect-debounce'
 import { toast } from 'vue-sonner'
 import type { AssetsQueryParams } from '~/api/resources/assets'

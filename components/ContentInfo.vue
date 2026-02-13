@@ -51,5 +51,3 @@ defineProps<{
     </dd>
   </dl>
 </template>
-
-<style scoped></style>

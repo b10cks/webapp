@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useDark, useToggle } from '@vueuse/core'
 import { Avatar } from '~/components/ui/avatar'
 import {
@@ -30,11 +32,11 @@ const menu = [
   { icon: 'lucide:home', label: 'Home', route: 'space' },
   { icon: 'lucide:feather', label: 'Content', route: 'space-content' },
   { icon: 'lucide:blocks', label: 'Blocks', route: 'space-blocks' },
-  { icon: 'lucide:images', label: 'Assets', route: 'space-assets' },
+  { icon: 'lucide:images', label: 'Assets', route: 'space-assets-index' },
   { icon: 'lucide:database-zap', label: 'Data sets', route: 'space-datasources' },
   { icon: 'lucide:split', label: 'Redirects', route: 'space-redirects' },
   { icon: 'lucide:rocket', label: 'Releases', route: 'space-releases' },
-  { icon: 'lucide:settings', label: 'Settings', route: 'space-settings' },
+  { icon: 'lucide:settings', label: 'Settings', route: 'space-settings-index' },
 ]
 
 const buildLink = (name: string) => {

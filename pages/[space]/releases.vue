@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import CreateReleaseDialog from '~/components/releases/CreateReleaseDialog.vue'
 import ReleaseList from '~/components/releases/ReleaseList.vue'
 import { Button } from '~/components/ui/button'

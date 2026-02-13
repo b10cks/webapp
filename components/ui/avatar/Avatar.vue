@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import NuxtImg from '~/components/NuxtImg.vue'
+
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 import type { AvatarVariants } from '.'

@@ -57,12 +57,18 @@ const addLanguage = (newLanguage: { code: string; name: string }) => {
 }
 
 const slugStrategyOptions = [
-  { value: 'never', label: $t('labels.settings.i18n.slugStrategy.values.never') },
+  {
+    value: 'never',
+    label: $t('labels.settings.i18n.slugStrategy.values.never'),
+  },
   {
     value: 'prepend_translations',
     label: $t('labels.settings.i18n.slugStrategy.values.prependTranslations'),
   },
-  { value: 'always_prepend', label: $t('labels.settings.i18n.slugStrategy.values.alwaysPrepend') },
+  {
+    value: 'always_prepend',
+    label: $t('labels.settings.i18n.slugStrategy.values.alwaysPrepend'),
+  },
 ]
 
 const saveSettings = async () => {

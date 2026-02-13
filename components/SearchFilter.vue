@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { SplitBadge } from '~/components/ui/badge'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 

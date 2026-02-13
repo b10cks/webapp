@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { deepClone } from '@vue/devtools-shared'
 import { AccordionContent, AccordionHeader, AccordionItem, AccordionTrigger } from 'reka-ui'
 import AssetBlock from '~/components/blocks/AssetBlock.vue'

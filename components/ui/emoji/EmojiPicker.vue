@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'

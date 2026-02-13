@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 interface NavItem {
   title: string
   name: string
@@ -9,7 +11,7 @@ interface NavItem {
 const items: NavItem[] = [
   {
     title: 'labels.settings.general.title',
-    name: 'space-settings',
+    name: 'space-settings-index',
     icon: 'lucide:settings',
   },
   {

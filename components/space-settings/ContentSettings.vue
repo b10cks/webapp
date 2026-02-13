@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
+import { ref } from 'vue'
+import { Button } from '~/components/ui/button'
 import {
   Card,
   CardContent,
@@ -7,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import { FormField } from '~/components/ui/form'
 import {
   Select,
   SelectContent,
@@ -14,9 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import { FormField } from '~/components/ui/form'
-import { ref } from 'vue'
-import { Button } from '~/components/ui/button'
 
 const { useUpdateSpaceMutation } = useSpaces()
 const { mutate: updateSpace } = useUpdateSpaceMutation()

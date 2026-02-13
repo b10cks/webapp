@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import CreateInviteDialog from '~/components/invites/CreateInviteDialog.vue'
 import TeamInvitesList from '~/components/invites/TeamInvitesList.vue'
 import AddMemberDialog from '~/components/teams/AddMemberDialog.vue'
 import TeamMembersList from '~/components/teams/TeamMembersList.vue'
-import AppHeader from '~/components/AppHeader.vue'
-import TeamSelector from '~/components/TeamSelector.vue'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import IconName from '~/components/ui/IconName.vue'
@@ -146,11 +146,19 @@ const getTeamColorStyle = (color: string | null | undefined) => {
               </Badge>
               <span class="text-muted-foreground flex items-center gap-1 text-sm">
                 <Icon name="lucide:users" />
-                {{ $tc('labels.teams.memberCount', { count: team.user_count || 0 }) }}
+                {{
+                  $t('labels.teams.memberCount', team.spaces_count || 0, {
+                    count: team.user_count || 0,
+                  })
+                }}
               </span>
               <span class="text-muted-foreground flex items-center gap-1 text-sm">
                 <Icon name="lucide:box" />
-                {{ $tc('labels.teams.spaceCount', { count: team.spaces_count || 0 }) }}
+                {{
+                  $t('labels.teams.spaceCount', team.spaces_count || 0, {
+                    count: team.spaces_count || 0,
+                  })
+                }}
               </span>
             </div>
           </div>

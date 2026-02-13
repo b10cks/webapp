@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import SearchFilter from '~/components/SearchFilter.vue'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'

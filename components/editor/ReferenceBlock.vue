@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { computed, ref, watch } from 'vue'
-import { useAlertDialog } from '~/composables/useAlertDialog'
 import { Button } from '~/components/ui/button'
+import { useAlertDialog } from '~/composables/useAlertDialog'
 import ContentPicker from './ContentPicker.vue'
 
 const props = defineProps<{

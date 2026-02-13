@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
+import { Button } from '~/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -6,7 +9,6 @@ import {
   DialogHeader,
   DialogHeaderCombined,
 } from '~/components/ui/dialog'
-import { Button } from '~/components/ui/button'
 import { InputField } from '~/components/ui/form'
 
 const { formatFileSize, formatDateTime } = useFormat()

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import HeaderActions from '~/components/content/HeaderActions.vue'
 import FlattenedLocalization from '~/components/localization/FlattendeLocalization.vue'
 import { Input } from '~/components/ui/input'

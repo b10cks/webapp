@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
+import BlockTypeSelect from '~/components/ui/BlockTypeSelect.vue'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
-import BlockTypeSelect from '~/components/ui/BlockTypeSelect.vue'
 
 const types = [
   'text',

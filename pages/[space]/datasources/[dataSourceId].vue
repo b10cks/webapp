@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useRouteQuery } from '@vueuse/router'
 import { computed, nextTick, ref } from 'vue'
 import DataEntriesIcon from '~/assets/images/data-entries.svg?component'

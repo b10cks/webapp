@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { CommentResource } from '~/types/comments'
 import CommentItem from './CommentItem.vue'
 

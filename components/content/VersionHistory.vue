@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useRouteQuery } from '@vueuse/router'
 import dayjs from 'dayjs'
 import { RadioGroupItem, RadioGroupRoot } from 'reka-ui'

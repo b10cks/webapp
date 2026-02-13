@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { BackupsQueryParams } from '~/api/resources/backups'
 import BackupIcon from '~/assets/images/backups.svg?component'
 import SearchFilter from '~/components/SearchFilter.vue'

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import CommentItem from '~/components/comments/CommentItem.vue'
+import Icon from '~/components/Icon.vue'
+
 import { Avatar } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { Emoji, EmojiPicker } from '~/components/ui/emoji'

@@ -103,18 +103,16 @@ const routes: RouteRecordRaw[] = [
         path: ':contentId',
         name: 'space-content-contentId',
         component: () => import('~/pages/[space]/content/[contentId]/index.vue'),
-        children: [
-          {
-            path: 'localization',
-            name: 'space-content-localization',
-            component: () => import('~/pages/[space]/content/[contentId]/localization.vue'),
-          },
-          {
-            path: 'versions',
-            name: 'space-content-versions',
-            component: () => import('~/pages/[space]/content/[contentId]/versions.vue'),
-          },
-        ],
+      },
+      {
+        path: ':contentId/localization',
+        name: 'space-content-contentId-localization',
+        component: () => import('~/pages/[space]/content/[contentId]/localization.vue'),
+      },
+      {
+        path: ':contentId/versions',
+        name: 'space-content-contentId-versions',
+        component: () => import('~/pages/[space]/content/[contentId]/versions.vue'),
       },
     ],
   },
@@ -149,13 +147,12 @@ const routes: RouteRecordRaw[] = [
     name: 'space-datasources',
     component: () => import('~/pages/[space]/datasources/index.vue'),
     meta: { layout: 'default' },
-    children: [
-      {
-        path: ':dataSourceId',
-        name: 'space-datasources-dataSourceId',
-        component: () => import('~/pages/[space]/datasources/[dataSourceId].vue'),
-      },
-    ],
+  },
+  {
+    path: '/:space/datasources/:dataSourceId',
+    name: 'space-datasources-dataSourceId',
+    component: () => import('~/pages/[space]/datasources/[dataSourceId].vue'),
+    meta: { layout: 'default' },
   },
   {
     path: '/:space/releases',
@@ -219,19 +216,10 @@ export const router = createRouter({
 })
 
 router.beforeEach(async (to, _from, next) => {
-  console.log('[Router Guard] Navigation to:', to.name, 'path:', to.path)
-
   const auth = useAuth()
 
   try {
-    console.log('[Router Guard] Calling initAuth...')
     await auth.initAuth()
-    console.log(
-      '[Router Guard] initAuth complete. isReady:',
-      auth.isReady.value,
-      'isAuthenticated:',
-      auth.isAuthenticated.value
-    )
   } catch (error) {
     console.error('[Router] Auth initialization failed:', error)
   }
@@ -241,29 +229,17 @@ router.beforeEach(async (to, _from, next) => {
 
   const isGuestRoute = to.meta.guest === true
 
-  console.log(
-    '[Router Guard] isReady:',
-    isReady,
-    'isAuthenticated:',
-    isAuthenticated,
-    'isGuestRoute:',
-    isGuestRoute
-  )
-
   if (!isReady) {
-    console.log('[Router Guard] Not ready, allowing navigation')
     next()
     return
   }
 
   if (isGuestRoute && isAuthenticated) {
-    console.log('[Router Guard] Guest route but authenticated, redirecting to index')
     next({ name: 'index' })
     return
   }
 
   if (!isGuestRoute && !isAuthenticated) {
-    console.log('[Router Guard] Protected route but not authenticated, redirecting to login')
     next({
       name: 'login',
       query: { return: to.fullPath },
@@ -271,6 +247,5 @@ router.beforeEach(async (to, _from, next) => {
     return
   }
 
-  console.log('[Router Guard] Allowing navigation')
   next()
 })

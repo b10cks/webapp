@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+import NuxtImg from '~/components/NuxtImg.vue'
+
+import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
+import AssetGrid from '~/components/assets/AssetGrid.vue'
+import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
 import { useAlertDialog } from '~/composables/useAlertDialog'
-import AssetGrid from '~/components/assets/AssetGrid.vue'
-import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'
-import { Button } from '~/components/ui/button'
 import Label from '../ui/form/Label.vue'
 
 interface AssetValue {

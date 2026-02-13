@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { TreeItem, type TreeItemToggleEvent, TreeRoot } from 'reka-ui'
+import CreateFolderDialog from '~/components/assets/CreateFolderDialog.vue'
 import RenamableTitle from '~/components/ui/RenamableTitle.vue'
 import { Button } from '~/components/ui/button'
-import CreateFolderDialog from '~/components/assets/CreateFolderDialog.vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import type { ContentResource } from '~/types/contents'
 
 const props = defineProps<{
   spaceId: string

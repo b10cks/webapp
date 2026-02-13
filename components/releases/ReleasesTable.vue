@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import ReleasesIcon from '~/assets/images/releases.svg?component'
 import ReleaseBadge from '~/components/releases/ReleaseBadge.vue'
 import SearchFilter from '~/components/SearchFilter.vue'

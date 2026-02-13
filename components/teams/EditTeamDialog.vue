@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeaderCombined } from '~/components/ui/dialog'
 import { SelectField, TextField } from '~/components/ui/form'
@@ -37,7 +39,9 @@ const teamTypes = computed(() => [
 ])
 
 const parentOptions = computed(() => {
-  const options: { value: string | null; label: string }[] = [{ value: null, label: t('labels.teams.noParent') }]
+  const options: { value: string | null; label: string }[] = [
+    { value: null, label: t('labels.teams.noParent') },
+  ]
 
   const flattenHierarchy = (items: TeamHierarchyItem[], prefix = '') => {
     for (const item of items) {
@@ -81,9 +85,11 @@ const handleSubmit = async () => {
   try {
     const payload: UpdateTeamPayload = {}
     if (formData.value.name !== props.team?.name) payload.name = formData.value.name
-    if (formData.value.description !== props.team?.description) payload.description = formData.value.description
+    if (formData.value.description !== props.team?.description)
+      payload.description = formData.value.description
     if (formData.value.type !== props.team?.type) payload.type = formData.value.type
-    if (formData.value.parent_id !== props.team?.parent_id) payload.parent_id = formData.value.parent_id
+    if (formData.value.parent_id !== props.team?.parent_id)
+      payload.parent_id = formData.value.parent_id
     if (formData.value.color !== props.team?.color) payload.color = formData.value.color
     if (formData.value.icon !== props.team?.icon) payload.icon = formData.value.icon
     if (JSON.stringify(formData.value.settings) !== JSON.stringify(props.team?.settings)) {

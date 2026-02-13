@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { Button } from '~/components/ui/button'
-import { ArrayInputField, CheckboxField, InputField } from '~/components/ui/form'
+import { InputField } from '~/components/ui/form'
 
 interface HtmlClass {
   name: string
@@ -88,7 +90,10 @@ watch(
               class="hover:text-destructive"
               @click="removeHtmlClass(index)"
             >
-              <Icon name="lucide:trash-2" size="0.9rem" />
+              <Icon
+                name="lucide:trash-2"
+                size="0.9rem"
+              />
             </Button>
           </div>
           <InputField
@@ -101,7 +106,10 @@ watch(
         </div>
       </div>
 
-      <div v-if="showAddForm" class="flex flex-col gap-2 rounded border border-input bg-surface p-3">
+      <div
+        v-if="showAddForm"
+        class="flex flex-col gap-2 rounded border border-input bg-surface p-3"
+      >
         <InputField
           v-model="newClass.name"
           name="new-class-name"
@@ -146,7 +154,10 @@ watch(
         variant="outline"
         @click="showAddForm = true"
       >
-        <Icon name="lucide:plus" size="0.9rem" />
+        <Icon
+          name="lucide:plus"
+          size="0.9rem"
+        />
         Add HTML Class
       </Button>
     </div>

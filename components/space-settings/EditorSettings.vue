@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { deepClone } from '@vue/devtools-shared'
+import Icon from '~/components/Icon.vue'
 import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
 import { Label } from '~/components/ui/form'
 import SettingsTable, { type ColumnDefinition } from '~/components/ui/settings-table.vue'
 import { Switch } from '~/components/ui/switch'
@@ -13,7 +21,9 @@ const { mutate: updateSpace } = useUpdateSpaceMutation()
 const props = defineProps<{ space: SpaceResource }>()
 
 const environments = ref(
-  deepClone(Array.isArray(props.space.settings?.environments) ? props.space.settings!.environments : [])
+  deepClone(
+    Array.isArray(props.space.settings?.environments) ? props.space.settings!.environments : []
+  )
 )
 const visualEditorEnabled = ref(props.space.settings.visual_editor)
 

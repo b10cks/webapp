@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { RadioGroupItemProps } from 'reka-ui'
 import { RadioGroupIndicator, RadioGroupItem, useForwardProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'

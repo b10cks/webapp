@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+import NuxtImg from '~/components/NuxtImg.vue'
+
 import { Button } from '~/components/ui/button'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Card, CardContent, CardFooter, CardHeaderCombined } from '~/components/ui/card'
-import { SelectField, FormField, InputField } from '~/components/ui/form'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
+import { FormField, InputField, SelectField } from '~/components/ui/form'
 import { useFileUpload } from '~/composables/useFileUpload'
 
 const { useUserQuery, useUpdateUserMutation, useUploadAvatarMutation } = useUser()
@@ -222,9 +225,9 @@ const onDragOverAvatar = (e: DragEvent) => {
           name="language"
           :description="$t('labels.account.settings.languageDescription')"
           :placeholder="$t('labels.account.settings.selectLanguage')"
-          :model-value="$getLocale()"
+          :model-value="getLocale()"
           @update:model-value="onLanguageChange"
-          :options="$getLocales().map((locale) => ({ label: locale.name, value: locale.code }))"
+          :options="locales.map((locale) => ({ label: locale.name, value: locale.code }))"
         />
       </CardContent>
     </Card>

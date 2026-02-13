@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import AppHeader from '~/components/AppHeader.vue'
 interface NavItem {
   title: string
@@ -10,7 +12,7 @@ interface NavItem {
 const items: NavItem[] = [
   {
     title: 'labels.account.profile.title',
-    name: 'account-settings',
+    name: 'account-settings-index',
     icon: 'lucide:user',
   },
   {

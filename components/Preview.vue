@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { toast } from 'vue-sonner'
 import Markdown from '~/components/Markdown.vue'
 import {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import BlockEdit from '~/components/BlockEdit.vue'
 import BlockMenu from '~/components/BlockMenu.vue'
 import BlockTemplatesSheet from '~/components/blocks/BlockTemplatesSheet.vue'

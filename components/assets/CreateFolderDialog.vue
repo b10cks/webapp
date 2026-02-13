@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { Translation } from 'nuxt-i18n-micro-types/src'
 import { ref } from 'vue'
 import { Button } from '~/components/ui/button'

@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useClipboard } from '@vueuse/core'
 import { SelectTrigger } from 'reka-ui'
 import { computed } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import type { SpaceQueryParams } from '~/api/resources/spaces'
 import AppHeader from '~/components/AppHeader.vue'
+import NuxtImg from '~/components/NuxtImg.vue'
 import TeamSelector from '~/components/TeamSelector.vue'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
@@ -73,7 +76,7 @@ const { data: spaces } = useSpacesQuery(spaceFilter)
 
 interface Action {
   icon?: string
-  label: Translation
+  label: string
   action?: (space: SpaceResource) => void
 }
 

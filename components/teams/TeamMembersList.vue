@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import UsersIcon from '~/assets/images/users.svg?component'
 import SearchFilter from '~/components/SearchFilter.vue'
 import { Avatar } from '~/components/ui/avatar'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
 import { Checkbox } from '~/components/ui/checkbox'
-import SortSelect from '~/components/ui/SortSelect.vue'
 import {
   Select,
   SelectContent,
@@ -13,8 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
+import SortSelect from '~/components/ui/SortSelect.vue'
 import {
   Table,
   TableBody,
@@ -24,8 +24,10 @@ import {
   TableRow,
   TableSortableHead,
 } from '~/components/ui/table'
+import TableLoadingRow from '~/components/ui/TableLoadingRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import type { LaravelMeta } from '~/types'
-import type { TeamUserQueryParams, TeamUserResource } from '~/types/teams'
+import type { TeamUserResource } from '~/types/teams'
 import TableEmptyRow from '../ui/TableEmptyRow.vue'
 
 const props = withDefaults(

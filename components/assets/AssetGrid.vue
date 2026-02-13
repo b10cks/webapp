@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { AssetsQueryParams } from '~/api/resources/assets'
 import AssetsIcon from '~/assets/images/assets.svg?component'
 import AssetDetailsDialog from '~/components/assets/AssetDetailsDialog.vue'

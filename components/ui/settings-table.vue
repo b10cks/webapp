@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import { useSortable } from '@vueuse/integrations/useSortable'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'

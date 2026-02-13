@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
 import { useVModel } from '@vueuse/core'

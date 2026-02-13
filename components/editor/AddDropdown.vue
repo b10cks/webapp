@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from '~/components/Icon.vue'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,8 +8,8 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
-import BlockWithTemplatesSubmenu from './BlockWithTemplatesSubmenu.vue'
 import IconName from '~/components/ui/IconName.vue'
+import BlockWithTemplatesSubmenu from './BlockWithTemplatesSubmenu.vue'
 
 const emit = defineEmits<{
   (e: 'select', blockSlug: string, templateId?: string | null): void

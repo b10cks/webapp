@@ -1,9 +1,11 @@
 import { computed, readonly, ref } from 'vue'
+
+import type { ApiResponse } from '~/types'
+import type { User } from '~/types/users'
+
 import { isClient } from '~/lib/env'
 import { useI18n } from '~/plugins/i18n'
 import { router } from '~/router'
-import type { ApiResponse } from '~/types'
-import type { User } from '~/types/users'
 
 interface LoginPayload {
   email: string

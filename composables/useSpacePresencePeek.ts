@@ -14,7 +14,9 @@ export function useSpacePresencePeek() {
   const fetchSpacePresence = async (spaceId: string): Promise<SpacePresenceInfo | null> => {
     try {
       const { api } = await import('~/api')
-      const response = await api.client.get<{ data: SpacePresenceInfo }>(`/mgmt/v1/spaces/${spaceId}/presence`)
+      const response = await api.client.get<{ data: SpacePresenceInfo }>(
+        `/mgmt/v1/spaces/${spaceId}/presence`
+      )
       return response.data
     } catch (err) {
       console.error(`Failed to fetch presence for space ${spaceId}:`, err)
@@ -43,7 +45,9 @@ export function useSpacePresencePeek() {
     error.value = null
 
     try {
-      const results = await Promise.all(spaceIds.map((id) => fetchSpacePresence(id).catch(() => null)))
+      const results = await Promise.all(
+        spaceIds.map((id) => fetchSpacePresence(id).catch(() => null))
+      )
 
       results.forEach((info, index) => {
         if (info) {

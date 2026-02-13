@@ -1,4 +1,5 @@
 import posthog from 'posthog-js'
+
 import { runtimeConfig } from '~/lib/runtime-config'
 
 export async function installPosthog() {

@@ -1,5 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
+
 import { createRouter, createWebHistory } from 'vue-router'
+
 import { useAuth } from '~/composables/useAuth'
 
 const routes: RouteRecordRaw[] = [
@@ -239,7 +241,14 @@ router.beforeEach(async (to, _from, next) => {
 
   const isGuestRoute = to.meta.guest === true
 
-  console.log('[Router Guard] isReady:', isReady, 'isAuthenticated:', isAuthenticated, 'isGuestRoute:', isGuestRoute)
+  console.log(
+    '[Router Guard] isReady:',
+    isReady,
+    'isAuthenticated:',
+    isAuthenticated,
+    'isGuestRoute:',
+    isGuestRoute
+  )
 
   if (!isReady) {
     console.log('[Router Guard] Not ready, allowing navigation')

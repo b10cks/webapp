@@ -1,5 +1,5 @@
-import { isClient } from '~/lib/env'
 import { getXsrfHeaders } from '~/lib/csrf'
+import { isClient } from '~/lib/env'
 
 interface AuthHandler {
   handleUnauthorized: (endpoint: string, options: any) => Promise<{ retry?: boolean } | void>
@@ -139,7 +139,8 @@ export class ApiClient {
     }
 
     try {
-      const csrfHeaders = method === 'GET' || method === 'HEAD' || method === 'OPTIONS' ? {} : getXsrfHeaders()
+      const csrfHeaders =
+        method === 'GET' || method === 'HEAD' || method === 'OPTIONS' ? {} : getXsrfHeaders()
       return await makeRequest({
         ...this.defaultHeaders,
         ...csrfHeaders,
@@ -160,7 +161,11 @@ export class ApiClient {
     }
   }
 
-  public get<T>(endpoint: string, query: Record<string, unknown> = {}, options: RequestOptions = {}): Promise<T> {
+  public get<T>(
+    endpoint: string,
+    query: Record<string, unknown> = {},
+    options: RequestOptions = {}
+  ): Promise<T> {
     return this.request<T>(endpoint, { method: 'GET', query, ...options })
   }
 

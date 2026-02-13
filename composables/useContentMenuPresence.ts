@@ -1,5 +1,7 @@
-import { isClient } from '~/lib/env'
 import type Echo from 'laravel-echo'
+
+import { isClient } from '~/lib/env'
+
 import type { PresenceUser } from './usePresence'
 
 export interface ContentPresenceMap {
@@ -74,29 +76,32 @@ export function useContentMenuPresence(spaceIdRef: MaybeRefOrComputed<string>) {
             }
           }
         })
-        .listen('.content:presence', (event: { content_id: string; user: PresenceUser; action: 'join' | 'leave' }) => {
-          if (event.action === 'join') {
-            const currentUsers = presenceMap.value[event.content_id] || []
-            if (!currentUsers.find((u) => u.id === event.user.id)) {
-              presenceMap.value = {
-                ...presenceMap.value,
-                [event.content_id]: [...currentUsers, event.user],
+        .listen(
+          '.content:presence',
+          (event: { content_id: string; user: PresenceUser; action: 'join' | 'leave' }) => {
+            if (event.action === 'join') {
+              const currentUsers = presenceMap.value[event.content_id] || []
+              if (!currentUsers.find((u) => u.id === event.user.id)) {
+                presenceMap.value = {
+                  ...presenceMap.value,
+                  [event.content_id]: [...currentUsers, event.user],
+                }
               }
-            }
-          } else if (event.action === 'leave') {
-            const currentUsers = presenceMap.value[event.content_id] || []
-            const filtered = currentUsers.filter((u) => u.id !== event.user.id)
-            if (filtered.length === 0) {
-              const { [event.content_id]: _, ...rest } = presenceMap.value
-              presenceMap.value = rest
-            } else {
-              presenceMap.value = {
-                ...presenceMap.value,
-                [event.content_id]: filtered,
+            } else if (event.action === 'leave') {
+              const currentUsers = presenceMap.value[event.content_id] || []
+              const filtered = currentUsers.filter((u) => u.id !== event.user.id)
+              if (filtered.length === 0) {
+                const { [event.content_id]: _, ...rest } = presenceMap.value
+                presenceMap.value = rest
+              } else {
+                presenceMap.value = {
+                  ...presenceMap.value,
+                  [event.content_id]: filtered,
+                }
               }
             }
           }
-        })
+        )
     } catch {
       // Silently fail if presence is not available
     }

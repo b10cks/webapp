@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { toast } from 'vue-sonner'
-import { api } from '~/api'
+
 import type { ChangePasswordPayload, UpdateUserPayload } from '~/api/resources/users'
 import type { User } from '~/types/users'
+
+import { api } from '~/api'
 
 import { queryKeys } from './useQueryClient'
 

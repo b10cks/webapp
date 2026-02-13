@@ -1,7 +1,8 @@
-import { isClient } from '~/lib/env'
 import { useStorage } from '@vueuse/core'
 
 import type { TeamResource } from '~/types/teams'
+
+import { isClient } from '~/lib/env'
 
 interface GlobalTeamState {
   selectedTeamId: string | null

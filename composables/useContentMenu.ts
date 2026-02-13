@@ -1,10 +1,10 @@
-import { isClient } from '~/lib/env'
 // src/composables/useContentMenu.ts
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 
 import type { ContentResource } from '~/types/contents'
 
 import { api } from '~/api'
+import { isClient } from '~/lib/env'
 
 import { queryKeys } from './useQueryClient'
 

@@ -1,6 +1,8 @@
-import { isClient } from '~/lib/env'
 import type Echo from 'laravel-echo'
+
 import type { User } from '~/types/users'
+
+import { isClient } from '~/lib/env'
 
 export interface PresenceUser extends User {
   joined_at: string
@@ -16,7 +18,10 @@ export interface UsePresenceOptions {
   reconnectDelay?: number
 }
 
-export function usePresence(channelNameRef: MaybeRefOrComputed<string | null>, options: UsePresenceOptions = {}) {
+export function usePresence(
+  channelNameRef: MaybeRefOrComputed<string | null>,
+  options: UsePresenceOptions = {}
+) {
   const { maxReconnectAttempts = 5, reconnectDelay = 3000 } = options
 
   const channelName = computed(() => unref(channelNameRef))

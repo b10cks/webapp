@@ -4,6 +4,7 @@ import Calendar from 'dayjs/plugin/calendar'
 import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import UpdateLocale from 'dayjs/plugin/updateLocale'
+
 import { getLocale } from '~/plugins/i18n'
 
 export default function useFormat() {
@@ -78,7 +79,11 @@ export default function useFormat() {
     }).format(value)
   }
 
-  function formatDuration(milliseconds: number, decimals: number = 0, unit: 'ms' | 's' = 'ms'): string {
+  function formatDuration(
+    milliseconds: number,
+    decimals: number = 0,
+    unit: 'ms' | 's' = 'ms'
+  ): string {
     if (milliseconds === 0) return `0 ${unit}`
 
     // If unit is seconds, convert milliseconds to seconds
@@ -92,7 +97,11 @@ export default function useFormat() {
     )
   }
 
-  function formatNumber(value: number, decimals: number = 0, options: Intl.NumberFormatOptions = {}): string {
+  function formatNumber(
+    value: number,
+    decimals: number = 0,
+    options: Intl.NumberFormatOptions = {}
+  ): string {
     return new Intl.NumberFormat(locale.value, {
       maximumFractionDigits: decimals,
       minimumFractionDigits: decimals,
@@ -139,9 +148,9 @@ export default function useFormat() {
       new Intl.NumberFormat(locale.value, {
         maximumFractionDigits: i === 0 ? 0 : 1,
         minimumFractionDigits: i === 0 ? 0 : 1,
-      }).format(bytes / 1024 ** i)
-      + ' '
-      + units[i]
+      }).format(bytes / 1024 ** i) +
+      ' ' +
+      units[i]
     )
   }
 

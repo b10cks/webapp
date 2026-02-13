@@ -1,7 +1,8 @@
 import type { Broadcaster } from 'laravel-echo'
+import type { App } from 'vue'
+
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
-import type { App } from 'vue'
 
 import { api } from '~/api'
 import { getXsrfHeaders } from '~/lib/csrf'
@@ -30,7 +31,10 @@ export function installEcho(_app: App) {
     authorizer: (channel: { name: string }) => ({
       authorize: (
         socketId: string,
-        callback: (error: boolean | Error, authData?: { auth: string; channel_data?: string }) => void
+        callback: (
+          error: boolean | Error,
+          authData?: { auth: string; channel_data?: string }
+        ) => void
       ) => {
         api.client
           .ensureCsrfCookie()

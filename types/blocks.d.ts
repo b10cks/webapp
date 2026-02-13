@@ -107,7 +107,13 @@ interface OptionSchema extends Schema {
   exclude_empty: boolean
 }
 
-type TranslatableSchema = TextSchema | TextareaSchema | MarkdownSchema | RichTextSchema | LinkSchema | MetaSchema
+type TranslatableSchema =
+  | TextSchema
+  | TextareaSchema
+  | MarkdownSchema
+  | RichTextSchema
+  | LinkSchema
+  | MetaSchema
 type SchemaType =
   | BlocksSchema
   | LinkSchema

@@ -1,4 +1,5 @@
 import { useAuth } from '~/composables/useAuth'
+
 import { router } from './index'
 
 router.beforeEach(async (to, _from, next) => {

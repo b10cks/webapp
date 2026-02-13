@@ -23,7 +23,9 @@ export class BlockVersions extends BaseResource<
   }
 
   async restore(versionId: string): Promise<BlockVersion> {
-    const response = await this.client.post<ApiResponse<BlockVersion>>(`${this.basePath}/${versionId}/restore`)
+    const response = await this.client.post<ApiResponse<BlockVersion>>(
+      `${this.basePath}/${versionId}/restore`
+    )
     return response.data
   }
 }

@@ -1,4 +1,5 @@
 import type { MaybeRef } from 'vue'
+
 import { isClient } from '~/lib/env'
 
 export interface SeoMetaOptions {

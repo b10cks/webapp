@@ -30,22 +30,40 @@ export class Contents extends BaseResource<
   /**
    * Publish a content item
    */
-  public async publish(contentId: string, payload: UpdateContentPayload): Promise<ApiResponse<ContentResource>> {
-    return this.client.post<ApiResponse<ContentResource>>(`${this.basePath}/${contentId}/publish`, payload)
+  public async publish(
+    contentId: string,
+    payload: UpdateContentPayload
+  ): Promise<ApiResponse<ContentResource>> {
+    return this.client.post<ApiResponse<ContentResource>>(
+      `${this.basePath}/${contentId}/publish`,
+      payload
+    )
   }
 
   /**
    * Schedule a content item for publishing
    */
-  public async schedule(contentId: string, payload: UpdateContentPayload): Promise<ApiResponse<ContentResource>> {
-    return this.client.post<ApiResponse<ContentResource>>(`${this.basePath}/${contentId}/schedule`, payload)
+  public async schedule(
+    contentId: string,
+    payload: UpdateContentPayload
+  ): Promise<ApiResponse<ContentResource>> {
+    return this.client.post<ApiResponse<ContentResource>>(
+      `${this.basePath}/${contentId}/schedule`,
+      payload
+    )
   }
 
   /**
    * Unpublish a content item
    */
-  public async unpublish(contentId: string, payload: UpdateContentPayload): Promise<ApiResponse<ContentResource>> {
-    return this.client.post<ApiResponse<ContentResource>>(`${this.basePath}/${contentId}/unpublish`, payload)
+  public async unpublish(
+    contentId: string,
+    payload: UpdateContentPayload
+  ): Promise<ApiResponse<ContentResource>> {
+    return this.client.post<ApiResponse<ContentResource>>(
+      `${this.basePath}/${contentId}/unpublish`,
+      payload
+    )
   }
 
   /**
@@ -58,7 +76,10 @@ export class Contents extends BaseResource<
       parent_id?: string | null
     }
   ): Promise<ApiResponse<ContentResource>> {
-    return this.client.post<ApiResponse<ContentResource>>(`${this.basePath}/${contentId}/duplicate`, payload)
+    return this.client.post<ApiResponse<ContentResource>>(
+      `${this.basePath}/${contentId}/duplicate`,
+      payload
+    )
   }
 
   /**

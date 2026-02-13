@@ -2,15 +2,10 @@
 import { deepClone } from '@vue/devtools-shared'
 import { toast } from 'vue-sonner'
 import { Button } from '~/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '~/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog'
 import { InputField } from '~/components/ui/form'
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { isClient } from '~/lib/env'
 
 const { formatFileSize, formatDateTime } = useFormat()
 const { getFileIcon } = useFileUtils()
@@ -164,14 +159,14 @@ const updateFocusPointPosition = (event: MouseEvent) => {
 }
 
 onMounted(() => {
-  if (import.meta.client) {
+  if (isClient) {
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', stopDragging)
   }
 })
 
 onUnmounted(() => {
-  if (import.meta.client) {
+  if (isClient) {
     window.removeEventListener('mousemove', handleMouseMove)
     window.removeEventListener('mouseup', stopDragging)
   }

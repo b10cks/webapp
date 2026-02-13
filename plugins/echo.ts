@@ -1,10 +1,11 @@
 import type { Broadcaster } from 'laravel-echo'
-
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
+import type { App } from 'vue'
 
 import { api } from '~/api'
 import { getXsrfHeaders } from '~/lib/csrf'
+import { runtimeConfig } from '~/lib/runtime-config'
 
 declare global {
   interface Window {
@@ -13,33 +14,23 @@ declare global {
   }
 }
 
-export default defineNuxtPlugin(async (_nuxtApp) => {
-  const runTimeConfig = useRuntimeConfig()
-  const echoConfig = runTimeConfig.public.echo
-  const apiBaseUrl = runTimeConfig.public.apiBaseUrl || ''
+export function installEcho(_app: App) {
+  const echoConfig = runtimeConfig.public.echo
+  const apiBaseUrl = runtimeConfig.public.apiBaseUrl || ''
 
-  // Ensure we have a valid configuration
   if (!echoConfig || !echoConfig.broadcaster) {
     console.warn('[Echo] Configuration is missing or invalid')
-    return {
-      provide: {
-        echo: null,
-      },
-    }
+    return
   }
 
   const authEndpoint = `${apiBaseUrl}/auth/v1/broadcast`
 
-  // Configure Echo with custom authorizer for Sanctum session authentication
   const echoOptions = {
     ...echoConfig,
     authorizer: (channel: { name: string }) => ({
       authorize: (
         socketId: string,
-        callback: (
-          error: boolean | Error,
-          authData?: { auth: string; channel_data?: string }
-        ) => void
+        callback: (error: boolean | Error, authData?: { auth: string; channel_data?: string }) => void
       ) => {
         api.client
           .ensureCsrfCookie()
@@ -91,10 +82,4 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   window.Echo = new Echo(echoOptions)
 
   console.log('[Echo] Initialized with Sanctum authorizer')
-
-  return {
-    provide: {
-      echo: window.Echo,
-    },
-  }
-})
+}

@@ -14,27 +14,23 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <div class="w-full bg-background">
-        <div class="content-grid">
-          <ContentHeader
-            :header="$t('labels.redirects.title')"
-            :description="$t('labels.redirects.description')"
+  <div class="w-full bg-background">
+    <div class="content-grid">
+      <ContentHeader
+        :header="$t('labels.redirects.title')"
+        :description="$t('labels.redirects.description')"
+      >
+        <template #actions>
+          <Button
+            variant="primary"
+            @click="handleAddRedirect"
           >
-            <template #actions>
-              <Button
-                variant="primary"
-                @click="handleAddRedirect"
-              >
-                <Icon name="lucide:plus" />
-                {{ $t('actions.redirects.add') }}
-              </Button>
-            </template>
-          </ContentHeader>
-          <RedirectsTable :space-id="spaceId" />
-        </div>
-      </div>
-    </NuxtLayout>
+            <Icon name="lucide:plus" />
+            {{ $t('actions.redirects.add') }}
+          </Button>
+        </template>
+      </ContentHeader>
+      <RedirectsTable :space-id="spaceId" />
+    </div>
   </div>
 </template>

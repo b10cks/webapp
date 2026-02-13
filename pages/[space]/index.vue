@@ -13,19 +13,15 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <div class="w-full bg-background">
-        <div class="content-grid pb-6">
-          <div v-if="currentSpace">
-            <ContentHeader
-              :header="currentSpace.name"
-              :description="formatDateTime(currentSpace.updated_at)"
-            />
-            <SpaceDashboard :space-id="currentSpace.id" />
-          </div>
-        </div>
+  <div class="w-full bg-background">
+    <div class="content-grid pb-6">
+      <div v-if="currentSpace">
+        <ContentHeader
+          :header="currentSpace.name"
+          :description="formatDateTime(currentSpace.updated_at)"
+        />
+        <SpaceDashboard :space-id="currentSpace.id" />
       </div>
-    </NuxtLayout>
+    </div>
   </div>
 </template>

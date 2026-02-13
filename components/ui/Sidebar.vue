@@ -5,17 +5,19 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuSub,
-  DropdownMenuSubTrigger,
   DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { Switch } from '~/components/ui/switch'
 import { SimpleTooltip } from '~/components/ui/tooltip'
+import { getLocale, locales } from '~/plugins/i18n'
 
+const router = useRouter()
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 const { handleUpdateLanguage } = useUserSettings()
@@ -35,16 +37,24 @@ const menu = [
   { icon: 'lucide:settings', label: 'Settings', route: 'space-settings' },
 ]
 
-const buildLink = (name: string) => ({
-  name,
-  params: {
-    space: spaceId.value,
-  },
-})
+const buildLink = (name: string) => {
+  if (!spaceId?.value) {
+    return { name: 'index' }
+  }
+  return {
+    name,
+    params: {
+      space: spaceId.value,
+    },
+  }
+}
 
 const handleLanguageChange = (lang: string) => {
   handleUpdateLanguage(lang)
 }
+
+const currentLocale = computed(() => getLocale())
+const availableLocales = locales
 </script>
 
 <template>
@@ -57,7 +67,7 @@ const handleLanguageChange = (lang: string) => {
           :tooltip="m.label"
           side="right"
         >
-          <NuxtLink
+          <RouterLink
             :to="buildLink(m.route)"
             class="flex size-8 items-center justify-center rounded-lg transition-colors duration-200 ease-butter hover:bg-border"
             active-class="text-primary bg-border"
@@ -67,7 +77,7 @@ const handleLanguageChange = (lang: string) => {
               size="1.25rem"
               stroke-width="5"
             />
-          </NuxtLink>
+          </RouterLink>
         </SimpleTooltip>
       </div>
     </div>
@@ -117,9 +127,9 @@ const handleLanguageChange = (lang: string) => {
                 align="start"
                 class="min-w-40"
               >
-                <DropdownMenuRadioGroup :model-value="$getLocale()">
+                <DropdownMenuRadioGroup :model-value="currentLocale">
                   <DropdownMenuRadioItem
-                    v-for="loc in $getLocales()"
+                    v-for="loc in availableLocales"
                     :key="loc.code"
                     :value="loc.code"
                     @select="handleLanguageChange(loc.code)"
@@ -129,7 +139,7 @@ const handleLanguageChange = (lang: string) => {
                 </DropdownMenuRadioGroup>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
-            <DropdownMenuItem @click="navigateTo('/account/settings')">
+            <DropdownMenuItem @click="router.push('/account/settings')">
               <Icon name="lucide:cog" />
               <span>{{ $t('actions.user.account') }}</span>
             </DropdownMenuItem>

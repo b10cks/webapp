@@ -186,9 +186,9 @@ const confirmDelete = async () => {
               :class="{ 'bg-background/50': index % 2 === 0 }"
             >
               <TableCell class="cursor-pointer">
-                <NuxtLink :href="`/${spaceId}/datasources/${dataSource.id}`">{{
+                <RouterLink :href="`/${spaceId}/datasources/${dataSource.id}`">{{
                   dataSource.name
-                }}</NuxtLink>
+                }}</RouterLink>
               </TableCell>
               <TableCell>
                 <SimpleTooltip

@@ -26,22 +26,18 @@ const component = computed(() => {
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <BlockMenu
-        v-model:mode="mode"
-        v-model:selected-folder="folder"
-        :space-id="spaceId"
-      />
-      <div class="flex grow bg-background">
-        <component
-          :is="component"
-          :space-id="spaceId"
-          :mode="mode"
-          :folder="folder"
-          class="mx-auto flex w-full max-w-7xl grow flex-col gap-6"
-        />
-      </div>
-    </NuxtLayout>
+  <BlockMenu
+    v-model:mode="mode"
+    v-model:selected-folder="folder"
+    :space-id="spaceId"
+  />
+  <div class="flex grow bg-background">
+    <component
+      :is="component"
+      :space-id="spaceId"
+      :mode="mode"
+      :folder="folder"
+      class="mx-auto flex w-full max-w-7xl grow flex-col gap-6"
+    />
   </div>
 </template>

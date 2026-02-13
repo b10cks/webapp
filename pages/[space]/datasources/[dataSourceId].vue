@@ -8,8 +8,6 @@ import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { Input } from '~/components/ui/input'
 import SortSelect from '~/components/ui/SortSelect.vue'
 import { Switch } from '~/components/ui/switch'
-import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
-import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import {
   Table,
   TableBody,
@@ -19,6 +17,8 @@ import {
   TableRow,
   TableSortableHead,
 } from '~/components/ui/table'
+import TableEmptyRow from '~/components/ui/TableEmptyRow.vue'
+import TablePaginationFooter from '~/components/ui/TablePaginationFooter.vue'
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Textarea } from '~/components/ui/textarea'
 import { useDataEntries } from '~/composables/useDataEntries'
@@ -335,382 +335,372 @@ const isDefaultSelected = computed(() => selectedDimension.value === 'default')
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <div class="w-full bg-background">
-        <div class="content-grid">
-          <ContentHeader
-            :header="dataSource?.name || $t('labels.datasets.dataEntries')"
-            :description="dataSource?.description"
+  <div class="w-full bg-background">
+    <div class="content-grid">
+      <ContentHeader
+        :header="dataSource?.name || $t('labels.datasets.dataEntries')"
+        :description="dataSource?.description"
+      >
+        <template #before-header>
+          <RouterLink
+            :to="{ name: 'space-datasources', params: { space: spaceId } }"
+            class="flex cursor-pointer items-center gap-2"
           >
-            <template #before-header>
-              <NuxtLink
-                :to="{ name: 'space-datasources', params: { space: spaceId } }"
-                class="flex cursor-pointer items-center gap-2"
+            <Icon name="lucide:chevron-left" />
+            {{ $t('labels.datasets.backToDataSources') }}
+          </RouterLink>
+        </template>
+        <template #actions>
+          <div class="flex items-center gap-4">
+            <div
+              v-if="settings.dataEntries.mode === 'grid'"
+              class="flex items-center gap-2"
+            >
+              <Switch
+                id="autosave"
+                v-model="settings.dataEntries.autoSave"
+              />
+              <label
+                for="autosave"
+                class="text-sm text-muted"
               >
-                <Icon name="lucide:chevron-left" />
-                {{ $t('labels.datasets.backToDataSources') }}
-              </NuxtLink>
-            </template>
-            <template #actions>
-              <div class="flex items-center gap-4">
-                <div
-                  v-if="settings.dataEntries.mode === 'grid'"
-                  class="flex items-center gap-2"
+                {{ $t('labels.datasets.autoSave') }}
+              </label>
+            </div>
+            <Tabs
+              :model-value="settings.dataEntries.mode"
+              @update:model-value="handleEditModeChange"
+            >
+              <TabsList class="h-8">
+                <TabsTrigger
+                  value="single"
+                  class="px-2 py-1 text-xs"
                 >
-                  <Switch
-                    id="autosave"
-                    v-model="settings.dataEntries.autoSave"
-                  />
-                  <label
-                    for="autosave"
-                    class="text-sm text-muted"
-                  >
-                    {{ $t('labels.datasets.autoSave') }}
-                  </label>
-                </div>
-                <Tabs
-                  :model-value="settings.dataEntries.mode"
-                  @update:model-value="handleEditModeChange"
+                  {{ $t('labels.datasets.singleEdit') }}
+                </TabsTrigger>
+                <TabsTrigger
+                  value="grid"
+                  class="px-2 py-1 text-xs"
                 >
-                  <TabsList class="h-8">
-                    <TabsTrigger
-                      value="single"
-                      class="px-2 py-1 text-xs"
-                    >
-                      {{ $t('labels.datasets.singleEdit') }}
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="grid"
-                      class="px-2 py-1 text-xs"
-                    >
-                      {{ $t('labels.datasets.gridEdit') }}
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div>
-            </template>
-          </ContentHeader>
-
-          <div
-            v-if="isLoadingDataSource"
-            class="flex items-center justify-center gap-2 py-12"
-          >
-            <Icon
-              name="lucide:loader"
-              class="animate-spin"
-            />
-            {{ $t('labels.datasets.loading') }}
+                  {{ $t('labels.datasets.gridEdit') }}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
+        </template>
+      </ContentHeader>
 
-          <div
-            v-else-if="dataSource"
-            class="space-y-6"
-          >
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <Tabs
-                  v-if="showDimensionTabs"
-                  :model-value="selectedDimension"
-                  @update:model-value="handleDimensionChange"
+      <div
+        v-if="isLoadingDataSource"
+        class="flex items-center justify-center gap-2 py-12"
+      >
+        <Icon
+          name="lucide:loader"
+          class="animate-spin"
+        />
+        {{ $t('labels.datasets.loading') }}
+      </div>
+
+      <div
+        v-else-if="dataSource"
+        class="space-y-6"
+      >
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <Tabs
+              v-if="showDimensionTabs"
+              :model-value="selectedDimension"
+              @update:model-value="handleDimensionChange"
+            >
+              <TabsList>
+                <TabsTrigger
+                  v-for="tab in dimensionTabs"
+                  :key="tab.key"
+                  :value="tab.key"
                 >
-                  <TabsList>
-                    <TabsTrigger
-                      v-for="tab in dimensionTabs"
-                      :key="tab.key"
-                      :value="tab.key"
-                    >
-                      {{ tab.label }}
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                <div class="ml-auto flex items-center gap-2">
-                  <SearchFilter
-                    v-model="filters"
-                    :filterable-fields="possibleFilters"
-                    class="lg:min-w-xs 2xl:min-w-md"
-                    @search="searchQuery = $event"
-                    @reset="searchQuery = ''"
-                  />
-                  <SortSelect
-                    v-model="sortBy"
-                    :options="sortOptions"
-                    :label="$t('labels.sortBy')"
-                    :placeholder="$t('labels.sortBy')"
-                  />
-                </div>
-              </div>
-
-              <div class="overflow-hidden rounded-md border border-input">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableSortableHead
-                        v-model="sortBy"
-                        class="w-1/3"
-                        column="key"
-                        >{{ $t('labels.dataEntries.fields.key') }}
-                      </TableSortableHead>
-                      <TableSortableHead
-                        v-model="sortBy"
-                        class="w-1/2"
-                        column="value"
-                        >{{ $t('labels.dataEntries.fields.value') }}
-                      </TableSortableHead>
-                      <TableHead
-                        v-if="!isDefaultSelected"
-                        class="w-1/2"
-                      >
-                        {{ dimensionTabs.find((tab) => tab.key === selectedDimension)?.label }}
-                      </TableHead>
-                      <TableHead
-                        v-if="isDefaultSelected"
-                        class="w-16"
-                        >{{ $t('labels.dataEntries.fields.active') }}
-                      </TableHead>
-                      <TableHead class="w-24">{{
-                        $t('labels.dataEntries.fields.actions')
-                      }}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow
-                      v-if="isDefaultSelected"
-                      class="bg-elevated"
-                    >
-                      <TableCell>
-                        <Input
-                          v-model="newEntryData.key"
-                          :placeholder="$t('labels.dataEntries.fields.key')"
-                          pattern="^[a-zA-Z0-9._\-]+$"
-                          required
-                          @keydown.enter="handleSaveNewEntry"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          v-model="newEntryData.value"
-                          :placeholder="$t('labels.dataEntries.fields.value')"
-                          :disabled="!isDefaultSelected"
-                          @keydown.enter="handleSaveNewEntry"
-                        />
-                      </TableCell>
-                      <TableCell v-if="!isDefaultSelected">
-                        <Input
-                          v-model="newEntryData.dimensions[selectedDimension]"
-                          :placeholder="
-                            dimensionTabs.find((tab) => tab.key === selectedDimension)?.label
-                          "
-                          @keydown.enter="handleSaveNewEntry"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Switch
-                          v-model:checked="newEntryData.is_active"
-                          :default-value="true"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div class="flex gap-1">
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            class="h-8 w-8"
-                            :disabled="!newEntryData.key || isCreatingEntry"
-                            @click="handleSaveNewEntry"
-                          >
-                            <Icon
-                              v-if="isCreatingEntry"
-                              name="lucide:loader"
-                              class="h-3 w-3 animate-spin"
-                            />
-                            <Icon
-                              v-else
-                              name="lucide:plus"
-                              class="h-3 w-3"
-                            />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow v-if="isLoadingEntries">
-                      <TableCell
-                        :colspan="4"
-                        class="h-24 text-center"
-                      >
-                        <div class="flex items-center justify-center">
-                          <Icon
-                            name="lucide:loader"
-                            class="mr-2 h-6 w-6 animate-spin"
-                          />
-                          {{ $t('labels.datasets.loadingEntries') }}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                    <template v-else-if="dataEntriesResponse?.data.length">
-                      <TableRow
-                        v-for="entry in dataEntriesResponse?.data"
-                        :key="entry.id"
-                        :data-entry-id="entry.id"
-                        @dblclick="handleEditEntry(entry)"
-                      >
-                        <TableCell>
-                          <Input
-                            v-if="isEntryEditing(entry.id)"
-                            :model-value="entry.key"
-                            :disabled="!isDefaultSelected"
-                            @update:model-value="(value) => handleInputChange(entry, 'key', value)"
-                            @keydown="(e) => handleKeyDown(e, entry.id, 'key')"
-                          />
-                          <span
-                            v-else
-                            class="font-medium"
-                            >{{ entry.key }}</span
-                          >
-                        </TableCell>
-
-                        <TableCell>
-                          <Textarea
-                            v-if="isEntryEditing(entry.id)"
-                            :model-value="entry.value"
-                            :disabled="!isDefaultSelected"
-                            @update:model-value="
-                              (value) => handleInputChange(entry, 'value', value)
-                            "
-                            @keydown="(e) => handleKeyDown(e, entry.id, 'value')"
-                          />
-                          <span
-                            v-else
-                            class="block max-w-[200px] truncate"
-                            >{{ entry.value || '-' }}</span
-                          >
-                        </TableCell>
-
-                        <TableCell v-if="!isDefaultSelected">
-                          <Textarea
-                            v-if="isEntryEditing(entry.id)"
-                            :model-value="getDimensionValue(entry, selectedDimension)"
-                            @update:model-value="
-                              (value) =>
-                                handleInputChange(entry, `dimension.${selectedDimension}`, value)
-                            "
-                            @keydown="
-                              (e) => handleKeyDown(e, entry.id, `dimension.${selectedDimension}`)
-                            "
-                          />
-                          <span v-else>{{
-                            getDimensionValue(entry, selectedDimension) || '-'
-                          }}</span>
-                        </TableCell>
-
-                        <TableCell v-if="isDefaultSelected">
-                          <Switch
-                            :disabled="!isEntryEditing(entry.id)"
-                            :model-value="entry.is_active"
-                            @update:model-value="
-                              (value) => handleInputChange(entry, 'is_active', value)
-                            "
-                          />
-                        </TableCell>
-
-                        <TableCell>
-                          <div class="flex gap-1">
-                            <template v-if="isEntryEditing(entry.id)">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                :disabled="isUpdatingEntry"
-                                @click="handleSaveEntry(entry.id)"
-                              >
-                                <Icon
-                                  v-if="isUpdatingEntry"
-                                  name="lucide:loader"
-                                  class="animate-spin"
-                                />
-                                <Icon
-                                  v-else
-                                  name="lucide:check"
-                                  class="text-green-500"
-                                />
-                                <span class="sr-only">Save</span>
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                @click="handleDiscardEntry(entry.id)"
-                              >
-                                <Icon
-                                  name="lucide:x"
-                                  class="text-red-500"
-                                />
-                                <span class="sr-only">Cancel</span>
-                              </Button>
-                            </template>
-                            <template v-else>
-                              <Button
-                                v-if="settings.dataEntries.mode === 'single'"
-                                size="icon"
-                                variant="ghost"
-                                @click="handleEditEntry(entry)"
-                              >
-                                <Icon name="lucide:pencil" />
-                              </Button>
-                              <Button
-                                v-if="
-                                  settings.dataEntries.mode === 'grid' &&
-                                  !settings.dataEntries.autoSave &&
-                                  hasEntryPendingChanges(entry.id)
-                                "
-                                size="icon"
-                                variant="outline"
-                                class="h-8 w-8"
-                                @click="handleSaveEntry(entry.id)"
-                              >
-                                <Icon
-                                  name="lucide:check"
-                                  class="text-green-500"
-                                />
-                              </Button>
-                              <Button
-                                v-if="isDefaultSelected"
-                                size="icon"
-                                variant="destructive"
-                                class="h-8 w-8"
-                                @click="handleDeleteEntry(entry)"
-                              >
-                                <Icon
-                                  name="lucide:trash-2"
-                                  class="h-3 w-3"
-                                />
-                              </Button>
-                            </template>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    </template>
-                    <TableEmptyRow
-                      v-else
-                      :colspan="4"
-                      :icon="DataEntriesIcon"
-                      :label="$t('labels.datasets.noEntries')"
-                    />
-                  </TableBody>
-                </Table>
-              </div>
-
-              <TablePaginationFooter
-                v-if="dataEntriesResponse?.meta"
-                :meta="dataEntriesResponse.meta"
-                :current-page="currentPage"
-                :per-page="perPage"
-                :page-size-options="pageSizeOptions"
-                @update:current-page="(val) => (currentPage = val)"
-                @update:per-page="(val) => (perPage = val)"
+                  {{ tab.label }}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <div class="ml-auto flex items-center gap-2">
+              <SearchFilter
+                v-model="filters"
+                :filterable-fields="possibleFilters"
+                class="lg:min-w-xs 2xl:min-w-md"
+                @search="searchQuery = $event"
+                @reset="searchQuery = ''"
+              />
+              <SortSelect
+                v-model="sortBy"
+                :options="sortOptions"
+                :label="$t('labels.sortBy')"
+                :placeholder="$t('labels.sortBy')"
               />
             </div>
           </div>
+
+          <div class="overflow-hidden rounded-md border border-input">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableSortableHead
+                    v-model="sortBy"
+                    class="w-1/3"
+                    column="key"
+                    >{{ $t('labels.dataEntries.fields.key') }}
+                  </TableSortableHead>
+                  <TableSortableHead
+                    v-model="sortBy"
+                    class="w-1/2"
+                    column="value"
+                    >{{ $t('labels.dataEntries.fields.value') }}
+                  </TableSortableHead>
+                  <TableHead
+                    v-if="!isDefaultSelected"
+                    class="w-1/2"
+                  >
+                    {{ dimensionTabs.find((tab) => tab.key === selectedDimension)?.label }}
+                  </TableHead>
+                  <TableHead
+                    v-if="isDefaultSelected"
+                    class="w-16"
+                    >{{ $t('labels.dataEntries.fields.active') }}
+                  </TableHead>
+                  <TableHead class="w-24">{{ $t('labels.dataEntries.fields.actions') }}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow
+                  v-if="isDefaultSelected"
+                  class="bg-elevated"
+                >
+                  <TableCell>
+                    <Input
+                      v-model="newEntryData.key"
+                      :placeholder="$t('labels.dataEntries.fields.key')"
+                      pattern="^[a-zA-Z0-9._\-]+$"
+                      required
+                      @keydown.enter="handleSaveNewEntry"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      v-model="newEntryData.value"
+                      :placeholder="$t('labels.dataEntries.fields.value')"
+                      :disabled="!isDefaultSelected"
+                      @keydown.enter="handleSaveNewEntry"
+                    />
+                  </TableCell>
+                  <TableCell v-if="!isDefaultSelected">
+                    <Input
+                      v-model="newEntryData.dimensions[selectedDimension]"
+                      :placeholder="
+                        dimensionTabs.find((tab) => tab.key === selectedDimension)?.label
+                      "
+                      @keydown.enter="handleSaveNewEntry"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      v-model:checked="newEntryData.is_active"
+                      :default-value="true"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div class="flex gap-1">
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        class="h-8 w-8"
+                        :disabled="!newEntryData.key || isCreatingEntry"
+                        @click="handleSaveNewEntry"
+                      >
+                        <Icon
+                          v-if="isCreatingEntry"
+                          name="lucide:loader"
+                          class="h-3 w-3 animate-spin"
+                        />
+                        <Icon
+                          v-else
+                          name="lucide:plus"
+                          class="h-3 w-3"
+                        />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow v-if="isLoadingEntries">
+                  <TableCell
+                    :colspan="4"
+                    class="h-24 text-center"
+                  >
+                    <div class="flex items-center justify-center">
+                      <Icon
+                        name="lucide:loader"
+                        class="mr-2 h-6 w-6 animate-spin"
+                      />
+                      {{ $t('labels.datasets.loadingEntries') }}
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <template v-else-if="dataEntriesResponse?.data.length">
+                  <TableRow
+                    v-for="entry in dataEntriesResponse?.data"
+                    :key="entry.id"
+                    :data-entry-id="entry.id"
+                    @dblclick="handleEditEntry(entry)"
+                  >
+                    <TableCell>
+                      <Input
+                        v-if="isEntryEditing(entry.id)"
+                        :model-value="entry.key"
+                        :disabled="!isDefaultSelected"
+                        @update:model-value="(value) => handleInputChange(entry, 'key', value)"
+                        @keydown="(e) => handleKeyDown(e, entry.id, 'key')"
+                      />
+                      <span
+                        v-else
+                        class="font-medium"
+                        >{{ entry.key }}</span
+                      >
+                    </TableCell>
+
+                    <TableCell>
+                      <Textarea
+                        v-if="isEntryEditing(entry.id)"
+                        :model-value="entry.value"
+                        :disabled="!isDefaultSelected"
+                        @update:model-value="(value) => handleInputChange(entry, 'value', value)"
+                        @keydown="(e) => handleKeyDown(e, entry.id, 'value')"
+                      />
+                      <span
+                        v-else
+                        class="block max-w-[200px] truncate"
+                        >{{ entry.value || '-' }}</span
+                      >
+                    </TableCell>
+
+                    <TableCell v-if="!isDefaultSelected">
+                      <Textarea
+                        v-if="isEntryEditing(entry.id)"
+                        :model-value="getDimensionValue(entry, selectedDimension)"
+                        @update:model-value="
+                          (value) =>
+                            handleInputChange(entry, `dimension.${selectedDimension}`, value)
+                        "
+                        @keydown="
+                          (e) => handleKeyDown(e, entry.id, `dimension.${selectedDimension}`)
+                        "
+                      />
+                      <span v-else>{{ getDimensionValue(entry, selectedDimension) || '-' }}</span>
+                    </TableCell>
+
+                    <TableCell v-if="isDefaultSelected">
+                      <Switch
+                        :disabled="!isEntryEditing(entry.id)"
+                        :model-value="entry.is_active"
+                        @update:model-value="
+                          (value) => handleInputChange(entry, 'is_active', value)
+                        "
+                      />
+                    </TableCell>
+
+                    <TableCell>
+                      <div class="flex gap-1">
+                        <template v-if="isEntryEditing(entry.id)">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            :disabled="isUpdatingEntry"
+                            @click="handleSaveEntry(entry.id)"
+                          >
+                            <Icon
+                              v-if="isUpdatingEntry"
+                              name="lucide:loader"
+                              class="animate-spin"
+                            />
+                            <Icon
+                              v-else
+                              name="lucide:check"
+                              class="text-green-500"
+                            />
+                            <span class="sr-only">Save</span>
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            @click="handleDiscardEntry(entry.id)"
+                          >
+                            <Icon
+                              name="lucide:x"
+                              class="text-red-500"
+                            />
+                            <span class="sr-only">Cancel</span>
+                          </Button>
+                        </template>
+                        <template v-else>
+                          <Button
+                            v-if="settings.dataEntries.mode === 'single'"
+                            size="icon"
+                            variant="ghost"
+                            @click="handleEditEntry(entry)"
+                          >
+                            <Icon name="lucide:pencil" />
+                          </Button>
+                          <Button
+                            v-if="
+                              settings.dataEntries.mode === 'grid' &&
+                              !settings.dataEntries.autoSave &&
+                              hasEntryPendingChanges(entry.id)
+                            "
+                            size="icon"
+                            variant="outline"
+                            class="h-8 w-8"
+                            @click="handleSaveEntry(entry.id)"
+                          >
+                            <Icon
+                              name="lucide:check"
+                              class="text-green-500"
+                            />
+                          </Button>
+                          <Button
+                            v-if="isDefaultSelected"
+                            size="icon"
+                            variant="destructive"
+                            class="h-8 w-8"
+                            @click="handleDeleteEntry(entry)"
+                          >
+                            <Icon
+                              name="lucide:trash-2"
+                              class="h-3 w-3"
+                            />
+                          </Button>
+                        </template>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                </template>
+                <TableEmptyRow
+                  v-else
+                  :colspan="4"
+                  :icon="DataEntriesIcon"
+                  :label="$t('labels.datasets.noEntries')"
+                />
+              </TableBody>
+            </Table>
+          </div>
+
+          <TablePaginationFooter
+            v-if="dataEntriesResponse?.meta"
+            :meta="dataEntriesResponse.meta"
+            :current-page="currentPage"
+            :per-page="perPage"
+            :page-size-options="pageSizeOptions"
+            @update:current-page="(val) => (currentPage = val)"
+            @update:per-page="(val) => (perPage = val)"
+          />
         </div>
       </div>
-    </NuxtLayout>
+    </div>
   </div>
 </template>

@@ -11,7 +11,7 @@ import {
 } from '~/components/ui/card'
 import { FormField, SelectField } from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
-import SettingsTable, { type ColumnDefinition } from '~/components/ui/settings-table'
+import SettingsTable, { type ColumnDefinition } from '~/components/ui/settings-table.vue'
 
 const { useUpdateSpaceMutation } = useSpaces()
 const { mutate: updateSpace } = useUpdateSpaceMutation()

@@ -3,6 +3,7 @@ import { marked } from 'marked'
 import type { CleanTranslation } from 'nuxt-i18n-micro-types/src'
 
 const props = defineProps<{ content: string | CleanTranslation }>()
+const router = useRouter()
 
 const html = computed(() => {
   return marked.parse(props.content as string)
@@ -13,7 +14,7 @@ function onClick(e: MouseEvent) {
     return
   }
 
-  const url = new URL((e.target as HTMLLinkElement).href, useRequestURL())
+  const url = new URL((e.target as HTMLLinkElement).href, window.location.origin)
   if (url.protocol === 'mailto:') {
     return
   }
@@ -25,7 +26,7 @@ function onClick(e: MouseEvent) {
     return
   }
 
-  navigateTo(url.pathname)
+  router.push(url.pathname)
 }
 </script>
 

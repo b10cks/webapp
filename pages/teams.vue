@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import type { TeamsQueryParams } from '~/api/resources/teams'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
-import CreateTeamDialog from '~/components/teams/CreateTeamDialog.vue'
-import EditTeamDialog from '~/components/teams/EditTeamDialog.vue'
-import TeamHierarchyTree from '~/components/teams/TeamHierarchyTree.vue'
-import TeamsList from '~/components/teams/TeamsList.vue'
 import AppHeader from '~/components/AppHeader.vue'
+import TeamHierarchyTree from '~/components/teams/TeamHierarchyTree.vue'
 import TeamSelector from '~/components/TeamSelector.vue'
 import type { CreateTeamPayload, TeamResource, UpdateTeamPayload } from '~/types/teams'
 
@@ -72,7 +68,7 @@ const handleDeleteTeam = (teamId: string) => {
 }
 
 const handleViewTeam = (teamId: string) => {
-  navigateTo(`/teams/${teamId}`)
+  router.push({ name: 'team', params: { team: teamId } })
 }
 
 const handleCurrentPageUpdate = (page: number) => {
@@ -100,25 +96,21 @@ const handleHierarchySelect = (teamId: string) => {
 </script>
 
 <template>
-  <div>
-    <NuxtLayout name="start">
-      <AppHeader>
-        <div class="flex items-start">
-          <TeamSelector size="sm" />
-        </div>
-      </AppHeader>
-      <div class="flex w-full grow bg-background pt-14">
-        <aside class="w-sm shrink-0 border-r border-border bg-surface">
-          <TeamHierarchyTree
-            :title="$t('labels.teams.hierarchyTitle')"
-            :teams="teams"
-            @select="handleHierarchySelect"
-          />
-        </aside>
-        <main class="content-grid mx-auto">
-          <NuxtPage />
-        </main>
-      </div>
-    </NuxtLayout>
+  <AppHeader>
+    <div class="flex items-start">
+      <TeamSelector size="sm" />
+    </div>
+  </AppHeader>
+  <div class="flex w-full grow bg-background pt-14">
+    <aside class="w-sm shrink-0 border-r border-border bg-surface">
+      <TeamHierarchyTree
+        :title="$t('labels.teams.hierarchyTitle')"
+        :teams="teams"
+        @select="handleHierarchySelect"
+      />
+    </aside>
+    <main class="content-grid mx-auto">
+      <RouterView />
+    </main>
   </div>
 </template>

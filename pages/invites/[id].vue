@@ -65,94 +65,90 @@ const handleAccept = () => {
 </script>
 
 <template>
-  <div>
-    <NuxtLayout name="start">
-      <AppHeader>
-        <div class="flex items-start">
-          <TeamSelector size="sm" />
+  <AppHeader>
+    <div class="flex items-start">
+      <TeamSelector size="sm" />
+    </div>
+  </AppHeader>
+  <div class="flex w-full grow items-center justify-center bg-background pt-14">
+    <div class="w-full max-w-md space-y-6">
+      <h1 class="text-2xl font-bold">{{ $t('labels.invites.page.title') }}</h1>
+      <Alert
+        v-if="isPending"
+        class="space-y-4"
+      >
+        {{ $t('labels.invites.page.loading') }}
+      </Alert>
+      <Alert
+        v-else-if="error"
+        icon="lucide:alert-circle"
+        color="destructive"
+      >
+        <p class="font-semibold">{{ $t('labels.invites.page.invalidOrExpired') }}</p>
+        <p class="mt-1 text-sm">{{ $t('labels.invites.page.invalidOrExpiredDesc') }}</p>
+      </Alert>
+      <Alert
+        v-else-if="isExpired"
+        color="destructive"
+        icon="lucide:clock"
+      >
+        <p class="font-semibold">{{ $t('labels.invites.page.expired') }}</p>
+        <p class="mt-1 text-sm">{{ $t('labels.invites.page.expiredDesc') }}</p>
+      </Alert>
+      <Alert
+        v-else-if="isAccepted"
+        color="success"
+        icon="lucide:check-circle"
+      >
+        <p class="font-semibold">{{ $t('labels.invites.page.alreadyAccepted') }}</p>
+        <p class="mt-1 text-sm">{{ $t('labels.invites.page.alreadyAcceptedDesc') }}</p>
+      </Alert>
+
+      <form
+        v-else-if="invite"
+        class="space-y-6"
+        @submit.prevent="handleAccept"
+      >
+        <div>
+          {{ $t('labels.invites.page.invitedToJoin') }}
+          <span class="font-semibold">{{ resourceName }}</span>
         </div>
-      </AppHeader>
-      <div class="flex w-full grow items-center justify-center bg-background pt-14">
-        <div class="w-full max-w-md space-y-6">
-          <h1 class="text-2xl font-bold">{{ $t('labels.invites.page.title') }}</h1>
-          <Alert
-            v-if="isPending"
-            class="space-y-4"
-          >
-            {{ $t('labels.invites.page.loading') }}
-          </Alert>
-          <Alert
-            v-else-if="error"
-            icon="lucide:alert-circle"
-            color="destructive"
-          >
-            <p class="font-semibold">{{ $t('labels.invites.page.invalidOrExpired') }}</p>
-            <p class="mt-1 text-sm">{{ $t('labels.invites.page.invalidOrExpiredDesc') }}</p>
-          </Alert>
-          <Alert
-            v-else-if="isExpired"
-            color="destructive"
-            icon="lucide:clock"
-          >
-            <p class="font-semibold">{{ $t('labels.invites.page.expired') }}</p>
-            <p class="mt-1 text-sm">{{ $t('labels.invites.page.expiredDesc') }}</p>
-          </Alert>
-          <Alert
-            v-else-if="isAccepted"
-            color="success"
-            icon="lucide:check-circle"
-          >
-            <p class="font-semibold">{{ $t('labels.invites.page.alreadyAccepted') }}</p>
-            <p class="mt-1 text-sm">{{ $t('labels.invites.page.alreadyAcceptedDesc') }}</p>
-          </Alert>
+        <Alert
+          variant="modern"
+          v-if="invite.message"
+        >
+          {{ invite.message }}
+        </Alert>
 
-          <form
-            v-else-if="invite"
-            class="space-y-6"
-            @submit.prevent="handleAccept"
+        <div class="space-y-2">
+          <Button
+            type="submit"
+            variant="primary"
+            class="w-full"
+            :disabled="isAccepting"
           >
-            <div>
-              {{ $t('labels.invites.page.invitedToJoin') }}
-              <span class="font-semibold">{{ resourceName }}</span>
-            </div>
-            <Alert
-              variant="modern"
-              v-if="invite.message"
-            >
-              {{ invite.message }}
-            </Alert>
+            <Icon
+              v-if="isAccepting"
+              name="lucide:loader-2"
+              class="animate-spin"
+            />
+            {{
+              isAccepting
+                ? $t('labels.invites.page.acceptingButton')
+                : $t('labels.invites.page.acceptButton')
+            }}
+          </Button>
 
-            <div class="space-y-2">
-              <Button
-                type="submit"
-                variant="primary"
-                class="w-full"
-                :disabled="isAccepting"
-              >
-                <Icon
-                  v-if="isAccepting"
-                  name="lucide:loader-2"
-                  class="animate-spin"
-                />
-                {{
-                  isAccepting
-                    ? $t('labels.invites.page.acceptingButton')
-                    : $t('labels.invites.page.acceptButton')
-                }}
-              </Button>
-
-              <Button
-                type="button"
-                variant="outline"
-                class="w-full"
-                @click="router.back()"
-              >
-                {{ $t('labels.invites.page.declineButton') }}
-              </Button>
-            </div>
-          </form>
+          <Button
+            type="button"
+            variant="outline"
+            class="w-full"
+            @click="router.back()"
+          >
+            {{ $t('labels.invites.page.declineButton') }}
+          </Button>
         </div>
-      </div>
-    </NuxtLayout>
+      </form>
+    </div>
   </div>
 </template>

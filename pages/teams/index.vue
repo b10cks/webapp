@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import type { TeamsQueryParams } from '~/api/resources/teams'
-import ContentHeader from '~/components/ui/ContentHeader.vue'
 import CreateTeamDialog from '~/components/teams/CreateTeamDialog.vue'
 import EditTeamDialog from '~/components/teams/EditTeamDialog.vue'
-import TeamHierarchyTree from '~/components/teams/TeamHierarchyTree.vue'
 import TeamsList from '~/components/teams/TeamsList.vue'
-import AppHeader from '~/components/AppHeader.vue'
-import TeamSelector from '~/components/TeamSelector.vue'
+import ContentHeader from '~/components/ui/ContentHeader.vue'
 import type { CreateTeamPayload, TeamResource, UpdateTeamPayload } from '~/types/teams'
 
 const { t } = useI18n()
@@ -74,7 +71,7 @@ const handleDeleteTeam = (teamId: string) => {
 }
 
 const handleViewTeam = (teamId: string) => {
-  navigateTo(`/teams/${teamId}`)
+  router.push({ name: 'team', params: { team: teamId } })
 }
 
 const handleCurrentPageUpdate = (page: number) => {
@@ -102,43 +99,41 @@ const handleHierarchySelect = (teamId: string) => {
 </script>
 
 <template>
-  <div>
-    <div class="flex flex-col gap-8">
-      <ContentHeader
-        :header="$t('labels.teams.pageTitle')"
-        :description="$t('labels.teams.pageDescription')"
-      >
-        <template #actions>
-          <CreateTeamDialog
-            :hierarchy="hierarchy"
-            @submit="handleCreateTeam"
-          />
-        </template>
-      </ContentHeader>
+  <div class="flex flex-col gap-8">
+    <ContentHeader
+      :header="$t('labels.teams.pageTitle')"
+      :description="$t('labels.teams.pageDescription')"
+    >
+      <template #actions>
+        <CreateTeamDialog
+          :hierarchy="hierarchy"
+          @submit="handleCreateTeam"
+        />
+      </template>
+    </ContentHeader>
 
-      <TeamsList
-        :teams="teams"
-        :hierarchy="hierarchy"
-        :is-loading="isLoadingTeams"
-        :meta="meta"
-        :current-page="currentPage"
-        :per-page="perPage"
-        :sort-by="sortBy"
-        @view="handleViewTeam"
-        @edit="handleEditTeam"
-        @delete="handleDeleteTeam"
-        @update:current-page="handleCurrentPageUpdate"
-        @update:per-page="handlePerPageUpdate"
-        @update:sort-by="handleSortByUpdate"
-        @update:filters="handleFiltersUpdate"
-      />
-    </div>
-
-    <EditTeamDialog
-      v-model:open="isEditDialogOpen"
-      :team="selectedTeamForEdit"
+    <TeamsList
+      :teams="teams"
       :hierarchy="hierarchy"
-      @submit="handleUpdateTeam"
+      :is-loading="isLoadingTeams"
+      :meta="meta"
+      :current-page="currentPage"
+      :per-page="perPage"
+      :sort-by="sortBy"
+      @view="handleViewTeam"
+      @edit="handleEditTeam"
+      @delete="handleDeleteTeam"
+      @update:current-page="handleCurrentPageUpdate"
+      @update:per-page="handlePerPageUpdate"
+      @update:sort-by="handleSortByUpdate"
+      @update:filters="handleFiltersUpdate"
     />
   </div>
+
+  <EditTeamDialog
+    v-model:open="isEditDialogOpen"
+    :team="selectedTeamForEdit"
+    :hierarchy="hierarchy"
+    @submit="handleUpdateTeam"
+  />
 </template>

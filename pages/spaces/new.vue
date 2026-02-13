@@ -197,7 +197,7 @@ const handleNext = async () => {
 
     await createSpace(payload, {
       onSuccess(data) {
-        navigateTo(`/${data.id}`)
+        router.push({ name: 'space', params: { space: data.id } })
       },
     })
   }
@@ -211,196 +211,192 @@ const handleBack = () => {
 </script>
 
 <template>
-  <div>
-    <NuxtLayout name="start">
-      <AppHeader />
-      <div class="w-full grow bg-background pt-10">
-        <main class="content-grid py-6">
-          <div class="content-narrow grid gap-6">
-            <ContentHeader
-              :header="$t('labels.spaces.newPageTitle')"
-              :description="$t('labels.spaces.newPageDescription')"
-            />
-            <Stepper
-              v-model="step"
-              class="flex w-full items-start justify-center"
-            >
-              <StepperItem
-                v-for="(item, i) in steps"
-                :key="item.step"
-                :step="i + 1"
-                :disabled="item?.disabled"
-              >
-                <StepperTrigger>
-                  <StepperIndicator>
-                    <Icon :name="item.icon" />
-                  </StepperIndicator>
-                  <div class="flex flex-col">
-                    <StepperTitle>{{ $t(`labels.spaces.steps.${item.step}.title`) }}</StepperTitle>
-                    <StepperDescription>{{
-                      $t(`labels.spaces.steps.${item.step}.description`)
-                    }}</StepperDescription>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator
-                  v-if="item.step !== steps[steps.length - 1].step"
-                  class="h-px w-[10rem]"
-                />
-              </StepperItem>
-            </Stepper>
-            <div
-              v-if="step === 1"
-              class="space-y-6"
-            >
-              <h2 class="text-xl font-semibold text-primary">Select a plan</h2>
-              <RadioGroup v-model="selectedPlan">
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <Card
-                    v-for="plan in plans"
-                    :key="plan.id"
-                    :class="[
-                      'flex flex-col bg-surface',
-                      plan.disabled ? 'opacity-30' : '',
-                      selectedPlan === plan.id ? 'ring ring-ring' : '',
-                    ]"
-                    @click="plan.id === selectedPlan ? handleNext() : () => {}"
-                  >
-                    <CardHeader class="relative pb-2">
-                      <Badge
-                        v-if="plan.badge"
-                        :variant="plan.badge.variant"
-                        class="absolute -top-2 -right-2 rounded-full"
-                      >
-                        {{ plan.badge.text }}
-                      </Badge>
-                      <CardTitle class="text-xl text-primary">{{ plan.name }}</CardTitle>
-                      <CardDescription>{{ plan.description }}</CardDescription>
-                    </CardHeader>
-                    <CardContent class="grow">
-                      <div class="flex items-baseline gap-2">
-                        <div class="text-3xl font-bold text-primary">{{ plan.price }}</div>
-                        <div class="text-sm text-text-muted">{{ plan.period }}</div>
-                      </div>
-                      <ul class="mt-6 grid gap-3">
-                        <li
-                          v-for="(feature, featureIndex) in plan.features"
-                          :key="featureIndex"
-                          class="item-start flex gap-2"
-                        >
-                          <Icon
-                            name="lucide:check"
-                            class="mt-1 text-success"
-                          />
-                          <span>{{ feature }}</span>
-                        </li>
-                        <li
-                          v-for="(feature, featureIndex) in plan?.aiFeatures"
-                          :key="featureIndex"
-                          class="item-start flex gap-2"
-                        >
-                          <Icon
-                            name="lucide:sparkles"
-                            size="0.825rem"
-                            class="mt-1 text-ai"
-                          />
-                          <span>{{ feature }}</span>
-                        </li>
-                      </ul>
-                    </CardContent>
-                    <CardFooter>
-                      <RadioGroupItem
-                        :id="plan.id"
-                        :value="plan.id"
-                        class="sr-only"
-                        :disabled="plan.disabled"
-                      />
-                      <Label
-                        :for="plan.id"
-                        :class="[
-                          'flex w-full cursor-pointer items-center justify-center rounded-md border py-2 text-sm font-semibold',
-                          selectedPlan === plan.id
-                            ? 'border-accent bg-accent text-accent-foreground'
-                            : 'border-elevated',
-                          plan.disabled ? 'cursor-not-allowed opacity-50' : '',
-                        ]"
-                      >
-                        {{
-                          $t(
-                            selectedPlan === plan.id
-                              ? 'actions.spaces.new.continueWith'
-                              : 'actions.spaces.new.select',
-                            plan
-                          )
-                        }}
-                      </Label>
-                    </CardFooter>
-                  </Card>
-                </div>
-              </RadioGroup>
-            </div>
-            <div
-              v-if="step === 2"
-              class="space-y-6"
-            >
-              <h2 class="text-xl font-semibold">Space details</h2>
-              <div class="space-y-4">
-                <InputField
-                  v-model="spaceName"
-                  name="name"
-                  :label="$t('labels.spaces.fields.name')"
-                  :placeholder="$t('labels.spaces.fields.namePlaceholder')"
-                  required
-                  :description="$t('labels.spaces.fields.nameDescription')"
-                  :autofocus="true"
-                  @input="handleNameChange"
-                />
-                <InputField
-                  v-model="spaceSlug"
-                  name="slug"
-                  :label="$t('labels.spaces.fields.slug')"
-                  placeholder="my-awesome-space"
-                  required
-                  :description="$t('labels.spaces.fields.slugDescription')"
-                />
-                <ServerLocationSelect
-                  v-model="serverLocation"
-                  disabled
-                />
+  <AppHeader />
+  <div class="w-full grow bg-background pt-10">
+    <main class="content-grid py-6">
+      <div class="content-narrow grid gap-6">
+        <ContentHeader
+          :header="$t('labels.spaces.newPageTitle')"
+          :description="$t('labels.spaces.newPageDescription')"
+        />
+        <Stepper
+          v-model="step"
+          class="flex w-full items-start justify-center"
+        >
+          <StepperItem
+            v-for="(item, i) in steps"
+            :key="item.step"
+            :step="i + 1"
+            :disabled="item?.disabled"
+          >
+            <StepperTrigger>
+              <StepperIndicator>
+                <Icon :name="item.icon" />
+              </StepperIndicator>
+              <div class="flex flex-col">
+                <StepperTitle>{{ $t(`labels.spaces.steps.${item.step}.title`) }}</StepperTitle>
+                <StepperDescription>{{
+                  $t(`labels.spaces.steps.${item.step}.description`)
+                }}</StepperDescription>
               </div>
-            </div>
-            <div class="mt-8 flex justify-between">
-              <Button
-                variant="outline"
-                :disabled="step === 1"
-                @click="handleBack"
+            </StepperTrigger>
+            <StepperSeparator
+              v-if="item.step !== steps[steps.length - 1].step"
+              class="h-px w-[10rem]"
+            />
+          </StepperItem>
+        </Stepper>
+        <div
+          v-if="step === 1"
+          class="space-y-6"
+        >
+          <h2 class="text-xl font-semibold text-primary">Select a plan</h2>
+          <RadioGroup v-model="selectedPlan">
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <Card
+                v-for="plan in plans"
+                :key="plan.id"
+                :class="[
+                  'flex flex-col bg-surface',
+                  plan.disabled ? 'opacity-30' : '',
+                  selectedPlan === plan.id ? 'ring ring-ring' : '',
+                ]"
+                @click="plan.id === selectedPlan ? handleNext() : () => {}"
               >
-                {{ $t('actions.back') }}
-              </Button>
-              <Button
-                variant="primary"
-                :disabled="
-                  (step === 1 && !selectedPlan) ||
-                  (step === 2 && (!spaceName || !spaceSlug || !serverLocation))
-                "
-                @click="handleNext"
-              >
-                <template v-if="step < 2">
-                  {{ $t('actions.next') }}
-                  <Icon name="lucide:chevron-right" />
-                </template>
-                <template v-else>
-                  <Icon
-                    v-if="isPending"
-                    name="lucide:loader"
-                    class="animate-spin"
+                <CardHeader class="relative pb-2">
+                  <Badge
+                    v-if="plan.badge"
+                    :variant="plan.badge.variant"
+                    class="absolute -top-2 -right-2 rounded-full"
+                  >
+                    {{ plan.badge.text }}
+                  </Badge>
+                  <CardTitle class="text-xl text-primary">{{ plan.name }}</CardTitle>
+                  <CardDescription>{{ plan.description }}</CardDescription>
+                </CardHeader>
+                <CardContent class="grow">
+                  <div class="flex items-baseline gap-2">
+                    <div class="text-3xl font-bold text-primary">{{ plan.price }}</div>
+                    <div class="text-sm text-text-muted">{{ plan.period }}</div>
+                  </div>
+                  <ul class="mt-6 grid gap-3">
+                    <li
+                      v-for="(feature, featureIndex) in plan.features"
+                      :key="featureIndex"
+                      class="item-start flex gap-2"
+                    >
+                      <Icon
+                        name="lucide:check"
+                        class="mt-1 text-success"
+                      />
+                      <span>{{ feature }}</span>
+                    </li>
+                    <li
+                      v-for="(feature, featureIndex) in plan?.aiFeatures"
+                      :key="featureIndex"
+                      class="item-start flex gap-2"
+                    >
+                      <Icon
+                        name="lucide:sparkles"
+                        size="0.825rem"
+                        class="mt-1 text-ai"
+                      />
+                      <span>{{ feature }}</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <RadioGroupItem
+                    :id="plan.id"
+                    :value="plan.id"
+                    class="sr-only"
+                    :disabled="plan.disabled"
                   />
-                  Create Space
-                </template>
-              </Button>
+                  <Label
+                    :for="plan.id"
+                    :class="[
+                      'flex w-full cursor-pointer items-center justify-center rounded-md border py-2 text-sm font-semibold',
+                      selectedPlan === plan.id
+                        ? 'border-accent bg-accent text-accent-foreground'
+                        : 'border-elevated',
+                      plan.disabled ? 'cursor-not-allowed opacity-50' : '',
+                    ]"
+                  >
+                    {{
+                      $t(
+                        selectedPlan === plan.id
+                          ? 'actions.spaces.new.continueWith'
+                          : 'actions.spaces.new.select',
+                        plan
+                      )
+                    }}
+                  </Label>
+                </CardFooter>
+              </Card>
             </div>
+          </RadioGroup>
+        </div>
+        <div
+          v-if="step === 2"
+          class="space-y-6"
+        >
+          <h2 class="text-xl font-semibold">Space details</h2>
+          <div class="space-y-4">
+            <InputField
+              v-model="spaceName"
+              name="name"
+              :label="$t('labels.spaces.fields.name')"
+              :placeholder="$t('labels.spaces.fields.namePlaceholder')"
+              required
+              :description="$t('labels.spaces.fields.nameDescription')"
+              :autofocus="true"
+              @input="handleNameChange"
+            />
+            <InputField
+              v-model="spaceSlug"
+              name="slug"
+              :label="$t('labels.spaces.fields.slug')"
+              placeholder="my-awesome-space"
+              required
+              :description="$t('labels.spaces.fields.slugDescription')"
+            />
+            <ServerLocationSelect
+              v-model="serverLocation"
+              disabled
+            />
           </div>
-        </main>
+        </div>
+        <div class="mt-8 flex justify-between">
+          <Button
+            variant="outline"
+            :disabled="step === 1"
+            @click="handleBack"
+          >
+            {{ $t('actions.back') }}
+          </Button>
+          <Button
+            variant="primary"
+            :disabled="
+              (step === 1 && !selectedPlan) ||
+              (step === 2 && (!spaceName || !spaceSlug || !serverLocation))
+            "
+            @click="handleNext"
+          >
+            <template v-if="step < 2">
+              {{ $t('actions.next') }}
+              <Icon name="lucide:chevron-right" />
+            </template>
+            <template v-else>
+              <Icon
+                v-if="isPending"
+                name="lucide:loader"
+                class="animate-spin"
+              />
+              Create Space
+            </template>
+          </Button>
+        </div>
       </div>
-    </NuxtLayout>
+    </main>
   </div>
 </template>

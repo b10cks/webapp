@@ -1,3 +1,4 @@
+import { isClient } from '~/lib/env'
 import type Echo from 'laravel-echo'
 import type { User } from '~/types/users'
 
@@ -42,7 +43,7 @@ export function usePresence(channelNameRef: MaybeRefOrComputed<string | null>, o
   }
 
   const connect = () => {
-    if (!import.meta.client) return
+    if (!isClient) return
     if (!channelName.value) return
 
     const echo = getEcho()

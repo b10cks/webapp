@@ -1,35 +1,21 @@
-import type { DehydratedState, VueQueryPluginOptions } from '@tanstack/vue-query'
+import { QueryClient, VueQueryPlugin, type VueQueryPluginOptions } from '@tanstack/vue-query'
+import type { App } from 'vue'
 
-import { defineNuxtPlugin, useState } from '#imports'
-import { dehydrate, hydrate, QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
-
-export default defineNuxtPlugin((nuxt) => {
-  const vueQueryState = useState<DehydratedState | null>('vue-query')
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: true,
-        retry: 1,
-        staleTime: 1000 * 60 * 5,
-      },
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true,
+      retry: 1,
+      staleTime: 1000 * 60 * 5,
     },
-  })
-  const options: VueQueryPluginOptions = { queryClient }
-  nuxt.vueApp.use(VueQueryPlugin, options)
-
-  if (import.meta.server) {
-    nuxt.hooks.hook('app:rendered', () => {
-      vueQueryState.value = dehydrate(queryClient)
-    })
-  }
-
-  if (import.meta.client) {
-    hydrate(queryClient, vueQueryState.value)
-  }
-
-  return {
-    provide: {
-      queryClient,
-    },
-  }
+  },
 })
+
+const options: VueQueryPluginOptions = { queryClient }
+
+export function installVueQuery(app: App) {
+  app.use(VueQueryPlugin, options)
+  app.provide('queryClient', queryClient)
+}
+
+export { queryClient }

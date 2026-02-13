@@ -47,61 +47,58 @@ const e = ref(null)
 </script>
 
 <template>
-  <div>
-    <NuxtLayout name="unauthenticated">
-      <div class="grid w-full max-w-md space-y-8 select-none">
-        <div class="mb-6 grid gap-4">
-          <Logo
-            alt="b10cks logo"
-            class="h-8 w-8 text-primary"
-          />
-          <h1
-            class="text-2xl font-semibold text-primary"
-            v-text="$t('labels.login.header')"
-          />
-          <p class="text-sm text-muted">{{ $t('labels.login.intro') }}</p>
-        </div>
-        <form
-          class="grid gap-6"
-          @submit.prevent="login(formData)"
-        >
-          <Alert
-            v-if="error && !requiresTwoFactor"
-            color="destructive"
-            icon="lucide:alert-circle"
-          >
-            {{ error }}
-          </Alert>
-          <InputField
-            v-model="formData.email"
-            type="email"
-            name="email"
-            :label="$t('labels.login.fields.emailLabel')"
-            :placeholder="$t('labels.login.fields.emailPlaceholder')"
-            required
-          />
-          <div class="grid gap-3">
-            <InputField
-              v-model="formData.password"
-              type="password"
-              name="password"
-              :label="$t('labels.login.fields.passwordLabel')"
-              :placeholder="$t('labels.login.fields.passwordPlaceholder')"
-              required
-            />
-            <div class="text-right">
-              <NuxtLink to="/login/password">{{ $t('labels.login.forgotPassword') }}</NuxtLink>
-            </div>
-          </div>
-          <Button variant="primary">{{ $t('actions.login') }}</Button>
-          <Markdown :content="$t('labels.login.signup')" />
-        </form>
-      </div>
-      <TwoFactorVerifyDialog
-        v-model:open="twoFactorDialogOpen"
-        :on-verify="handleVerify"
-        :on-cancel="handleCancel"
+  <div class="grid w-full max-w-md space-y-8 select-none">
+    <div class="mb-6 grid gap-4">
+      <Logo
+        alt="b10cks logo"
+        class="h-8 w-8 text-primary"
       />
-    </NuxtLayout>
+      <h1
+        class="text-2xl font-semibold text-primary"
+        v-text="$t('labels.login.header')"
+      />
+      <p class="text-sm text-muted">{{ $t('labels.login.intro') }}</p>
+    </div>
+    <form
+      class="grid gap-6"
+      @submit.prevent="login(formData)"
+    >
+      <Alert
+        v-if="error && !requiresTwoFactor"
+        color="destructive"
+        icon="lucide:alert-circle"
+        class="select-text"
+      >
+        {{ error }}
+      </Alert>
+      <InputField
+        v-model="formData.email"
+        type="email"
+        name="email"
+        :label="$t('labels.login.fields.emailLabel')"
+        :placeholder="$t('labels.login.fields.emailPlaceholder')"
+        required
+      />
+      <div class="grid gap-3">
+        <InputField
+          v-model="formData.password"
+          type="password"
+          name="password"
+          :label="$t('labels.login.fields.passwordLabel')"
+          :placeholder="$t('labels.login.fields.passwordPlaceholder')"
+          required
+        />
+        <div class="text-right">
+          <RouterLink to="/login/password">{{ $t('labels.login.forgotPassword') }}</RouterLink>
+        </div>
+      </div>
+      <Button variant="primary">{{ $t('actions.login') }}</Button>
+      <Markdown :content="$t('labels.login.signup')" />
+    </form>
   </div>
+  <TwoFactorVerifyDialog
+    v-model:open="twoFactorDialogOpen"
+    :on-verify="handleVerify"
+    :on-cancel="handleCancel"
+  />
 </template>

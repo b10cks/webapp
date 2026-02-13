@@ -1,3 +1,7 @@
+import { computed, readonly, ref } from 'vue'
+import { isClient } from '~/lib/env'
+import { useI18n } from '~/plugins/i18n'
+import { router } from '~/router'
 import type { ApiResponse } from '~/types'
 import type { User } from '~/types/users'
 
@@ -27,17 +31,18 @@ interface ParsedError {
   message?: string
 }
 
+const globalUser = ref<User | null>(null)
+const globalIsReady = ref(false)
+const globalIsInitializing = ref(false)
+
 export function useAuth() {
-  const router = useRouter()
-  const route = useRoute()
-  const { $posthog } = useNuxtApp()
   const { t } = useI18n()
 
-  const user = useState<User>('auth_user', () => null)
+  const user = globalUser
   const isAuthenticated = computed(() => !!user.value)
   const isLoading = ref(false)
-  const isReady = useState<boolean>('auth_ready', () => false)
-  const isInitializing = useState<boolean>('auth_initializing', () => false)
+  const isReady = globalIsReady
+  const isInitializing = globalIsInitializing
   const error = ref<string | null>(null)
 
   const requiresTwoFactor = ref(false)
@@ -64,13 +69,6 @@ export function useAuth() {
       const { api } = await import('~/api')
       const response = await api.client.request<ApiResponse<User>>('/mgmt/v1/users/me')
       user.value = response.data
-
-      if (user.value && $posthog) {
-        $posthog().identify(user.value.id, {
-          email: user.value.email,
-          name: `${user.value.firstname} ${user.value.lastname}`,
-        })
-      }
     } catch (err: any) {
       const { status } = parseErrorResponse(err)
       user.value = null
@@ -107,7 +105,8 @@ export function useAuth() {
       pendingLoginPayload.value = null
 
       return await handleAuthResponse(() => {
-        router.push((route.query.return as string) || '/')
+        const currentRoute = router.currentRoute.value
+        router.push((currentRoute.query.return as string) || '/')
       })
     } catch (err: any) {
       const { status, errorCode, message } = parseErrorResponse(err)
@@ -160,7 +159,8 @@ export function useAuth() {
       await api.client.post<AuthResponse>('/auth/v1/register', payload)
 
       return await handleAuthResponse(() => {
-        router.push((route.query.return as string) || '/')
+        const currentRoute = router.currentRoute.value
+        router.push((currentRoute.query.return as string) || '/')
       })
     } catch (err: any) {
       error.value =
@@ -174,18 +174,28 @@ export function useAuth() {
   }
 
   const logout = async (returnPath?: string): Promise<void> => {
+    try {
+      const { api } = await import('~/api')
+      await api.client.post('/auth/v1/logout')
+    } catch (error) {
+      console.warn('[Auth] Logout API call failed:', error)
+    }
+
     user.value = null
+    globalIsReady.value = false
     error.value = null
     requiresTwoFactor.value = false
     pendingLoginPayload.value = null
 
-    if (route.fullPath.startsWith('/login')) {
-      return Promise.resolve()
+    const currentRoute = router.currentRoute.value
+
+    if (currentRoute.fullPath.startsWith('/login')) {
+      return
     }
 
-    navigateTo({
+    router.push({
       name: 'login',
-      query: { return: returnPath || route.query.return || route.fullPath || '/' },
+      query: { return: returnPath || currentRoute.query.return || currentRoute.fullPath || '/' },
     })
   }
 
@@ -195,17 +205,19 @@ export function useAuth() {
   }
 
   const initAuth = async (): Promise<void> => {
-    if (!import.meta.client || isInitializing.value) return
+    if (!isClient) return
+    if (isInitializing.value) return
 
     isInitializing.value = true
-    await loadUser(true)
-    isReady.value = true
-    isInitializing.value = false
+    try {
+      await loadUser(true)
+    } catch (error) {
+      console.error('[Auth] Failed to load user during init:', error)
+    } finally {
+      isReady.value = true
+      isInitializing.value = false
+    }
   }
-
-  onMounted(() => {
-    initAuth()
-  })
 
   return {
     user: readonly(user),
@@ -222,5 +234,6 @@ export function useAuth() {
     logout,
     handleUnauthorized,
     loadUser,
+    initAuth,
   }
 }

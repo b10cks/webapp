@@ -105,18 +105,16 @@ const unpublish = async () => {
 }
 
 const switchLocalization = () => {
-  navigateTo({
-    ...route,
-    hash: undefined,
+  router.push({
     name: isLocalization.value ? 'space-content-contentId' : 'space-content-contentId-localization',
+    params: route.params,
   })
 }
 
 const switchVersions = () => {
-  navigateTo({
-    ...route,
-    hash: undefined,
+  router.push({
     name: isVersions.value ? 'space-content-contentId' : 'space-content-contentId-versions',
+    params: route.params,
   })
 }
 
@@ -124,9 +122,7 @@ const assignedRelease = computed(() =>
   (releases.value.data || []).find((release) => release.id === contentModel.value.releaseId)
 )
 
-const isInScheduledRelease = computed(
-  () => assignedRelease.value && getReleaseState(assignedRelease.value) !== 'draft'
-)
+const isInScheduledRelease = computed(() => assignedRelease.value && getReleaseState(assignedRelease.value) !== 'draft')
 
 const hasLocalization = computed(() => space.value?.settings?.languages?.length > 0)
 
@@ -134,9 +130,7 @@ const draftReleases = computed(() =>
   (releases.value.data || []).filter((release) => getReleaseState(release) === 'draft')
 )
 
-const canPublishToRelease = computed(
-  () => !isInScheduledRelease.value && !contentModel.value.isPublished
-)
+const canPublishToRelease = computed(() => !isInScheduledRelease.value && !contentModel.value.isPublished)
 
 const handleAssignToRelease = (release: any) => {
   selectedReleaseForAssign.value = release

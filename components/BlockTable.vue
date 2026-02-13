@@ -188,12 +188,12 @@ const handleDelete = async (block: BlockResource) => {
                   class="cursor-pointer hover:bg-accent"
                 >
                   <TableCell>
-                    <NuxtLink :href="`/${spaceId}/blocks/${block.id}`">
+                    <RouterLink :href="`/${spaceId}/blocks/${block.id}`">
                       <IconName
                         v-bind="{ name: block.name, color: block.color, icon: block.icon }"
                         class="font-semibold"
                       />
-                    </NuxtLink>
+                    </RouterLink>
                   </TableCell>
                   <TableCell>
                     <Badge

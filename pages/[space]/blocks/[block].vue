@@ -6,7 +6,6 @@ import BlockVersionsSheet from '~/components/blocks/BlockVersionsSheet.vue'
 import { Button } from '~/components/ui/button'
 import ContentHeader from '~/components/ui/ContentHeader.vue'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 
 const route = useRoute()
 const spaceId = computed(() => route.params.space as string)
@@ -34,81 +33,77 @@ const submit = async (b: BlockResource) => {
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <BlockMenu :space-id="spaceId" />
-      <ScrollArea class="flex grow bg-background">
-        <div v-if="isLoading">Loading ...</div>
-        <div
-          v-else-if="block"
-          class="mx-auto flex w-full max-w-5xl flex-col gap-6 pb-6"
-        >
-          <ContentHeader :header="block.name">
-            <template #actions>
-              <div class="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  @click="showVersionsSheet = true"
-                >
-                  <Icon name="lucide:history" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  @click="showTemplatesSheet = true"
-                >
-                  <Icon name="lucide:notepad-text-dashed" />
-                  {{ $t('actions.blocks.templates') }}
-                  <Badge
-                    v-if="block.templates_count"
-                    variant="secondary"
-                    size="sm"
-                    class="ml-1"
-                  >
-                    {{ block.templates_count }}
-                  </Badge>
-                </Button>
-              </div>
-            </template>
-          </ContentHeader>
-
-          <div class="mx-auto max-w-xl">
-            <BlockEdit
-              v-slot="{ editBlock }"
-              :block="block"
-              :space-id="spaceId"
-              show-schema
-              @submit="submit"
+  <BlockMenu :space-id="spaceId" />
+  <ScrollArea class="flex grow bg-background">
+    <div v-if="isLoading">Loading ...</div>
+    <div
+      v-else-if="block"
+      class="mx-auto flex w-full max-w-5xl flex-col gap-6 pb-6"
+    >
+      <ContentHeader :header="block.name">
+        <template #actions>
+          <div class="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              @click="showVersionsSheet = true"
             >
-              <div class="flex">
-                <Button
-                  type="button"
-                  variant="primary"
-                  class="ml-auto"
-                  @click="submit(editBlock)"
-                >
-                  {{ $t('actions.blocks.save') }}
-                </Button>
-              </div>
-            </BlockEdit>
+              <Icon name="lucide:history" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              @click="showTemplatesSheet = true"
+            >
+              <Icon name="lucide:notepad-text-dashed" />
+              {{ $t('actions.blocks.templates') }}
+              <Badge
+                v-if="block.templates_count"
+                variant="secondary"
+                size="sm"
+                class="ml-1"
+              >
+                {{ block.templates_count }}
+              </Badge>
+            </Button>
           </div>
-        </div>
-      </ScrollArea>
+        </template>
+      </ContentHeader>
 
-      <BlockVersionsSheet
-        v-if="block"
-        v-model:open="showVersionsSheet"
-        :space-id="spaceId"
-        :block="block"
-      />
+      <div class="mx-auto max-w-xl">
+        <BlockEdit
+          v-slot="{ editBlock }"
+          :block="block"
+          :space-id="spaceId"
+          show-schema
+          @submit="submit"
+        >
+          <div class="flex">
+            <Button
+              type="button"
+              variant="primary"
+              class="ml-auto"
+              @click="submit(editBlock)"
+            >
+              {{ $t('actions.blocks.save') }}
+            </Button>
+          </div>
+        </BlockEdit>
+      </div>
+    </div>
+  </ScrollArea>
 
-      <BlockTemplatesSheet
-        v-if="block"
-        v-model:open="showTemplatesSheet"
-        :space-id="spaceId"
-        :block-id="blockId"
-      />
-    </NuxtLayout>
-  </div>
+  <BlockVersionsSheet
+    v-if="block"
+    v-model:open="showVersionsSheet"
+    :space-id="spaceId"
+    :block="block"
+  />
+
+  <BlockTemplatesSheet
+    v-if="block"
+    v-model:open="showTemplatesSheet"
+    :space-id="spaceId"
+    :block-id="blockId"
+  />
 </template>

@@ -1,3 +1,4 @@
+import { isClient } from '~/lib/env'
 // src/composables/useContentMenu.ts
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 
@@ -96,7 +97,7 @@ export function useContentMenu(spaceId: MaybeRef<string>) {
   }
 
   const setupEcho = () => {
-    if (!import.meta.client) return
+    if (!isClient) return
 
     try {
       const echo = useEcho()

@@ -144,9 +144,7 @@ const updateHover = (itemId: string | null) => {
 }
 
 const copyLink = () => {
-  navigator.clipboard
-    .writeText(src.value)
-    .then(() => toast.message(t('notifications.preview.copied') as string))
+  navigator.clipboard.writeText(src.value).then(() => toast.message(t('notifications.preview.copied') as string))
 }
 
 // Expose the refresh method to parent components
@@ -247,7 +245,7 @@ const handleLoad = () => {
               : $t('messages.preview.noEnvironments', {
                   url: $router.resolve({
                     name: 'space-settings-configuration',
-                    params: { id: currentSpace?.id },
+                    params: { space: currentSpace?.id },
                   }).href,
                 })
           "

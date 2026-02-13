@@ -1,3 +1,4 @@
+import { isClient } from '~/lib/env'
 import type Echo from 'laravel-echo'
 import type { PresenceUser } from './usePresence'
 
@@ -24,7 +25,7 @@ export function useContentMenuPresence(spaceIdRef: MaybeRefOrComputed<string>) {
   }
 
   const setupPresenceListener = () => {
-    if (!import.meta.client) return
+    if (!isClient) return
 
     const echo = getEcho()
     if (!echo) return

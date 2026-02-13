@@ -15,7 +15,7 @@ import { InputField } from '~/components/ui/form'
 import SettingsTable, {
   type ColumnDefinition,
   type TableItem,
-} from '~/components/ui/settings-table'
+} from '~/components/ui/settings-table.vue'
 
 const { useUpdateSpaceMutation } = useSpaces()
 const { mutate: updateSpace } = useUpdateSpaceMutation()

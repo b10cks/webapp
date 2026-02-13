@@ -72,95 +72,91 @@ const handleSignup = async () => {
 </script>
 
 <template>
-  <div>
-    <NuxtLayout name="unauthenticated">
-      <div class="grid w-full max-w-md space-y-8">
-        <div class="grid gap-4">
-          <Logo
-            alt="b10cks logo"
-            class="h-8 w-8 text-primary"
-          />
-          <h1
-            class="font-script text-2xl font-semibold text-primary"
-            v-text="$t('labels.login.signupHeader')"
-          />
-          <Markdown
-            class="text-sm text-muted"
-            :content="$t('labels.login.signupDescription')"
-          />
-          <Alert
-            v-if="publicInvite"
-            color="info"
-            variant="modern"
-            icon="lucide:handshake"
-          >
-            <Markdown
-              :content="
-                $t('labels.login.invite', {
-                  inviter: publicInvite.inviter?.name,
-                  name: publicInvite.space?.name || publicInvite.team?.name || 'their team',
-                })
-              "
-            />
-          </Alert>
-          <Alert
-            v-else-if="inviteError"
-            color="warning"
-            variant="modern"
-            icon="lucide:octagon-x"
-          >
-            {{ inviteError.data.message }}
-          </Alert>
-        </div>
-        <form
-          class="grid gap-6"
-          @submit.prevent="handleSignup"
-        >
-          <InputField
-            v-model="formData.firstname"
-            type="text"
-            name="firstname"
-            :label="$t('labels.login.fields.firstnameLabel')"
-            :placeholder="$t('labels.login.fields.firstnamePlaceholder')"
-            required
-          />
-          <InputField
-            v-model="formData.lastname"
-            type="text"
-            name="lastname"
-            :label="$t('labels.login.fields.lastnameLabel')"
-            :placeholder="$t('labels.login.fields.lastnamePlaceholder')"
-            required
-          />
-          <InputField
-            v-model="formData.email"
-            type="email"
-            name="email"
-            :label="$t('labels.login.fields.emailLabel')"
-            :placeholder="$t('labels.login.fields.emailPlaceholder')"
-            :description="emailMismatch ? $t('labels.login.emailMismatch') : ''"
-            required
-          />
-          <InputField
-            v-model="formData.password"
-            type="password"
-            name="password"
-            :label="$t('labels.login.fields.passwordLabel')"
-            :placeholder="$t('labels.login.fields.passwordPlaceholder')"
-            required
-          />
-          <InputField
-            v-model="formData.password_confirmation"
-            type="password"
-            name="password_confirmation"
-            :label="$t('labels.login.fields.passwordConfirmationLabel')"
-            :placeholder="$t('labels.login.fields.passwordConfirmationPlaceholder')"
-            required
-          />
-          <Button variant="primary">{{ $t('actions.signup') }}</Button>
-          <Markdown :content="$t('labels.login.login', { url: loginUrl })" />
-        </form>
-      </div>
-    </NuxtLayout>
+  <div class="grid w-full max-w-md space-y-8">
+    <div class="grid gap-4">
+      <Logo
+        alt="b10cks logo"
+        class="h-8 w-8 text-primary"
+      />
+      <h1
+        class="font-script text-2xl font-semibold text-primary"
+        v-text="$t('labels.login.signupHeader')"
+      />
+      <Markdown
+        class="text-sm text-muted"
+        :content="$t('labels.login.signupDescription')"
+      />
+      <Alert
+        v-if="publicInvite"
+        color="info"
+        variant="modern"
+        icon="lucide:handshake"
+      >
+        <Markdown
+          :content="
+            $t('labels.login.invite', {
+              inviter: publicInvite.inviter?.name,
+              name: publicInvite.space?.name || publicInvite.team?.name || 'their team',
+            })
+          "
+        />
+      </Alert>
+      <Alert
+        v-else-if="inviteError"
+        color="warning"
+        variant="modern"
+        icon="lucide:octagon-x"
+      >
+        {{ inviteError.data.message }}
+      </Alert>
+    </div>
+    <form
+      class="grid gap-6"
+      @submit.prevent="handleSignup"
+    >
+      <InputField
+        v-model="formData.firstname"
+        type="text"
+        name="firstname"
+        :label="$t('labels.login.fields.firstnameLabel')"
+        :placeholder="$t('labels.login.fields.firstnamePlaceholder')"
+        required
+      />
+      <InputField
+        v-model="formData.lastname"
+        type="text"
+        name="lastname"
+        :label="$t('labels.login.fields.lastnameLabel')"
+        :placeholder="$t('labels.login.fields.lastnamePlaceholder')"
+        required
+      />
+      <InputField
+        v-model="formData.email"
+        type="email"
+        name="email"
+        :label="$t('labels.login.fields.emailLabel')"
+        :placeholder="$t('labels.login.fields.emailPlaceholder')"
+        :description="emailMismatch ? $t('labels.login.emailMismatch') : ''"
+        required
+      />
+      <InputField
+        v-model="formData.password"
+        type="password"
+        name="password"
+        :label="$t('labels.login.fields.passwordLabel')"
+        :placeholder="$t('labels.login.fields.passwordPlaceholder')"
+        required
+      />
+      <InputField
+        v-model="formData.password_confirmation"
+        type="password"
+        name="password_confirmation"
+        :label="$t('labels.login.fields.passwordConfirmationLabel')"
+        :placeholder="$t('labels.login.fields.passwordConfirmationPlaceholder')"
+        required
+      />
+      <Button variant="primary">{{ $t('actions.signup') }}</Button>
+      <Markdown :content="$t('labels.login.login', { url: loginUrl })" />
+    </form>
   </div>
 </template>

@@ -7,27 +7,17 @@ const { data: currentSpace } = useCurrentSpaceQuery()
 
 const route = useRoute()
 const spaceId = computed(() => (route.params?.space as string) || null)
-const { isAuthenticated, isReady } = useAuth()
 
 useSeoMeta({
   titleTemplate: (title) => {
-    return [title, currentSpace.value?.name, 'b10cks'].filter((e) => e).join(' – ')
+    const parts = [title]
+    if (currentSpace.value?.name) {
+      parts.push(currentSpace.value.name)
+    }
+    parts.push('b10cks')
+    return parts.filter(Boolean).join(' – ')
   },
 })
-
-if (import.meta.client) {
-  watch(
-    [isReady, isAuthenticated],
-    ([ready, authenticated]) => {
-      if (!ready || authenticated) return
-      navigateTo({
-        name: 'login',
-        query: { return: route.fullPath },
-      })
-    },
-    { immediate: true }
-  )
-}
 
 provide('spaceId', spaceId)
 </script>

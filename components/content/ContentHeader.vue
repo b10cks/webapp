@@ -1,15 +1,10 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '~/components/ui/breadcrumb'
 import { Button } from '~/components/ui/button'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from '~/components/ui/breadcrumb'
 import type { ContentResource } from '~/types/contents'
-import { NuxtLink } from '#components'
 import { SimpleTooltip } from '../ui/tooltip'
 
 const props = defineProps<{
@@ -22,9 +17,7 @@ const spaceId = inject('spaceId')
 const { useContentMenuQuery, buildBreadcrumbs } = useContentMenu(spaceId)
 const { data: contentMenu } = useContentMenuQuery()
 const { settings } = useSpaceSettings(spaceId)
-const breadcrumbs = computed(
-  () => props.content && buildBreadcrumbs(contentMenu.value, props.content.id)
-)
+const breadcrumbs = computed(() => props.content && buildBreadcrumbs(contentMenu.value, props.content.id))
 
 watch(breadcrumbs, (crumbs) => {
   const path = crumbs.map(({ id }) => id)
@@ -77,7 +70,7 @@ const togglePreview = () => {
               </li>
               <BreadcrumbItem>
                 <BreadcrumbLink
-                  :as="NuxtLink"
+                  :as="RouterLink"
                   :to="{
                     name: 'space-content-contentId',
                     params: { space: spaceId, contentId: id },

@@ -1,5 +1,6 @@
 import { Chart as ChartJS } from 'chart.js'
+import type { App } from 'vue'
 
-export default defineNuxtPlugin(() => {
+export function installChart(_app: App) {
   ChartJS.defaults.animation = false
-})
+}

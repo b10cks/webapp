@@ -53,38 +53,34 @@ const handleDelete = async (dataSource: DataSourceResource) => {
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <div class="w-full bg-background">
-        <div class="content-grid">
-          <ContentHeader
-            :header="$t('labels.datasets.title')"
-            :description="$t('labels.datasets.description')"
+  <div class="w-full bg-background">
+    <div class="content-grid">
+      <ContentHeader
+        :header="$t('labels.datasets.title')"
+        :description="$t('labels.datasets.description')"
+      >
+        <template #actions>
+          <Button
+            variant="primary"
+            @click="handleAddDataSource"
           >
-            <template #actions>
-              <Button
-                variant="primary"
-                @click="handleAddDataSource"
-              >
-                <Icon name="lucide:plus" />
-                <span>{{ $t('actions.datasources.add') }}</span>
-              </Button>
-            </template>
-          </ContentHeader>
-          <div class="space-y-6">
-            <DataSourcesTable
-              :space-id="spaceId"
-              @edit="handleEditDataSource"
-              @delete="handleDelete"
-            />
-          </div>
-          <DataSourceDialog
-            v-model:open="createDialogOpen"
-            :data-source="editingDataSource"
-            @close="closeDialog"
-          />
-        </div>
+            <Icon name="lucide:plus" />
+            <span>{{ $t('actions.datasources.add') }}</span>
+          </Button>
+        </template>
+      </ContentHeader>
+      <div class="space-y-6">
+        <DataSourcesTable
+          :space-id="spaceId"
+          @edit="handleEditDataSource"
+          @delete="handleDelete"
+        />
       </div>
-    </NuxtLayout>
+      <DataSourceDialog
+        v-model:open="createDialogOpen"
+        :data-source="editingDataSource"
+        @close="closeDialog"
+      />
+    </div>
   </div>
 </template>

@@ -112,62 +112,58 @@ const isLoading = computed(
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <div class="w-full bg-background">
-        <div class="content-grid">
-          <ContentHeader
-            :header="$t('labels.releases.title')"
-            :description="$t('labels.releases.description')"
+  <div class="w-full bg-background">
+    <div class="content-grid">
+      <ContentHeader
+        :header="$t('labels.releases.title')"
+        :description="$t('labels.releases.description')"
+      >
+        <template #actions>
+          <Button
+            variant="primary"
+            @click="createDialogOpen = true"
+            :disabled="isLoading"
           >
-            <template #actions>
-              <Button
-                variant="primary"
-                @click="createDialogOpen = true"
-                :disabled="isLoading"
-              >
-                <Icon name="lucide:plus" />
-                {{ $t('labels.releases.createRelease') }}
-              </Button>
-            </template>
-          </ContentHeader>
+            <Icon name="lucide:plus" />
+            {{ $t('labels.releases.createRelease') }}
+          </Button>
+        </template>
+      </ContentHeader>
 
-          <ReleaseList
-            :is-loading="isLoading"
-            @commit="(release) => handleCommit(release.id)"
-            @cancel="handleCancelClick"
-            @delete="handleDeleteClick"
-            @edit="
-              (release) => {
-                releaseToEdit.value = release
-                editDialogOpen.value = true
-              }
-            "
-          />
-        </div>
-      </div>
-    </NuxtLayout>
-
-    <CreateReleaseDialog
-      :open="createDialogOpen"
-      :loading="isCreating"
-      @update:open="createDialogOpen = $event"
-      @create="handleCreateRelease"
-    />
-
-    <CreateReleaseDialog
-      :open="editDialogOpen"
-      :loading="isUpdatingRelease"
-      :release-to-edit="releaseToEdit"
-      @update:open="
-        (newOpen) => {
-          editDialogOpen.value = newOpen
-          if (!newOpen) {
-            releaseToEdit.value = null
+      <ReleaseList
+        :is-loading="isLoading"
+        @commit="(release) => handleCommit(release.id)"
+        @cancel="handleCancelClick"
+        @delete="handleDeleteClick"
+        @edit="
+          (release) => {
+            releaseToEdit.value = release
+            editDialogOpen.value = true
           }
-        }
-      "
-      @update="handleUpdateRelease"
-    />
+        "
+      />
+    </div>
   </div>
+
+  <CreateReleaseDialog
+    :open="createDialogOpen"
+    :loading="isCreating"
+    @update:open="createDialogOpen = $event"
+    @create="handleCreateRelease"
+  />
+
+  <CreateReleaseDialog
+    :open="editDialogOpen"
+    :loading="isUpdatingRelease"
+    :release-to-edit="releaseToEdit"
+    @update:open="
+      (newOpen) => {
+        editDialogOpen.value = newOpen
+        if (!newOpen) {
+          releaseToEdit.value = null
+        }
+      }
+    "
+    @update="handleUpdateRelease"
+  />
 </template>

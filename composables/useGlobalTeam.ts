@@ -1,3 +1,4 @@
+import { isClient } from '~/lib/env'
 import { useStorage } from '@vueuse/core'
 
 import type { TeamResource } from '~/types/teams'
@@ -19,7 +20,7 @@ export function useGlobalTeam() {
   }
 
   // Persistent state - only use localStorage on client-side
-  const state = import.meta.client
+  const state = isClient
     ? useStorage<GlobalTeamState>(STORAGE_KEY, defaultState, localStorage, {
         mergeDefaults: true,
         serializer: {
@@ -39,7 +40,7 @@ export function useGlobalTeam() {
   const { data: teams, isLoading: isLoadingTeams, error: teamsError } = useTeamsQuery()
 
   // Load currently selected team details - only on client side
-  const selectedTeamQuery = import.meta.client
+  const selectedTeamQuery = isClient
     ? useTeamQuery(computed(() => state.value.selectedTeamId || ''))
     : { data: ref(null), isLoading: ref(false), error: ref(null) }
 

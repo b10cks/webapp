@@ -1,10 +1,16 @@
-import type { NitroFetchOptions } from 'nitropack'
-
+import { isClient } from '~/lib/env'
 import { getXsrfHeaders } from '~/lib/csrf'
 
 interface AuthHandler {
   handleUnauthorized: (endpoint: string, options: any) => Promise<{ retry?: boolean } | void>
 }
+
+interface RequestOptions extends RequestInit {
+  query?: Record<string, unknown>
+  body?: any
+}
+
+const isClient = typeof window !== 'undefined'
 
 export class ApiClient {
   private readonly baseURL: string
@@ -41,52 +47,105 @@ export class ApiClient {
     return this.authToken ? { Authorization: `Bearer ${this.authToken}` } : {}
   }
 
-  private resolveUrl(endpoint: string): string {
-    return endpoint.startsWith('http') ? endpoint : `${this.baseURL}${endpoint}`
+  private resolveUrl(endpoint: string, query?: Record<string, unknown>): string {
+    let url = endpoint.startsWith('http') ? endpoint : `${this.baseURL}${endpoint}`
+    if (query && Object.keys(query).length > 0) {
+      const params = new URLSearchParams()
+      for (const [key, value] of Object.entries(query)) {
+        if (value !== undefined && value !== null) {
+          params.set(key, String(value))
+        }
+      }
+      url += `?${params.toString()}`
+    }
+    return url
   }
 
   public async ensureCsrfCookie(): Promise<void> {
-    if (!import.meta.client || this.csrfReady) return
+    if (!isClient || this.csrfReady) return
 
-    const url = this.resolveUrl('/auth/v1/csrf-cookie')
-    await $fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-    this.csrfReady = true
+    console.log('[API] Fetching CSRF cookie from /auth/v1/csrf-cookie')
+
+    try {
+      const response = await fetch('/auth/v1/csrf-cookie', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+
+      console.log('[API] CSRF response status:', response.status)
+      console.log('[API] CSRF response headers:', Object.fromEntries(response.headers.entries()))
+      console.log('[API] Document cookies after CSRF request:', document.cookie)
+
+      if (response.ok) {
+        this.csrfReady = true
+      } else {
+        console.warn('[API] CSRF cookie request failed with status:', response.status)
+      }
+    } catch (error) {
+      console.warn('[API] Failed to fetch CSRF cookie:', error)
+    }
   }
 
-  public async request<T>(endpoint: string, options: NitroFetchOptions<any> = {}): Promise<T> {
-    const url = this.resolveUrl(endpoint)
-    const method = (options.method || 'GET').toString().toUpperCase()
+  private async parseResponse<T>(response: Response): Promise<T> {
+    const contentType = response.headers.get('content-type')
+    const isJson = contentType?.includes('application/json')
+
+    if (!response.ok) {
+      let errorData: any = {}
+      if (isJson) {
+        try {
+          errorData = await response.json()
+        } catch {
+          // ignore json parse errors
+        }
+      }
+      const error: any = new Error(errorData.message || response.statusText)
+      error.response = response
+      error.data = errorData
+      error.status = response.status
+      throw error
+    }
+
+    if (isJson) {
+      return response.json()
+    }
+    return response.text() as unknown as T
+  }
+
+  public async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+    const { query, body, ...fetchOptions } = options
+    const method = (fetchOptions.method || 'GET').toString().toUpperCase()
 
     if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
       await this.ensureCsrfCookie()
     }
 
-    const makeRequest = async (headers: Record<string, string>) => {
-      return $fetch<T>(url, {
-        ...options,
-        credentials: options.credentials || 'include',
+    const url = this.resolveUrl(endpoint, query)
+
+    const makeRequest = async (headers: Record<string, string>): Promise<T> => {
+      const response = await fetch(url, {
+        ...fetchOptions,
+        credentials: fetchOptions.credentials || 'include',
         headers: {
           ...headers,
-          ...options.headers,
+          ...fetchOptions.headers,
         },
+        body: body !== undefined ? JSON.stringify(body) : undefined,
       })
+      return this.parseResponse<T>(response)
     }
 
     try {
-      const csrfHeaders =
-        method === 'GET' || method === 'HEAD' || method === 'OPTIONS' ? {} : getXsrfHeaders()
+      const csrfHeaders = method === 'GET' || method === 'HEAD' || method === 'OPTIONS' ? {} : getXsrfHeaders()
       return await makeRequest({
         ...this.defaultHeaders,
         ...csrfHeaders,
       })
     } catch (error: any) {
-      if (error?.response?.status === 401 && this.authHandler) {
+      if (error?.status === 401 && this.authHandler) {
         const retryInfo = await this.authHandler.handleUnauthorized(endpoint, options)
 
         if (retryInfo?.retry) {
@@ -95,35 +154,29 @@ export class ApiClient {
             ...getXsrfHeaders(),
           })
         }
-
-        throw error
       }
 
       throw error
     }
   }
 
-  public get<T>(
-    endpoint: string,
-    query: Record<string, unknown> = {},
-    options: NitroFetchOptions<any> = {}
-  ): Promise<T> {
+  public get<T>(endpoint: string, query: Record<string, unknown> = {}, options: RequestOptions = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'GET', query, ...options })
   }
 
-  public post<T>(endpoint: string, data?: any, options: NitroFetchOptions<any> = {}): Promise<T> {
+  public post<T>(endpoint: string, data?: any, options: RequestOptions = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'POST', body: data, ...options })
   }
 
-  public put<T>(endpoint: string, data?: any, options: NitroFetchOptions<any> = {}): Promise<T> {
+  public put<T>(endpoint: string, data?: any, options: RequestOptions = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'PUT', body: data, ...options })
   }
 
-  public patch<T>(endpoint: string, data?: any, options: NitroFetchOptions<any> = {}): Promise<T> {
+  public patch<T>(endpoint: string, data?: any, options: RequestOptions = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'PATCH', body: data, ...options })
   }
 
-  public delete<T>(endpoint: string, options: NitroFetchOptions<any> = {}): Promise<T> {
+  public delete<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     return this.request<T>(endpoint, { method: 'DELETE', ...options })
   }
 }
